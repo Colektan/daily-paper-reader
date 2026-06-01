@@ -25,3 +25,100 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: RL-VLA-world
+      description: 查找RL，VLA，world model，robot manipulation相关的论文
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: reinforcement learning
+          keyword_cn: 强化学习
+          query: reinforcement learning methods and algorithms
+        - keyword: vision language action
+          keyword_cn: 视觉语言动作模型
+          query: vision language action models for robotics
+        - keyword: world model
+          keyword_cn: 世界模型
+          query: world model in reinforcement learning and robotics
+        - keyword: robot manipulation
+          keyword_cn: 机器人操作
+          query: robot manipulation using learning methods
+      intent_queries:
+        - query: Reinforcement learning for robot manipulation with world models
+          query_cn: 结合世界模型的强化学习用于机器人操作
+          enabled: true
+          source: manual
+          note: ''
+        - query: Vision language action models in robot manipulation
+          query_cn: 视觉语言动作模型在机器人操作中的应用
+          enabled: true
+          source: manual
+          note: ''
+        - query: Integration of vision language action and reinforcement learning
+          query_cn: 视觉语言动作与强化学习的集成
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-01T07:04:56.607Z'
+    - tag: rep-learning
+      description: 帮我查找表征学习，AI新架构等等可以优化AI模型通用表现和训练方法的论文。
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: representation learning
+          keyword_cn: 表征学习
+          query: representation learning methods improving model performance
+        - keyword: self-supervised learning
+          keyword_cn: 自监督学习
+          query: self-supervised learning techniques for feature extraction
+        - keyword: transfer learning
+          keyword_cn: 迁移学习
+          query: transfer learning methods to improve model training efficiency
+        - keyword: meta-learning
+          keyword_cn: 元学习
+          query: meta-learning algorithms for fast adaptation and improved generalization
+        - keyword: training optimization
+          keyword_cn: 训练优化
+          query: training optimization strategies for better model convergence
+        - keyword: pretraining methods
+          keyword_cn: 预训练方法
+          query: pretraining methods enhancing downstream model performance
+      intent_queries:
+        - query: How can representation learning improve model generalization and training efficiency?
+          query_cn: 表征学习如何提高模型泛化能力和训练效率？
+          enabled: true
+          source: manual
+          note: ''
+        - query: What are the latest AI architectures that enhance model performance and training methods?
+          query_cn: 有哪些最新的AI架构可以提升模型性能和训练方法？
+          enabled: true
+          source: manual
+          note: ''
+        - query: Techniques for optimizing model training to achieve better general performance
+          query_cn: 优化模型训练以实现更好通用性能的技术
+          enabled: true
+          source: manual
+          note: ''
+        - query: Advances in representation learning and neural architecture search for AI
+          query_cn: 表征学习和神经架构搜索在AI中的进展
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-01T07:13:28.397Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
