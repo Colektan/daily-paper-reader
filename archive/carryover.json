@@ -1,17 +1,298 @@
 {
-  "generated_at": "2026-06-01T07:27:08.025685+00:00",
-  "updated_date": "20260503-20260601",
+  "generated_at": "2026-06-01T22:27:40.463435+00:00",
+  "updated_date": "20260601",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260503-20260601",
+      "updated_date": "20260601",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260503-20260601",
+      "updated_date": "20260601",
       "carryover_days": 9,
-      "items": []
+      "items": [
+        {
+          "id": "2605.27843v1",
+          "source": "arxiv",
+          "title": "A self-supervised learning approach to deep filter banks for texture recognition",
+          "abstract": "An important challenge in texture recognition is the limited amount of data for training frequently found in real-world applications. In computer vision in general, a successful strategy to mitigate this issue is the use of a pretraining stage where the neural network learns to identify relations between parts of the data in a self-supervised manner. A well-established framework in this direction is masked autoencoder. Nevertheless, these models usually rely on computationally intensive architectures, such as vision transformers. In the particular case of texture images, most of the relevant information is compacted within a delimited area around each pixel, which suggests that capturing long-range dependence via the attention mechanism may be unnecessary. Based on that assumption, here we propose a framework where the pretraining model is a convolutional autoencoder. To leverage the rich information conveyed by texture patterns, we employ deep filters coupled with Fisher vector pooling. In this way, we improve the performance of texture recognition without adding significant computational burden. Our approach is compared with several state-of-the-art methods in different texture databases, confirming its potential both in terms of classification accuracy and computational complexity.",
+          "authors": [
+            "Joao B. Florindo",
+            "Lucas O. Lyra",
+            "Antonio E. Fabris"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-05-27T01:58:39+00:00",
+          "link": "https://arxiv.org/pdf/2605.27843v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Proposes self-supervised learning for deep filter banks in texture recognition",
+          "llm_evidence_cn": "提出用于纹理识别的自监督深度滤波器组",
+          "llm_evidence": "提出用于纹理识别的自监督深度滤波器组",
+          "canonical_evidence": "提出用于纹理识别的自监督深度滤波器组",
+          "llm_tldr_en": "Applies self-supervised learning to deep filter banks for texture recognition, using masked autoencoder style pretraining to handle limited data.",
+          "llm_tldr_cn": "纹理识别面临数据量有限的问题。本文采用自监督学习策略，利用掩码自编码器风格的预训练来学习滤波器组特征，避免了使用计算密集的视觉Transformer。在多个纹理数据集上，该方法在少量数据下取得了优异的识别性能。展示了自监督学习在纹理表征提取中的有效性。",
+          "llm_tldr": "纹理识别面临数据量有限的问题。本文采用自监督学习策略，利用掩码自编码器风格的预训练来学习滤波器组特征，避免了使用计算密集的视觉Transformer。在多个纹理数据集上，该方法在少量数据下取得了优异的识别性能。展示了自监督学习在纹理表征提取中的有效性。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "self-supervised learning techniques for feature extraction",
+          "matched_requirement_id": "req-9",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.27843v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.31022v1",
+          "source": "arxiv",
+          "title": "Augmented Lagrangian Predictive Coding",
+          "abstract": "Predictive coding (PC) is a local-learning alternative to backpropagation (BP), training deep networks via local energy-minimization dynamics rather than a global backward pass. We introduce Augmented Lagrangian Predictive Coding (PC-ALM), which maintains PC's inference budget but aligns each weight update toward BP by accumulating per-layer constraint errors into a layer-local Lagrange multiplier. In linear PC networks, PC-ALM converges to an equilibrium with exact BP gradients distributed across the network via only layer-local updates. We analyze PC-ALM in nonlinear PC networks up to depth 128 and show that it matches BP performance across all width-depth regimes, notably in deep narrow networks where PC underperforms. PC-ALM introduces recurrent dynamics in each layer's activations. Compared to PC's heat flow on a scalar energy, PC-ALM dynamics are driven by dual ascent on the augmented Lagrangian. We observe \"ballistic\" credit propagation across very deep networks, with credit signals evenly distributed across layers, compared to PC's slow, diffusive credit propagation. Beyond the algorithm itself, the augmented Lagrangian framework offers a generalization of PC, and may yield insights into how distributed systems could compute and propagate BP-like credit signals through purely local dynamics.",
+          "authors": [
+            "Jeffrey Seely",
+            "Julian Gould"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-05-29T08:54:21+00:00",
+          "link": "https://arxiv.org/pdf/2605.31022v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "new AI architecture for training deep networks",
+          "llm_evidence_cn": "用于训练深度网络的新AI架构",
+          "llm_evidence": "用于训练深度网络的新AI架构",
+          "canonical_evidence": "用于训练深度网络的新AI架构",
+          "llm_tldr_en": "Augmented Lagrangian Predictive Coding (PC-ALM) introduces a local-learning alternative to backpropagation that matches BP performance by accumulating constraint errors into layer-local Lagrange multipliers.",
+          "llm_tldr_cn": "本文提出增强拉格朗日预测编码（PC-ALM），作为反向传播的局部学习替代方案。通过将逐层约束误差累积为局部拉格朗日乘子，使每个权重更新逼近BP梯度。实验表明，PC-ALM在深度128的非线性网络中匹配BP性能，尤其在窄深网络中优于原PC方法，为生物启发式学习提供新路径。",
+          "llm_tldr": "本文提出增强拉格朗日预测编码（PC-ALM），作为反向传播的局部学习替代方案。通过将逐层约束误差累积为局部拉格朗日乘子，使每个权重更新逼近BP梯度。实验表明，PC-ALM在深度128的非线性网络中匹配BP性能，尤其在窄深网络中优于原PC方法，为生物启发式学习提供新路径。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
+          "matched_requirement_id": "req-15",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.31022v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.28165v1",
+          "source": "arxiv",
+          "title": "Unification and Optimization of Robust Supervised Learning",
+          "abstract": "The literature has proposed various robust alternatives to empirical risk minimisation to address failure modes such as distribution shift, label noise and finite-sample degeneracies. Examples include distributionally robust optimization, label smoothing, vicinal risk minimization, and Mixup. However, such approaches are typically developed in isolation, forcing practitioners to commit a priori to a single failure mode even when the dominant mode for the task is unclear. To address this, we organize a broad class of existing methods along three common design axes and derive a tractable training procedure that decomposes robust learning into sequential stages (reference distribution enrichment, input-space perturbation, label-space perturbation, and sample-level aggregation), each with a choice of stance (pessimistic, neutral, or optimistic). This results in a unified design space in which joint hyperparameter optimization can compose and configure robustness strategies suited to the task at hand. Across tabular, image, and reward modeling benchmarks, joint hyperparameter optimization is competitive with the best single-method baseline in each setting, offering a reliable default for practitioners who do not know a priori which failure mode dominates their task.",
+          "authors": [
+            "Jonas Hanselle",
+            "Valentin Margraf",
+            "Clemens Damke",
+            "Eyke Hüllermeier"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-05-27T08:47:50+00:00",
+          "link": "https://arxiv.org/pdf/2605.28165v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "unification and optimization of robust supervised learning methods",
+          "llm_evidence_cn": "统一和优化鲁棒监督学习方法",
+          "llm_evidence": "统一和优化鲁棒监督学习方法",
+          "canonical_evidence": "统一和优化鲁棒监督学习方法",
+          "llm_tldr_en": "Unifies robust supervised learning methods into a sequential training procedure, improving performance across various failure modes.",
+          "llm_tldr_cn": "本文将分布鲁棒优化、标签平滑、Mixup等鲁棒方法统一为三轴设计，并推导出顺序训练流程（参考分布丰富、输入扰动、标签扰动、样本级聚合），在分布偏移和标签噪声等场景下取得更优泛化。",
+          "llm_tldr": "本文将分布鲁棒优化、标签平滑、Mixup等鲁棒方法统一为三轴设计，并推导出顺序训练流程（参考分布丰富、输入扰动、标签扰动、样本级聚合），在分布偏移和标签噪声等场景下取得更优泛化。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.28165v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.28444v1",
+          "source": "arxiv",
+          "title": "Bilinear Coordinate Alignment for Training-Free Task-Vector Transfer",
+          "abstract": "Fine-tuning large-scale pre-trained models is a recent prevalent paradigm for adapting general representations to specialized tasks. However, when a new version of a pre-trained model becomes available, expertise acquired through fine-tuning cannot be directly reused because it is tied to the parameterization of the original model, requiring another costly fine-tuning. To address this inefficiency, recent work uses task vectors, defined as the parameter difference between a fine-tuned model and its base model, to transfer expertise across models. While existing methods bridge disparate models by matching activations or gradients, a significant performance gap remains relative to direct fine-tuning, suggesting that these partial correspondences are insufficient. In this work, instead of viewing a task vector merely as a parameter offset, we revisit the formation of task vectors and show that they can be derived as accumulated bilinear interactions between input-side activations and output-side gradients. Motivated by this observation, we formulate task-vector transfer as a dual-space alignment problem and propose BiCo, a training-free framework for transferring task vectors through Bilinear Coordinate alignment. BiCo estimates orthogonal Procrustes mappings in both spaces using a single forward-backward pass on a small calibration set, without any parameter update. Across extensive computer vision and natural language processing benchmarks, BiCo consistently outperforms existing transfer methods across models that differ in width, depth, and pre-training configuration.",
+          "authors": [
+            "Jungyong Son",
+            "Jinwook Jung",
+            "Minhee Park",
+            "Sungyong Baik"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-05-27T13:10:34+00:00",
+          "link": "https://arxiv.org/pdf/2605.28444v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "transfer learning via task vectors without fine-tuning",
+          "llm_evidence_cn": "通过任务向量实现免微调的迁移学习",
+          "llm_evidence": "通过任务向量实现免微调的迁移学习",
+          "canonical_evidence": "通过任务向量实现免微调的迁移学习",
+          "llm_tldr_en": "Proposes bilinear coordinate alignment for training-free task-vector transfer, enabling expertise reuse across different pre-trained models without additional fine-tuning.",
+          "llm_tldr_cn": "传统的微调迁移将知识绑定在特定参数化上，当预训练模型版本更新时需重新微调。本文提出双线性坐标对齐方法，利用任务向量（微调模型与基模型参数差）实现免再训练的跨模型迁移。通过双线性对齐坐标空间，显著缩小了迁移性能与直接微调的差距，提高了迁移效率。",
+          "llm_tldr": "传统的微调迁移将知识绑定在特定参数化上，当预训练模型版本更新时需重新微调。本文提出双线性坐标对齐方法，利用任务向量（微调模型与基模型参数差）实现免再训练的跨模型迁移。通过双线性对齐坐标空间，显著缩小了迁移性能与直接微调的差距，提高了迁移效率。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.28444v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.29327v1",
+          "source": "arxiv",
+          "title": "Reasoning-preserved Efficient Distillation of Large Language Models via Activation-aware Initialization",
+          "abstract": "Efficient Distillation (EDistill) compresses large language models (LLMs) by structured pruning parameters and tuning lightweight modules with high training efficiency. Although these EDistilled LLMs achieve state-of-the-art (SOTA) performance on general ability benchmarks relative to similarly sized LLMs, we identify a severe degradation in their multi-step reasoning ability, which we term reasoning collapse. We systematically analyze the geometric origins of reasoning collapse and show that the SOTA EDistill method based on width-reducing projection matrices suffers from eRank collapse, in which the effective rank (eRank) of hidden representations drops. We theoretically explain how singular values of randomly initialized projection matrices become unevenly distributed, leading to eRank collapse and thus token indistinguishability. To address this issue, we propose RED (Reasoning-preserved Efficient Distillation) for LLMs, which introduces activation-aware initialization to initialize projection matrices as channel-selection matrices, thus theoretically mitigating eRank collapse. Experiments on Llama and Qwen series demonstrate that RED substantially recovers reasoning while maintaining high training efficiency and SOTA general ability.",
+          "authors": [
+            "Junlin He",
+            "Yihong Tang",
+            "Tong Nie",
+            "Guilong Li",
+            "Binyu Yang",
+            "Jinxiao Du",
+            "Lijun Sun",
+            "Wei Ma"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL",
+            "cs.LG"
+          ],
+          "published": "2026-05-28T04:02:22+00:00",
+          "link": "https://arxiv.org/pdf/2605.29327v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Representation learning in distillation: eRank collapse and activation-aware initialization",
+          "llm_evidence_cn": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
+          "llm_evidence": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
+          "canonical_evidence": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
+          "llm_tldr_en": "Identifies reasoning collapse in LLM distillation due to eRank collapse of representations, and proposes activation-aware initialization to preserve reasoning.",
+          "llm_tldr_cn": "该论文发现大语言模型的高效蒸馏方法（EDistill）在多步推理能力上出现严重退化，称为推理崩溃。通过几何分析，揭示这是由于隐藏表征的有效秩（eRank）坍塌导致的。作者提出激活感知初始化方法，在蒸馏过程中保持表征的秩，从而保留推理能力。实验证明该方法能有效缓解推理崩溃，提升蒸馏模型的推理性能。",
+          "llm_tldr": "该论文发现大语言模型的高效蒸馏方法（EDistill）在多步推理能力上出现严重退化，称为推理崩溃。通过几何分析，揭示这是由于隐藏表征的有效秩（eRank）坍塌导致的。作者提出激活感知初始化方法，在蒸馏过程中保持表征的秩，从而保留推理能力。实验证明该方法能有效缓解推理崩溃，提升蒸馏模型的推理性能。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.29327v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.25525v1",
+          "source": "arxiv",
+          "title": "SAE-FD: Sparse Autoencoder Feature Distillation for Continual Learning of Large Language Models",
+          "abstract": "Continual learning enables large language models to adapt to evolving tasks without retraining from scratch, yet catastrophic forgetting remains a central obstacle. Among continual learning methods, regularization-based approaches are widely used to constrain model updates and reduce forgetting, operating in weight space, gradient space, or output space. However, these dense representation spaces suffer from feature superposition, where multiple concepts are encoded in overlapping dimensions, making it difficult to selectively protect previously learned knowledge without impeding new-task learning. To address this issue, we propose \\method (Sparse Autoencoder Feature Distillation), which anchors model representations in the sparse feature space of a pre-trained Sparse Autoencoder, where dense activations are decomposed into a sparse overcomplete basis that reduces representational entanglement, enabling more targeted regularization with less interference to new-task learning. Experiments on two continual learning benchmarks across three model architectures show that \\method consistently outperforms existing regularization-based methods, achieving up to 52.70% average accuracy with only -0.46 backward transfer.",
+          "authors": [
+            "Mingxu Zhang",
+            "Yuhan Li",
+            "Lujundong Li",
+            "Dazhong Shen",
+            "Hui Xiong",
+            "Ying Sun"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-05-25T07:27:41+00:00",
+          "link": "https://arxiv.org/pdf/2605.25525v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Sparse autoencoder feature distillation for representation learning in continual learning",
+          "llm_evidence_cn": "稀疏自编码器特征蒸馏用于持续学习中的表征学习",
+          "llm_evidence": "稀疏自编码器特征蒸馏用于持续学习中的表征学习",
+          "canonical_evidence": "稀疏自编码器特征蒸馏用于持续学习中的表征学习",
+          "llm_tldr_en": "Proposes SAE-FD, using sparse autoencoders to distill features and mitigate catastrophic forgetting in LLM continual learning.",
+          "llm_tldr_cn": "该论文针对大语言模型持续学习中的灾难性遗忘问题，提出稀疏自编码器特征蒸馏（SAE-FD）方法。传统的正则化方法在密集表征空间中遭受特征叠加，难以选择性保护旧知识。SAE-FD将模型表征锚定在稀疏特征空间，通过特征蒸馏保留关键知识，同时允许新任务学习。实验表明该方法有效缓解遗忘，并提升持续学习性能。",
+          "llm_tldr": "该论文针对大语言模型持续学习中的灾难性遗忘问题，提出稀疏自编码器特征蒸馏（SAE-FD）方法。传统的正则化方法在密集表征空间中遭受特征叠加，难以选择性保护旧知识。SAE-FD将模型表征锚定在稀疏特征空间，通过特征蒸馏保留关键知识，同时允许新任务学习。实验表明该方法有效缓解遗忘，并提升持续学习性能。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.25525v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2605.31324v1",
+          "source": "arxiv",
+          "title": "Inconsistency-Aware Minimization: Improving Generalization with Unlabeled Data",
+          "abstract": "Estimating the generalization gap and developing optimization methods that improve generalization are crucial for deep learning models, for both theoretical understanding and practical applications. Leveraging unlabeled data for these purposes offers significant advantages in real-world scenarios. This paper introduces a novel generalization measure, local inconsistency, derived from an information-geometric perspective on the parameter space of neural networks. A key feature of local inconsistency is that it can be computed without explicit labels. We establish theoretical underpinnings by connecting local inconsistency to the Fisher information matrix and the loss Hessian. Empirically, we demonstrate that local inconsistency correlates with the generalization gap. Based on these findings, we propose Inconsistency-Aware Minimization (IAM), which incorporates local inconsistency into the training objective. We demonstrate that in standard supervised learning settings, IAM enhances generalization, achieving performance comparable to that of existing methods such as Sharpness-Aware Minimization. Furthermore, IAM exhibits efficacy in semi- and self-supervised learning scenarios, where the local inconsistency is computed from unlabeled data.",
+          "authors": [
+            "Hee-Sung Kim",
+            "Hyeonseong Kim",
+            "Sungyoon Lee"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-05-29T13:56:17+00:00",
+          "link": "https://arxiv.org/pdf/2605.31324v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "inconsistency-aware minimization improves generalization using unlabeled data",
+          "llm_evidence_cn": "不一致感知最小化利用无标签数据提升泛化",
+          "llm_evidence": "不一致感知最小化利用无标签数据提升泛化",
+          "canonical_evidence": "不一致感知最小化利用无标签数据提升泛化",
+          "llm_tldr_en": "Proposes a generalization measure 'local inconsistency' computable without labels, and uses it as a regularization objective (Inconsistency-Aware Minimization) to improve generalization, with theoretical connections to Fisher information and loss Hessian.",
+          "llm_tldr_cn": "估算泛化差距对深度学习至关重要。本文从信息几何角度提出局部不一致性度量，无需标签即可计算，并可作为正则化目标（不一致感知最小化）优化模型。理论上与Fisher信息矩阵和损失Hessian关联，实验显示该度量与泛化差距相关且能提升泛化性能。",
+          "llm_tldr": "估算泛化差距对深度学习至关重要。本文从信息几何角度提出局部不一致性度量，无需标签即可计算，并可作为正则化目标（不一致感知最小化）优化模型。理论上与Fisher信息矩阵和损失Hessian关联，实验显示该度量与泛化差距相关且能提升泛化性能。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2605.31324v1",
+          "carry_days": 1
+        }
+      ]
     }
   }
 }
