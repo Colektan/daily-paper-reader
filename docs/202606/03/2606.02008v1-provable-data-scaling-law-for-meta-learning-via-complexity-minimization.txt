@@ -1,0 +1,3353 @@
+Title: Provable Data Scaling Law for Meta Learning via Complexity Minimization
+
+URL Source: https://arxiv.org/pdf/2606.02008v1
+
+Published Time: Tue, 02 Jun 2026 03:11:43 GMT
+
+Number of Pages: 41
+
+Markdown Content:
+# Provable Data Scaling Law for Meta Learning via Complexity Minimization 
+
+## Kazuto Fukuchi ∗1,2 , Ryuichiro Hataya 3,4 , and Kota Matsui 4,5,6 1University of Tsukuba, Japan 
+
+> 2
+
+## RIKEN AIP, Japan 
+
+> 3
+
+## SB Intuitions Corp., Japan 
+
+> 4
+
+## Kyoto University, Japan 
+
+> 5
+
+## Shiga University, Japan 
+
+> 6
+
+## Institute of Science Tokyo, Japan June 2, 2026 
+
+Abstract 
+
+Pre-training has become a fundamental paradigm in modern machine learning, with one of its key empirical benefits being reduced downstream sample complexity as the scale of pre-training data increases. However, existing theoretical frameworks for pre-training do not fully explain this phenomenon. In this paper, we introduce complexity minimization, a novel meta-representation learning framework designed to enable theoretical analysis of this scaling behavior, which learns representations by evaluating the downstream model complexity best suited to each domain and minimizing the worst-case such complexity across source domains. Our end-to-end theoretical analysis, spanning pre-training through downstream regression, shows that this framework provably captures this scaling behavior; in particular, we show that the error rate of few-shot adaptation improves as the amount of meta-training data grows. Empirically, we demonstrate that incorporating complexity regularization into existing meta-learning methods consistently improves downstream sample efficiency. 
+
+# 1 Introduction 
+
+Pre-training, encompassing self-supervised learning, representation learning, and meta-learning, is now a fundamental component of modern machine learning, as demonstrated by the recent success of foundation models, large models pre-trained on massive datasets. For example, in natural language processing, large-scale pre-trained language models such as BERT and GPT-3 have shown that representations learned from broad text corpora can be adapted to a wide range of downstream tasks, including natural language inference, question answering, and text generation (Devlin et al. 2019; Brown et al. 2020). In computer vision and vision–language learning, contrastive and promptable pre-training has led to models such as CLIP and the Segment Anything Model, which exhibit strong transferability across image classification, retrieval, and segmentation tasks with little or no task-specific supervision (Radford et al. 2021; Kirillov et al. 2023). A similar paradigm has 
+
+> ∗fukuchi@cs.tsukuba.ac.jp, Corresponding author
+
+1
+
+> arXiv:2606.02008v1 [stat.ML] 1 Jun 2026
+
+also emerged in scientific and domain-specific applications: AlphaFold has transformed protein-structure prediction by leveraging large-scale biological sequence and structural information (Jumper et al. 2021), while medical large language models such as Med-PaLM illustrate the potential of pre-training and instruction tuning for clinical question answering (Singhal et al. 2023). In robotics, large transformer-based policies trained on diverse robot interaction data have shown improved generalization to new objects, environments, and instructions (Brohan et al. 2022). The theoretical study of pre-training, including analyses for few-shot learning (Du et al. 2020), in-context learning (Bai et al. 2023; Li et al. 2023; Kim et al. 2024), and meta-learning (Collins et al. 2022; Huang et al. 2022; Aliakbarpour et al. 2024; Block et al. 2025; Ding et al. 2025; Wu et al. 2025), has revealed the advantage of pre-training in terms of the sample complexity of the downstream learning task. For example, Du et al. (2020) showed that the existence of a common linear representation shared across source and downstream tasks yields a reduction in sample complexity. Pre-training has also been shown to reduce downstream sample complexity in in-context learning under generalized linear models (Bai et al. 2023), nonparametric regression models (Kim et al. 2024), and a hypothesis class with bounded algorithmic stability (Li et al. 2023). Furthermore, many researchers have shown that the meta-learning algorithms provably reduce the downstream sample complexity (Collins et al. 2022; Huang et al. 2022; Aliakbarpour et al. 2024; Block et al. 2025; Ding et al. 2025; Wu et al. 2025). These results, however, are inconsistent with the empirical phenomenon known as the scaling law , first introduced by Kaplan et al. (2020a). The data scaling law for pre-trained models, in particular, shows that pre-training on more data leads to better error rate of the downstream learning task (Henighan et al. 2020; Mikami et al. 2022). The aforementioned theoretical results cannot explain this empirical finding, since the downstream error rates they establish are independent of the pre-training data size. Recently, Fukuchi et al. (2026) has provided a theoretical framework that can explain the data scaling law for pre-trained models. Their framework, caulking, adapts the pre-trained model to the downstream task by inserting an adapter, as in parameter-efficient fine-tuning (PEFT) methods. Their analysis establishes that training the pre-trained model so that the complexity of the adapter decreases as the pre-training data size grows provably reduces the sample complexity of the downstream task. However, their results lack an end-to-end analysis from pre-training to downstream learning, leaving unclear the training strategy that achieves the data scaling law. Developing a pre-training algorithm that provably achieves the data scaling law is important not only for the theoretical understanding of recent advances in foundation models, but also for guiding the practical development of pre-trained models. 
+
+Our contribution The main contribution of this paper is a meta-representation learning algo-rithm together with its theoretical analysis, proving the achievability of the data scaling law. Our contributions are summarized as follows: 
+
+• We propose complexity minimization , a novel meta-representation learning framework that selects a feature extractor by minimizing the worst-case best model complexity across observed source domains. The best model complexity serves as a proxy for the convergence rate of the downstream excess error: for instance, when the underlying regression function is sparse, the sparsity level governs the downstream convergence rate, so minimizing it directly reduces downstream sample complexity. 
+
+• To instantiate complexity minimization, we construct a novel estimator of the best model complexity using Lepski’s method (Lepskii 1991), a principled adaptive model selection procedure that identifies 2the optimal complexity level from a sample without prior knowledge of the underlying complexity parameters. 
+
+• We provide an end-to-end theoretical analysis spanning meta-training through downstream learning and prove that the downstream error rate exhibits the data scaling law. Specifically, the downstream excess error achieves the rate 
+
+(n/ ln n)−β∗+O(ln −γ m), (1) where m and n are the meta-learning and downstream sample sizes, respectively, β∗ > 0 is the ideal downstream convergence exponent, and γ > 0 is a constant. The exponent in Eq. (1) approaches 
+
+β∗ as m → ∞ , meaning the downstream error decays faster with n as the meta-training sample size grows, which is precisely the data scaling law. 
+
+• We empirically verify that adding a norm-based complexity regularizer to standard meta-learning algorithms consistently improves downstream sample efficiency across multiple baselines and datasets. All missing proofs are left to the appendix. 
+
+# 2 Problem Formulation 
+
+Notation For a positive integer m, let [m] = {1, . . . , m }. For sequences an and bn, we write 
+
+an ≲ bn (resp. an ≳ bn) if an ≤ Cb n (resp. an ≥ Cb n) for some C > 0 and all n; an ≍ bn means both hold. For a vector x ∈ Rd and a function f : X → R, we write ∥x∥p for the ℓp-norm and ∥f ∥Lp for the 
+
+Lp-norm. We write P and E for probability and expectation. For a measurable function f : X → R
+
+and a random variable X taking values in X , we define ∥f ∥Lp(X) = ( E[|f (X)|p]) 1/p for p ∈ [1 , ∞).For a set A endowed with a metric ρ and ϵ > 0, N (ϵ, A, ρ ) denotes the ϵ-covering number of A;for A endowed with a norm ∥ · ∥ , we write N (ϵ, A, ∥ · ∥ ) = N (ϵ, A, ρ ∥·∥ ) where ρ∥·∥ (x, y ) = ∥x − y∥.Additional notation used in the proofs is collected in Appendix A. 
+
+Meta-representation learning problem Consider a representation learning problem with samples from multiple domains. Let P∗ be the set of all pairs (X, Y ) of random variables, where 
+
+X ∈ X ⊆ Rd is a feature and Y ∈ R is an outcome. Throughout, we assume E[Y |X] ∈ [0 , 1] almost surely. Let P ⊆ P ∗ denote the subset of feature-outcome pairs associated with all domains of interest, and let P ⊆ 2P∗
+
+be the collection of all possible realizations of P. The learner knows P∗ but not P.Let (X(1) , Y (1) ), . . . , (X(D), Y (D)) ∈ P be the feature-outcome pairs for D observed domains, drawn i.i.d. from a distribution over P. The learner observes m i.i.d. copies of each (X(d), Y (d)), denoted 
+
+(X(d)1 , Y (d)1 ), . . . , (X(d) 
+
+> m
+
+, Y (d) 
+
+> m
+
+). The goal is to learn a feature extractor ϕ : X → Rp that minimizes the sample complexity of learning a regressor of the form f ◦ ϕ for some f : Rp → [0 , 1] from an additional sample drawn from some (X, Y ) ∈ P , which we refer to as the downstream learning task. 
+
+Remark 1 (Intuition behind P∗ and P). The distinction between P∗ and P is central to character-izing the conditions for successful meta representation learning. We assume that a single common feature representation performs well for all domains in P, so that obtaining such a representation minimizes the sample complexity of the downstream task. In other words, P shares a common feature representation, whereas P∗ encompasses all possible feature-outcome distributions over a variety of representations. Since the learner does not know P, they do not know this common representation either. Identifying P from pre-training data is therefore valuable for reducing downstream sample complexity. 
+
+3min 
+
+> ϕ
+
+max 
+
+> d=1 ,...,D
+
+J†(d) 
+
+> n
+
+(ϕ)
+
+Domain 1 
+
+J†(1)  
+
+> n
+
+(ϕ) · · · Domain DJ†(D) 
+
+> n
+
+(ϕ)
+
+Meta-learner 
+
+Base-learners 
+
+Figure 1: Conceptual diagram of complexity minimization . Each base-learner (bottom) assesses the best model complexity J†(d) 
+
+> n
+
+(ϕ) for its domain d and reports it to the meta-learner. The meta-learner (top) selects ϕ to minimize the worst-case best model complexity over the observed domains, thereby reducing the downstream sample complexity across all domains. 
+
+Downstream regression problem In the downstream task, the learner receives an additional sample from some (X, Y ) ∈ P and a pre-trained feature extractor ϕ : X → Rp, and finds a head function f : Rp → [0 , 1] such that f ◦ ϕ is an accurate regressor for (X, Y ). Let (X1, Y 1), . . . , (Xn, Y n)
+
+be n i.i.d. copies of (X, Y ). The quality of f is measured by the expected squared error 
+
+Eϕ(f ; X, Y ) = E
+
+[
+
+(( f ◦ ϕ)( X) − Y )2]
+
+.
+
+Equivalently, f minimizes the excess error ¯Eϕ(f ; X, Y ) = ∥f ◦ ϕ − E[Y |X]∥2
+
+> L2(X)
+
+, where E[Y |X] is the Bayes optimal regressor for (X, Y ). Let fn denote the head function learned from the sample. The sample complexity of the downstream task is characterized by the rate at which ¯Eϕ(fn; X, Y )
+
+decreases as n grows. 
+
+# 3 Complexity Minimization 
+
+We propose complexity minimization (Figure 1), a meta-representation learning framework following the meta-learner/base-learner architecture of existing approaches (Finn et al. 2017; Hospedales et al. 2022; Ding et al. 2025; Wu et al. 2025). The meta-learner maintains the feature extractor ϕ as its meta-parameter (Figure 1 top); each base-learner is associated with one observed domain and evaluates ϕ by a domain-specific criterion (Figure 1 bottom). Many existing meta-learning algorithms, including MAML (Finn et al. 2017), instantiate this criterion as the downstream regression error. Our key departure is to replace the regression error with the best model complexity of the head function, which serves as a proxy for the convergence rate of the downstream excess error. Formally, let FJ be a sequence of increasing classes of head functions f : Rp → [0 , 1] , indexed by a complexity parameter J ∈ N, where model complexity (e.g., the number of non-zero weights) increases with J.Letting fn,J denote the head function learned over FJ from a downstream sample of size n, the best model complexity for domain d under ϕ is 
+
+J†(d) 
+
+> n
+
+(ϕ) = arg min 
+
+> J∈N
+
+¯Eϕ(fn,J ; X(d), Y (d)).
+
+When, for instance, the head function is truly sparse, the minimal sufficient sparsity level governs the downstream convergence rate; a smaller best model complexity therefore implies faster downstream learning. The meta-learner collects these criteria from every base-learner and selects ϕ to minimize the 4worst-case value across all observed domains: 
+
+min  
+
+> ϕ∈Φ
+
+max  
+
+> d=1 ,...,D
+
+J†(d) 
+
+> n
+
+(ϕ), (2) where Φ is a class of feature extractors. Because J†(d) 
+
+> n
+
+(ϕ) depends on the unknown downstream distribution, it must be estimated from pre-training samples in practice. This estimation step is precisely what connects complexity minimization to the data scaling law: larger pre-training samples yield more accurate complexity estimates, resulting in a smaller selected model complexity and therefore a faster downstream convergence rate across all domains in P.
+
+# 4 Provable Scaling Laws via Complexity Minimization 
+
+In this section, we present a concrete instantiation of the complexity minimization framework and establish the data scaling law for the resulting algorithm. 
+
+Downstream rate We employ a specific characterization of the downstream error rate 
+
+¯Eϕ(fn,J ; X, Y ) to build the concrete algorithm. Specifically, the downstream error is character-ized by two quantities: the approximation error and the Minkowski–Bouligand dimension. This characterization is applicable to deep neural network based estimators (Suzuki 2019a; Hayakawa et al. 2020; Schmidt-Hieber 2020; Kohler et al. 2021; Chen et al. 2022b; Imaizumi et al. 2023; Nishimura et al. 2023) and hence covers modern machine learning algorithms. We first introduce these two quantities and then present the characterization on the downstream error. Given ϕ ∈ Φ and (X, Y ) ∈ P ∗, the approximation error of the regression function under ϕ is 
+
+AJ (ϕ; X, Y ) = min  
+
+> fJ∈F J
+
+∥fJ ◦ ϕ − E[Y |X]∥2
+
+> L2(X)
+
+.
+
+The Minkowski–Bouligand dimension of a set S with respect to a norm ∥ · ∥ is defined as 
+
+dMB (S; ∥·∥ ) = lim sup 
+
+> ϵ→0
+
+ln N (ϵ, S, ∥·∥ )ln(1 /ϵ ) .
+
+Building from these definitions, we have the following theorem. 
+
+Theorem 1 (Based on Hayakawa et al. (2020) and Schmidt-Hieber (2020)) . Fix (X, Y ) ∈ P ∗
+
+and ϕ ∈ Φ. Let FJ be a sequence of increasing classes of functions f : Rp → [0 , 1] such that 
+
+dMB (FJ ; ∥·∥ L∞ ) ≤ J for any J ∈ N. Then, there is a learning algorithm fn,J such that with high probability, 
+
+¯Eϕ(fn,J ; X, Y ) ≲ AJ (ϕ; X, Y ) + J ln( n)
+
+n . (3) The convergence rate induced from Theorem 1 is determined by the decreasing rate of the approxi-mation error as J grows. For example, if AJ (ϕ; X, Y ) ≍ J−2α for some α > 0, then the convergence rate is ≍ (n/ ln n)−2α/ (2 α+1) with J ≍ (n/ ln n)1/(2 α+1) , derived by optimizing the right hand side of Eq. (3) for J. As the choice of J depends on the unknown parameter α, we refer to this rate as the oracle rate. 5Ideal downstream rate We introduce the ideal decreasing rate of the downstream error. In our analysis, we focus only on the polynomial decreasing rate of AJ .
+
+Assumption 1 (Polynomial decreasing rate of AJ ). There exists a functional α(ϕ; X, Y ) ∈ (0 , ∞) for 
+
+(X, Y ) ∈ P ∗ and ϕ ∈ Φ such that AJ (ϕ; X, Y ) ≍ J−2α(ϕ;X,Y ). Additionally, there exists a constant 
+
+¯α < ∞ such that α(ϕ; X, Y ) ≤ ¯α for any ϕ ∈ Φ and (X, Y ) ∈ P ∗.
+
+We write β(ϕ; X, Y ) = 2 α(ϕ; X, Y )/(2 α(ϕ; X, Y ) + 1) and ¯β = 2 ¯α/ (2 ¯α + 1) . From Theorem 1, 
+
+¯Eϕ(fn,J ; X, Y ) ≲ (n/ ln n)−β(ϕ;X,Y ) with appropriately chosen J for fixed ϕ and (X, Y ) ∈ P . The ideal convergence exponent for a given P ∈ P is therefore 
+
+β∗P := sup 
+
+> ϕ∈Φ
+
+inf   
+
+> (X,Y )∈P
+
+β(ϕ; X, Y ).
+
+Technical assumptions For our main theorem, we need several technical assumptions. First, we introduce an assumption about the complexity of the class of feature extractors, Φ.
+
+Assumption 2 (Complexity of Φ). There exist β0 > 0 with β0 + ¯β < 1 and γ ∈ (0 , 1] such that for any P ∈ P, for all m ≥ 1,
+
+∑  
+
+> J∈[m]: J≤m
+> ln m
+
+N (Vm,J , Φ, ρ J ) ≲ m(m/ ln m)β0
+
+,
+
+and 
+
+ln N (ln −γ m, Φ, ρ β, P ) ≲ ln m, 
+
+where ρJ (ϕ, ϕ ′) = sup f ∈F J ∥f ◦ ϕ − f ◦ ϕ′∥L∞ and ρβ, P (ϕ, ϕ ′) = sup (X,Y )∈P |β(ϕ; X, Y ) − β(ϕ′; X, Y )|.
+
+Assumption 2 requires that two types of metric entropy conditions on Φ hold simultaneously. Constructing concrete families Φ satisfying Assumption 2 is an important open problem. Next, we introduce an assumption about the distribution over the domains. 
+
+Assumption 3 (Uniform domain sampling) . For each P ∈ P, (X, Y ) ∈ P is distributed by the domain distribution. There exists ν > 0 such that for any δ > 0 and any ϕ ∈ Φ, the domain-distributed 
+
+(X′, Y ′) satisfies |β(ϕ; X, Y ) − β(ϕ; X′, Y ′)| ≤ δ with probability at least Cδ ν for some universal constant C > 0.
+
+Since the learner observes samples from only finitely many domains, these domains must collectively represent all of P for the meta-learned representation to generalize. Assumption 3 imposes a near-uniform condition on the domain distribution, ensuring that the observed domains approximately cover P in terms of β when D is sufficiently large. Lastly, we introduce a mild assumption about the noise in Y .
+
+Assumption 4 (Sub-gaussian noise) . For any (X, Y ) ∈ P ∗, conditioned on X, Y − E[Y |X] is sub-gaussian with variance proxy at most σ2; namely, for all λ ∈ R, E[ exp (λ(Y − E[Y |X])) |X] ≤ eσ2λ2/2
+
+almost surely. 
+
+Assumption 4 is a standard assumption employed in a broad literature (Suzuki 2019a; Hayakawa et al. 2020; Schmidt-Hieber 2020; Kohler et al. 2021; Chen et al. 2022b; Imaizumi et al. 2023; Nishimura et al. 2023). 6Main result We present our main theoretical result, exhibiting meta-learning and downstream algorithms that provably achieve the data scaling law. 
+
+Theorem 2 (Main theorem) . Assume Assumptions 1 to 4. There exist a meta-learning algorithm and a downstream learning algorithm such that, if ln 1+ νγ m ≲ D and ln D ≲ ln m, then with probability at least 1 − O(m−1) − O(n−1),
+
+¯E ˆϕ( ˆfn) ≲
+
+( n
+
+ln( n)
+
+)−β∗P +O( 1ln γ m )
+
+.
+
+The error rate in Theorem 2 exhibits the data scaling law: the rate at which the downstream error decreases in n improves as the meta-learning sample size m grows. To the best of our knowledge, this is the first end-to-end theoretical analysis establishing the data scaling law for pre-training. The proof constructs concrete meta-learning and downstream algorithms and establishes that both achieve the rate stated in Theorem 2. The analyses of our meta-learning and downstream algorithms for proving Theorem 2 are found in Appendix A. 
+
+## 4.1 Base-learner 
+
+Our meta-learning algorithm consists of interacting base-learner and meta-learner as described in Section 3, and in this subsection, we describe the concrete construction of the base-learner. In the complexity minimization framework, the base-learner assesses the best model complexity J†(d) 
+
+> n
+
+(ϕ).Because this quantity depends on the unknown downstream distribution, each base-learner must estimate it from pre-training samples. Our idea in estimating the best model complexity is to employ the Lepski’s method (Lepskii 1991), which selects the model complexity adaptively without knowledge of the underlying complexity parameters. 
+
+Lepski’s method Lepski’s method (Lepskii 1991) is a powerful tool for adaptive model selection in nonparametric statistics and can automatically find the optimal model complexity from a sample without prior knowledge of the underlying complexity parameters. For example, it builds estimators for nonparametric regression within smooth function classes such as Hölder, Sobolev, and Besov spaces, achieving convergence rates determined by the smoothness parameter without prior knowledge of it (Lepskii 1991; Lepski et al. 1997). We now instantiate Lepski’s method using the oracle rate from Theorem 1 with fixed ϕ and (X, Y ) ∈P∗. The idea is to estimate AJ (ϕ; X, Y ) and select J so that the estimated AJ and the term J ln( n)
+
+> n
+
+are balanced. Let f ∗  
+
+> Y|X,ϕ,J
+
+be the best regressor in FJ such that 
+
+∥∥∥f ∗  
+
+> Y|X,ϕ,J
+
+◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+= min  
+
+> fJ∈F J
+
+∥fJ ◦ ϕ − E[Y |X]∥2
+
+> L2(X)
+
+,
+
+where f ∗  
+
+> Y|X,ϕ,J
+
+is an arbitrary one if the tie occurs. We omit the first and second subscripts to denote 
+
+f ∗ 
+
+> J
+
+if (X, Y ) and ϕ are clear from the context. Then, the algorithm selects J following the Lepski’s rule, defined as 
+
+J∗
+
+> n
+
+(ϕ; X, Y ) = min 
+
+{
+
+J ∈ [m] : ∀J ≤ J′ ≤ m
+
+ln m , ∥f ∗ 
+
+> J
+
+◦ ϕ − f ∗ 
+
+> J′
+
+◦ ϕ∥2 
+
+> L2(X)
+
+≤ ρV n,J ′
+
+}
+
+, (4) where Vn,J = J ln( n) 
+
+> n
+
+is referred to as a variance term or a majorant, and ρ > 0 is a constant chosen as specified in the analyses. The intuition behind the Lepski’s rule is that if f ∗ 
+
+> J
+
+sufficiently approximates the regression function, then increasing J does not significantly deviate f ∗ 
+
+> J
+
+up to the variance. 7Empirical estimation The base-learner for domain d estimates the Lepski rule value 
+
+J∗
+
+> m
+
+(ϕ; X(d), Y (d)) from Eq. (4) as a proxy for the best model complexity J†(d) 
+
+> n
+
+(ϕ) from Eq. (2). For each J, a sieved least-squares estimator is computed, yielding the regressor 
+
+ˆf (d) 
+
+> m,J
+
+= arg min  
+
+> fJ∈F J
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+(fJ ◦ ϕ)( X(d) 
+
+> i
+
+) − Y (d)
+
+> i
+
+)2
+
+.
+
+Then, the estimated complexity is obtained as 
+
+ˆJ(d)(ϕ) = min 
+
+{
+
+J ∈ [m] : ∀J ≤ J′ ≤ m
+
+ln m ,
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆf (d) 
+
+> m,J
+
+◦ ϕ)
+
+(
+
+X(d)
+
+> i
+
+)
+
+− ( ˆf (d) 
+
+> m,J ′
+
+◦ ϕ)
+
+(
+
+X(d)
+
+> i
+
+)) 2
+
+≤ ρV m,J ′
+
+}
+
+.
+
+## 4.2 Meta-learner 
+
+The meta-learner collects the estimated complexity ˆJ(d)(ϕ) from all D base-learners and selects 
+
+ϕ to minimize the worst-case estimated complexity, forming the empirical counterpart of Eq. (2). Specifically, the estimated feature extractor is defined as 
+
+ˆϕ = arg min 
+
+> ϕ∈Φ
+
+max 
+
+> d∈[D]
+
+ˆJ(d)(ϕ). (5) Minimizing the worst case ensures that ˆϕ simultaneously reduces the estimated downstream complexity across all observed domains, yielding a feature extractor whose downstream performance generalizes uniformly over P.
+
+## 4.3 Downstream Algorithm 
+
+At downstream time, we again carry out Lepski’s method to construct the learned regressor. Specifi-cally, define 
+
+ˆfn,J = arg min  
+
+> fJ∈F J
+
+1
+
+n
+
+> n
+
+∑
+
+> i=1
+
+(
+
+(fJ ◦ ˆϕ)( Xi) − Yi
+
+)2
+
+.
+
+Then, the complexity is estimated as 
+
+ˆJn = min 
+
+{
+
+J ∈ [n] : ∀J ≤ J′ ≤ n
+
+ln n , 1
+
+n
+
+> n
+
+∑
+
+> i=1
+
+(
+
+( ˆfn,J ◦ ˆϕ)( Xi) − ( ˆfn,J ′ ◦ ˆϕ)( Xi)
+
+)2
+
+≤ ρV n,J ′
+
+}
+
+.
+
+Consequently, the learned regressor is given by ˆfn = ˆfn, ˆJn .
+
+# 5 Experiments 
+
+We empirically validate the effect of complexity minimization by adding a complexity regularization term to meta-learning algorithms. The experiments demonstrate how the pre-training size m affects the downstream scaling behavior in terms of the fine-tuning size n. Four representative meta-learning 810 2 10 3                
+
+> n(fine-tune size)
+> 3 × 10 1
+> 4 × 10 1
+> 6 × 10 1
+> test error rate
+> MAML (FO)
+> 10 210 3
+> n(fine-tune size)
+> MAML (SO)
+> 10 210 3
+> n(fine-tune size)
+> ProtoNet
+> 10 210 3
+> n(fine-tune size)
+> R2D2
+> Spectral Baseline m=8,000 m=16,000 m=24,000 m=32,000 m=40,000
+
+Figure 2: Regularizing model complexity (parameter spectral norms) improves down-stream sample efficiency. Test error rate on CIFAR-10 (log scale) vs. fine-tuning size ( n, log scale) with different pre-training size m for four meta-learning algorithms trained on Mini-ImageNet in the 5-way 1-shot setting with and without model complexity regularization. algorithms are adopted, which are discussed in Section 6: first- and second-order MAML (Finn et al. 2017), Prototypical Networks (Snell et al. 2017), and R2-D2 (Bertinetto et al. 2019). The meta-losses of these algorithms are augmented with a spectral norm-based regularizer on the model parameters. Further experimental details are described in Appendix C. Figure 2 reports the downstream test error rates on CIFAR-10 (Krizhevsky 2009) for a CNN, whose feature extractor is pre-trained with each meta-learning algorithm on Mini-ImageNet (Ravi et al. 2017) with m samples in the 5-way 1-shot setting and then fine-tuned on a subset of the CIFAR-10 training dataset with n samples. Regularizing the spectral norm of the parameters as a measure of model complexity yields a clear improvement in downstream performance. Additional experiments in Appendix C show that complexity minimization works on other datasets and meta-learning settings, and regularizing other norms, such as the ℓ1 norm, also improves downstream sample efficiency. Together, these algorithm-agnostic results provide empirical support for our theoretical claims. 
+
+# 6 Related Work 
+
+In this section, we briefly review prior works closely related to our study. A more comprehensive literature survey is provided in Appendix D. 
+
+Meta-Learning Methodologies. Meta-learning aims to acquire a learning procedure that can rapidly adapt to unseen tasks from limited samples by exploiting experiences from a collection of past tasks drawn from a task distribution (Wang et al. 2020; Hospedales et al. 2021). A standard taxonomy divides meta-learning methods into metric-based, optimization-based, and model-based approaches. 
+
+Metric-based methods classify queries by proximity, attention, or comparison in an embedding space. Representative examples include Matching Networks, which introduced one-shot classification via attention over a support set and formalized episodic training (Vinyals et al. 2016); Prototypical Networks, which classify queries by distances to class-wise mean embeddings and provide a clear view of meta-representation learning (Snell et al. 2017); and Relation Networks, which learn the comparison function itself using a neural network (Sung et al. 2018). Optimization-based methods learn an initialization, update rule, or inner-loop adaptation mechanism such that a few optimization steps on a new task yield strong performance. MAML established a model-agnostic framework based on inner-loop gradient descent and outer-loop optimization of post-adaptation performance (Finn et al. 2017). Meta-SGD further learns the initialization, update directions, and learning rates (Li et al. 2017). 9R2-D2 replaces iterative inner-loop adaptation with a differentiable closed-form ridge-regression base learner on top of learned embeddings, occupying an intermediate position between metric-based classifiers and gradient-based adaptation methods (Bertinetto et al. 2019). Model-based methods 
+
+implement adaptation within the network architecture itself, using memory, hypernetworks, or learned optimizers. Memory-Augmented Neural Networks use external memory for rapid one/few-shot adaptation (Santoro et al. 2016), while learning-to-learn approaches such as Optimization as a Model learn update rules using recurrent architectures (Hochreiter et al. 2001; Andrychowicz et al. 2016; Ravi et al. 2017). SNAIL further combines temporal convolutions and attention as a general-purpose meta-learner across supervised and reinforcement learning domains (Mishra et al. 2017). 
+
+Meta-Representation Learning: Sharing Representations Across Tasks Meta-learning is closely related to transfer learning, since both transfer information from previous tasks to unseen ones (Pan et al. 2009). Representation learning motivates the acquisition of shared latent features that facilitate learning across tasks (Bengio et al. 2013), and meta-representation learning specializes such shared representations for few-shot task adaptation with statistical and computational efficiency. Classically, Baxter’s inductive bias learning model formalized meta-generalization as learning a good hypothesis space from multiple tasks sampled from a task environment (Baxter 2000). Subsequent work on Multi-Task Representation Learning established generalization bounds showing the benefit of learning low-dimensional dictionaries or feature maps shared across tasks (Maurer et al. 2013, 2016). More recent theory studies sample-efficient estimation and transfer of shared low-dimensional linear representations across linear regression tasks (Tripuraneni et al. 2021), as well as the role of overparameterization in enabling few-shot adaptation with large-scale models (Sun et al. 2021). 
+
+Learning Theory of (Deep) Meta-Learning Learning theory for meta-learning must han-dle a dual-sampling structure: tasks are sampled from a task distribution, and data points are sampled within each task (Baxter 2000; Hospedales et al. 2021). Recent studies typically decom-pose excess risk into statistical estimation, optimization, and approximation errors, often through the meta-generalization gap between the expected risk on unseen tasks and the empirical meta-objective (Rezazadeh 2022; Wang et al. 2024). This line of work has clarified how representation sharing and the number of inner-loop adaptation steps affect sample efficiency and stability (Chen et al. 2022a; Huang et al. 2022). Several theoretical frameworks have been developed. Algorith-mic stability, including meta-stability for both inner and outer loops, yields realistic bounds for gradient-based and non-convex meta-learning algorithms (Bousquet et al. 2002; Wang et al. 2024). PAC-Bayes theory introduces hierarchical meta-priors and task-specific posteriors to obtain bounds depending on both the number of tasks and within-task sample size (Pentina et al. 2014; Amit et al. 2018; Rezazadeh 2022). Information-theoretic analyses bound generalization via mutual information between algorithm outputs and data (Chen et al. 2021). Uniform convergence remains a classical approach, but its bounds are often loose for deep learning and meta-learning, motivating the recent shift toward data-dependent analyses (Nagarajan et al. 2019). Crucially, these results may not explain the data scaling law for pre-training, as their error rates with respect to the downstream sample size are independent of the pre-training sample size. 
+
+# 7 Conclusion 
+
+We introduced complexity minimization, a meta representation learning framework that provably achieves the data scaling law for pre-training. The framework instructs each base-learner to estimate 10 the best model complexity for its domain via Lepski’s method, and the meta-learner selects the feature extractor that minimizes the worst-case complexity across all observed domains. Our end-to-end theoretical analysis establishes that the downstream excess error decays faster with the downstream sample size n as the meta-training size m grows, formally capturing the data scaling law. Empirically, augmenting standard meta-learning algorithms with a norm-based complexity regularizer consistently improves downstream sample efficiency across multiple algorithms and datasets, supporting the theoretical claims. 
+
+Limitations and broader impacts While the complexity assumptions on Φ in Assumption 2 are reasonable, exhibiting a concrete class Φ that satisfies them remains open, and constructing such feature families is an important direction for future work. Our theoretical analysis likewise focuses on regression; extending it to classification and structured prediction remains open. We build on standard meta-learning and do not propose a qualitatively new paradigm with novel direct societal risks. As in broader work on large-scale pre-training and foundation models, familiar considerations regarding computational cost and equitable access to data and compute nonetheless apply. 
+
+Acknowledgments 
+
+This work was partly supported by JSPS KAKENHI Grant Numbers JP26K02874 and JP23H00483 to K.F., JP23K28146, JP24K20836 and 25K03086 to K.M, and JST BOOST Grant Number JP-MJBY24G2 to R.H. 
+
+# References 
+
+Lepskii, O. V. (1991). On a Problem of Adaptive Estimation in Gaussian White Noise. In: Theory of Probability & Its Applications 35.3, pp. 454–466. issn : 0040-585X. doi : 10.1137/1135065 .Lepski, O. V., E. Mammen, and V. G. Spokoiny (1997). Optimal Spatial Adaptation to Inhomogeneous Smoothness: An Approach Based on Kernel Estimates with Variable Bandwidth Selectors. In: The Annals of Statistics 25.3, pp. 929–947. issn : 0090-5364, 2168-8966. doi : 10.1214/aos/1069362731 .Baxter, Jonathan (2000). A model of inductive bias learning. In: Journal of artificial intelligence research 12, pp. 149–198. Hochreiter, Sepp, A Steven Younger, and Peter R Conwell (2001). Learning to learn using gradient descent. In: International conference on artificial neural networks . Springer, pp. 87–94. Bousquet, Olivier and André Elisseeff (2002). Stability and generalization. In: Journal of machine learning research 2.Mar, pp. 499–526. Krizhevsky, Alex (2009). Learning multiple layers of features from tiny images . Tech. rep. University of Toronto. Pan, Sinno Jialin and Qiang Yang (2009). A survey on transfer learning. In: IEEE Transactions on knowledge and data engineering 22.10, pp. 1345–1359. Netzer, Yuval, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, and Andrew Y. Ng (2011). Reading digits in natural images with unsupervised feature learning. In: NeurIPS Workshop on Deep Learning and Unsupervised Feature Learning .Bengio, Yoshua, Aaron Courville, and Pascal Vincent (2013). Representation learning: A review and new perspectives. In: IEEE transactions on pattern analysis and machine intelligence 35.8, pp. 1798–1828. Maurer, Andreas, Massi Pontil, and Bernardino Romera-Paredes (2013). Sparse coding for multitask and transfer learning. In: International conference on machine learning . PMLR, pp. 343–351. 11 Pentina, Anastasia and Christoph Lampert (2014). A PAC-Bayesian bound for lifelong learning. In: 
+
+International Conference on Machine Learning . PMLR, pp. 991–999. Kingma, Diederik P. and Jimmy Ba (2015). Adam: a method for stochastic optimization. In: 
+
+International Conference on Learning Representations .Lake, Brenden M., Ruslan Salakhutdinov, and Joshua B. Tenenbaum (2015). Human-level concept learning through probabilistic program induction. In: Science 350.6266, pp. 1332–1338. Andrychowicz, Marcin, Misha Denil, Sergio Gomez, Matthew W Hoffman, David Pfau, Tom Schaul, Brendan Shillingford, and Nando De Freitas (2016). Learning to learn by gradient descent by gradient descent. In: Advances in neural information processing systems 29. Maurer, Andreas, Massimiliano Pontil, and Bernardino Romera-Paredes (2016). The benefit of multitask representation learning. In: Journal of Machine Learning Research 17.81, pp. 1–32. Santoro, Adam, Sergey Bartunov, Matthew Botvinick, Daan Wierstra, and Timothy Lillicrap (2016). Meta-learning with memory-augmented neural networks. In: International conference on machine learning . PMLR, pp. 1842–1850. Vinyals, Oriol, Charles Blundell, Timothy Lillicrap, Daan Wierstra, et al. (2016). Matching networks for one shot learning. In: Advances in neural information processing systems 29. Bartlett, Peter L, Dylan J Foster, and Matus J Telgarsky (2017). Spectrally-normalized margin bounds for neural networks. In: Advances in neural information processing systems 30. Finn, Chelsea, Pieter Abbeel, and Sergey Levine (2017). Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks. In: Proceedings of the 34th International Conference on Machine Learning . PMLR, pp. 1126–1135. Hestness, Joel, Sharan Narang, Newsha Ardalani, Gregory Diamos, Heewoo Jun, Hassan Kianinejad, Md Mostofa Ali Patwary, Yang Yang, and Yanqi Zhou (2017). Deep learning scaling is predictable, empirically. In: arXiv:1712.00409 .Li, Zhenguo, Fengwei Zhou, Fei Chen, and Hang Li (2017). Meta-sgd: Learning to learn quickly for few-shot learning. In: arXiv:1707.09835 .Mishra, Nikhil, Mostafa Rohaninejad, Xi Chen, and Pieter Abbeel (2017). A simple neural attentive meta-learner. In: arXiv:1707.03141 .Ravi, Sachin and Hugo Larochelle (2017). Optimization as a model for few-shot learning. In: Interna-tional conference on learning representations .Snell, Jake, Kevin Swersky, and Richard Zemel (2017). Prototypical networks for few-shot learning. In: Advances in neural information processing systems 30. Yarotsky, Dmitry (2017). Error bounds for approximations with deep ReLU networks. In: Neural networks 94, pp. 103–114. Zhang, Chiyuan, Samy Bengio, Moritz Hardt, Benjamin Recht, and Oriol Vinyals (2017). Under-standing deep learning requires rethinking generalization. In: International Conference on Learning Representations .Amit, Ron and Ron Meir (2018). Meta-learning by adjusting priors based on extended PAC-Bayes theory. In: International Conference on Machine Learning . PMLR, pp. 205–214. Bradbury, James et al. (2018). JAX: composable transformations of Python + NumPy programs .
+
+http://github.com/jax-ml/jax . Version 0.4. Jacot, Arthur, Franck Gabriel, and Clément Hongler (2018). Neural tangent kernel: Convergence and generalization in neural networks. In: Advances in neural information processing systems 31. Mei, Song, Andrea Montanari, and Phan-Minh Nguyen (2018). A mean field view of the landscape of two-layer neural networks. In: Proceedings of the National Academy of Sciences 115.33, E7665– E7671. 12 Neyshabur, Behnam, Srinadh Bhojanapalli, and Nathan Srebro (2018). A PAC-Bayesian Approach to Spectrally-Normalized Margin Bounds for Neural Networks. In: International Conference on Learning Representations .Nichol, Alex, Joshua Achiam, and John Schulman (2018). On first-order meta-learning algorithms. In: arXiv:1803.02999 .Sung, Flood, Yongxin Yang, Li Zhang, Tao Xiang, Philip HS Torr, and Timothy M Hospedales (2018). Learning to compare: Relation network for few-shot learning. In: Proceedings of the IEEE conference on computer vision and pattern recognition , pp. 1199–1208. Allen-Zhu, Zeyuan, Yuanzhi Li, and Zhao Song (2019). A convergence theory for deep learning via over-parameterization. In: International conference on machine learning . PMLR, pp. 242–252. Belkin, Mikhail, Daniel Hsu, Siyuan Ma, and Soumik Mandal (2019). Reconciling modern machine-learning practice and the classical bias–variance trade-off. In: Proceedings of the National Academy of Sciences 116.32, pp. 15849–15854. Bertinetto, Luca, Joao F. Henriques, Philip Torr, and Andrea Vedaldi (2019). Meta-learning with differentiable closed-form solvers. In: International Conference on Learning Representations .Chizat, Lenaic, Edouard Oyallon, and Francis Bach (2019). On lazy training in differentiable programming. In: Advances in neural information processing systems 32. Devlin, Jacob, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova (2019). Bert: Pre-training of deep bidirectional transformers for language understanding. In: Proceedings of the 2019 conference of the North American chapter of the association for computational linguistics: human language technologies, volume 1 (long and short papers) , pp. 4171–4186. Du, Simon S, Xiyu Zhai, Barnabas Poczos, and Aarti Singh (2019). Gradient descent provably optimizes over-parameterized neural networks. In: International Conference on Learning Represen-tations .Nagarajan, Vaishnavh and J Zico Kolter (2019). Uniform convergence may be unable to explain generalization in deep learning. In: Advances in neural information processing systems 32. Oono, Kenta and Taiji Suzuki (2019). Approximation and non-parametric estimation of ResNet-type convolutional neural networks. In: International conference on machine learning . PMLR, pp. 4922– 4931. Rajeswaran, Aravind, Chelsea Finn, Sham M Kakade, and Sergey Levine (2019). Meta-learning with implicit gradients. In: Advances in neural information processing systems 32. Saunshi, Nikunj, Orestis Plevrakis, Sanjeev Arora, Mikhail Khodak, and Hrishikesh Khandeparkar (2019). A theoretical analysis of contrastive unsupervised representation learning. In: International conference on machine learning . PMLR, pp. 5628–5637. Suzuki, Taiji (2019a). Adaptivity of Deep ReLU Network for Learning in Besov and Mixed Smooth Besov Spaces: Optimal Rate and Curse of Dimensionality. In: International Conference on Learning Representations .– (2019b). Adaptivity of deep ReLU network for learning in Besov and mixed smooth Besov spaces: optimal rate and curse of dimensionality. In: International Conference on Learning Representations .Brown, Tom et al. (2020). Language models are few-shot learners. In: Advances in neural information processing systems 33, pp. 1877–1901. DeepMind et al. (2020). The DeepMind JAX Ecosystem . http://github.com/google-deepmind .Du, Simon Shaolei, Wei Hu, Sham M. Kakade, Jason D. Lee, and Qi Lei (2020). Few-Shot Learning via Learning the Representation, Provably. In: International Conference on Learning Representations .Hayakawa, Satoshi and Taiji Suzuki (2020). On the Minimax Optimality and Superiority of Deep Neural Network Learning over Sparse Parameter Spaces. In: Neural Networks 123, pp. 343–361. 
+
+issn : 0893-6080. doi : 10.1016/j.neunet.2019.12.014 .13 Henighan, Tom et al. (2020). Scaling Laws for Autoregressive Generative Modeling . doi : 10.48550/ arXiv . 2010 . 14701 . arXiv: 2010 . 14701 [cs] . url : http : / / arxiv . org / abs / 2010 . 14701 .Pre-published. Kaplan, Jared et al. (2020a). Scaling Laws for Neural Language Models . doi : 10.48550/arXiv.2001. 08361 . arXiv: 2001.08361 [cs] . url : http://arxiv.org/abs/2001.08361 . Pre-published. – (2020b). Scaling laws for neural language models. In: arXiv:2001.08361 .Schmidt-Hieber, Johannes (2020). Nonparametric Regression Using Deep Neural Networks with ReLU Activation Function. In: The Annals of Statistics 48.4, pp. 1875–1897. issn : 0090-5364, 2168-8966. doi : 10.1214/19-AOS1875 .Sirignano, Justin and Konstantinos Spiliopoulos (2020). Mean field analysis of neural networks: A law of large numbers. In: SIAM Journal on Applied Mathematics 80.2, pp. 725–752. Wang, Yaqing, Quanming Yao, James T Kwok, and Lionel M Ni (2020). Generalizing from a few examples: A survey on few-shot learning. In: ACM computing surveys (csur) 53.3, pp. 1–34. Woodworth, Blake, Suriya Gunasekar, Jason D Lee, Edward Moroshko, Pedro Savarese, Itay Golan, Daniel Soudry, and Nathan Srebro (2020). Kernel and rich regimes in overparametrized models. In: Conference on Learning Theory . PMLR, pp. 3635–3673. Chen, Qi, Changjian Shui, and Mario Marchand (2021). Generalization bounds for meta-learning: An information-theoretic analysis. In: Advances in Neural Information Processing Systems 34, pp. 25878–25890. HaoChen, Jeff Z, Colin Wei, Adrien Gaidon, and Tengyu Ma (2021). Provable guarantees for self-supervised deep learning with spectral contrastive loss. In: Advances in neural information processing systems 34, pp. 5000–5011. Hernandez, Danny, Jared Kaplan, Tom Henighan, and Sam McCandlish (2021). Scaling laws for transfer. In: arXiv:2102.01293 .Hospedales, Timothy, Antreas Antoniou, Paul Micaelli, and Amos Storkey (2021). Meta-learning in neural networks: A survey. In: IEEE transactions on pattern analysis and machine intelligence 
+
+44.9, pp. 5149–5169. Jumper, John et al. (2021). Highly accurate protein structure prediction with AlphaFold. In: nature 
+
+596.7873, pp. 583–589. Kidger, Patrick and Cristian Garcia (2021). Equinox: neural networks in JAX via callable PyTrees and filtered transformations. In: Differentiable Programming Workshop at Neural Information Processing Systems . arXiv: 2111.00254 [cs.LG] .Kohler, Michael and Sophie Langer (2021). On the Rate of Convergence of Fully Connected Deep Neural Network Regression Estimates. In: The Annals of Statistics 49.4, pp. 2231–2249. issn :0090-5364, 2168-8966. doi : 10.1214/20-AOS2034 .Nakkiran, Preetum, Gal Kaplun, Yamini Bansal, Tristan Yang, Boaz Barak, and Ilya Sutskever (2021). Deep double descent: Where bigger models and more data hurt. In: Journal of Statistical Mechanics: Theory and Experiment 2021.12, p. 124003. Radford, Alec et al. (2021). Learning transferable visual models from natural language supervision. In: International conference on machine learning . PmLR, pp. 8748–8763. Sun, Yue, Adhyyan Narang, Ibrahim Gulluk, Samet Oymak, and Maryam Fazel (2021). Towards sample-efficient overparameterized meta-learning. In: Advances in Neural Information Processing Systems 34, pp. 28156–28168. Tripuraneni, Nilesh, Chi Jin, and Michael Jordan (2021). Provable meta-learning of linear representa-tions. In: International conference on machine learning . PMLR, pp. 10434–10443. Ba, Jimmy, Murat A Erdogdu, Taiji Suzuki, Zhichao Wang, Denny Wu, and Greg Yang (2022). High-dimensional asymptotics of feature learning: How one gradient step improves the representation. In: Advances in Neural Information Processing Systems 35, pp. 37932–37946. 14 Brohan, Anthony et al. (2022). Rt-1: Robotics transformer for real-world control at scale. In: arXiv preprint arXiv:2212.06817 .Chen, Lisha, Songtao Lu, and Tianyi Chen (2022a). Understanding benign overfitting in gradient-based meta learning. In: Advances in neural information processing systems 35, pp. 19887–19899. Chen, Minshuo, Haoming Jiang, Wenjing Liao, and Tuo Zhao (2022b). Nonparametric Regression on Low-Dimensional Manifolds Using Deep ReLU Networks: Function Approximation and Statistical Recovery. In: Information and Inference: A Journal of the IMA 11.4, pp. 1203–1253. issn : 2049-8772. 
+
+doi : 10.1093/imaiai/iaac001 .Collins, Liam, Aryan Mokhtari, Sewoong Oh, and Sanjay Shakkottai (2022). MAML and ANIL Provably Learn Representations. In: Proceedings of the 39th International Conference on Machine Learning . PMLR, pp. 4238–4310. Hoffmann, Jordan et al. (2022). Training Compute-Optimal Large Language Models. In: Advances in Neural Information Processing Systems .Hospedales, Timothy, Antreas Antoniou, Paul Micaelli, and Amos Storkey (2022). Meta-Learning in Neural Networks: A Survey. In: IEEE Transactions on Pattern Analysis and Machine Intelligence 
+
+44.09, pp. 5149–5169. issn : 0162-8828. doi : 10.1109/TPAMI.2021.3079209 .Huang, Yu, Yingbin Liang, and Longbo Huang (2022). Provable generalization of overparameterized meta-learning trained with sgd. In: Advances in Neural Information Processing Systems 35, pp. 16563–16576. Mikami, Hiroaki, Kenji Fukumizu, Shogo Murai, Shuji Suzuki, Yuta Kikuchi, Taiji Suzuki, Shin-ichi Maeda, and Kohei Hayashi (2022). A Scaling Law for Syn2real Transfer: How Much Is Your Pre-training Effective? In: Joint European Conference on Machine Learning and Knowledge Discovery in Databases . Springer, pp. 477–492. Rezazadeh, Arezou (2022). A unified view on pac-bayes bounds for meta-learning. In: International Conference on Machine Learning . PMLR, pp. 18576–18595. Bai, Yu, Fan Chen, Huan Wang, Caiming Xiong, and Song Mei (2023). Transformers as Statisticians: Provable In-Context Learning with In-Context Algorithm Selection. In: Advances in Neural Information Processing Systems . Vol. 36, pp. 57125–57211. Imaizumi, Masaaki and Johannes Schmidt-Hieber (2023). On Generalization Bounds for Deep Networks Based on Loss Surface Implicit Regularization. In: IEEE Transactions on Information Theory 69.2, pp. 1203–1223. issn : 1557-9654. doi : 10.1109/TIT.2022.3215088 .Kirillov, Alexander et al. (2023). Segment anything. In: Proceedings of the IEEE/CVF international conference on computer vision , pp. 4015–4026. Li, Yingcong, Muhammed Emrullah Ildiz, Dimitris Papailiopoulos, and Samet Oymak (2023). Transformers as Algorithms: Generalization and Stability in In-context Learning. In: Proceedings of the 40th International Conference on Machine Learning . PMLR, pp. 19565–19594. Nishimura, Yuto and Taiji Suzuki (2023). Minimax Optimality of Convolutional Neural Networks for Infinite Dimensional Input-Output Problems and Separation from Kernel Methods. In: The Twelfth International Conference on Learning Representations .Oko, Kazusato, Shunta Akiyama, and Taiji Suzuki (2023). Diffusion models are minimax optimal distribution estimators. In: International Conference on Machine Learning . PMLR, pp. 26517– 26582. Singhal, Karan et al. (2023). Large language models encode clinical knowledge. In: Nature 620.7972, pp. 172–180. Suzuki, Taiji, Denny Wu, Kazusato Oko, and Atsushi Nitanda (2023). Feature learning via mean-field langevin dynamics: classifying sparse parities and beyond. In: Advances in Neural Information Processing Systems 36, pp. 34536–34556. 15 Takakura, Shokichi and Taiji Suzuki (2023). Approximation and estimation ability of transformers for sequence-to-sequence functions with infinite dimensional input. In: International Conference on Machine Learning . PMLR, pp. 33416–33447. Aliakbarpour, Maryam, Konstantina Bairaktari, Gavin Brown, Adam Smith, Nathan Srebro, and Jonathan Ullman (2024). Metalearning with very few samples per task. In: The Thirty Seventh Annual Conference on Learning Theory . PMLR, pp. 46–93. Bahri, Yasaman, Ethan Dyer, Jared Kaplan, Jaehoon Lee, and Utkarsh Sharma (2024). Explaining neural scaling laws. In: Proceedings of the National Academy of Sciences 121.27, e2311878121. Kim, Juno, Tai Nakamaki, and Taiji Suzuki (2024). Transformers Are Minimax Optimal Nonpara-metric In-Context Learners. In: Advances in Neural Information Processing Systems . Vol. 37, pp. 106667–106713. Wang, Yunjuan and Raman Arora (2024). On the stability and generalization of meta-learning. In: 
+
+Advances in Neural Information Processing Systems 37, pp. 83665–83710. Block, Jacob L., Sundararajan Srinivasan, Liam Collins, Aryan Mokhtari, and Sanjay Shakkot-tai (2025). Provable Meta-Learning with Low-Rank Adaptations. In: The Thirty-ninth Annual Conference on Neural Information Processing Systems .Bordelon, Blake, Alexander Atanasov, and Cengiz Pehlevan (2025). How feature learning can improve neural scaling laws. In: Journal of Statistical Mechanics: Theory and Experiment 2025.8, p. 084002. Ding, Wenjun, Jingling Liu, Lixing Chen, Xiu Su, Tao Sun, Fan Wu, and Zhe Qu (2025). On the Stability and Generalization of Meta-Learning: The Impact of Inner-Levels. In: The Thirty-ninth Annual Conference on Neural Information Processing Systems .Lourie, Nicholas, Michael Y. Hu, and Kyunghyun Cho (2025). Scaling Laws Are Unreliable for Downstream Tasks: A Reality Check. In: Findings of the Association for Computational Linguistics: EMNLP 2025 . Ed. by Christos Christodoulopoulos, Tanmoy Chakraborty, Carolyn Rose, and Violet Peng. Suzhou, China: Association for Computational Linguistics, pp. 16167–16180. isbn :979-8-89176-335-7. doi : 10.18653/v1/2025.findings-emnlp.877 .Nishikawa, Naoki, Yujin Song, Kazusato Oko, Denny Wu, and Taiji Suzuki (2025). Nonlinear transformers can perform inference-time feature learning. In: Forty-second International Conference on Machine Learning .Wu, Shiguang, Yaqing Wang, Yatao Bian, and Quanming Yao (2025). Learning to Learn with Contrastive Meta-Objective. In: The Thirty-ninth Annual Conference on Neural Information Processing Systems .Fukuchi, Kazuto, Ryuichiro Hataya, and Kota Matsui (2026). Provable Target Sample Complexity Improvements as Pre-Trained Models Scale. In: The 29th International Conference on Artificial Intelligence and Statistics .
+
+# A Analyses 
+
+Additional notations We fix a common probability space (Ω , F, μ ) and identify all random variables with measurable maps on it. For a random variable X : Ω → R, we set ∥X∥p = ( E[|X|p]) 1/p 
+
+for p ∈ [1 , ∞) and ∥X∥∞ = inf {C > 0 : P[|X| ≤ C] = 1 }. For a measurable function f : X → R and a random variable X on X , we set ∥f ∥L∞(X) = inf {C > 0 : P[|f (X)| ≤ C] = 1 }. For a set A, |A|
+
+denotes its cardinality; 1 denotes the indicator function. For real values a, b , define a ∨ b = max {a, b }
+
+and a ∧ b = min {a, b }.We write α∗P = sup ϕ∈Φ inf (X,Y )∈P α(ϕ; X, Y ), αP (ϕ) = inf (X,Y )∈P α(ϕ; X, Y ), and βP (ϕ) =inf (X,Y )∈P β(ϕ; X, Y ).16 Given a function h : X → R and k ∈ N, define the empirical Lp(X) norm of h for p ∈ [1 , ∞) and a random variable X ∈ X by 
+
+∥h∥pLpk (X) = 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+hp(Xi),
+
+where X1, . . . , X k are i.i.d. copies of X. Given two random variables X, Y ∈ R and k ∈ N, we use the empirical inner product and the empirical Lp norm of X for p ∈ [1 , ∞] defined as 
+
+⟨X, Y ⟩k = 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+XiYi and ∥X∥pLpk
+
+= 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+Xpi ,
+
+where (X1, Y 1), . . . , (Xk, Y k) are i.i.d. copies of (X, Y ). Let 
+
+BJ,J ′ (ϕ; X, Y ) = ∥f ∗ 
+
+> J
+
+◦ ϕ − f ∗ 
+
+> J′
+
+◦ ϕ∥2 
+
+> L2(X)
+
+and ˆBJ,J ′ (ϕ; X, Y ) = 
+
+∥∥∥ ˆfJ ◦ ϕ − ˆfJ′ ◦ ϕ
+
+∥∥∥2
+
+> L2
+> m(X)
+
+,
+
+where we refer to these quantities as bias terms. Given a feature extractor ϕ and k ∈ N, the ideal and empirical best complexities are defined as 
+
+J∗ 
+
+> k
+
+(ϕ) = sup  
+
+> (X,Y )∈P
+
+J∗ 
+
+> k
+
+(ϕ; X, Y ) and ˆJk(ϕ) = max 
+
+> d∈[D]
+
+ˆJk(ϕ; X(d), Y (d)).
+
+Here, ˆJk(ϕ; X, Y ) (two arguments) denotes the empirical Lepski complexity for a specific domain 
+
+(X, Y ) and sample size k, as in Theorem A.3, while ˆJk(ϕ) (one argument) is its worst-case value over the observed domains. The ideal feature extractor ϕ∗ is such that J∗
+
+> m
+
+(ϕ∗) = inf ϕ∈Φ J∗
+
+> m
+
+(ϕ) and the estimated extractor ˆϕ satisfies ˆJm( ˆϕ) = min ϕ∈Φ ˆJm(ϕ), consistent with Eq. (5). We define the empirical counterpart of f ∗  
+
+> Y|X,ϕ,J
+
+as 
+
+ˆfY |X,ϕ,k,J = arg min  
+
+> fJ∈F J
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+(( fJ ◦ ϕ)( Xi) − Yi)2,
+
+where (X1, Y 1), . . . , (Xk, Y k) are i.i.d. copies of (X, Y ). We also omit the first and second subscripts in ˆfY |X,ϕ,k,J if (X, Y ) and ϕ are clear from the context. 
+
+Meta-learning and downstream learning analyses We analyze the proposed meta-learning and downstream learning algorithms and establish the performance guarantees. Specifically, we show the following two theorems corresponding to meta-learning and downstream learning, respectively. 
+
+Theorem A.1 (Meta-learning performance guarantee) . Assume Assumptions 1 to 4. Suppose that 
+
+ln 1+ νγ m ≲ D and ln D ≲ ln m. For any P ∈ P, the feature extractor ˆϕ in Eq. (5) satisfies that there exists a constant C > 0 such that with probability at least 1 − O(m−1),
+
+βP ( ˆϕ) ≥ β∗P − C
+
+ln γ m .
+
+Theorem A.2 (Downstream learning performance guarantee) . Let P ∈ P be the target distribution. Suppose that the learned feature extractor ˆϕ is independent of the downstream sample. Assume Assumption 1. Then, the learned regressor ˆfn in Section 4.3 satisfies that with probability at least 
+
+1 − n−1,
+
+¯E ˆϕ( ˆfn) ≲ (n/ ln n)−βP ( ˆϕ).
+
+17 Combining Theorem A.1 and Theorem A.2 immediately leads to the main theorem Theorem 2. To prove Theorems A.1 and A.2, we first derive an error bound on the best complexity estimator ˆJm
+
+with a fixed feature extractor ϕ in Appendix A.1. Then, we extend it to the learned feature extractor 
+
+ˆϕ in Appendix A.3. Building from these analyses, we prove Theorems A.1 and A.2 in Appendix A.4 by appropriately handling the effect of finite observation of domains. 
+
+## A.1 Best Complexity Estimation with Fixed Feature Extractor and Dis-tribution 
+
+In this subsection, we analyze the best complexity estimator ˆJm(ϕ; X, Y ) with a fixed feature extractor 
+
+ϕ and a fixed distribution (X, Y ) ∈ P . Specifically, we prove the following theorem. 
+
+Theorem A.3. Fix ϕ and (X, Y ) ∈ P . Suppose that AJ (ϕ; X, Y ) ≍ J−2α for some α > 0. Assume Assumption 4. If ρ > 0 is a sufficiently large constant, there exist constants c, C > 0 such that with probability at least 1 − m−Ω(( m/ ln m)1/(2 α+1) ),
+
+cJ ∗
+
+> m
+
+(ϕ; X, Y ) ≤ ˆJm(ϕ; X, Y ) and ˆJm(ϕ; X, Y ) ≤ CJ ∗
+
+> m
+
+(ϕ; X, Y ),
+
+or equivalently, ˆJm(ϕ; X, Y ) ≍ (m/ ln m)1/(2 α+1) .
+
+Theorem A.3 states that while the learner does not use the unknown parameter α in the complexity estimation, the resulting best complexity estimator ˆJm(ϕ; X, Y ) is equivalent to the ideal complexity depending on α up to multiplicative constants. The key ingredient to prove Theorem A.3 is the upper and lower bounds on ˆBJ,J ′ via the approximation error AJ (ϕ; X, Y ).
+
+Theorem A.4. Fix ϕ, (X, Y ) ∈ P , and J, J ′ ∈ [m] such that J′ ≥ J. Assume Assumption 4. Then, with probability at least 1 − e−t,
+
+ˆBJ,J ′ (ϕ; X, Y ) ≲ AJ (ϕ; X, Y ) + Vm,J ′ + tm .
+
+Moreover, with probability at least 1 − e−t,
+
+ˆBJ,J ′ (ϕ; X, Y ) ≳ AJ (ϕ; X, Y ) − AJ′ (ϕ; X, Y ) − Vm,J ′ − tm .
+
+Theorem A.4 shows that the empirical bias term ˆBJ,J ′ is characterized dominantly by the approxi-mation error AJ for a small complexity J. In particular, when AJ ≍ J−2α, the empirical comparison 
+
+ˆBJ,J ′ between regressors at complexity levels J and J′ faithfully reflects the underlying approxima-tion structure: it is large when AJ is large (meaning complexity J is insufficient) and small when 
+
+AJ ≍ Vm,J ′ (meaning the Lepski stopping criterion is met). This fidelity is what enables the Lepski method to identify the optimal complexity from data without prior knowledge of α.We also use the following property of the approximation error. 
+
+Lemma 1. For fixed ϕ and (X, Y ) ∈ P , assume AJ (ϕ; X, Y ) ≍ J−2α for some α ∈ (0 , ∞). Then, we have 
+
+AJ∗ ≍ Vm,J ∗ ≍ (m/ ln m)−2α/ (2 α+1) and J∗ ≍ (m/ ln m)1/(2 α+1) ,
+
+where J∗ = J∗
+
+> m
+
+(ϕ; X, Y ).
+
+18 Lemma 1 states that J∗ achieves the ideal complexity of (m/ ln m)1/(2 α+1) , and AJ∗ and Vm,J ∗ are equivalent up to multiplicative constants. Now, we prove Theorem A.3. 
+
+Proof of Theorem A.3. Let J∗ = J∗
+
+> m
+
+(ϕ; X, Y ), ˆJ = ˆJm(ϕ; X, Y ), ˆBJ,J ′ = ˆBJ,J ′ (ϕ; X, Y ), and AJ =
+
+AJ (ϕ; X, Y ). Applying the union bound over J, J ′ ∈ [m] into Theorem A.4 gives that with probability at least 1 − e−t, for all J, J ′ ∈ [m] where J′ ≥ J,
+
+ˆBJ,J ′ ≲ AJ + Vm,J ′ + tm , (6) and 
+
+ˆBJ,J ′ ≳ AJ − AJ′ − Vm,J ′ − tm , (7) where we use ln mm ≲ Vm,J ≲ Vm,J ′ . Let Et be this event; hence, P{E t} ≥ 1 − e−t.
+
+Upper bound. Let Jup ∈ [m] such that CJ ∗ ≥ Jup ≥ CJ ∗ − 1 for some C > 1. Suppose that Et
+
+occurs. Assume that ˆJ > J up . Then, Jup must fail the empirical Lepski condition; hence, for some 
+
+J′ ≥ Jup , we have 
+
+ˆBJup ,J ′ > ρV m,J ′ .
+
+By Eq. (6), there exist constants C1, C 2 > 0 such that 
+
+ρV m,J ′ < C 1
+
+(AJup + Vm,J ′
+
+) + C2
+
+tm .
+
+By Lemma 1, we have 
+
+AJup ≤ AJ∗ ≲ Vm,J ∗ ≤ Vm,J ′ .
+
+Hence, there are constants C1, C 2 > 0 such that 
+
+C2tm > (ρ − C1)Vm,J ′ ,
+
+where the sufficiently large ρ ensures ρ − C1 > 0. The above inequality is contradicting if 
+
+t ≤ m(ρ − C1)Vm,J ′
+
+C2
+
+.
+
+For such t, ˆJ ≤ Jup under the event Et. Choosing t = ln m · κ(m/ ln m)Vm,J ∗ for κ = ( ρ − C1)/C 2
+
+yields the contradictory t. Consequently, with probability at least P{E t} ≥ 1 − m−κ(m/ ln m)Vm,J ∗ ,we have ˆJ ≤ Jup ≤ CJ ∗.
+
+Lower bound. Let Jlo ∈ [m] such that cJ ∗ + 1 ≥ Jlo ≥ cJ ∗ for some c ∈ (0 , 1) . Suppose that Et
+
+occurs. Assume that ˆJ < J lo . Then, since ˆJ satisfies the empirical Lepski condition, we have 
+
+ˆB ˆJ,J ∗ ≤ ρV m,J ∗ .
+
+19 By Eq. (7), there exist constants C1, C 2, C 3 > 0 such that 
+
+ρV m,J ∗ ≥ C1A ˆJ − C2(AJ∗ + Vm,J ∗ ) − C3tm .
+
+By the assumption of AJ ≍ J−2α and Lemma 1, we have 
+
+A ˆJ ≳ c−2αAJ∗ ≳ c−2αVm,J ∗ ,
+
+and AJ∗ ≲ Vm,J ∗ . Hence, there exist constants C1, C 2, C 3 > 0 such that 
+
+C3tm ≥ (C1c−2α − C2 − ρ)Vm,J ∗ .
+
+A sufficiently small c ensures C1c−2α − C2 − ρ > 0. The above inequality is contradicting if 
+
+t ≤ m(C1c−2α − C2 − ρ)Vm,J ∗
+
+C3
+
+.
+
+For such t, ˆJ ≥ Jlo under the event Et. Choosing t = ln m · κ(m/ ln m)Vm,J ∗ for κ =(C1c−2α − C2 − ρ)/C 3 yields the contradictory t. Consequently, with probability at least P{E t} ≥ 
+
+1 − m−κ(m/ ln m)Vm,J ∗ , we have ˆJ ≥ Jlo ≥ cJ ∗.By Lemma 1, we have (m/ ln m)Vm,J ∗ ≳ (m/ ln m)1/(2 α+1) , which gives the claim. 
+
+## A.2 Bias Analysis with Fixed Feature Extractor 
+
+In this subsection, we investigate the empirical bias term ˆBJ,J ′ to prove Theorem A.4. To derive bounds on ˆBJ,J ′ , we first derive the error upper and lower bounds on the sieved least-square estimator 
+
+ˆfm,J .
+
+Sieved least-square estimator Lemma 2. Fix ϕ, J, and (X, Y ) ∈ P . Assume Assumption 4. Then, there exists universal constants 
+
+c1, c 2 > 0 such that for any η ∈ (0 , 1) , with probability at least 1 − 3e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤
+
+11 − η
+
+(
+
+2(1 + η)AJ (ϕ; X, Y ) + 6σ2c2J ln mηm 
+
++
+
+(
+
+2√2 ln(2) σc 1 + ηc 21
+
+m
+
+) 1
+
+m +
+
+(
+
+2√2σc 1
+
+ln 1/2(2) + 6σ2
+
+η + 5(1 + η)6
+
+)
+
+tm
+
+)
+
+.
+
+Lemma 3. Fix ϕ, J, and (X, Y ) ∈ P . Assume Assumption 4. Then, there exists universal constants 
+
+c1, c 2 > 0 such that with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 14 AJ (ϕ; X, Y ) − 2c2J ln m
+
+3m − 3c21
+
+2m2 − 2t
+
+3m .
+
+20 Remark 2. Lemma 2 implies that, with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲ AJ (ϕ; X, Y ) + Vm,J + tm .
+
+Also, Lemma 3 implies that, with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≳ AJ (ϕ; X, Y ) − Vm,J − tm .
+
+Now, we prove Theorem A.4. 
+
+Proof of Theorem A.4. For shorthands, let ˆBJ,J ′ = ˆBJ,J ′ (ϕ; X, Y ) and AJ = AJ (ϕ; X, Y ). By the triangle and reverse triangle inequalities, we have 
+
+(∥∥∥ ˆfm,J ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+−
+
+∥∥∥ ˆfm,J ′ ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+)2
+
+≤ ˆBJ,J ′ ≤
+
+(∥∥∥ ˆfm,J ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
++
+
+∥∥∥ ˆfm,J ′ ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+)2
+
+. (8) We now prove the upper and lower bounds separately. 
+
+Upper bound Application of Lemma 2 to both terms in the right-hand side of Eq. (8) yields that with probability at least 1 − 2e−t,
+
+∥∥∥ ˆfm,J ◦ ϕ − E[Y |X]
+
+∥∥∥2 
+
+> L2
+> m(X)
+
+≲AJ + Vm,J + tm
+
+∥∥∥ ˆfm,J ′ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲AJ′ + Vm,J ′ + tm .
+
+Noting that AJ is decreasing in J, Vm,J is increasing in J, and Vm,J ≳ 1 
+
+> m
+
+, we have with probability at least 1 − e−t,
+
+ˆBJ,J ′ ≲ AJ + Vm,J ′ + tm .
+
+Lower bound Respectively applying Lemma 3 and Lemma 2 into the first and second terms of the left-hand side of Eq. (8) gives that with probability at least 1 − 2e−t,
+
+∥∥∥ ˆfm,J ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≳AJ − Vm,J − tm
+
+∥∥∥ ˆfm,J ′ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲AJ′ + Vm,J ′ + tm .
+
+Again, using the facts that AJ is decreasing in J, Vm,J is increasing in J, and Vm,J ≳ 1 
+
+> m
+
+, we have with probability at least 1 − e−t,
+
+ˆBJ,J ′ ≳ AJ − AJ′ − Vm,J ′ − tm .
+
+21 A.3 Best Complexity Estimator with Learned Feature Extractor 
+
+In this subsection, we prove Theorem A.1. To this end, we extend Theorem A.3 for the learned feature extractor ˆϕ. Specifically, we prove the following theorem. 
+
+Theorem A.5. Fix (X, Y ) ∈ P. Let ˆϕ be the learned feature extractor depending on the pre-training samples. Assume Assumptions 1 and 2. If ρ > 0 is a sufficiently large con-stant, there exist constants c, C > 0 such that for some ϵ > 0, with probability at least 
+
+1 − ∑ 
+
+> J,J ′∈[m]: J′≥J
+
+N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )m−Ω(( m/ ln m)1/(2 ¯ α+1) ),
+
+cJ ∗
+
+> m
+
+( ˆϕ; X, Y ) ≤ ˆJm( ˆϕ; X, Y ) and ˆJm( ˆϕ; X, Y ) ≤ CJ ∗
+
+> m
+
+( ˆϕ; X, Y ),
+
+or equivalently, ˆJm( ˆϕ; X, Y ) ≍ (m/ ln m)1/(2 α( ˆϕ;X,Y )+1) .
+
+Theorem A.5 is an analogue of Theorem A.3 with learned ˆϕ.Following the analyses with the fixed ϕ case, we derive bounds on the bias terms with ˆϕ to prove Theorem A.5. 
+
+Theorem A.6. Fix ϕ, (X, Y ) ∈ P , and J, J ′ ∈ [m] such that J′ ≥ J. Let ˆϕ be the learned feature extractor depending on the pre-training samples. Assume Assumptions 2 and 4. Then, with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+ˆBJ,J ′ ( ˆϕ; X, Y ) ≲ AJ ( ˆϕ; X, Y ) + Vm,J ′ + tm .
+
+Moreover, with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+ˆBJ,J ′ ( ˆϕ; X, Y ) ≳ AJ ( ˆϕ; X, Y ) − AJ′ ( ˆϕ; X, Y ) − Vm,J ′ − tm .
+
+Based on Theorem A.6, we prove Theorem A.5. 
+
+Proof of Theorem A.5. We invoke the same proof of Theorem A.3 except leveraging Theorem A.6 and choosing t as 
+
+t = ln m · κ(m/ ln m)1/(2 ¯ α+1) ,
+
+where κ is an appropriate constant leading to the contradictory t. Noting that m/ ln m > 1, such a choice of t gives contradictory t for any ˆϕ and (X, Y ) ∈ P ∗.
+
+## A.4 Meta-Learning and Downstream Learning Analyses 
+
+Now, we prove Theorem A.1. 
+
+Proof of Theorem A.1. By the definition of ˆϕ, we have 
+
+max 
+
+> d∈[D]
+
+ˆJm( ˆϕ; X(d), Y (d)) ≤ max 
+
+> d∈[D]
+
+ˆJm(ϕ∗; X(d), Y (d)).
+
+Application of the union bound into Theorem A.5 over d ∈ [D] yields that with probability at least 
+
+1 − D ∑ 
+
+> J,J ′∈[m]: J′≥J
+
+N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )m−Ω(( m/ ln m)1/(2 ¯ α+1) ),
+
+max 
+
+> d∈[D]
+
+(m/ ln m)1/(2 α( ˆϕ;X(d),Y (d))+1) ≲ max  
+
+> d∈[D]
+
+J∗
+
+> m
+
+( ˆϕ; X(d), Y (d)) ≲ max 
+
+> d∈[D]
+
+ˆJm( ˆϕ; X(d), Y (d))
+
+22 Also, applying the union bound to Theorem A.3 with ϕ = ϕ∗ over d ∈ [D] gives that with probability at least 1 − Dm −Ω(( m/ ln m)1/(2 ¯ α+1) ),
+
+max 
+
+> d∈[D]
+
+ˆJm(ϕ∗; X(d), Y (d)) ≲ max  
+
+> d∈[D]
+
+J∗
+
+> m
+
+(ϕ∗; X(d), Y (d)) ≤ J∗
+
+> m
+
+(ϕ∗) ≲ (m/ ln m)1/(2 α∗P +1) .
+
+Note that 1/(2 α(ϕ; X, Y )+1) = 1 −β(ϕ; X, Y ). Consequently, there exists a constant C > 1 such that with probability at least 1 − 2D ∑ 
+
+> J,J ′∈[m]: J′≥J
+
+N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )m−Ω(( m/ ln m)1/(2 ¯ α+1) ),
+
+(m/ ln m)1−min d∈[D] β( ˆϕ;X(d),Y (d)) ≤ C(m/ ln m)1−β∗P .
+
+Taking the logarithm of both sides and dividing by ln( m/ ln m), we have 
+
+min  
+
+> d∈[D]
+
+β( ˆϕ; X(d), Y (d)) ≥ β∗P − ln C
+
+ln( m/ ln m) .
+
+Fix an arbitrary ϕ ∈ Φ. Let (X[1] , Y [1] ), . . . , (X[⌈1/ϵ ⌉], Y [⌈1/ϵ ⌉]) be such that for any (X, Y ) ∈ P ,there exists i satisfying |β(ϕ; X[i], Y [i]) − β(ϕ; X, Y )| ≤ ϵ. By Assumption 3, there exists d ∈ [D]
+
+such that | min i β(ϕ; X[i], Y (i)) − β(ϕ; X(d), Y (d))| ≤ ϵ with probability at least 1 − (1 − Cϵ ν )D for some universal constant C > 0. Hence, with probability at least 1 − (1 − Cϵ ν )D ,
+
+min  
+
+> d∈[D]
+
+β(ϕ; X(d), Y (d)) ≤ inf   
+
+> (X,Y )∈P
+
+β(ϕ; X, Y ) + 2 ϵ. 
+
+For t > 0, taking ϵν = t/CD yields with probability at least 1 − e−t,
+
+min  
+
+> d∈[D]
+
+β(ϕ; X(d), Y (d)) ≤ inf   
+
+> (X,Y )∈P
+
+β(ϕ; X, Y ) + 2 
+
+( tCD 
+
+)ν
+
+.
+
+Consider ln −γ m-cover of Φ in Assumption 2, denoted as ϕ1, . . . , ϕ Nm , where Nm =
+
+N ( ln −γ m, Φ, ρ β, P ). Let ˆϕm be the closest ϕi to ˆϕ in terms of ρβ, P . Then, we have with prob-ability at least 1 − Nme−t,
+
+min  
+
+> d∈[D]
+
+β( ˆϕ; X(d), Y (d)) ≤ min  
+
+> d∈[D]
+
+β( ˆϕm; X(d), Y (d)) + 1ln γ m
+
+≤ inf   
+
+> (X,Y )∈P
+
+β( ˆϕm; X, Y ) + 2 
+
+( tCD 
+
+)ν
+
++ 1ln γ m
+
+≤βP ( ˆϕ) + 2 
+
+( tCD 
+
+)ν
+
++ 2ln γ m .
+
+By Assumption 2 and D ≳ ln 1+ νγ m, with t = ln Nm + ln m, we have with probability at least 
+
+1 − m−1,
+
+min  
+
+> d∈[D]
+
+β( ˆϕ; X(d), Y (d)) ≤ βP ( ˆϕ) + O
+
+( 1ln γ m
+
+)
+
+.
+
+By the union bound, we have with probability at least 1 − m−1 −
+
+2mO(1) ∑ 
+
+> J,J ′∈[m]: J′≥J
+
+N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )m−Ω(( m/ ln m)1/(2 ¯ α+1) ),
+
+βP ( ˆϕ) ≥ β∗P − O
+
+( 1ln γ m
+
+)
+
+.
+
+23 By Assumption 2, we have 
+
+∑
+
+> J,J ′∈[m]: J′≥J
+
+N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )m−Ω(( m/ ln m)1/(2 ¯ α+1) )
+
+≲ m−Ω(( m/ ln m)1/(2 ¯ α+1) ) ≲ m−1,
+
+which gives the desired result. Next, we prove Theorem A.2. 
+
+Proof of Theorem A.2. Let J∗ = J∗
+
+> n
+
+( ˆϕ; X, Y ) and ˆJ = ˆJn( ˆϕ; X, Y ). Let ˆf ′ 
+
+> n,J
+
+be the closest function among O(1 /n )-net of FJ to ˆfn,J in L∞-norm. Application of the union bound over O(1 /n )-net and 
+
+ˆJ and Lemma 7 yields that with probability at least 1 − e−t,
+
+¯E ˆϕ( ˆfn) = 
+
+∥∥∥ ˆfn, ˆJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+≲
+
+∥∥∥ ˆf ′  
+
+> n, ˆJ
+
+◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
++ 1
+
+n2
+
+≲
+
+∥∥∥ ˆf ′  
+
+> n, ˆJ
+
+◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> n(X)
+
++
+
+√
+
+Vn, ˆJ + ln nn + tn
+
+∥∥∥ ˆf ′  
+
+> n, ˆJ
+
+◦ ˆϕ − E[Y |X]
+
+∥∥∥L2(X)
+
++ Vn, ˆJ + ln nn + tn .
+
+By AM-GM inequality, with probability at least 1 − e−t,
+
+¯E ˆϕ( ˆfn) ≲
+
+∥∥∥ ˆfn, ˆJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> n(X)
+
++ Vn, ˆJ + tn .
+
+If ˆJ ≤ J∗, the empirical Lepski’s rule ensures that 
+
+¯E ˆϕ( ˆfn) ≲
+
+∥∥∥ ˆfn,J ∗ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> n(X)
+
++ Vn,J ∗ + tn .
+
+By Lemma 2, we get with probability at least 1 − e−t,
+
+¯E ˆϕ( ˆfn) ≲ AJ∗ ( ˆϕ; X, Y ) + Vn,J ∗ + tn .
+
+From Lemma 1, we have with probability at least 1 − e−t,
+
+¯E ˆϕ( ˆfn) ≲ (n/ ln n)−β( ˆϕ;X,Y ) + tn .
+
+If ˆJ > J ∗, there exists J′ ≥ J∗ such that J∗ fails the empirical Lepski condition, i.e., 
+
+ˆBJ∗,J ′ ( ˆϕ; X, Y ) > ρV n,J ′ .
+
+By Theorem A.4 (upper bound), with probability at least 1 − e−t,
+
+ˆBJ∗,J ′ ( ˆϕ; X, Y ) ≲ AJ∗ ( ˆϕ; X, Y ) + Vn,J ′ + tn .
+
+24 From Lemma 1, AJ∗ ≲ Vn,J ∗ ≤ Vn,J ′ , so there exist constants C1, C 2 > 0 such that 
+
+ρV n,J ′ < C 1Vn,J ′ + C2
+
+tn .
+
+Rearranging gives (ρ − C1)Vn,J ′ < C 2t/n . Choosing ρ > C 1 + C2 and t = ln n, this is contradicted since Vn,J ′ ≥ Vn, 1 = ln (n)/n implies (ρ − C1) ln (n)/n ≤ C2 ln (n)/n . Hence, by choosing ρ sufficiently large, the event ˆJ > J ∗ occurs with probability at most e−t = 1 /n . Combining both cases with a union bound, we have with probability at least 1 − 2/n ,
+
+¯E ˆϕ( ˆfn) ≲ (n/ ln n)−βP ( ˆϕ) + ln nn ≲ (n/ ln n)−βP ( ˆϕ),
+
+where the last step uses βP ( ˆϕ) ∈ (0 , 1) .
+
+## A.5 Bias Analysis with Learned Feature Extractor 
+
+Here, we analyze ˆBJ,J ′ for the learned feature extractor ˆϕ. We follow similar steps of the analyses in Appendix A.2 but introduce an approximation and the union bound due to the covering of Φ. First, we reveal the error upper and lower bounds on the sieved least-square estimator. 
+
+Lemma 4. Fix (X, Y ) ∈ P , J ∈ [m], and ϵ > 0. Let ˆϕ be the learned feature extractor depending on the pre-training samples. Assume Assumptions 2 and 4. Then, there exist universal constants 
+
+c1, c 2 > 0 such that for any η ∈ (0 , 1) , with probability at least 1 − (1 + 2 N (ϵ, Φ, ρ J )) e−t,
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤
+
+11 − η
+
+(
+
+4(2 + 3 η)AJ ( ˆϕ; X, Y ) + 6σ2c2J ln mηm 
+
++
+
+(
+
+2√2 ln(2) σc 1 + 3ηc 21
+
+m
+
+) 1
+
+m + (4 + 3 η)ϵ +
+
+(
+
+2√2σc 1
+
+ln 1/2(2) + 6σ2
+
+η + 5(1 + η)6
+
+)
+
+tm
+
+)
+
+.
+
+Lemma 5. Fix (X, Y ) ∈ P , J ∈ [m], and ϵ > 0. Let ˆϕ be the learned feature extractor depending on the pre-training samples. Assume Assumptions 1 and 2. Then, there exist universal constants 
+
+c1, c 2 > 0 such that with probability at least 1 − N (ϵ, Φ, ρ J )e−t,
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 14 AJ ( ˆϕ; X, Y ) − 2c2J ln m
+
+3m − 3ϵ2
+
+2 − 3c21
+
+2m2 − 2t
+
+3m .
+
+We now give a proof of Theorem A.6. 
+
+Proof of Theorem A.6. We follow the proof of Theorem A.4 with Lemmas 4 and 5. For shorthands, let ˆBJ,J ′ = ˆBJ,J ′ ( ˆϕ; X, Y ) and AJ = AJ ( ˆϕ; X, Y ). By the triangle and reverse triangle inequalities, we have 
+
+(∥∥∥ ˆfm,J ◦ ˆϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+−
+
+∥∥∥ ˆfm,J ′ ◦ ˆϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+)2
+
+≤ ˆBJ,J ′ ≤
+
+25 (∥∥∥ ˆfm,J ◦ ˆϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
++
+
+∥∥∥ ˆfm,J ′ ◦ ˆϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+)2
+
+. (9) We now prove the upper and lower bounds separately. 
+
+Upper bound Application of Lemma 4 to both terms in the right-hand side of Eq. (9) yields that with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+∥∥∥ ˆfm,J ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲AJ + Vm,J + tm
+
+∥∥∥ ˆfm,J ′ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲AJ′ + Vm,J ′ + tm .
+
+Noting that AJ is decreasing in J, Vm,J is increasing in J, and Vm,J ≳ 1 
+
+> m
+
+, we have with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+ˆBJ,J ′ ≲ AJ + Vm,J ′ + tm .
+
+Lower bound Respectively applying Lemma 5 and Lemma 4 into the first and second terms of the left-hand side of Eq. (9) gives that with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+∥∥∥ ˆfm,J ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≳AJ − Vm,J − tm
+
+∥∥∥ ˆfm,J ′ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≲AJ′ + Vm,J ′ + tm .
+
+Again, using the facts that AJ is decreasing in J, Vm,J is increasing in J, and Vm,J ≳ 1 
+
+> m
+
+, we have with probability at least 1 − N (Vm,J , Φ, ρ J )N (Vm,J ′ , Φ, ρ J′ )e−t,
+
+ˆBJ,J ′ ≳ AJ − AJ′ − Vm,J ′ − tm .
+
+# B Proofs of Analyses 
+
+## B.1 Proofs for Bias Analyses 
+
+Properties of Lepski’s method To prove Lemma 1, we leverage the following lemma. 
+
+Lemma 6. Fix ϕ and (X, Y ) ∈ P . Assume that AJ (ϕ; X, Y ) ≍ J−2α. For any constant c > 1, there exists C > 0 such that for any J, J ′ ∈ N where J′ ≥ CJ ,
+
+BJ,J ′ (ϕ; X, Y ) ≤ cA J (ϕ; X, Y ).
+
+Furthermore, for c ≥ 4, this inequality is satisfied with C = 1 . Moreover, there exists a constant 
+
+c > 0 such that for any constant C > 0 and for any J, J ′ ∈ N where J′ ≥ CJ ,
+
+BJ,J ′ (ϕ; X, Y ) ≥ (1 − cC −α)AJ (ϕ; X, Y ).
+
+Proof of Lemma 6. We use the shorthands BJ,J ′ = BJ,J ′ (ϕ; X, Y ) and AJ = AJ (ϕ; X, Y ).26 Upper bound. By the triangle inequality, for any J, J ′ ∈ N,
+
+BJ,J ′ ≤ AJ
+
+(
+
+1 + A1/2
+
+> J′
+
+A1/2
+
+> J
+
+)2
+
+.
+
+By the assumption of AJ ≍ J−2α, there exists a constant C′ > 0 such that 
+
+A1/2
+
+> J′
+
+A1/2
+
+> J
+
+≤ C′
+
+( JJ′
+
+)α
+
+≤ C′C−α.
+
+Since c > 1, we can choose C > 0 such that 1 + C′C−α ≤ √c, confirming the upper bound. The further statement follows from the fact that for any J′ ≥ J, AJ′ ≤ AJ .
+
+Lower bound. By the reverse triangle inequality, for any J, J ′ ∈ N,
+
+BJ,J ′ ≥ AJ
+
+(
+
+1 − A1/2
+
+> J′
+
+A1/2
+
+> J
+
+)2
+
+.
+
+By the same argument as the upper bound, there exists a constant c > 0 such that 
+
+BJ,J ′ ≥ AJ
+
+(1 − cC −α/2)2.
+
+For C > 0 such that 1 − cC −α/2 ∈ (0 , 1) , we have (1 − cC −α/2) 2 ≤ 1 − cC −α, confirming the lower bound. Now, we prove Lemma 1. 
+
+Proof of Lemma 1. Write AJ for AJ (ϕ; X, Y ) throughout. By assumption, there exist constants 
+
+0 < c ℓ ≤ cu < ∞ such that 
+
+cℓJ−2α ≤ AJ ≤ cuJ−2α for all J ∈ N.
+
+Define J0 = ( m/ ln m)1/(2 α+1) ; a direct computation gives Vm,J 0 = J0 ln (m)/m = J−2α 
+
+> 0
+
+. Hence, with this J0, we have Vm,J 0 ≍ AJ0 due to assumption. By Lemma 6, for some constant c ≥ 4, for any J′ ≥ J,
+
+BJ,J ′ ≤ cA J ≤ cc uJ−2α.
+
+We can choose J such that cc uJ−2α ≤ J−2α 
+
+> 0
+
+= Vm,J 0 , satisfying the Lepski condition. Hence, for such a J, we have J∗
+
+> m
+
+(ϕ; X, Y ) ≤ J ≲ J0.By Lemma 6, for some constant c ∈ (0 , 1) , there exists C > 0 such that for any J, J ′ ∈ N where 
+
+J′ ≥ CJ ,
+
+BJ,J ′ ≥ cA J ≥ cc ℓJ−2α.
+
+We can choose J such that cc ℓJ−2α ≥ J−2α 
+
+> 0
+
+= Vm,J 0 , breaking the Lepski condition. Hence, for such a J, we have J∗
+
+> m
+
+(ϕ; X, Y ) ≥ J ≳ J0.27 Proofs for sieved least square estimator We use three concentration inequalities for the empirical L2-norm ∥ · ∥ 2 
+
+> L2
+> k(X)
+
+, the empirical inner product to the noise ⟨· , ϵ ⟩k, and the absolute sum of the noise 1
+
+> k
+
+∑ki=1 |ϵi|.
+
+Lemma 7. Let X be a random variable on X . For any fixed measurable function h : X → [−1, 1] 
+
+and any t > 0, with probability at least 1 − e−t,
+
+∥h∥2  
+
+> L2
+> k(X)
+
+− ∥ h∥2 
+
+> L2(X)
+
+≤
+
+√ 2tk ∥h∥2 
+
+> L2(X)
+
++ t
+
+3k .
+
+Moreover, with probability at least 1 − e−t,
+
+∥h∥2 
+
+> L2(X)
+
+− ∥ h∥2  
+
+> L2
+> k(X)
+
+≤
+
+√ 2tk ∥h∥2 
+
+> L2(X)
+
++ t
+
+3k .
+
+Lemma 8. Let X ∈ R be a random variable. Let ϵ be sub-gaussian and mean-zero independent random variables such that their variance proxy is at most σ2 > 0. Then, conditioned on X, with probability at least 1 − e−t,
+
+⟨X, ϵ ⟩k ≤
+
+√ 2σ2tk ∥X∥L2
+
+> k
+
+.
+
+Lemma 9. Let ϵ1, . . . , ϵ k be sub-gaussian and mean-zero independent random variables such that their variance proxy is at most σ2 > 0. Then, with probability at least 1 − e−t,
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+|ϵi| ≤ σ
+
+( 2tk + 2 ln 2 
+
+)1/2
+
+.
+
+From the definition of the Minkowski–Bouligand dimension, for c2 > 1, there is a sufficiently small c1 > 0 such that with ϵm = c1 
+
+> m
+
+, ln N (ϵm, FJ , ∥ · ∥ L∞ ) ≤ c2J ln (m) for any m ≥ 1. Let 
+
+Nm,J = N (ϵm, FJ , ∥ · ∥ L∞ ) and f1, ..., f Nm,J be an ϵm-cover of FJ in ∥ · ∥ L∞ . Let ˆfJ,ϵ m be the closest function from these to ˆfJ in ∥ · ∥ L∞ .We now prove Lemmas 2 and 3. 
+
+Proof of Lemma 2. We can decompose the squared error as 
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+= ∥fJ ◦ ϕ − E[Y |X]∥2
+
+> L2
+> m(X)
+
++ 2
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ϕ)( Xi) − (fJ ◦ ϕ)( Xi)
+
+)
+
+ϵi
+
++ 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ϕ)( Xi) − Yi
+
+)2
+
+− 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(( fJ ◦ ϕ)( Xi) − Yi)2,
+
+where ϵi = Yi − E[Y |X]. Since ˆfJ is an empirical minimizer over FJ and fJ ∈ F J , we have 28 ∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2
+> m(X)
+
++ 2
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ϕ)( Xi) − (fJ ◦ ϕ)( Xi)
+
+)
+
+ϵi.
+
+For the second term in the right-hand side, we have 
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ϕ)( Xi) − (fJ ◦ ϕ)( Xi)
+
+)
+
+ϵi ≤
+
+ϵm
+
+m
+
+> m
+
+∑
+
+> i=1
+
+|ϵi| + 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ,ϵ m ◦ ϕ)( Xi) − (fJ ◦ ϕ)( Xi)
+
+)
+
+ϵi.
+
+By Lemma 9, Lemma 8, union bound over the ϵm-covers, and triangle inequality, we have with probability at least 1 − 2e−t,
+
+ϵm
+
+m
+
+> m
+
+∑
+
+> i=1
+
+|ϵi| ≤ σϵ m
+
+( 2tm + 2 ln 2 
+
+)1/2
+
+,
+
+and 
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ,ϵ m ◦ ϕ)( Xi) − (fJ ◦ ϕ)( Xi)
+
+)
+
+ϵi ≤
+
+√ 2σ2(ln( Nm,J ) + t)
+
+m
+
+(∥∥∥ ˆfJ ◦ ϕ − fJ ◦ ϕ
+
+∥∥∥L2
+
+> m(X)
+
++ ϵm
+
+)
+
+.
+
+Consequently, we have with probability at least 1 − 2e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2
+> m(X)
+
++ 2 σϵ m
+
+( 2tm + 2 ln 2 
+
+)1/2
+
++
+
+√ 8σ2(c2J ln( m) + t)
+
+m
+
+(∥∥∥ ˆfJ ◦ ϕ − fJ ◦ ϕ
+
+∥∥∥L2 
+
+> m(X)
+
++ ϵm
+
+)
+
+.
+
+By the triangle inequality, the AM-GM inequality, and the fact that √1 + x ≤ 1 + x for x ≥ 0, for any η ∈ (0 , 1) , we have 
+
+(1 − η)
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤
+
+(1 + η)∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2
+> m(X)
+
++ 6σ2c2J ln( m)
+
+ηm 
+
++
+
+(
+
+2√2 ln(2) σc 1 + ηc 21
+
+m
+
+) 1
+
+m +
+
+(
+
+2√2σc 1
+
+ln 1/2(2) + 6σ2
+
+η
+
+)
+
+tm . (10) 29 Application of Lemma 7 to the first term in the right-hand side of Eq. (10) yields with probability at least 1 − e−t,
+
+∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2
+> m(X)
+
+≤∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2(X)
+
++
+
+√ 2tm ∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2(X)
+
++ t
+
+3m .
+
+The AM-GM inequality √2tv/m ≤ v + t/ (2 m) yields with probability at least 1 − e−t,
+
+∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2
+> m(X)
+
+≤ 2∥fJ ◦ ϕ − E[Y |X]∥2 
+
+> L2(X)
+
++ 5t
+
+6m . (11) Combining Eq. (10) and Eq. (11) yields the claim. 
+
+Proof of Lemma 3. By the triangle and reverse triangle inequalities, we have 
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥
+
+(∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+−
+
+∥∥∥ ˆfJ ◦ ϕ − ˆfJ,ϵ m ◦ ϕ
+
+∥∥∥L2
+
+> m(X)
+
+)2
+
+≥
+
+(∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+− ϵm
+
+)2
+
+≥ 12
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+− ϵ2
+
+> m
+
+,
+
+Application of the union bound to Lemma 7 gives with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+−
+
+√ 2 ln Nm,J + 2 tm
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥L2(X)
+
+− 4 ln Nm,J 
+
+3m − t
+
+3m .
+
+The AM-GM inequality yields with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 12
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+− 4 ln Nm,J 
+
+3m − 4t
+
+3m .
+
+By the definition of ˆfJ,ϵ m , we have 
+
+∥∥∥ ˆfJ,ϵ m ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 12
+
+(∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥L2(X)
+
+− ϵm
+
+)2
+
+− 4 ln Nm,J 
+
+3m − 4t
+
+3m .
+
+Noting that ˆfJ ∈ F J almost surely, we have 
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+≥ AJ (ϕ; X, Y ) almost surely .
+
+By the triangle inequality, we have 
+
+(AJ (ϕ; X, Y ) − ϵm)2 ≥ 12 AJ (ϕ; X, Y ) − ϵ2
+
+> m
+
+.
+
+Consequently, we have with probability at least 1 − e−t,
+
+∥∥∥ ˆfJ ◦ ϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 14 AJ (ϕ; X, Y ) − 3ϵ2
+
+> m
+
+2 − 2 ln Nm,J 
+
+3m − 2t
+
+3m .
+
+Using the upper bound on ln Nm,J and the definition of ϵm, we get the desired result. 30 B.2 Proofs for Bias Analyses with Learned Feature Extractor 
+
+Proofs for sieved least-square estimator Consider ϵ-cover of Φ in Assumption 2, denoted as 
+
+ϕ1, ..., ϕ Nϵ , where Nϵ = N (ϵ, Φ, ρ J ). Let ˆiϵ = arg min i∈[Nϵ] ρJ ( ˆϕ, ϕ i) and ˆϕϵ = ϕˆiϵ .From the definition of the Minkowski–Bouligand dimension, for c2 > 1, there is a sufficiently small c1 > 0 such that with ϵm = c1 
+
+> m
+
+, ln N (ϵm, FJ , ∥ · ∥ L∞ ) ≤ c2J ln (m) for any m ≥ 1. Let 
+
+Nm,J = N (ϵ, FJ , ∥ · ∥ L∞ ) and f1, ..., f Nm,J be a ϵm-cover of FJ in ∥ · ∥ L∞ . Let ˆfJ,ϵ m be the closest function from these functions to ˆfJ in ∥ · ∥ L∞ .
+
+Proof of Lemma 4. We can decompose the squared error as 
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+=
+
+∥∥∥fJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
++ 2
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ˆϕ)( Xi) − (fJ ◦ ˆϕ)( Xi)
+
+)
+
+ϵi
+
++ 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ˆϕ)( Xi) − Yi
+
+)2
+
+− 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+(fJ ◦ ˆϕ)( Xi) − Yi
+
+)2
+
+,
+
+where ϵi = Yi − E[Y |X]. Since ˆfJ is an empirical minimizer over FJ and fJ ∈ F J , we have 
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤
+
+∥∥∥fJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
++ 2
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ˆϕ)( Xi) − (fJ ◦ ˆϕ)( Xi)
+
+)
+
+ϵi.
+
+For the second term in the right-hand side, we have 
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ ◦ ˆϕ)( Xi) − (fJ ◦ ˆϕ)( Xi)
+
+)
+
+ϵi ≤
+
+ϵm + 2 ϵm
+
+> m
+
+∑
+
+> i=1
+
+|ϵi| + 1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ,ϵ m ◦ ˆϕϵ)( Xi) − (fJ ◦ ˆϕϵ)( Xi)
+
+)
+
+ϵi.
+
+By Lemma 9, Lemma 8, union bound over the ϵ-covers, and triangle inequality, we have with probability at least 1 − (1 + Nϵ)e−t,
+
+ϵm
+
+> m
+
+∑
+
+> i=1
+
+|ϵi| ≤ σ(ϵm + 2 ϵ)
+
+( 2tm + 2 ln 2 
+
+)1/2
+
+,
+
+and 
+
+1
+
+m
+
+> m
+
+∑
+
+> i=1
+
+(
+
+( ˆfJ,ϵ ◦ ˆϕϵ)( Xi) − (fJ ◦ ˆϕϵ)( Xi)
+
+)
+
+ϵi ≤
+
+√ 2σ2(ln( Nm,J ) + t)
+
+m
+
+(∥∥∥ ˆfJ ◦ ˆϕ − fJ ◦ ˆϕϵ
+
+∥∥∥L2
+
+> m(X)
+
++ ϵm
+
+)
+
+.
+
+31 Consequently, we have with probability at least 1 − (1 + Nϵ)e−t,
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2 
+
+> L2
+> m(X)
+
+≤
+
+∥∥∥fJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
++ 2 σ(ϵm + 2 ϵ)
+
+( 2tm + 2 ln 2 
+
+)1/2
+
++
+
+√ 8σ2(c2J ln( m) + t)
+
+m
+
+(∥∥∥ ˆfJ ◦ ˆϕ − fJ ◦ ˆϕϵ
+
+∥∥∥L2
+
+> m(X)
+
++ ϵm + ϵ
+
+)
+
+.
+
+By the triangle inequality, the AM-GM inequality, and the fact that √1 + x ≤ 1 + x for x ≥ 0, for any η ∈ (0 , 1) , we have 
+
+(1 − η)
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2 
+
+> L2
+> m(X)
+
+≤
+
+(2 + 3 η)
+
+∥∥∥fJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
++ 6σ2c2J ln( m)
+
+ηm 
+
++
+
+(
+
+2√2 ln(2) σc 1 + 3ηc 21
+
+m
+
+) 1
+
+m + (2 + 3 η)ϵ +
+
+(
+
+2√2σc 1
+
+ln 1/2(2) + 6σ2
+
+η
+
+)
+
+tm . (12) Application of Lemma 7 with union bound over ϵ-cover of Φ to the first term in the right-hand side of Eq. (12) yields with probability at least 1 − Nϵe−t,
+
+∥∥∥fJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤
+
+∥∥∥fJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
++
+
+√
+
+2tm
+
+∥∥∥fJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
++ t
+
+3m .
+
+The AM-GM inequality √2tv/m ≤ v + t/ (2 m) yields with probability at least 1 − Nϵe−t,
+
+∥∥∥fJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≤ 4
+
+∥∥∥fJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
++ 2 ϵ2 + 5t
+
+6m . (13) Combining Eq. (12) and Eq. (13) yields the claim. 
+
+Proof of Lemma 5. By the reverse triangle and triangle inequalities, we have 
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥
+
+(∥∥∥ ˆfJ ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+− ϵ
+
+)2
+
+≥
+
+(∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥L2
+
+> m(X)
+
+− ϵm − ϵ
+
+)2
+
+≥ 12
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+− ϵ2 
+
+> m
+
+− ϵ2.
+
+Application of the union bound to Lemma 7 gives with probability at least 1 − Nϵe−t,32 ∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+−
+
+√ 2 ln Nm,J + 2 tm
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥L2(X)
+
+− ln Nm,J 
+
+3m − t
+
+3m .
+
+The AM-GM inequality yields with probability at least 1 − Nϵe−t,
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 12
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+− 4 ln Nm,J 
+
+3m − 4t
+
+3m .
+
+By the definitions of ˆfJ,ϵ m and ˆϕϵ, we have 
+
+∥∥∥ ˆfJ,ϵ m ◦ ˆϕϵ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥
+
+12
+
+(∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥L2(X)
+
+− ϵm − ϵ
+
+)2
+
+− 4 ln Nm,J 
+
+3m − 4t
+
+3m .
+
+Noting that ˆfJ ∈ F J almost surely, we have 
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2(X)
+
+≥ AJ ( ˆϕ; X, Y ) almost surely .
+
+By the triangle inequality, we have 
+
+(
+
+AJ ( ˆϕ; X, Y ) − ϵm − ϵ
+
+)2
+
+≥ 12 AJ ( ˆϕ; X, Y ) − ϵ2 
+
+> m
+
+− ϵ2.
+
+Consequently, we have with probability at least 1 − Nϵe−t,
+
+∥∥∥ ˆfJ ◦ ˆϕ − E[Y |X]
+
+∥∥∥2
+
+> L2
+> m(X)
+
+≥ 14 AJ ( ˆϕ; X, Y ) − 3( ϵ2 
+
+> m
+
++ ϵ2)2 − 2 ln Nm,J 
+
+3m − 2t
+
+3m .
+
+Using the upper bound on ln Nm,J and the definition of ϵm, we get the desired result. 
+
+## B.3 Proofs for Concentration Inequalities 
+
+Proof of Lemma 7. Let X1, . . . , X k be i.i.d. copies of X and set g = h2 : X → [0 , 1] . Then 
+
+∥h∥2  
+
+> L2
+> k(X)
+
+− ∥ h∥2 
+
+> L2(X)
+
+= 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+(g(Xi) − E[g(X)]) .
+
+The summands g(Xi) − E[g(X)] are i.i.d., bounded in [−1, 1] , and satisfy 
+
+V[g(X)] ≤ E[g(X)2] = E[h(X)4] ≤ E[h(X)2] = ∥h∥2
+
+> L2(X)
+
+,
+
+where h4 ≤ h2 holds pointwise since |h| ≤ 1. Applying Bernstein’s inequality to the i.i.d. summands 
+
+g(Xi) − E[g(X)] yields, with probability at least 1 − e−t,
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+(g(Xi) − E[g(X)]) ≤
+
+√ 2V[g(X)] tk + t
+
+3k ≤
+
+√ 2tk ∥h∥2 
+
+> L2(X)
+
++ t
+
+3k .
+
+The same derivation is valid even if we exchange ∥h∥2  
+
+> L2
+> k(X)
+
+and ∥h∥2
+
+> L2(X)
+
+.33 Proof of Lemma 8. 
+
+E
+
+[
+
+exp 
+
+(
+
+λk
+
+> k
+
+∑
+
+> i=1
+
+hiϵi
+
+)] 
+
+=
+
+> k
+
+∏
+
+> i=1
+
+E
+
+[
+
+exp 
+
+( λk hiϵi
+
+)] 
+
+=
+
+> k
+
+∏
+
+> i=1
+
+exp 
+
+( λ2σ2h2
+
+> i
+
+2k2
+
+)
+
+= exp 
+
+(
+
+λ2σ2
+
+2k · 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+h2
+
+> i
+
+)
+
+.
+
+By the Chernoff bound, we have 
+
+P
+
+{
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+hiϵi > t 
+
+}
+
+≤ inf  
+
+> λ> 0
+
+exp 
+
+(
+
+λ2σ2
+
+2k · 1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+h2 
+
+> i
+
+− λt 
+
+)
+
+≤ exp 
+
+− t2k
+
+2σ2
+
+(
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+h2
+
+> i
+
+)−1.
+
+Choosing t appropriately yields the claim. 
+
+Proof of Lemma 9. For any λ > 0 and x ∈ R, the inequality eλ|x| ≤ eλx + e−λx holds, so the sub-gaussian assumption gives 
+
+E
+
+[
+
+eλ|ϵi|]
+
+≤ E[eλϵ i ] + E[e−λϵ i ] ≤ 2eλ2σ2/2.
+
+By independence, 
+
+E
+
+[
+
+exp 
+
+(
+
+λk
+
+> k
+
+∑
+
+> i=1
+
+|ϵi|
+
+)] 
+
+≤ 2k exp 
+
+( λ2σ2
+
+2k
+
+)
+
+.
+
+The Chernoff bound then gives, for any s > 0,
+
+P
+
+(
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+|ϵi| > s 
+
+)
+
+≤ inf  
+
+> λ> 0
+
+exp 
+
+(
+
+−λks + k ln 2 + kλ 2σ2
+
+2
+
+)
+
+.
+
+The infimum over λ > 0 is attained at λ∗ = s/σ 2, yielding 
+
+P
+
+(
+
+1
+
+k
+
+> k
+
+∑
+
+> i=1
+
+|ϵi| > s 
+
+)
+
+≤ exp 
+
+(
+
+− ks 2
+
+2σ2 + k ln 2 
+
+)
+
+.
+
+Setting s = σ( 2tk + 2 ln 2 )1/2 gives ks 2 
+
+> 2σ2
+
+= t + k ln 2 , so the right-hand side equals e−t.
+
+# C Experiments 
+
+## C.1 Tasks and Architectures 
+
+We meta-train on three settings: Omniglot (Lake et al. 2015) 5-way and 20 -way 1-shot on a Conv4-64 backbone over 28 × 28 grayscale inputs, and Mini-ImageNet (Vinyals et al. 2016; Ravi et al. 34 2017) 5-way 1-shot on a Conv4-128 backbone over 84 × 84 RGB inputs, each with five queries per task. Omniglot features transfer to SVHN (Netzer et al. 2011), while Mini-ImageNet features transfer to CIFAR-10 and CIFAR-100 (Krizhevsky 2009). We set the pre-training sample size 
+
+m ∈ { 1,000 , 2,000 , 4,000 , 8,000 , 16 ,000 } for Omniglot and m ∈ { 8,000 , 16 ,000 , 24 ,000 , 32 ,000 , 40 ,000 }
+
+for Mini-ImageNet, and the fine-tuning sample size n ∈ { 100 , 500 , 1,000 , 2,500 , 5,000 }.
+
+## C.2 Algorithms, Regularizers, and Optimization 
+
+We compare four meta-learners spanning the gradient-based and metric-based families: first-and second-order MAML (Finn et al. 2017), Prototypical Networks (Snell et al. 2017), and R2-D2 (Bertinetto et al. 2019). Meta-training adds a regularization term λ·R (θ) to the meta-loss, with R
+
+the spectral norm ∑ 
+
+> l
+
+σmax (Wl) or the entry-wise ℓ1 norm ∑
+
+> l
+
+∥Wl∥1, each globally normalized so that 
+
+λ is comparable across architectures and penalties. The outer loop runs 3,000 steps of Adam (Kingma et al. 2015) ( β1= 0.9, β2= 0.95 ) at lr = 3 × 10 −4 with meta batch size 8. Fine-tuning trains the full backbone plus a fresh linear head for 30 epochs of Adam at 3 × 10 −4. The regularization coefficient 
+
+λ is selected by grid search over {10 −2, 10 −1, 1, 10 , 10 2, 10 3}. The mean values over three random seeds with standard deviation are reported. 
+
+## C.3 Implementation and Compute 
+
+The pipeline is built on JAX (Bradbury et al. 2018) v0.10 with CUDA 12.9, Equinox (Kidger et al. 2021), and Optax (DeepMind et al. 2020). Every trial occupies an NVIDIA H100 ( 80 GB) in single precision. The full sweep consumed about 1,000 H100-hours. 
+
+## C.4 Additional Results 
+
+Figure 3 presents the downstream test error rates on SVHN, CIFAR-10, and CIFAR-100 for CNN models pre-trained on Omniglot (5-way 1-shot and 20-way 1-shot) and Mini-ImageNet. It can be seen that regularizing model complexity improves downstream sample efficiency in various settings. In addition to the results with the spectral norm regularization, Figure 4 displays the results with the ℓ1-norm regularization. We can observe the improvements by ℓ1-norm regularization, although they are not as vivid as those by spectral-norm regularization. 
+
+# D Comprehensive survey of related work 
+
+## D.1 Meta-Learning Methodologies 
+
+Meta-learning is a framework that seeks to acquire a learning procedure capable of adapting to future unseen tasks using limited samples. Rather than focusing on generalization within a single task, it leverages experiences from a collection of past tasks drawn from a task distribution (Wang et al. 2020; Hospedales et al. 2021). A widely adopted taxonomy for these methods consists of a tripartite classification: (i) metric-based methods, which rely on distances and similarities; (ii) optimization-based methods, which incorporate gradient updates in an inner loop; and (iii) model-based methods, which construct the learner itself using mechanisms such as memory or hypernetworks. 
+
+Metric-based approaches. The metric-based family employs a framework for classifying queries based on proximity, attention, or comparison within an embedding space. As a representative example, Matching Networks proposed one-shot classification via attention between a support set and a query, 35 2 × 10 1
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Omniglot 5w  SVHN
+> test error rate
+
+MAML (FO) MAML (SO) ProtoNet R2D2 
+
+2 × 10 1
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Omniglot 20w  SVHN
+> test error rate
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Mini-ImageNet 5w  CIFAR-10
+> test error rate
+
+10 2 10 3
+
+n (fine-tune size) 
+
+7 × 10 1
+
+8 × 10 1
+
+9 × 10 1
+
+> Mini-ImageNet 5w  CIFAR-100
+> test error rate
+
+10 2 10 3
+
+n (fine-tune size) 
+
+10 2 10 3
+
+n (fine-tune size) 
+
+10 2 10 3
+
+n (fine-tune size) 
+
+Spectral Baseline m=1,000 m=2,000 m=4,000 m=8,000 m=16,000 m=24,000 m=32,000 m=40,000 Figure 3: Downstream test error rate on SVHN, CIFAR-10, CIFAR-100 (log scale) vs. fine-tuning sample size ( n, log scale) with different pre-training sample size ( m) for four meta-learning algorithms with and without parameter spectral-norm regularization trained on Omniglot or Mini-ImageNet. 36 2 × 10 1
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Omniglot 5w  SVHN
+> test error rate
+
+MAML (FO) MAML (SO) ProtoNet R2D2 
+
+2 × 10 1
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Omniglot 20w  SVHN
+> test error rate
+
+3 × 10 1
+
+4 × 10 1
+
+6 × 10 1
+
+> Mini-ImageNet 5w  CIFAR-10
+> test error rate
+
+10 2 10 3
+
+n (fine-tune size) 
+
+7 × 10 1
+
+8 × 10 1
+
+9 × 10 1
+
+> Mini-ImageNet 5w  CIFAR-100
+> test error rate
+
+10 2 10 3
+
+n (fine-tune size) 
+
+10 2 10 3
+
+n (fine-tune size) 
+
+10 2 10 3
+
+n (fine-tune size) 
+
+L1-weight Baseline m=1,000 m=2,000 m=4,000 m=8,000 m=16,000 m=24,000 m=32,000 m=40,000 Figure 4: Downstream test error rate on SVHN, CIFAR-10, CIFAR-100 (log scale) vs. fine-tuning sample size ( n, log scale) with different pre-training sample size ( m) for four meta-learning algorithms with and without parameter ℓ1-norm regularization trained on Omniglot or Mini-ImageNet. 37 formalizing the episodic training regime (Vinyals et al. 2016). Prototypical Networks introduced a concise classifier based on distances to class-specific “prototypes” (mean embeddings), providing a clear perspective on meta-representation learning (Snell et al. 2017). Relation Networks enable more expressive comparisons by learning the distance function itself using a neural network (Sung et al. 2018). 
+
+Optimization-based approaches. The optimization-based family views meta-learning as “learning an initial parameter set or update rule such that a few steps of optimization on an unseen task lead to high performance.” MAML established a model-agnostic framework by adapting to task-specific parameters via K-step gradient descent in the inner loop and optimizing the post-adaptation performance in the outer loop (Finn et al. 2017). First-order methods such as FO-MAML and Reptile are categorized as algorithms that avoid second-order derivative computations while shifting initial values in a direction that makes “simultaneous learning from the same starting point” easier across tasks (Nichol et al. 2018). Meta-SGD further parameterizes not only the initial values but also the update directions and learning rates, thereby learning a higher-capacity “way to learn” (Li et al. 2017). Another line of work replaces the iterative inner-loop adaptation with differentiable closed-form or rapidly convergent solvers. R2-D2 introduced a differentiable ridge-regression base learner that constructs task-specific classifiers on top of learned embeddings, allowing the meta-objective to be optimized by backpropagating through the solver itself (Bertinetto et al. 2019). This approach occupies an intermediate position between metric-based methods, which often rely on fixed nearest-neighbor or prototype rules after representation learning, and gradient-based methods such as MAML, which perform explicit iterative parameter adaptation. Additionally, iMAML, which computes meta-gradients using implicit gradients without explicitly unrolling the inner loop, is a representative example of scaling these methods by treating them as bilevel optimization problems (Rajeswaran et al. 2019). 
+
+Model-based approaches. The model-based family implements intra-task adaptation as part of the network’s computation using external memory, hypernetworks, or architectures designed to learn the optimizer. Memory-Augmented Neural Networks (MANN) demonstrated rapid one/few-shot adaptation by using external memory to quickly write and read new information, providing a foundation for meta-learning via model design (Santoro et al. 2016). Furthermore, the classical lineage of “learning to learn” such as “Optimization as a Model” (which uses LSTMs to learn update rules), can be understood as a bridge between model-based and optimization-based approaches (Hochreiter et al. 2001; Andrychowicz et al. 2016; Ravi et al. 2017). SNAIL demonstrated high performance across multiple domains (supervised and reinforcement learning) as a general-purpose meta-learner combining temporal convolutions with attention (Mishra et al. 2017). 
+
+## D.2 Meta-Representation Learning: Sharing Representations Across Tasks 
+
+Meta-learning is closely related to transfer learning in that it transfers experiences from numerous tasks to an unseen task (Pan et al. 2009). Representation learning naturally motivates the acquisition of shared representations in transfer and multi-task learning, based on the general principle that mapping inputs to useful latent representations facilitates learning (Bengio et al. 2013). Meta-representation learning is characterized by specializing these shared representations for few-shot adaptation within a task, aiming for both statistical and computational efficiency simultaneously. Classically, Baxter’s model of inductive bias learning clarified the concept of meta-generalization, namely learning a good hypothesis space by observing multiple tasks from a task environment, 38 and served as the starting point for subsequent formalizations (Baxter 2000). In more recent learning theory, Multi-Task Representation Learning (MTRL) has emerged, showing the benefits of learning low-dimensional representations such as dictionaries or feature maps from multiple tasks through generalization error bounds; this provides theoretical support for the acquisition of shared representations in meta-representation learning (Maurer et al. 2013, 2016). As a theory dealing more explicitly with meta-representation learning, research has provided algo-rithms and lower bounds for achieving sample-efficient representation estimation and transfer to unseen tasks in settings where a group of linear regression tasks shares a common low-dimensional linear representation (Tripuraneni et al. 2021). Additionally, some studies analyze the effects of overparameterization on the sample efficiency of meta-representation learning using linear regression sequences, beginning to explain the phenomena observed in deep meta-learning where few-shot adaptation is possible even with large-scale models (Sun et al. 2021). 
+
+## D.3 Learning Theory of Meta-Learning 
+
+Learning theory for meta-learning must account for a dual-sampling structure: the extraction of tasks from a task distribution and the sampling of data points within each individual task (Baxter 2000; Hospedales et al. 2021). Recent theoretical studies commonly employ a framework that decomposes excess risk into statistical estimation error, optimization error, and model approximation error, centered around the meta-generalization gap, the discrepancy between the expected risk on unseen tasks and the empirical meta-objective (Rezazadeh 2022; Wang et al. 2024). In particular, significant progress has been made in precisely analyzing the effects of representation sharing across tasks and how the number of adaptation steps (the inner loop) influences the overall stability of the algorithm (Chen et al. 2022a; Huang et al. 2022). 
+
+Algorithmic Stability. This measures the sensitivity of the output to the replacement of a single data point in the training set. By introducing the concept of “meta-stability” which accounts for the stability of both the inner and outer loops, this framework provides realistic bounds even for gradient-based methods involving non-convex optimization (Bousquet et al. 2002; Wang et al. 2024). 
+
+PAC-Bayes Theory. By introducing a hierarchy of meta-priors and task-specific posteriors, this approach derives bounds dependent on both the task count and sample size (Pentina et al. 2014; Amit et al. 2018; Rezazadeh 2022). 
+
+Information-Theoretic Approach. This approach evaluates generalization error using the mutual information between the algorithm’s output and the input data, thereby quantifying the dependency on the underlying data distribution (Chen et al. 2021). 
+
+Uniform Convergence. Although this framework utilizes traditional complexity measures, the resulting bounds tend to be loose in the context of deep learning and meta-learning. Consequently, data-dependent analyses have become the mainstream approach in recent years (Nagarajan et al. 2019). 
+
+## D.4 Deep Learning Theory 
+
+Theoretical understanding of deep learning has been developed from several complementary perspec-tives, including approximation theory, statistical generalization, optimization, representation learning, and scaling laws. A classical line of work studies the expressive power and statistical estimation properties of neural networks. Deep ReLU networks are known to approximate rich function classes with rates depending on smoothness, sparsity, compositionality, or intrinsic dimension (Yarotsky 2017; 39 Schmidt-Hieber 2020). Particularly relevant to our work is the theory of adaptive approximation and estimation by deep networks. Suzuki (Suzuki 2019b) showed that deep ReLU networks achieve minimax optimal rates over Besov and mixed-smooth Besov spaces and can adapt to spatially inho-mogeneous smoothness. Hayakawa and Suzuki (Hayakawa et al. 2020) further established minimax optimality and the superiority of deep neural network learning over sparse parameter spaces. These results clarify an important statistical mechanism behind deep learning: deep nonlinear architectures can exploit hidden structural regularities that are difficult for non-adaptive linear or kernel methods to capture. This adaptivity perspective has also been extended to modern architectures, including convolutional and ResNet-type networks, Transformers, and diffusion models (Oono et al. 2019; Oko et al. 2023; Takakura et al. 2023). Another major line of work studies generalization in overparameterized neural networks. Since classical capacity bounds based on the raw number of parameters are too pessimistic for modern deep learning, refined analyses have been developed using norms, margins, PAC-Bayes bounds, compression, and algorithm-dependent complexity measures. For example, Bartlett et al. (Bartlett et al. 2017) derived spectrally-normalized margin bounds, and Neyshabur et al. (Neyshabur et al. 2018) developed PAC-Bayesian spectrally-normalized bounds. At the same time, empirical and theoretical studies of interpolation, benign overfitting, and double descent have shown that the classical bias–variance trade-off does not fully explain modern neural network generalization (Zhang et al. 2017; Belkin et al. 2019; Nakkiran et al. 2021). These studies mainly concern single-task learning, whereas our work studies how representations learned from multiple source tasks affect the sample complexity of future tasks. Optimization theory provides another perspective. The neural tangent kernel (NTK) theory shows that infinitely wide neural networks trained by gradient descent can behave like kernel methods (Jacot et al. 2018), and related overparameterization analyses establish global convergence of gradient-based methods under suitable assumptions (Allen-Zhu et al. 2019; Du et al. 2019). However, NTK analyses typically describe a lazy-training regime in which features remain nearly fixed during training (Chizat et al. 2019). This perspective alone is insufficient to explain representation learning, where the features themselves are learned. Mean-field analyses provide an alternative view in which the distribution of neurons evolves during training and feature learning can occur (Mei et al. 2018; Sirignano et al. 2020; Woodworth et al. 2020). Recent work has therefore focused on feature learning beyond fixed-kernel or lazy-training regimes. Ba et al. (Ba et al. 2022) showed that even a single gradient step on the first-layer weights of a two-layer network can improve the learned representation over random features and outperform broad classes of fixed-kernel methods. Suzuki et al. (Suzuki et al. 2023) analyzed feature learning via mean-field Langevin dynamics and showed that mean-field neural networks can achieve sample-complexity improvements over kernel methods for structured problems such as sparse parity learning. More recently, Nishikawa et al. (Nishikawa et al. 2025) showed that nonlinear Transformers can perform inference-time feature learning in in-context learning. These works are closely aligned with our motivation: the statistical advantage of deep learning comes not only from large model capacity, but also from the ability to learn task-relevant representations. The success of large pre-trained models has also motivated theoretical studies of representation learning and scaling laws. Contrastive and self-supervised representation learning have been analyzed as mechanisms for extracting downstream-useful features from auxiliary or unlabeled data (Saunshi et al. 2019; HaoChen et al. 2021). Empirical scaling laws have shown that loss often follows predictable power-law behavior as data, model size, or compute increases (Hestness et al. 2017; Kaplan et al. 2020b; Hoffmann et al. 2022), and recent theoretical work has attempted to explain such laws through 40 variance-limited regimes, data geometry, kernel spectra, and feature learning (Bahri et al. 2024; Bordelon et al. 2025). Scaling laws have also been studied in transfer and downstream settings (Hernandez et al. 2021; Lourie et al. 2025), where the relation between source data and target tasks becomes essential. Our work is situated at the intersection of these theories and the theory of meta-learning. Classical and modern meta-learning theory shows that multiple related tasks can reduce the sample complexity of future tasks by learning a shared inductive bias or representation (Baxter 2000; Maurer et al. 2016; Tripuraneni et al. 2021). In contrast to most general deep learning theory, which primarily studies single-task approximation, optimization, or generalization, we analyze a meta-representation learning algorithm and prove the achievability of a data scaling law. Thus, our result connects the adaptivity and feature-learning viewpoint of deep learning theory with the statistical theory of meta-learning, making explicit how the number of source tasks and the number of samples per task jointly determine downstream sample efficiency. 41

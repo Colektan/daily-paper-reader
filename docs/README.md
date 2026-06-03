@@ -6,110 +6,86 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-02
-- 运行时间：2026-06-02 22:30:52 UTC
+- 最新运行日期：2026-06-03
+- 运行时间：2026-06-03 23:09:37 UTC
 - 运行状态：成功
-- 本次总论文数：30
-- 精读区：18
+- 本次总论文数：22
+- 精读区：10
 - 速读区：12
 
 ### 今日简报（AI）
-今日共处理30篇论文，精读18篇，其中《Wall-OSS-0.5技术报告》与《机器人操作世界模型综述》均获满分。最值得关注的是满分论文中的新型操作系统架构与机器人世界模型前沿进展。建议优先精读这两篇10分论文，再按兴趣速读多模态指令微调与联邦边缘学习领域的8分工作。
-- 详情：[/202606/02/README](/202606/02/README)
+今日精读聚焦机器人动作分块执行与离线元强化学习，速读关注LLM后训练数据优化及鲁棒学习新方法。最值得关注机器人策略的相位感知分块执行（PACE，9.0分）和行为不变任务表示学习（9.0分），两者均突破现有范式。普通读者可优先阅读这两篇精读论文，再根据兴趣涉猎速读中LLM数据工程或迁移学习相关成果。
+- 详情：[/202606/03/README](/202606/03/README)
 
 ### 精读区论文标签
-1. [Wall-OSS-0.5 Technical Report](/202606/02/2605.30877v2-wall-oss-05-technical-report)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：大规模视觉-语言-动作预训练用于机器人策略
-2. [World Models for Robotic Manipulation: A Survey](/202606/02/2606.00113v1-world-models-for-robotic-manipulation-a-survey)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：关于机器人操作世界模型的综述
-3. [Efficient On-policy Visual-RL via Stochastic Decoupled Policy Gradient](/202606/02/2605.26478v1-efficient-on-policy-visual-rl-via-stochastic-decoupled-policy-gradient)  
+1. [PACE: Phase-Aware Chunk Execution for Robot Policies with Action Chunking](/202606/03/2606.00537v1-pace-phase-aware-chunk-execution-for-robot-policies-with-action-chunking)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：高效在策略视觉强化学习方法用于机器人
-4. [PromptEmbedder:: Efficient and Transferable Text Embedding via Dual-LLM Soft Prompting](/202606/02/2605.28066v1-promptembedder-efficient-and-transferable-text-embedding-via-dual-llm-soft-prompting)  
+   evidence：针对VLA机器人策略的相位感知执行
+2. [Behavior-Invariant Task Representation Learning with Transformer-based World Models for Offline Meta-Reinforcement Learning](/202606/03/2606.00780v1-behavior-invariant-task-representation-learning-with-transformer-based-world-models-for-offline-meta-reinforcement-learning)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：世界模型与任务表示学习结合，用于离线元强化学习
+3. [Learning Multi-Modal Trajectory Policies for Data-Efficient Robotic Manipulation](/202606/03/2606.01047v1-learning-multi-modal-trajectory-policies-for-data-efficient-robotic-manipulation)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：针对机器人操作，结合视觉语言输入的多模态轨迹策略
+4. [Beyond Task Success: Behavioral and Representational Diagnostics for WAM and VLA](/202606/03/2606.01095v1-beyond-task-success-behavioral-and-representational-diagnostics-for-wam-and-vla)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：诊断VLA和世界动作模型在机器人操作中的表现
+5. [Lagrangian Perturbation Diffusion Steering: Latent Reinforcement Learning for Generative Policies](/202606/03/2606.01151v1-lagrangian-perturbation-diffusion-steering-latent-reinforcement-learning-for-generative-policies)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：潜空间强化学习用于生成策略，机器人操作
+6. [Provable Data Scaling Law for Meta Learning via Complexity Minimization](/202606/03/2606.02008v1-provable-data-scaling-law-for-meta-learning-via-complexity-minimization)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：双LLM软提示实现可迁移文本嵌入
-5. [Qwen-VLA: Unifying Vision-Language-Action Modeling across Tasks, Environments, and Robot Embodiments](/202606/02/2605.30280v2-qwen-vla-unifying-vision-language-action-modeling-across-tasks-environments-and-robot-embodiments)  
+   evidence：通过复杂度最小化的元学习数据缩放定律
+7. [Coordination Graphs for Constrained Multi-Agent Reinforcement Learning](/202606/03/2606.02337v1-coordination-graphs-for-constrained-multi-agent-reinforcement-learning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：统一的视觉语言动作基础模型，适用于机器人操作与导航
-6. [Remembering by Reconstructing: Domain Incremental Learning With Test-Time Training on Video Streams](/202606/02/2605.31108v1-remembering-by-reconstructing-domain-incremental-learning-with-test-time-training-on-video-streams)  
+   evidence：约束多智能体强化学习中的协调图方法
+8. [Tool-Aware Optimization with Entropy Guidance for Efficient Agentic Reinforcement Learning](/202606/03/2606.03762v1-tool-aware-optimization-with-entropy-guidance-for-efficient-agentic-reinforcement-learning)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：结合工具优化和熵引导的强化学习方法
+9. [Revisiting Embodied Chain-of-Thought for Generalizable Robot Manipulation](/202606/03/2606.03784v1-revisiting-embodied-chain-of-thought-for-generalizable-robot-manipulation)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：视觉-语言-动作模型在机器人操作中的应用
+10. [CoralBay: A Self-Supervised CT Foundation Model](/202606/03/2606.03888v1-coralbay-a-self-supervised-ct-foundation-model)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：自监督掩码自编码器用于领域增量学习
-7. [Skill Reuse as Compression in Agentic RL](/202606/02/2605.31509v1-skill-reuse-as-compression-in-agentic-rl)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：智能体强化学习中的技能重用作为压缩
-8. [Foundation-Preserving Adaptation via Generalized Rayleigh-Quotient Optimization](/202606/02/2606.00132v1-foundation-preserving-adaptation-via-generalized-rayleigh-quotient-optimization)  
-   标签：评分：9.0/10、query:rep-learning
-   evidence：通过Rayleigh商优化进行遗忘感知微调
-9. [Emergence of Exploration in Policy Gradient Reinforcement Learning via Retrying](/202606/02/2606.00151v1-emergence-of-exploration-in-policy-gradient-reinforcement-learning-via-retrying)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：基于重试的策略梯度RL中探索涌现
-10. [Agentic Transformers Provably Learn to Search via Reinforcement Learning](/202606/02/2606.00183v1-agentic-transformers-provably-learn-to-search-via-reinforcement-learning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：使用强化学习使Transformer学会树搜索
-11. [PaCo-VLA: Passivity-Shielded Compliance Prior for Contact-Rich Vision-Language-Action Manipulation](/202606/02/2606.00515v1-paco-vla-passivity-shielded-compliance-prior-for-contact-rich-vision-language-action-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：带无源性保护的VLA用于接触丰富操作
-12. [Behavior-Invariant Task Representation Learning with Transformer-based World Models for Offline Meta-Reinforcement Learning](/202606/02/2606.00780v1-behavior-invariant-task-representation-learning-with-transformer-based-world-models-for-offline-meta-reinforcement-learning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：结合离线元强化学习、世界模型和表征学习
-13. [Decoupled Behavioral Cloning for Scalable Inductive Generalization in RL from Specifications](/202606/02/2606.00838v1-decoupled-behavioral-cloning-for-scalable-inductive-generalization-in-rl-from-specifications)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：解耦行为克隆实现强化学习泛化
-14. [Threading Optimization for Vision-Language-Action Model Inference in Low-Cost Smart Agricultural Manipulation](/202606/02/2606.00966v1-threading-optimization-for-vision-language-action-model-inference-in-low-cost-smart-agricultural-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：低成本农业操作中VLA模型推理的线程优化
-15. [$τ_0$-WM: A Unified Video-Action World Model for Robotic Manipulation](/202606/02/2606.01027v1-0-wm-a-unified-video-action-world-model-for-robotic-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：面向机器人操作的统一视频-动作世界模型
-16. [OneVLA: A Unified Framework for Embodied Tasks](/202606/02/2606.01241v1-onevla-a-unified-framework-for-embodied-tasks)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：统一VLA框架处理导航和操作等具身任务
-17. [RoboSemanticBench: Diagnosing Semantic Grounding in Action Prediction for VLA Models](/202606/02/2606.02277v1-robosemanticbench-diagnosing-semantic-grounding-in-action-prediction-for-vla-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLA模型语义接地基准
-18. [RoboDream: Compositional World Models for Scalable Robot Data Synthesis](/202606/02/2606.02577v1-robodream-compositional-world-models-for-scalable-robot-data-synthesis)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于机器人数据合成的组合世界模型
+   evidence：自监督CT基础模型，在3D体数据上使用自蒸馏
 
 ### 速读区论文标签
-1. [Joint Optimization of Training and Inference in Federated Edge Learning via Constrained Multi-Objective Deep Reinforcement Learning](/202606/02/2605.25916v1-joint-optimization-of-training-and-inference-in-federated-edge-learning-via-constrained-multi-objective-deep-reinforcement-learning)  
+1. [Guiding LLM Post-training Data Engineering with Model Internals from Sparse Autoencoders](/202606/03/2605.27354v1-guiding-llm-post-training-data-engineering-with-model-internals-from-sparse-autoencoders)  
    标签：评分：8.0/10、query:rl-vla-world
-   evidence：多目标深度强化学习用于训练优化
-2. [Learning in Low-Dimensional Subspaces: Orthogonal Bottlenecks for Reinforcement Learning](/202606/02/2605.26012v1-learning-in-low-dimensional-subspaces-orthogonal-bottlenecks-for-reinforcement-learning)  
-   标签：评分：8.0/10、query:rl-vla-world
-   evidence：为深度强化学习引入一种表征级先验，在低维子空间中学习
-3. [Once-For-All: A Train-Once and Select-Anytime Framework for Multimodal Instruction Tuning](/202606/02/2605.26761v1-once-for-all-a-train-once-and-select-anytime-framework-for-multimodal-instruction-tuning)  
+   evidence：通过稀疏自编码器利用模型内部信号指导RL数据工程
+2. [Unification and Optimization of Robust Supervised Learning](/202606/03/2605.28165v1-unification-and-optimization-of-robust-supervised-learning)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：用于多模态指令调优的一次性训练数据选择框架
-4. [Addressing Variable Heterogeneity in Distributed Multimodal Training with Entrain](/202606/02/2605.27918v1-addressing-variable-heterogeneity-in-distributed-multimodal-training-with-entrain)  
+   evidence：统一和优化鲁棒监督学习方法
+3. [Bilinear Coordinate Alignment for Training-Free Task-Vector Transfer](/202606/03/2605.28444v1-bilinear-coordinate-alignment-for-training-free-task-vector-transfer)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：处理异质性的分布式多模态训练框架
-5. [Learning to Adapt SFT Data for Better Reasoning Generalization](/202606/02/2605.26924v1-learning-to-adapt-sft-data-for-better-reasoning-generalization)  
+   evidence：通过任务向量实现免微调的迁移学习
+4. [Efficient Pre-Training of LLMs through Truncated SVD Layers](/202606/03/2605.28573v1-efficient-pre-training-of-llms-through-truncated-svd-layers)  
+   标签：评分：8.0/10、query:rep-learning
+   evidence：通过截断SVD层实现高效预训练
+5. [Adversarial Dual On-Policy Distillation from Expressive Flow-based Teacher](/202606/03/2605.27095v1-adversarial-dual-on-policy-distillation-from-expressive-flow-based-teacher)  
    标签：评分：7.0/10、query:rl-vla-world
-   evidence：使用强化学习适应SFT数据
-6. [Efficient Test-Time Finetuning of LLMs via Convex Reconstruction and Gradient Caching](/202606/02/2605.30337v1-efficient-test-time-finetuning-of-llms-via-convex-reconstruction-and-gradient-caching)  
+   evidence：基于流匹配教师的对抗式在线策略蒸馏，用于具身控制
+6. [Energy-Structured Low-Rank Adaptation for Continual Learning](/202606/03/2605.27482v1-energy-structured-low-rank-adaptation-for-continual-learning)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：通过凸重构和梯度缓存实现高效测试时微调
-7. [Physical Object Understanding with a Physically Controllable World Model](/202606/02/2606.00439v1-physical-object-understanding-with-a-physically-controllable-world-model)  
-   标签：评分：7.0/10、query:rl-vla-world
-   evidence：开发概率世界模型用于物理对象理解
-8. [Saliency-Aware Model Merging](/202606/02/2606.00511v1-saliency-aware-model-merging)  
+   evidence：用于持续学习的低秩适应方法，通过能量集中和排序释放容量
+7. [Is Backpropagation Optimal? When Synthetic Gradients Improve Sample Efficiency](/202606/03/2605.27946v1-is-backpropagation-optimal-when-synthetic-gradients-improve-sample-efficiency)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：基于显著性的模型合并以提升跨领域性能
-9. [Accelerated Dynamic Importance Weighting with Versatile Divergence-Minimizing Estimators](/202606/02/2605.25499v1-accelerated-dynamic-importance-weighting-with-versatile-divergence-minimizing-estimators)  
-   标签：评分：6.0/10、query:rep-learning
-   evidence：针对分布偏移的训练优化
-10. [SAE-FD: Sparse Autoencoder Feature Distillation for Continual Learning of Large Language Models](/202606/02/2605.25525v1-sae-fd-sparse-autoencoder-feature-distillation-for-continual-learning-of-large-language-models)  
-   标签：评分：6.0/10、query:rep-learning
-   evidence：稀疏自编码器特征蒸馏提升持续学习模型性能
-11. [Reinforcement Learning from Denoising Feedback](/202606/02/2605.25638v1-reinforcement-learning-from-denoising-feedback)  
+   evidence：合成梯度提升训练样本效率
+8. [AREA: Attribute Extraction and Aggregation for CLIP-Based Class-Incremental Learning](/202606/03/2605.28809v1-area-attribute-extraction-and-aggregation-for-clip-based-class-incremental-learning)  
+   标签：评分：7.0/10、query:rep-learning
+   evidence：用于CLIP类增量学习的属性提取与聚合
+9. [SIA: Self Improving AI with Harness & Weight Updates](/202606/03/2605.27276v2-sia-self-improving-ai-with-harness--weight-updates)  
    标签：评分：6.0/10、query:rl-vla-world
-   evidence：利用去噪反馈的新型强化学习训练范式用于扩散语言模型
-12. [Agile Online Model Selection: Resolving Adaptation Lag via Safeguarded Large Learning Rates](/202606/02/2605.26919v1-agile-online-model-selection-resolving-adaptation-lag-via-safeguarded-large-learning-rates)  
+   evidence：在自我改进循环中使用强化学习管道更新权重
+10. [Conveyance: A Versatile Framework for Learning in Structured Class Spaces](/202606/03/2605.28420v2-conveyance-a-versatile-framework-for-learning-in-structured-class-spaces)  
    标签：评分：6.0/10、query:rep-learning
-   evidence：带保护的大学习率乐观在线镜像下降
+   evidence：针对结构化类别空间的新型损失函数，提升分类性能
+11. [Interpretability Without Tradeoffs: Disentangling Polysemanticity At Equal Predictive Performance](/202606/03/2605.31304v1-interpretability-without-tradeoffs-disentangling-polysemanticity-at-equal-predictive-performance)  
+   标签：评分：6.0/10、query:rep-learning
+   evidence：解耦表示实现无损可解释性
+12. [On the Difficulty of Learning a Meta-network for Training Data Selection](/202606/03/2606.00571v1-on-the-difficulty-of-learning-a-meta-network-for-training-data-selection)  
+   标签：评分：6.0/10、query:rep-learning
+   evidence：元学习用于训练数据选择的分析
 
 
 <div class="dpr-home-promo-card">

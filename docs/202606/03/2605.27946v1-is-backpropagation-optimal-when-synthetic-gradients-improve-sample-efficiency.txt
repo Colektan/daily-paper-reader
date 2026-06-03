@@ -1,0 +1,3240 @@
+Title: Is Backpropagation Optimal? When Synthetic Gradients Improve Sample Efficiency
+
+URL Source: https://arxiv.org/pdf/2605.27946v1
+
+Published Time: Thu, 28 May 2026 00:44:47 GMT
+
+Number of Pages: 31
+
+Markdown Content:
+# Is Backpropagation Optimal? When Synthetic Gradients Improve Sample Efficiency 
+
+Yibo Jacky Zhang 
+
+Stanford University 
+
+yiboz@stanford.edu 
+
+Zeyu Tang 
+
+Stanford University 
+
+zeyu@cs.stanford.edu 
+
+Sanmi Koyejo 
+
+Stanford University 
+
+sanmi@stanford.edu 
+
+## ABSTRACT 
+
+Backpropagation is the default learning rule for artificial neural networks and is often treated as the settled approach whenever differentiability is available. In this work, we revisit this convention through a theoretical lens of sample efficiency. We introduce a unified vectorized feedback framework for loss-based and reward-based learning on computational graphs, in which synthetic gradients emerge as a natural alternative to backpropagation. We characterize the conditions under which synthetic gradients can achieve a lower gradient-estimation mean squared error than backpropagation. We construct examples illustrating that this sample efficiency advantage can be arbitrarily large. Experiments on contextual bandits and reinforcement learning tasks demonstrate the potential of our theoretical findings. 
+
+## 1 Introduction 
+
+Backpropagation [ 38 , 60 , 48 ] has become the default learning rule for artificial neural networks, repeatedly outperforming alternatives (e.g., [ 37 , 34 , 22 , 49 , 19 ]). As a result, backpropagation (BP) is often treated as the settled answer to neural networks learning whenever differentiability is available. In this paper, we revisit this convention from the perspective of gradient-estimation sample efficiency. To formalize the sample efficiency analysis, we consider the gradient estimation problem on a computational graph with vectorized terminal feedback. This vectorized feedback framework unifies loss-based learning, where the vectorized feedback is the gradient of a loss, and reward-based learning, where it may be given by policy gradients [ 61 , 57 ]. In this picture, as detailed in the next section, backpropagation is analogous to a Monte Carlo (MC) estimator, and temporal-difference (TD) learning [ 56 ] provides a classical bootstrapped alternative to MC estimation. In the vectorized feedback setting, this bootstrapped alternative turns out to be the synthetic gradients [22, 14]. Synthetic gradients (SG) were originally introduced from the perspectives of decoupled computation and bio-plausibility, and their connection to TD learning was also noted early on [ 22 ]. However, prior work largely studied synthetic gradients in essentially chain-structured computational graphs, and established no clear empirical or theoretical advantage over unconstrained backpropagation. As a result, the topic has gradually fallen out of favor, with only limited recent interest [47, 23]. Our point of departure is that this negative picture reflects an incomplete analysis. As with TD versus MC methods, the advantage of synthetic gradient propagation is not universal, but regime-dependent. TD methods can offer practical sample-efficiency advantages over MC methods through bootstrapping, and their theoretical analysis is an active area of research [ 27 , 30 , 5 , 9, 11 ]. In contrast, synthetic gradients remain theoretically underexplored, with limited existing work focused mainly on training convergence [ 14 , 21 ]. However, the analogy between TD and synthetic gradients suggests a possible sample-efficiency advantage over backpropagation, which leads to our central question: 
+
+When can synthetic gradients improve gradient-estimation sample efficiency over backpropagation? 
+
+Formally, this paper studies gradient estimation on differentiable computational graphs. We compare the mean squared error of empirical gradient estimators formed from i.i.d. samples under backpropagation and synthetic gradient propagation. 
+
+Preprint. 1
+
+> arXiv:2605.27946v1 [stat.ML] 27 May 2026
+
+The main contribution of this paper is thus a formal theoretical investigation into this underexplored yet potentially important question. Our results show that backpropagation is not necessarily the minimum-MSE estimator of the true gradient when gradient feedback contains uncertainty. We identify conditions under which synthetic gradients reduce gradient-estimation MSE . Our results can be summarized as follows. 
+
+We introduce a vectorized feedback framework in Section 2 that unifies loss-based and reward-based learning on computational graphs. Motivated by this framework, we formally define the gradient estimation problem in Section 3. We then identify two conditions, defined formally in Section 4, that govern the comparison. Condition (A) says there must be uncertainty in gradient estimations. Specifically, (A)
+
+requires at least one of the following to hold: (A. 1) randomness in the terminal gradient feedback ; (A. 2) 
+
+internal stochasticity in the network computation ; (A. 3) sparse connectivity in the network that leads to partial observability at individual nodes . Condition (B) is a local sufficiency requirement : each node’s local observation contains sufficient information for the conditional mean of its incoming gradient feedback. Under these conditions, the comparison between backpropagation and synthetic gradients becomes sharp. Our theory yields the following separation. With condition ¬(A) ∧ (B), backpropagation is optimal in estimating mean squared error (MSE) among all conditionally unbiased gradient estimators. In contrast, with (A) ∧ (B), an oracle synthetic gradient generator achieves a smaller estimation MSE than backpropa-gation. Thus, for synthetic gradient propagation to improve sample efficiency, some source of randomness or structural sparsity is necessary. This also helps explain why prior work often found synthetic gradients to be worse: synthetic gradients were typically evaluated in deterministic and fully connected networks on relatively clean datasets, essentially where condition (A) is absent. When condition (B) does not hold exactly, or when the synthetic gradient is not an idealized oracle, synthetic gradients may be biased. In this case, we show that a mixture of synthetic and backpropagated gradients can be preferable due to a better bias-variance tradeoff. Inspired by the conditions (A) and (B), in Section 5 we show examples where synthetic gradient propa-gation can be arbitrarily more sample efficient than backpropagation with estimated non-oracle gradient predictors. This construction exploits a concrete realization of the local sufficiency condition (B): a network of specialized expert nodes that decomposes a global task into locally sufficient components. Motivated by our theoretical findings, in Section 6 we apply synthetic gradients to a class of sparsely connected networks. We evaluate this approach on a contextual bandit problem with MNIST contexts [ 33 ]and on POPGym, a recent reinforcement learning benchmark for partially observable environments [ 41 ]. In both settings, the results reflect our theoretical findings: synthetic gradient propagation improves sample efficiency when non-trivial gradient uncertainty is present. We then discuss related work in Section 7. Interestingly, the conditions that favor synthetic gradient propagation in our analysis also resemble several features of biological neural systems. We discuss this connection, along with limitations and future directions, in Section 8. 
+
+## 2 Vectorized Feedback on Computational Graphs 
+
+In this section, we formalize the analogy between TD versus MC estimation and synthetic gradients versus backpropagation on a layered DAG. We begin by fixing some general notation. Vectors and matrices use boldface characters, e.g., g and J. Unless otherwise specified, these are random variables. A sample is denoted with a subscript, e.g., gi, while an estimator formed from samples is denoted by a hat, e.g., 
+
+ˆg. We use a tilde to denote quantities associated with synthetic gradient propagation, e.g., ˜g. We write 
+
+[n] := {1, 2, . . . , n }. Additional notation is introduced as needed. Consider a neural network modeled by a layered DAG G = ( V, E ). Let xv denote the activation at a neuron v ∈ V . For each layer l = 0 , . . . , L , let Vl denote the set of nodes in that layer. The input-layer (layer l = 0 ) receives external inputs, and then each non-input node v ∈ Vl computes its activation through a (possibly stochastic) differential function based on the collective activations zv of its parent neurons 
+
+pa( v) ⊆ Vl−1. Let vL ∈ VL denote a terminal node whose activation y := xvL serves as system output. Then, the terminal node vL receives a global vectorized feedback gvL . This vectorized feedback unifies several cases. In loss-based learning, one may take gvL = ∇y ℓ for a loss term ℓ that may depend on the input data, target data, and the network output y. In reward-based learning, the global feedback gvL may be obtained from policy gradient. Backpropagation propagates this terminal feedback backward through the graph by repeated application of the chain rule. This recursion is exact, yet restrictive: each intermediate neuron plays a purely passive role. 2x1 
+
+> x2x3
+> xL
+
+V1 V2 V3 VL t = 1 t = 2 t = 3 t = L       
+
+> x1x2x3xL
+> z1z2z3
+> layer steps
+> as time steps
+> Layered Computation Time Evolution
+> Local observations
+
+zt
+
+> gL
+
+Figure 1: From a network path to a state evolution trajectory. Left: a single path through a layered network is highlighted in black. Right: after treating layer steps as time steps, the same path is viewed as the trajectory of a state machine. Shaded nodes denote local observations available at each step. Dashed arrows indicate information that skips across time. Curved arrow indicates a vectorized feedback gL.It receives downstream feedback and multiplies it by a Jacobian. To see the alternative viewpoint, consider a single path through the network, from a neuron v1 ∈ V1 in the first layer to vL ∈ VL in the final layer. Since we now focus on a single path, we use xl := xvl for notational ease, and similarly drop the node indicator “ v” for other relevant variables in the remainder of this section. Now, let us view its layered computation v1 → v2 → · · · → vL as the time evolution of a state machine. At step t, the variable xt is the local state of this machine, while the collection of variables at its parent nodes is viewed as a local observation zt. After L such local transitions, the trajectory receives terminal vectorized feedback gL. This process is illustrated in Figure 1. Under this view, backpropagation resembles Monte Carlo (MC) credit assignment: for any intermediate step t, the signal assigned to xt is obtained by directly transporting the terminal feedback gL through the chain rule. Thus, the entire global feedback gL
+
+is effectively given to the whole trajectory. Reward-based learning did not stop at MC, as TD methods can improve sample efficiency by replacing raw sampled future rewards with predicted values [ 56 , 30 ]. The analogy between TD and synthetic gradients is particularly clean in a finite-horizon reward process with reward rL only at the terminal time. For value functions, the task is to estimate the value Vt(zt) = E[rL | zt] from the local information zt. For synthetic gradients, the task is to estimate the gradient feedback gt from the same type of local information 
+
+zt. Let Jt+1  
+
+> t
+
+denote the transposed local Jacobian that maps feedback from step t + 1 to step t, and let 
+
+JLt := Jt+1  
+
+> t
+
+Jt+2  
+
+> t+1
+
+· · · JLL−1 be the full transposed Jacobian from step L back to step t. Then the four estimators can be illustrated as follows. 
+
+MC: bV MC  
+
+> t
+
+(zt) ← rL TD: bV TD  
+
+> t
+
+(zt) ← bV TD  
+
+> t+1
+
+(zt+1 ), bV TD  
+
+> t
+
+(zt) ≈ E[rL | zt],
+
+BP: bgt ← JLt gL SG: b˜ht(zt) ← Jt+1 
+
+> t
+
+b˜ht+1 (zt+1 ), b˜ht(zt) ≈ E[gt | zt].
+
+This extends the prior TD–SG analogy [ 22 , 47 ] from a single chain of computations to a generic layered DAG. As we later show in Section 4, this generalization is necessary for discovering conditions under which synthetic gradients can improve sample efficiency. However, let us first formalize the gradient-estimation problem and metrics for sample efficiency. 
+
+## 3 Problem Formulation: Gradient Propagation and Gradient Estimation 
+
+In this section, we formalize gradient propagation and define the estimation criterion used throughout the paper. We begin by extending the notation from the previous section. Throughout the paper, we assume that all random variables have finite second moments, so that their mean squared errors are well defined. Consider a layered DAG G = ( V, E ) with node-wise random variables. For each layer l ∈ { 0, . . . , L },node (l, i ) ∈ Vl denotes the i-th node in layer l, where i ∈ [ml], and V = ∪Ll=0 Vl. Let xv ∈ Rdv denote the random variable at node v, for some dimension dv . The input-layer variables {x0,i }m0 
+
+> i=1
+
+are drawn from an external distribution. For each layer l ∈ [L] and each node v ∈ Vl, the node variable is generated by a 3differentiable function fv with a local parameter θv :
+
+xv = fv (zv ; θv ), where zv :=  (xv− )v−∈pa( v), ξ v
+
+.
+
+Here pa( v) denotes the set of parent nodes of v, and ξv is an optional auxiliary random variable, independent of everything else, that governs the stochastic behavior of node v. For input nodes we may define 
+
+z(0 ,i ) = x(0 ,i ). For each terminal node (L, i ), we are given a feedback vector g(L,i ) ∈ Rd(L,i ) , living in the same Euclidean space as xL,i . This vectorized feedback is the starting point for gradient propagation. We next define the backward propagation of feedback vectors. For each l ≤ L − 1 and each node v ∈ Vl, let 
+
+ch( v) ⊆ Vl+1 denote the set of children of v. The backpropagated gradient at node v is defined recursively by 
+
+gv = X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+gv+ , where J v+ 
+
+> v
+
+:= 
+
+ ∂xv+
+
+∂xv
+
+⊤
+
+.
+
+Here ∂xv+ 
+
+> ∂xv
+
+is the Jacobian of the local computation at node v+, and it is generally a random matrix because it depends on the fv ’s input zv , which is a random variable. This recursion is the usual backpropagation: each node aggregates the feedback from its children under the chain rule. Synthetic gradients replace part of the exact incoming gradient with a locally generated one. We formalize this in the following definition. 
+
+Definition 1 (Synthetic Gradient Propagation ). For each edge v → v+ with v ∈ Vl, l ≤ L − 1, and 
+
+v+ ∈ ch( v), let ˜h v+ 
+
+> v
+
+∈ Rdv denote a synthetic gradient generated locally by node v+ for node v, and let 
+
+λ v+ 
+
+> v
+
+∈ [0 , 1] be a mixing weight. We define the propagated feedback recursively by 
+
+˜gv = X
+
+> v+∈ch( v)
+
+
+
+λ v+ 
+
+> v
+
+J v+ 
+
+> v
+
+˜gv+ +  1 − λ v+
+
+> v
+
+˜h v+
+
+> v
+
+
+
+,
+
+with terminal condition ˜gv = gv for all v ∈ VL.
+
+When all mixing weights λ = 1 , it reduces to ordinary backpropagation. When all λ = 0 , backward propagation is fully synthetic. Intermediate values allow one to trade off bias and variance. The propagated feedback at node v, whether exact or synthetic, induces a parameter gradient at the local parameter θv :
+
+˜gθ 
+
+> v
+
+= J θ 
+
+> v
+
+˜gv , gθ 
+
+> v
+
+= J θ 
+
+> v
+
+gv , where J θ 
+
+> v
+
+:= 
+
+ ∂xv
+
+∂θv
+
+⊤
+
+.
+
+We now define the criterion of estimator quality used throughout the paper. Let ˆ˜gθ 
+
+> v
+
+be an estimator of the parameter gradient at node v, e.g., the empirical mean of i.i.d. samples. We evaluate estimators by mean squared error (MSE) relative to the true target E gθ 
+
+> v
+
+.
+
+Definition 2 (Gradient Estimator Mean Squared Error ). Given an estimator ˆ˜gθ 
+
+> v
+
+of the parameter gradient at node v, its MSE is 
+
+˜∆2 
+
+> v
+
+:= E ˆ˜gθ 
+
+> v
+
+− E gθ
+
+> v
+> 22
+
+.
+
+Similarly, when the estimator uses only backpropagated gradients, we write ˆgθ 
+
+> v
+
+and ∆2 
+
+> v
+
+for the estimator and its MSE. 
+
+This is a classic criterion to capture sample complexity. A smaller MSE means fewer samples are needed to estimate the target gradient accurately. One may derive sample complexity bounds from ˜∆2
+
+> v
+
+using Chebyshev-type inequalities. Stronger assumptions, e.g., sub-Gaussianity, would yield sharper concentration bounds. In this paper, we impose no tail assumptions and work directly with MSE due to its exactness. To analyze ˜∆2 
+
+> v
+
+, we decompose it into the following terms. 
+
+Definition 3. For a fixed node v, define the expected conditional variance ( ˜ρ2 
+
+> v
+
+), the variance of the conditional mean ( ˜ν2 
+
+> v
+
+), and the squared bias ( ˜b2 
+
+> v
+
+): 
+
+˜ρ2 
+
+> v
+
+:= E ˜gθ 
+
+> v
+
+− E[˜ gθ 
+
+> v
+
+| zv ] 22, ˜ν2 
+
+> v
+
+:= E E[˜ gθ 
+
+> v
+
+| zv ] − E ˜gθ
+
+> v
+> 22
+
+, ˜b2 
+
+> v
+
+:= E ˜gθ 
+
+> v
+
+− E gθ
+
+> v
+> 22
+
+.
+
+Similarly, we define the corresponding backpropagation quantities ρ2 
+
+> v
+
+and ν2 
+
+> v
+
+. By definition, backpropaga-tion is unbiased, so b2 
+
+> v
+
+= 0 .
+
+4Intuitively, the quantity ˜ρ2 
+
+> v
+
+measures the gradient signal that cannot be predicted from the node’s local observations. Then, ˜ν2 
+
+> v
+
+measures the part of the signal that is predictable from zv . Finally, ˜b2 
+
+> v
+
+measures the bias introduced by the gradient estimator. 
+
+Lemma 1. Let ˆ˜gθ 
+
+> v
+
+= 1
+
+> n
+
+P 
+
+> i∈[n]
+
+˜gθ 
+
+> v,i
+
+be the empirical mean of n i.i.d. samples. Then 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ˜ ν2
+
+> v
+
+ + ˜b2 
+
+> v
+
+.
+
+In particular, for a conditionally unbiased estimator, i.e., E [˜ gθ 
+
+> v
+
+| zv ] = E [gθ 
+
+> v
+
+| zv ], we have 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ν2
+
+> v
+
+ .
+
+Lemma 1 makes the bias-variance tradeoffs explicit, which is expected from the MC vs TD analogy. The next section is devoted to characterizing when this tradeoff favors synthetic gradient propagation. 
+
+## 4 Conditions for When Synthetic Gradient Improves Sample Efficiency 
+
+We now turn to the central question. When can synthetic gradients improve sample efficiency? 
+
+To identify the conditions, we need to introduce the following definitions. For a node v ∈ V , define the sibling set (self-included) of a node v ∈ Vl by 
+
+sib( v) := {v′ ∈ Vl : pa( v′) ∩ pa( v)̸ = ∅}.
+
+Definition 4 (Extended Ancestor Set ). For a non-input node v ∈ Vl, we define its sibling-extended ancestor set by the following recursion. 
+
+an sib (v) :=  ∪v−∈pa(sib( v)) an sib (v−) ∪ sib( v),
+
+i.e., an sib (v) contains the siblings of v and the extended ancestors of its siblings’ parents, including its own ancestors. We define the sibling-extended ancestor set of any input node to be empty. 
+
+For any set of nodes U ⊂ V , define ZU := {zu : u ∈ U } to be the collection of the corresponding local observables. Under the MSE criterion, we discover that the sample efficiency is governed by two conditions. 
+
+Definition 5. We introduce conditions (A) and (B).
+
+(A): Uncertainty sources in the gradient feedback : (A) holds if any of the following conditions is true. (A.1) Stochastic terminal gradient feedback. The external gradient feedback g(L,i ) to some terminal node (L, i ) ∈ VL is not almost surely a deterministic function of its output x(L,i ).(A.2) Stochastic network computation. Some node v ∈ V performs stochastic computation. (A.3) Sparsely connected network. Some non-input node v ∈ Vl is sparsely connected to its previous layer, i.e., pa( v)̸ = Vl−1.
+
+(B): Conditional mean sufficiency. Every non-input node’s local observation zv is sufficient for its conditional mean gradient E[gv | zv ] relative to its extended ancestors’ information. Formally, for any node v ∈ Vl and any ancestor subset Ul ⊆ an sib (v), we have E[gv | zv ] = E[gv | zv , ZUl ] almost surely. Note that both conditions are stated in terms of the raw gradient gv , not in terms of any particular propagation rule. They are properties of the problem, not of the estimator. 
+
+Condition (A) ensures that there are uncertainty sources in the incoming gradient feedback at some node, and hence room for variance reduction. The first two cases are direct, while the third case is subtler: even when the terminal feedback and all node computations are deterministic, a sparsely connected node may still see randomness in its incoming gradient due to a partial observation of its upstream states. Then, condition (B) makes the comparison sharp. First, when (A) fails, it implies that there is no realized uncertainty left in the incoming gradient. Second, when (A) holds, it ensures an oracle synthetic gradient to be unbiased. Condition (B) can also be realized concretely as a form of specialization: an expert node 5whose functions are largely independent of others. This interpretation will become more transparent in Section 5. We note that (B) can be viewed as a weaker version of the Markov assumption: standard Markov assumption requires future variables to be conditionally independent of the full history given the current observables, while condition (B) requires only that the conditional mean of the incoming gradient feedback be determined by the node’s current observables. Existing sample-complexity analyses comparing TD and MC estimators typically impose Markovian state representations, often in tabular or linear settings [27, 30, 5, 9, 11]. In the next section, we show that these two conditions yield a clean separation between backpropagation and synthetic gradient propagation under an idealized oracle synthetic gradient estimator. As condition (B)
+
+and the oracle assumption can be strong, we then relax both of them to develop a more general comparison in Section 4.2. 
+
+4.1 Clean Comparisons Under Idealized Conditions 
+
+First, we establish the results for the optimality of backpropagation. 
+
+Theorem 1. Under ¬(A) ∧ (B), every gradient estimator ˆ˜gθ formed by empirical means of i.i.d. con-ditionally unbiased gradient samples (i.e., E [˜ gθ 
+
+> v
+
+| zv ] = E [gθ 
+
+> v
+
+| zv ]) has its estimation MSE greater or equal to that of the empirical-mean backpropagation estimator: ˜∆2 
+
+> v
+
+≥ ∆2 
+
+> v
+
+for any non-input nodes v ∈ V .
+
+In other words, under (B), it is necessary for (A) to hold for synthetic gradient propagation to be more sample efficient: one needs a source of uncertainty for any improvement over exact backpropagation to even be possible. We first consider an idealized synthetic gradient oracle, i.e., the prediction of the incoming gradient based on local observables: 
+
+˜h v+ 
+
+> v
+
+= J v+ 
+
+> v
+
+˜hv+ , where ˜hv+ := E [˜ gv+ | zv+ ]. (1) Note that Conditions (A. 1) –(A. 3) each correspond to a source variable χ that introduces realized uncer-tainty at some node v ∈ V :• under (A.1), χ is an exogenous source of terminal feedback randomness; • under (A.2), χ is an internal source of stochastic computation; • under (A.3), χ is a collection of node variables unobserved by v due to sparse connectivity. We impose the following technical assumption to exclude degenerate cases that would otherwise obscure the main message of our theorem. 
+
+Assumption 1 (Non-degenerate uncertainty source ). When condition (A) holds, at least one of its uncer-tainty sources is non-degenerate: there exist non-terminal v ∈ V and a source variable χ corresponding to (A. 1) –(A. 3) , such that E gθv | zv , Zch( v)
+
+̸ = E gθv | zv , Zch( v), χ with positive probability. 
+
+This rules out the degenerate case where the source χ does not introduce effective uncertainty: it should remain effective to some parameter gradient conditioned on local observables {zv , Zch( v)}.
+
+Theorem 2. Under (A) ∧ (B) and Assumption 1, consider synthetic gradient defined in equation 1 and all mixing weights λ = 0 . Then, for all non-input v ∈ V : ˜∆2 
+
+> v
+
+≤ ∆2 
+
+> v
+
+, and there exists some v: ˜∆2 
+
+> v
+
+< ∆2 
+
+> v
+
+.
+
+Therefore, under condition (B), condition (A) cleanly characterizes when the oracle synthetic gradients can be more sample efficient. In the next section, we relax both the condition (B) and the oracle assumption, moving to a more general regime where there is indeed a bias-variance tradeoff achieved by non-trivial mixing weights λ.
+
+4.2 Comparison Under Generalized Conditions Definition 6 ((B’): Generalized conditional mean sufficiency ). Every non-input node’s local observation 
+
+zv is approximately sufficient for its conditional mean gradient E[gv | zv ] relative to its extended ancestors’ information. Formally, ∀v ∈ Vl and any ancestor subset Ul ⊆ an sib (v), there is a constant ϵ > 0:
+
+∥E[gv | zv ] − E[gv | zv , ZUl ]∥2 ≤ ϵ, a.s. 
+
+6To relax the synthetic gradient oracle setting, we consider a generic synthetic gradient generator. Specifi-cally, for some constant ϵ′ > 0 and for each edge v → v+, let ˜h v+ 
+
+> v
+
+= J v+ 
+
+> v
+
+˜hv+ satisfy 
+
+˜hv+ − E[˜ gv+ | zv+ ] 2
+
+≤ ϵ′, a.s. (2) Thus, we allow two sources of approximation: imperfect local sufficiency through (B′), and imperfect synthetic gradient generator through equation 2. We next study how these approximations change the comparison between backpropagation and synthetic gradient propagation, and in particular how they lead to nontrivial optimal choices of the mixing weights λ. In this subsection, for all node v, we consider 
+
+λv = λ v+ 
+
+> v
+
+for any of its children v+ ∈ ch( v). This means that each node treats the synthetic gradient from their children equally. If bias is present, the optimal mixing weight must trade bias against variance. Fix a non-terminal node 
+
+v ∈ Vl. The parameter gradient induced by synthetic gradient propagation can be written as 
+
+˜gθ 
+
+> v
+
+= λv Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+˜gv+
+
+| {z }
+
+> =: ˜ pv
+
++(1 − λv ) Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+˜h v+
+
+> v
+
+| {z }
+
+> =:˜ sv
+
+= λv ˜pv + (1 − λv )˜ sv .
+
+Here ˜pv is the component obtained by backpropagating gradient feedback through Jacobians, whereas ˜sv
+
+is the component obtained from synthetic gradients. Let ˆ˜pv and ˆ˜sv denote the empirical means of ˜pv and ˜sv , respectively, based on n i.i.d. samples. Then the MSE ˜∆2 
+
+> v
+
+of the empirical mean estimator and the optimal mixing weight λ⋆ is 
+
+˜∆2 
+
+> v
+
+= E ∥ˆ˜gθ 
+
+> v
+
+− E gθ 
+
+> v
+
+∥22 = E λv ˆ˜pv + (1 − λv )ˆ˜sv − E gθ
+
+> v
+> 22
+
+, and λ⋆v = arg min  
+
+> λv∈[0 ,1]
+
+˜∆2 
+
+> v
+
+.
+
+If ˜pv = ˜ sv almost surely, then λv is irrelevant and we pick λ⋆v = 0 . Otherwise, standard quadratic optimization shows that there is a unique solution: 
+
+λ⋆v = E ∥ˆ˜sv − E gθ 
+
+> v
+
+∥22 − E ⟨ˆ˜sv − E gθ 
+
+> v
+
+, ˆ˜pv − E gθ 
+
+> v
+
+⟩
+
+E ∥ˆ˜sv − ˆ˜pv ∥22
+
+projection onto [0 , 1] . (3) Thus λ⋆v < 1 if incorporating a nonzero synthetic component improves over pure backpropagation at node 
+
+v. The next theorem gives a sufficient condition for this to happen. 
+
+Theorem 3. Under condition (B’) and equation 2, assume bounded jacobians ∀v, v + :max {∥ J v+ 
+
+> v
+
+∥2, ∥Jθ 
+
+> v
+
+∥2} ≤ J. A sufficient condition for λ⋆v < 1 is: 
+
+tr Cov( ˜ pv ) − tr Cov(˜ sv )
+
+n >
+
+J2(ϵ + ϵ′) X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+
+
+> 2
+
+where ∀u ∈ V : cu is defined recursively via 
+
+cu = J X
+
+> u+∈ch( u)
+
+(1 − λu + cu+ ), and for terminal nodes ∀u ∈ VL : cu = 0 .
+
+Here tr Cov( ·) denotes the trace of the covariance matrix, i.e., the total variance of a random vector, i.e., 
+
+tr Cov( g) = E ∥g − E g∥22.
+
+Theorem 3 has a simple interpretation. The left-hand side is the variance reduction obtained by using the synthetic component ˜sv instead of the backpropagated component ˜pv , after averaging over n samples. The right-hand side is the bias penalty induced by synthetic gradients. Thus, a synthetic mixture can be beneficial whenever the variance reduction dominates the induced bias. A question remains: how large can this sample efficiency advantage be when the synthetic-gradient generator must itself be estimated from data rather than treated as given? In the next section, we answer this question by constructing examples in which the advantage can be arbitrarily large. 75 An Example of Finite-Partition Expert Network 
+
+We consider a two-hidden-layer architecture in which the first hidden layer a single node, and the second hidden layer has nodes V2 = {(2 , j )}j∈[m2]. In the rest of the section, we denote j := (2 , j ). We focus on gradient estimation on the node (1 , 1) ∈ V1 in the first layer, and thus in this section we omit the subscript when referring to this target node . For example, gθ refers to the backpropagated gradient on this target node (1 , 1) ∈ V1.The first layer node computes a d-dim feature representation x = f (z; θ) ∈ Rd, where z is the input sampled from an external source (i.e., from layer l = 0 ). The second layer contains m2 expert nodes, where each expert j ∈ [m2] specializes in a k-dimensional subspace of the feature vector x. Formally, each expert j effectively acts on uj = Pj x, where Pj : Rd → Rk is a projection. Each expert outputs 
+
+yj = fj (uj ) ∈ R. Then, the final node collects the vector of expert outputs y = ( y1, . . . , y m2 ) ∈ Rm2 .Each expert node j solves an independent sub-task, such that the global loss function decomposes across the experts. The global loss function and its gradient to expert node j are respectively L := Pm2 
+
+> j=1
+
+ℓj (uj , y j ),and gj := ∂L 
+
+> ∂y j
+
+= ∂ℓ j (uj ,y j ) 
+
+> ∂y j
+
+. We compare ordinary backpropagation and synthetic-gradient propagation under three sources of stochastic expert feedback, each inspired by a sub-condition in condition (A).• Case 1: noisy terminal feedback. The external feedback carries i.i.d. noise: ˆgj = gj +ξj , E[ξj ] = 0, E[ξ2 
+
+> j
+
+] = σ2.
+
+• Case 2: stochastic expert activation. Each expert is activated with probability p independently every time. The gradient feedback is thus ˆgj = ηj 
+
+> p
+
+gj , ηj ∼ Bernoulli( p).• Case 3: partial observation. In this case, the terminal node sees some other variables z′ 
+
+> j
+
+, independent across j, such that the global loss term L′ = Pm2 
+
+> j=1
+
+ℓj (uj , y j , z′ 
+
+> j
+
+), and its gradient to expert j becomes 
+
+ˆgj = ∂L′ 
+
+> ∂y j
+
+= ∂ℓ j (uj ,y j ,z′  
+
+> j)
+> ∂y j
+
+.The synthetic gradient from expert j to the target node (1 , 1) needs to be estimated: ˆ˜hj (uj ) ≈ Jj E[gj | zj ].To characterize sample efficiency when the synthetic gradient estimator is itself learned from data, we restrict attention to discrete inputs. This yields a tabular setting, analogous to those commonly used in sample-complexity analyses of TD and MC estimators [9, 11]. Let z ∈ X denote the input variable to our target node (1 , 1) ∈ V1. Let the input space X be partitioned into R = 2 d sets X = FRr=1 Xr . We write zr for the representative input in partition r, and suppose the input variable z is sampled from a uniform distribution over these representative inputs. The target node’s function is piecewise parameterized: 
+
+f (z; θ) = 
+
+> R
+
+X
+
+> r=1
+
+1{z ∈ X r }fθr (z), where θ = ( θ1, . . . , θR). (4) Without loss of generality, let xr = fθr (zr ) ∈ {± 1}d. We assume that the map r 7 → xr is one-to-one and onto {± 1}d. Therefore, drawing r uniformly from [R] is equivalent to drawing xr uniformly from {± 1}d.Let each expert projection Pj selects exactly k coordinates of xr . Thus uj,r := Pj xr ∈ {± 1}k. For any 
+
+u ∈ {± 1}k, let the equivalent class under this projection be 
+
+Fj (r) := {s ∈ [R] : Pj xs = Pj xr }, and thus ∀r ∈ [R] : |F j (r)| = 2 d−k.
+
+In this example, this state-pooling effect is the source of the sample-efficiency advantage of each expert nodes’ synthetic gradient ˜hj ≈ Jj E[ˆ gj | uj ]. We defer the full construction of the example and the theorem statement to Appendix F, and give an informal version below. 
+
+Theorem 4 (Informal version of Theorem 5) . Under the settings described in this section, for all the three cases we have 
+
+∆2 = 2 d−k ˜∆2.
+
+Thus, in this example, the estimation MSE of backpropagation can be arbitrarily larger than that of synthetic gradient propagation. In particular, the gap scales exponentially with the dimension reduction induced by the expert nodes’ subspace specialization. 8(a) Expert network (b) bandit training dynamics (c) bandit mixing weight 
+
+Figure 2: Finite-partition and MNIST bandit results. (a) In the expert simulation, synthetic gradients reduces gradient estimation MSE relative to backpropagation, where the reduction ratio fits the theoretical prediction. (b) In the MNIST contextual bandit, synthetic gradients requires fewer steps (numer of samples seen) to converge. (c) Mixing weights sensitivity in the MNIST contextual bandit experiment. 
+
+## 6 Experiments 
+
+The experiments serve a single purpose: to investigate whether synthetic gradients can still provide sample-efficiency benefits in more applied settings where the conditions in Section 4 may not hold and the synthetic-gradient predictors must be learned from data. We investigate synthetic gradients in three experimental settings 1: from the finite-partition expert network as seen in the previous section, to learning contextual bandits and partially observable RL. 
+
+Simulation of the finite-partition expert network. We first simulate the expert network from Section 5. Figure 2 (a) shows the estimated MSE ratio for the setting of noisy terminal feedback (Case 1). The simulated MSE ratio grows exponentially with d − k, matching the predicted results from Theorem 5. implementation details and simulation results for other cases are shown in Appendix H.1. 
+
+SparseNet. Following our theoretical findings, we investigate a sparsely connected neural network architecture, where every neuron can propagate synthetic gradients. For a neuron to perform both non-linear computations and synthetic gradient prediction, a natural idea is to use a soft-gating mechanism where it has shared keys for input matching and separate heads for non-linear transformation and synthetic gradient prediction. Each neuron also estimates their optimal mixing weight according to equation 3. This architecture is named SparseNet , as detailed in Appendix H.2. 
+
+MNIST contextual bandit. We next test a contextual bandit task learned with policy gradient. The context is a sampled MNIST image [ 33 ], the action is a sampled digit label, and the reward is one for a correct label and zero otherwise; during training the reward is flipped with probability pflip = 0 .4 to simulate a noisy environment. The SparseNet is a five-layer sparse feedforward network with width 200 
+
+and 5 parents per neuron. The first layer receives input images, and final layer’s output is converted into probability logits for sampling actions. We compare SparseNet with synthetic gradient propagation and backpropagation, and a dense MLP. Figures 2 (b)&(c) show that synthetic gradient with adaptive mixing weights improves convergence speed relative to number of samples seen. All curves report means over 
+
+6 seeds with standard error of the mean (SEM). Implementation details and ablation on the number of parents, pflip , learning rates, and λ dynamics are shown in Appendix H.3. 
+
+POPGym reinforcement learning. We investigate whether synthetic gradient propagation can help recurrent neural network learning in RL. We use two maze navigation environments from POPGym [ 41 ]: 
+
+labyrinth escape and labyrinth explore , where only adjacent tiles can be observed by the agent. SparseNet is made recurrent by applying the same sparse neuron transition through time: 128 neurons each is connected to 6 other neurons and optionally the external input, where the connectivity is uniformly randomly picked and fixed at initialization. During each step, the collection of all neuron outputs is converted into probability logits for sampling actions. Synthetic gradient propagation is applied during backpropagation through time (BPTT) to mix backpropagated gradient with synthetic gradients. We compare SparseNet (sgprop), SparseNet (backprop), GRU [ 12 ] and LSTM [ 50 ]. Figure 3 shows the four main training curves. All curves report means over 6 seeds with standard error of the mean (SEM).  
+
+> 1Code is available at https://github.com/jackyzyb/sgprop
+
+9(a) escape , 20 trials. (b) escape , 40 trials.    
+
+> (c) explore , 20 trials. (d) explore , 40 trials.
+
+Figure 3: POPGym labyrinth escape and labyrinth explore . Training dynamics for all methods with 20 sampled trials per gradient update and 40 sampled trials per gradient update. Across these settings, synthetic gradients improve over backpropagation in few-sample regimes. Implementation details and ablations on learning rates and adaptive mixing weights are presented in Appendix H.4. 
+
+## 7 Related Work 
+
+Synthetic Gradients. Synthetic gradients were introduced as decoupled neural interfaces to remove the locking constraints imposed by backpropagation, allowing layers to update using locally predicted gradients rather than waiting for a full backward pass [ 22 ]. Their convergence was later analyzed to show that synthetic-gradient training can lead to different layer-wise representations [ 14 ]. Subsequent variants improved the design and training of synthetic-gradient models [ 13 , 40 , 2], including evaluations on larger-scale architectures such as convolutional neural networks [ 32 , 31 ] and ResNets [ 18 ]. Synthetic gradients, defined as a local learning rule, has also been studied in settings where globally backpropagated gradients are not fully available, including biologically plausible learning [ 3, 24 , 46 ], online recurrent learning [ 3 , 52 , 47 ], transductive meta-learning [ 20 ], and distributed or edge training [ 10 , 42 ]. These works suggest application-specific benefits of synthetic gradients, as discussed below. 
+
+Benefits of Synthetic Gradients versus Backpropagation. One of the clearest benefits of synthetic gradients discovered by prior work is a reduced horizon dependence in recurrent learning [ 22 , 52 , 47 ]. In this setting, backpropagation through time (BPTT) is often applied only over a truncated window, while synthetic gradients can estimate feedback gradients beyond the truncation boundary. Another benefit arises when training is bottlenecked by synchronization or communication: synthetic gradients allow modules to update asynchronously and can improve throughput in distributed settings [ 10 , 42 ]. However, when exact backpropagation is available, prior work generally finds that synthetic gradients, without additional mechanisms, do not match the performance of backpropagation. In this work, we investigate synthetic gradients from a fresh perspective: sample efficiency, and we compare against unconstrained backpropagation. As discussed in Section 2, the sample efficiency benefit is analogous to the advantage of temporal-difference methods over Monte Carlo methods in value function estimation. 
+
+TD versus MC. Temporal-difference (TD) methods [56] have long been studied as alternatives to Monte Carlo (MC) value function estimation, replacing unbiased full-return targets with bootstrapped recursive targets. Despite empirical success, understanding when this bootstrapping improves sample efficiency remains a longstanding question and an active research area. Early work on phased TD established an explicit bias-variance tradeoff [ 27 ]. Related oracle-style analyses further showed that TD methods can exploit Markov structure more efficiently than MC in Markov reward processes [ 17 ]. Subsequent work 10 developed nonasymptotic guarantees for TD and its variants in tabular and linear function approximation settings [ 30 , 6, 9, 35 , 11 ], while lower bounds showed that plain TD is not always statistically optimal [ 28 ,36 ]. More recent analyses extend finite-sample TD theory to nonlinear function approximation [ 7 , 55 , 4]and partially observable environments [ 8]. Overall, the literature suggests that TD is not uniformly superior to MC, but can be substantially more sample-efficient when it successfully exploits the Bellman structure. 
+
+## 8 Discussion, Limitation, and Future Work 
+
+In this work, as detailed in Section 4 and illustrated in Section 5, we identify four conditions under which synthetic gradients may show sample efficiency benefits. These four conditions on neural network learning can be interpreted as: (A. 1) stochastic external feedback; (A. 2) stochastic neuron computation; 
+
+(A. 3) neuron sparsely connected to others; and (B) neuron specialization and local sufficiency. These conditions picture a learning regime that is arguably closer to biological neural systems than to conventional artificial neural networks. We therefore briefly discuss potential connections to biological learning, while emphasizing that this work does not attempt a rigorous neuroscience investigation. Biological learning in real world is intrinsically stochastic, which may be modeled by noisy and delayed external reward signals [ 51 , 1, 44 ], providing a natural analog of Condition (A. 1) . Internally, stochasticity is also a well-established feature of neural computation: cortical neurons exhibit trial-to-trial spiking and synaptic transmission is probabilistic [ 29 , 53 , 15 , 45 , 59 ], consistent with Condition (A. 2) . Moreover, as described by Condition (A. 3) , biological networks are sparse and structured rather than densely connected [ 54 , 43 , 59 ]. Finally, evidence suggests that cortical areas or neuronal populations can exhibit a certain level of specialization and task decomposition [ 25 , 58 , 39 , 59 ]. Recent evidence for vectorized feedback signals in cortical dendrites [ 16 ] further suggests that biological feedback may be richer than scalar reinforcement signals. Overall, this literature suggests an interesting yet preliminary correspondence between the regimes in which synthetic gradients can be advantageous and several features of biological neural systems. However, a more direct and rigorous investigation of this connection is left for future work. Our analysis identifies conditions under which synthetic gradient propagation can improve sample effi-ciency, but it also has several limitations. First, Condition (B) can be strong, and it is not comprehensively explored how well it is satisfied in real network systems. Analysis under further relaxations of this condition is an important direction for future theoretical work. Second, our theory focuses primarily on estimation MSE. A more complete sample-complexity analysis could impose explicit distributional assumptions and derive concentration bounds. Moreover, the adaptive mixing weight used in our experiment is rather rudi-mentary, and better algorithms for estimating these weights may have important practical benefits. Finally, our experiments are intended as proof-of-concept demonstrations rather than a comprehensive empirical evaluation. Future work should test synthetic gradient propagation across broader architectures, tasks, and scales. Despite these limitations, our results suggest that synthetic gradients have a sample-efficiency role that is previously under-explored. 
+
+## References 
+
+[1] J Yu Angela and Peter Dayan. Uncertainty, neuromodulation, and attention. Neuron , 46(4):681–692, 2005. [2] Eugene Belilovsky, Michael Eickenberg, and Edouard Oyallon. Decoupled greedy learning of cnns. In International Conference on Machine Learning , pages 736–745. PMLR, 2020. [3] Guillaume Bellec, Franz Scherr, Elias Hajek, Darjan Salaj, Robert Legenstein, and Wolfgang Maass. Biologically inspired alternatives to backpropagation through time for learning in recurrent neural nets. arXiv preprint arXiv:1901.09049 , 2019. [4] Eloïse Berthier, Ziad Kobeissi, and Francis Bach. A non-asymptotic analysis of non-parametric temporal-difference learning. Advances in Neural Information Processing Systems , 35:7599–7613, 2022. [5] Jalaj Bhandari, Daniel Russo, and Raghav Singal. A finite time analysis of temporal difference learning with linear function approximation. In Sébastien Bubeck, Vianney Perchet, and Philippe Rigollet, editors, Proceedings of the 31st Conference On Learning Theory , volume 75 of Proceedings of Machine Learning Research , pages 1691–1692. PMLR, 06–09 Jul 2018. 11 [6] Jalaj Bhandari, Daniel Russo, and Raghav Singal. A finite time analysis of temporal difference learning with linear function approximation. In Conference on learning theory , pages 1691–1692. PMLR, 2018. [7] Qi Cai, Zhuoran Yang, Jason D Lee, and Zhaoran Wang. Neural temporal-difference learning converges to global optima. Advances in Neural Information Processing Systems , 32, 2019. [8] Semih Cayci, Niao He, and R Srikant. Finite-time analysis of natural actor-critic for pomdps. SIAM Journal on Mathematics of Data Science , 6(4):869–896, 2024. [9] David Cheikhi and Daniel Russo. On the statistical benefits of temporal difference learning. In 
+
+International Conference on Machine Learning , pages 4269–4293. PMLR, 2023. [10] Yitao Chen, Kaiqi Zhao, Baoxin Li, and Ming Zhao. Exploring the use of synthetic gradients for distributed deep learning across cloud and edge resources. In 2nd USENIX Workshop on Hot Topics in Edge Computing (HotEdge 19) , 2019. [11] Xiaoou Cheng and Jonathan Weare. The surprising efficiency of temporal difference learning for rare event prediction. Advances in Neural Information Processing Systems , 37:81257–81286, 2024. [12] Kyunghyun Cho, Bart Van Merriënboer, Ça˘ glar Gulçehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, and Yoshua Bengio. Learning phrase representations using rnn encoder–decoder for statistical machine translation. In Proceedings of the 2014 conference on empirical methods in natural language processing (EMNLP) , pages 1724–1734, 2014. [13] Wojciech M Czarnecki, Simon Osindero, Max Jaderberg, Grzegorz Swirszcz, and Razvan Pascanu. Sobolev training for neural networks. Advances in neural information processing systems , 30, 2017. [14] Wojciech Marian Czarnecki, Grzegorz ´ Swirszcz, Max Jaderberg, Simon Osindero, Oriol Vinyals, and Koray Kavukcuoglu. Understanding synthetic gradients and decoupled neural interfaces. In 
+
+International Conference on Machine Learning , pages 904–912. PMLR, 2017. [15] Peter Dayan and Laurence F Abbott. Theoretical neuroscience: computational and mathematical modeling of neural systems . MIT press, 2005. [16] Valerio Francioni, Vincent D Tang, Enrique HS Toloza, Zilan Ding, Norma J Brown, and Mark T Harnett. Vectorized instructive signals in cortical dendrites. Nature , 652(8112):1254–1263, 2026. [17] Steffen Grunewalder, Sepp Hochreiter, and Klaus Obermayer. Optimality of lstd and its relation to mc. In 2007 International Joint Conference on Neural Networks , pages 338–343. IEEE, 2007. [18] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image recognition. In Proceedings of the IEEE conference on computer vision and pattern recognition ,pages 770–778, 2016. [19] Geoffrey Hinton. The forward-forward algorithm: Some preliminary investigations. arXiv preprint arXiv:2212.13345 , 2(3):5, 2022. [20] Shell Xu Hu, Pablo Garcia Moreno, Yang Xiao, Xi Shen, Guillaume Obozinski, Neil Lawrence, and Andreas Damianou. Empirical bayes transductive meta-learning with synthetic gradients. In 
+
+International Conference on Learning Representations , 2020. [21] Zhouyuan Huo, Bin Gu, Heng Huang, et al. Decoupled parallel backpropagation with convergence guarantee. In International Conference on Machine Learning , pages 2098–2106. PMLR, 2018. [22] Max Jaderberg, Wojciech Marian Czarnecki, Simon Osindero, Oriol Vinyals, Alex Graves, David Sil-ver, and Koray Kavukcuoglu. Decoupled neural interfaces using synthetic gradients. In International conference on machine learning , pages 1627–1635. PMLR, 2017. [23] Vahid Janfaza, Shantanu Mandal, Farabi Mahmud, and Abdullah Muzahid. Ada-gp: Accelerating dnn training by adaptive gradient prediction. In Proceedings of the 56th Annual IEEE/ACM International Symposium on Microarchitecture , pages 1092–1105, 2023. [24] Jacques Kaiser, Hesham Mostafa, and Emre Neftci. Synaptic plasticity dynamics for deep continuous local learning (decolle). Frontiers in Neuroscience , 14:424, 2020. [25] Nancy Kanwisher, Josh McDermott, and Marvin M Chun. The fusiform face area: a module in human extrastriate cortex specialized for face perception. Journal of neuroscience , 17(11):4302–4311, 1997. [26] Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pappas, and François Fleuret. Transformers are rnns: Fast autoregressive transformers with linear attention. In International conference on machine learning , pages 5156–5165. PMLR, 2020. 12 [27] Michael J Kearns and Satinder Singh. Bias-variance error bounds for temporal difference updates. In 
+
+COLT , pages 142–147, 2000. [28] Koulik Khamaru, Ashwin Pananjady, Feng Ruan, Martin J Wainwright, and Michael I Jordan. Is temporal difference learning optimal? an instance-dependent analysis. SIAM Journal on Mathematics of Data Science , 3(4):1013–1040, 2021. [29] Alan Larkman, Timo Hannay, Ken Stratford, and Julian Jack. Presynaptic release probability influences the locus of long-term potentiation. Nature , 360(6399):70–73, 1992. [30] Alessandro Lazaric, Mohammad Ghavamzadeh, and Rémi Munos. Finite-sample analysis of lstd. In 
+
+ICML-27th International Conference on Machine Learning , pages 615–622, 2010. [31] Yann LeCun, Yoshua Bengio, and Geoffrey Hinton. Deep learning. nature , 521(7553):436–444, 2015. [32] Yann LeCun, Bernhard Boser, John S Denker, Donnie Henderson, Richard E Howard, Wayne Hubbard, and Lawrence D Jackel. Backpropagation applied to handwritten zip code recognition. 
+
+Neural computation , 1(4):541–551, 1989. [33] Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE , 86(11):2278–2324, 2002. [34] Dong-Hyun Lee, Saizheng Zhang, Asja Fischer, and Yoshua Bengio. Difference target propagation. In Joint european conference on machine learning and knowledge discovery in databases , pages 498–515. Springer, 2015. [35] Gen Li, Weichen Wu, Yuejie Chi, Cong Ma, Alessandro Rinaldo, and Yuting Wei. High-probability sample complexities for policy evaluation with linear function approximation. IEEE transactions on information theory , 70(8):5969–5999, 2024. [36] Tianjiao Li, Guanghui Lan, and Ashwin Pananjady. Accelerated and instance-optimal policy evalua-tion with linear function approximation. SIAM Journal on Mathematics of Data Science , 5(1):174– 200, 2023. [37] Timothy P Lillicrap, Daniel Cownden, Douglas B Tweed, and Colin J Akerman. Random synap-tic feedback weights support error backpropagation for deep learning. Nature communications ,7(1):13276, 2016. [38] Seppo Linnainmaa. Taylor expansion of the accumulated rounding error. BIT , 16(2):146–160, June 1976. [39] Valerio Mante, David Sussillo, Krishna V Shenoy, and William T Newsome. Context-dependent computation by recurrent dynamics in prefrontal cortex. nature , 503(7474):78–84, 2013. [40] Takeru Miyato, Daisuke Okanohara, Shin-ichi Maeda, and Masanori Koyama. Synthetic gradient methods with virtual forward-backward networks. 2017. [41] Steven Morad, Ryan Kortvelesy, Matteo Bettini, Stephan Liwicki, and Amanda Prorok. Popgym: Benchmarking partially observable reinforcement learning. In The Eleventh International Conference on Learning Representations , 2023. [42] Robby Neven, Marian Verhelst, Tinne Tuytelaars, and Toon Goedemé. Feed-forward on-edge fine-tuning using static synthetic gradient modules. In European Conference on Computer Vision , pages 131–146. Springer, 2020. [43] Seung Wook Oh, Julie A Harris, Lydia Ng, Brent Winslow, Nicholas Cain, Stefan Mihalas, Quanxin Wang, Chris Lau, Leonard Kuan, Alex M Henry, et al. A mesoscale connectome of the mouse brain. 
+
+Nature , 508(7495):207–214, 2014. [44] Shogo Ohmae and Javier F Medina. Climbing fibers encode a temporal-difference prediction error during cerebellar learning in mice. Nature neuroscience , 18(12):1798–1803, 2015. [45] Gerg˝ o Orbán, Pietro Berkes, József Fiser, and Máté Lengyel. Neural variability and sampling-based probabilistic representations in the visual cortex. Neuron , 92(2):530–543, 2016. [46] Joseph Pemberton, Ellen Boven, Richard Apps, and Rui Ponte Costa. Cortico-cerebellar networks as decoupling neural interfaces. Advances in neural information processing systems , 34:7745–7759, 2021. [47] Joseph Oliver Pemberton and Rui Ponte Costa. BP($\mathbf{\lambda}$): Online learning via synthetic gradients. Transactions on Machine Learning Research , 2024. 13 [48] David E Rumelhart, Geoffrey E Hinton, and Ronald J Williams. Learning representations by back-propagating errors. nature , 323(6088):533–536, 1986. [49] Benjamin Scellier and Yoshua Bengio. Equilibrium propagation: Bridging the gap between energy-based models and backpropagation. Frontiers in computational neuroscience , 11:24, 2017. [50] Jürgen Schmidhuber, Sepp Hochreiter, et al. Long short-term memory. Neural Comput , 9(8):1735– 1780, 1997. [51] Wolfram Schultz, Peter Dayan, and P Read Montague. A neural substrate of prediction and reward. 
+
+Science , 275(5306):1593–1599, 1997. [52] David Silver, Anirudh Goyal, Ivo Danihelka, Matteo Hessel, and Hado van Hasselt. Learning by directional gradient descent. In International Conference on Learning Representations , 2021. [53] William R Softky and Christof Koch. The highly irregular firing of cortical cells is inconsistent with temporal integration of random epsps. Journal of neuroscience , 13(1):334–350, 1993. [54] Sen Song, Per Jesper Sjöström, Markus Reigl, Sacha Nelson, and Dmitri B Chklovskii. Highly nonrandom features of synaptic connectivity in local cortical circuits. PLoS biology , 3(3):e68, 2005. [55] Tao Sun, Dongsheng Li, and Bao Wang. Finite-time analysis of adaptive temporal difference learning with deep neural networks. Advances in Neural Information Processing Systems , 35:19592–19604, 2022. [56] Richard S Sutton. Learning to predict by the methods of temporal differences. Machine learning ,3(1):9–44, 1988. [57] Richard S Sutton, David McAllester, Satinder Singh, and Yishay Mansour. Policy gradient methods for reinforcement learning with function approximation. Advances in neural information processing systems , 12, 1999. [58] Bosiljka Tasic, Zizhen Yao, Lucas T Graybuck, Kimberly A Smith, Thuc Nghi Nguyen, Darren Bertagnolli, Jeff Goldy, Emma Garren, Michael N Economo, Sarada Viswanathan, et al. Shared and distinct transcriptomic cell types across neocortical areas. Nature , 563(7729):72–78, 2018. [59] Xiao-Jing Wang. Theoretical neuroscience: Understanding cognition . CRC press, 2025. [60] Paul J Werbos. Applications of advances in nonlinear sensitivity analysis. Springer, 1981. [61] Ronald J Williams. Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning , 8(3):229–256, 1992. 14 Appendix 
+
+## A Proof of Lemma 1 
+
+Lemma 1. Let ˆ˜gθ 
+
+> v
+
+= 1
+
+> n
+
+P 
+
+> i∈[n]
+
+˜gθ 
+
+> v,i
+
+be the empirical mean of n i.i.d. samples. Then 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ˜ ν2
+
+> v
+
+ + ˜b2 
+
+> v
+
+.
+
+In particular, for an conditionally unbiased estimator, i.e., E [˜ gθ 
+
+> v
+
+| zv ] = E [gθ 
+
+> v
+
+| zv ], we have 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ν2
+
+> v
+
+ .
+
+Proof. We start from the standard bias-variance decomposition: 
+
+˜∆2 
+
+> v
+
+= E ˆ˜gθ 
+
+> v
+
+− E gθ
+
+> v
+> 22
+
+= E ˆ˜gθ 
+
+> v
+
+− E ˜gθ
+
+> v
+> 22
+
++ E ˜gθ 
+
+> v
+
+− E gθ
+
+> v
+> 22
+
+= E ˆ˜gθ 
+
+> v
+
+− E ˜gθ
+
+> v
+> 22
+
++ ˜b2 
+
+> v
+
+.
+
+Since ˆ˜gθ 
+
+> v
+
+is the empirical mean of n i.i.d. samples, 
+
+E ˆ˜gθ 
+
+> v
+
+− E ˜gθ 
+
+> v
+> 22
+
+= 1
+
+n E ˜gθ 
+
+> v
+
+− E ˜gθ 
+
+> v
+> 22
+
+.
+
+Now add and subtract E[˜ gθ 
+
+> v
+
+| zv ], and apply the law of total variance: 
+
+E ˜gθ 
+
+> v
+
+− E ˜gθ 
+
+> v
+> 22
+
+= E ˜gθ 
+
+> v
+
+− E[˜ gθ 
+
+> v
+
+| zv ] 22 + E E[˜ gθ 
+
+> v
+
+| zv ] − E ˜gθ
+
+> v
+> 22
+
+= ˜ ρ2 
+
+> v
+
++ ˜ ν2 
+
+> v
+
+.
+
+Combining the two results shows 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ˜ ν2
+
+> v
+
+ + ˜b2 
+
+> v
+
+.
+
+For an unbiased estimator, i.e., E [˜ gθ 
+
+> v
+
+| zv ] = E [gθ 
+
+> v
+
+| zv ], we have ˜b2 
+
+> v
+
+= 0 and ˜ν2 
+
+> v
+
+= ν2 
+
+> v
+
+. Thus, 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ν2
+
+> v
+
+ .
+
+## B Proof of Theorem 1 
+
+Theorem 1. Under ¬(A) ∧ (B), every gradient estimator ˆ˜gθ formed by empirical means of i.i.d. condi-tionally unbiased gradient samples (i.e., E [˜ gθ 
+
+> v
+
+| zv ] = E [gθ 
+
+> v
+
+| zv ]) has its estimation MSE greater or equal to that of the empirical-mean backpropagation estimator: ˜∆2 
+
+> v
+
+≥ ∆2 
+
+> v
+
+for any non-input nodes v ∈ V .. 
+
+Proof. First, we may examine the ¬(A) in more detail. ¬(A) needs all the following conditions to be true. 
+
+¬(A.1) Deterministic terminal gradient feedback. The gradient feedback g(L,i ) to any terminal nodes 
+
+(L, i ) ∈ VL is almost surely a deterministic function of the terminal output x(L,i ).
+
+¬(A.2) Deterministic network computation. All nodes v ∈ V perform deterministic computations. 
+
+¬(A.3) Fully connected network. All non-input nodes are fully connected to their previous layer. 15 Next, we prove the following statement for all non-input nodes v.
+
+¬(A. 1) ∧ ¬ (A. 2) ∧ ¬ (A. 3) ∧ (B) =⇒ ρ2 
+
+> v
+
+= 0 .
+
+We prove this theorem by induction. Define S(l) to be the following statement: the gradient feedback g(l,i ) to any node (l, i ) ∈ Vl is almost surely a deterministic function of the node’s local observation z(l,i ).
+
+Note that S(L) automatically holds under ¬(A. 1) . Now suppose S(l) holds for a layer l > 1, i.e., any node v ∈ Vl satisfies 
+
+gv = E[gv | zv ], a.s.. (5) Since the jacobian Jθ 
+
+> v
+
+is a function of zv , by equation 5 we have 
+
+gθ 
+
+> v
+
+= Jθ 
+
+> v
+
+gv = Jθ 
+
+> v
+
+E[gv | zv ] = E[Jθ 
+
+> v
+
+gv | zv ] = E[gθ 
+
+> v
+
+| zv ], a.s.. 
+
+This implies 
+
+ρ2 
+
+> v
+
+= E
+
+h
+
+gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv ] 22
+
+i
+
+= 0 .
+
+This proves the zero conditional variance for nodes v ∈ Vl in this layer. Next, we prove that S(l − 1) holds. For any node v ∈ Vl in the layer l, by ¬(A. 3) and (B) we have 
+
+∀v− ∈ Vl−1 : E[gv | zv ] = E[gv | zv , zv− ]. (6) For ∀v− ∈ Vl−1, we start by definition and then apply those conditions: 
+
+gv− = X
+
+> v∈ch( v−)
+
+J vv− gv
+
+= X
+
+> v∈ch( v−)
+
+J vv− E[gv | zv , zv− ] a.s. (by (5) and (6)) 
+
+= X
+
+> v∈ch( v−)
+
+E[J vv− gv | zv , zv− ] a.s. (J vv− is a function of zv )
+
+= X
+
+> v∈ch( v−)
+
+E[J vv− gv | zv− ] a.s. (by ¬(A. 2) and ¬(A. 3) , zv is a function of zv− )
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− gv zv−
+
+ a.s. 
+
+= E [gv− | zv− ] a.s. 
+
+This proves S(l − 1) . Therefore, by induction, backpropagation achieves ρ2 
+
+> v
+
+= 0 for all non-input nodes v.By Lemma 1, the estimator MSE from backpropagation is. 
+
+∆2 
+
+> v
+
+= 1
+
+n
+
+ ρ2 
+
+> v
+
++ ν2
+
+> v
+
+ = 1
+
+n ν2 
+
+> v
+
+.
+
+Therefore, by Lemma 1, any unbiased estimator cannot have smaller estimation MSE: 
+
+˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ˜ρ2 
+
+> v
+
++ ν2
+
+> v
+
+ ≥ 1
+
+n ν2 
+
+> v
+
+= ∆ 2 
+
+> v
+
+.
+
+## C Proof of Theorem 2 
+
+Theorem 2 Under (A) ∧ (B) and Assumption 1, consider synthetic gradient defined in equation 1 and all mixing weights λ = 0 . Then, for all non-input v ∈ V : ˜∆2 
+
+> v
+
+≤ ∆2 
+
+> v
+
+, and there exists some v: ˜∆2 
+
+> v
+
+< ∆2 
+
+> v
+
+.16 Proof. We begin by proving the following lemma. 
+
+Lemma 2. Under (B), synthetic gradient propagation with equation 1 and all λ = 0 leads to unbiased ˜gv .Formally, for all non-input nodes v we have 
+
+E[˜ gv | zv ] = E[gv | zv ].
+
+Proof. We prove by induction. First, for terminal nodes ∀v ∈ VL, ˜gv = gv by definition, and thus 
+
+E[˜ gv | zv ] = E[gv | zv ].Now, suppose for a layer l > 1 we have ∀v ∈ Vl : E[˜ gv | zv ] = E[gv | zv ]. Then, for any v− ∈ Vl−1:
+
+E[˜ gv− | zv− ] = E
+
+ X
+
+> v∈ch( v−)
+
+˜h vv− zv−
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[˜ gv | zv ] zv−
+
+ (by (1)) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[gv | zv ] zv−
+
+ (by induction) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[gv | zv , zv− ] zv−
+
+ (by (B)) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+E[J vv− gv | zv , zv− ] zv−
+
+ (J vv− is a function of zv )
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− gv zv−
+
+ (double expectation) 
+
+= E [gv− | zv− ] .
+
+Therefore, by induction, E[˜ gv | zv ] = E[gv | zv ] holds for all non-input nodes v.To proceed, we first prove the following inequality that explicitly shows how uncertainty appears under Condition (A) and Assumption 1: 
+
+E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22
+
+= E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v), χ] + E[gθ 
+
+> v
+
+| zv , Zch( v), χ] − E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22
+
+= E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v), χ]∥22 + E∥E[gθ 
+
+> v
+
+| zv , Zch( v), χ] − E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22
+
+≥ E∥E[gθ 
+
+> v
+
+| zv , Zch( v), χ] − E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22
+
+> 0. (by Assumption 1) Therefore, under Condition (A) and Assumption 1, there is some node v ∈ Vl having 
+
+E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v)]∥2 > 0, (7) where 
+
+Zch( v) := {zv+ : v+ ∈ ch( v)}.
+
+With Lemma 2 and equation 7, we are ready to prove the theorem. Note that Lemma 2 implies 
+
+E[˜ gθ 
+
+> v
+
+| zv ] = E[J θ 
+
+> v
+
+˜gv | zv ] = J θ 
+
+> v
+
+E[˜ gv | zv ] (J θ 
+
+> v
+
+is a function of zv )
+
+= J θ 
+
+> v
+
+E[gv | zv ] (by Lemma 2) 
+
+= E[J θ 
+
+> v
+
+gv | zv ] = E[gθ 
+
+> v
+
+| zv ]. (8) 17 We start from the conditional MSE. For any non-input node v:
+
+˜ρ2 
+
+> v
+
+= E
+
+h
+
+˜gθ 
+
+> v
+
+− E[˜ gθ 
+
+> v
+
+| zv ] 22
+
+i
+
+= E
+
+h
+
+˜gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv ] 22
+
+i
+
+. (by (8)) Recall synthetic gradient propagation with equation 1 and that all λv = 0 , we have 
+
+˜gθ 
+
+> v
+
+= Jθ 
+
+> v
+
+˜gv = Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+˜h v+ 
+
+> v
+
+= Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+E[˜ gv+ | zv+ ]= Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+E [gv+ | zv+ ] (Lemma 2) 
+
+= Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+E gv+ | Zch( v), zv
+
+ (by (B)) 
+
+= E
+
+ X
+
+> v+∈ch( v)
+
+Jθ 
+
+> v
+
+J v+ 
+
+> v
+
+gv+ | Zch( v), zv
+
+ (Jθ 
+
+> v
+
+, J v+ 
+
+> v
+
+are functions of Zch( v), zv )
+
+= E gθ 
+
+> v
+
+| Zch( v), zv
+
+ (9) Because conditioning does not increase variance, we conclude that 
+
+˜ρ2 
+
+> v
+
+≤ ρ2 
+
+> v
+
+.
+
+By Lemma 2, ˜gθ 
+
+> v
+
+is unbiased, and then by Lemma 1: 
+
+˜∆2 
+
+> v
+
+= 1
+
+n (˜ ρ2 
+
+> v
+
++ ν2 
+
+> v
+
+) ≤ 1
+
+n (ρ2 
+
+> v
+
++ ν2 
+
+> v
+
+) = ∆ 2 
+
+> v
+
+. (10) It remains to show that some node v achieves strict inequality. It follows from equation 10 that 
+
+∆2 
+
+> v
+
+− ˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ρ2 
+
+> v
+
+− ˜ρ2
+
+> v
+
+ .
+
+By equation 7, there is some non-input node v such that 
+
+E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22 > 0,
+
+and thus 
+
+ρ2 
+
+> v
+
+= E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv ]∥2 = E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v)] + E[gθ 
+
+> v
+
+| zv , Zch( v)] − E[gθ 
+
+> v
+
+| zv ]∥22
+
+= E∥gθ 
+
+> v
+
+− E[gθ 
+
+> v
+
+| zv , Zch( v)]∥22 + E∥E[gθ 
+
+> v
+
+| zv , Zch( v)] − E[gθ 
+
+> v
+
+| zv ]∥22
+
+> E∥E[gθ 
+
+> v
+
+| zv , Zch( v)] − E[gθ 
+
+> v
+
+| zv ]∥22 (by (7)) 
+
+= E∥˜gθ 
+
+> v
+
+− E[˜ gθ 
+
+> v
+
+| zv ]∥22 (by (9) and Lemma 2) 
+
+= ˜ ρ2 
+
+> v
+
+.
+
+Therefore, 
+
+∆2 
+
+> v
+
+− ˜∆2 
+
+> v
+
+= 1
+
+n
+
+ ρ2 
+
+> v
+
+− ˜ρ2
+
+> v
+
+ > 0.
+
+## D Proof of Lemma 3 
+
+We first quantify how the two approximation errors induce bias in synthetic gradient propagation. 
+
+Lemma 3. Under (B′), synthetic gradient propagation with equation 2. Then, for any non-input nodes 
+
+v ∈ Vl and collection ZUl ⊆ an sib (v) of extended ancestors, assuming bounded jacobians ∥J v+ 
+
+> v
+
+∥2 ≤ J,we have 
+
+∥E[˜ gv | zv , ZUl ] − E[gv | zv , ZUl ]∥2 ≤ cv (ϵ + ϵ′), a.s. (11) 
+
+where ∀v ∈ VL : cv = 0 for terminal nodes, and a node v ∈ Vl in layer l < L :
+
+cv = J X
+
+> v+∈ch( v)
+
+(1 − λv + cv+ )
+
+18 Proof. We begin by introducing a convenient notation. 
+
+Definition 7. We use O(ϵ) to denote a vector that satisfies ∥O (ϵ)∥2 ≤ ϵ almost surely. 
+
+With this notation, we can easily keep track of the scale of errors, e.g., O(ϵ) + O(ϵ) = O(2 ϵ); JO(ϵ) = 
+
+O(∥J∥2ϵ).Therefore, condition (B′) can be expressed as 
+
+E[gv | zv ] = E[gv | zv , ZUl ] + O(ϵ).
+
+Similarly, equation 2 can be expressed as 
+
+˜hv+ = E[˜ gv+ | zv+ ] + O(ϵ′).
+
+Next, we prove the lemma by induction. First, for terminal nodes ∀v ∈ VL, ˜gv = gv by definition, and thus E[˜ gv | ZUL ] = E[gv | ZUL ] for any subset UL ⊆ an sib (v).Now, suppose equation 11 holds for a layer l > 1. Then, consider any v− ∈ Vl−1 and a subset Ul−1 ⊆
+
+an sib (v−). Let Ul := {v−} ∪ Ul−1. Note that for any v ∈ ch( v−), we have Ul ⊆ an sib (v) by Definition 4. Therefore, 
+
+E[˜ gv− | zv− , ZUl−1 ] = E[˜ gv− | ZUl ]= E
+
+ X
+
+> v∈ch( v−)
+
+λv− J vv− ˜gv + (1 − λv− )( J vv− (E[˜ gv | zv ] + O(ϵ′))) ZUl
+
+
+
+= λv− E
+
+ X
+
+> v∈ch( v−)
+
+J vv− ˜gv ZUl
+
+| {z }
+
+> A
+
++(1 − λv− ) E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[˜ gv | zv ] ZUl
+
+| {z }
+
+> B
+
++ (1 − λv− ) · O  |ch( v−)| · Jϵ ′
+
+Applying double expectation, let ϵ′′ := ϵ + ϵ′, we have 
+
+A = E
+
+ X
+
+> v∈ch( v−)
+
+E [J vv− ˜gv | zv , ZUl ] ZUl
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E [˜ gv | zv , ZUl ] ZUl
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− (E [gv | zv , ZUl ] + O(cv ϵ′′ )) ZUl
+
+ (by induction) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E [gv | zv , ZUl ] ZUl
+
+ + O
+
+Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+E [J vv− gv | zv , ZUl ] ZUl
+
+ + O
+
+Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= E [gv− | ZUl ] + O
+
+Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+ . (double expectation) 19 Similarly, for the other term: 
+
+B = E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[˜ gv | zv ] ZUl
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− (E[gv | zv ] + O(cv ϵ′′ )) ZUl
+
+ (by induction) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[gv | zv ] ZUl
+
+ + O
+
+Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− (E[gv | zv , ZUl ] + O(ϵ)) ZUl
+
+ + O
+
+Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+ (by (B’)) 
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+J vv− E[gv | zv , ZUl ] ZUl
+
+ + O
+
+Jϵ · | ch( v−)| + Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= E
+
+ X
+
+> v∈ch( v−)
+
+E[J vv− gv | zv , ZUl ] ZUl
+
+ + O
+
+Jϵ · | ch( v−)| + Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= X
+
+> v∈ch( v−)
+
+E[J vv− gv | ZUl ] + O
+
+Jϵ · | ch( v−)| + Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+ (double expectation) 
+
+= E
+
+h
+
+gv− ZUl
+
+i
+
++ O
+
+Jϵ · | ch( v−)| + Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+ .
+
+Therefore, combining the above, we have 
+
+E[˜ gv− | zv− , ZUl−1 ] = λv− A + (1 − λv− )B + (1 − λv− ) · O  |ch( v−)| · Jϵ ′
+
+= E[gv− | zv− , ZUl−1 ] + O
+
+(1 − λv− )J(ϵ + ϵ′) · | ch( v−)| + Jϵ ′′ X
+
+> v∈ch( v−)
+
+cv
+
+
+
+= E[gv− | zv− , ZUl−1 ] + O (cv− (ϵ + ϵ′)) ,
+
+where 
+
+cv− = J X
+
+> v∈ch( v−)
+
+(1 − λv− + cv ).
+
+By induction, equation 11 holds for every node. 
+
+## E Proof of Theorem 3 
+
+Theorem 3 Under condition (B’) and equation 2, assume bounded jacobians ∀v, v + :max {∥ J v+ 
+
+> v
+
+∥2, ∥Jθ 
+
+> v
+
+∥2} ≤ J. A sufficient condition for λ⋆v < 1 is: 
+
+tr Cov( ˜ pv ) − tr Cov(˜ sv )
+
+n >
+
+J2(ϵ + ϵ′) X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+
+
+> 2
+
+where ∀u ∈ V : cu is defined recursively via 
+
+cu = J X
+
+> u+∈ch( u)
+
+(1 − λu + cu+ ), and for terminal nodes ∀u ∈ VL : cu = 0 .
+
+20 Proof. Let ϵ′′ := ϵ + ϵ′ and we use Definition 7 for a bounded vector such as O(ϵ′′ ). We start by applying Lemma 3 to the following quantity. 
+
+E[˜ sv ] = E
+
+Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+(E[˜ gv+ | zv+ ] + O(ϵ′)) 
+
+
+
+= E
+
+Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+(E[gv+ | zv+ ] + O(ϵ′ + cv+ ϵ′′ )) 
+
+ (by Lemma 3) 
+
+= E
+
+Jθ
+
+> v
+
+X
+
+> v+∈ch( v)
+
+J v+ 
+
+> v
+
+(E[gv+ | zv+ , zv ] + O(ϵ′ + ϵ + cv+ ϵ′′ )) 
+
+ (by (B’)) 
+
+= E
+
+ X
+
+> v+∈ch( v)
+
+E[Jθ 
+
+> v
+
+J v+ 
+
+> v
+
+gv+ | zv+ , zv ]
+
+ + O
+
+J2 X
+
+> v+∈ch( v)
+
+(( cv+ + 1) ϵ′′ )
+
+
+
+= E gθ
+
+> v
+
+ + O
+
+J2ϵ′′ X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+ .
+
+It is standard to show from equation 3 that λ⋆ < 1 if 
+
+E
+
+
+
+ˆ˜sv − E[gθ 
+
+> v
+
+] 22
+
+
+
+< E
+
+
+
+ˆ˜pv − E[gθ 
+
+> v
+
+] 22
+
+
+
+. (12) The LHS can be decomposed as follows. 
+
+E
+
+
+
+ˆ˜sv − E[gθ 
+
+> v
+
+] 22
+
+
+
+= E
+
+
+
+ˆ˜sv − E[˜ sv ] + E[˜ sv ] − E[gθ 
+
+> v
+
+] 22
+
+
+
+= 1
+
+n E
+
+h
+
+∥˜sv − E[˜ sv ]∥22
+
+i
+
++ E[˜ sv ] − E[gθ 
+
+> v
+
+] 22
+
+≤ 1
+
+n E
+
+h
+
+∥˜sv − E[˜ sv ]∥22
+
+i
+
++
+
+J2ϵ′′ X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+
+
+> 2
+
+= 1
+
+n tr Cov(˜ sv ) + 
+
+J2ϵ′′ X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+
+
+> 2
+
+.
+
+Similarly, the RHS shows 
+
+E
+
+
+
+ˆ˜pv − E[gθ 
+
+> v
+
+] 22
+
+
+
+= E
+
+
+
+ˆ˜pv − E[ ˜ pv ] + E[ ˜ pv ] − E[gθ 
+
+> v
+
+] 22
+
+
+
+= 1
+
+n E
+
+h
+
+∥ ˜pv − E[ ˜ pv ]∥22
+
+i
+
++ E[ ˜ pv ] − E[gθ 
+
+> v
+
+] 22
+
+≥ 1
+
+n E
+
+h
+
+∥ ˜pv − E[ ˜ pv ]∥22
+
+i
+
+= 1
+
+n tr Cov( ˜ pv ).
+
+Therefore, a sufficient condition for equation 12 is 
+
+1
+
+n tr Cov(˜ sv ) + 
+
+J2ϵ′′ X
+
+> v+∈ch( v)
+
+(1 + cv+ )
+
+
+
+> 2
+
+< 1
+
+n tr Cov( ˜ pv ).
+
+21 F Detailed Setup of the Example of Finite-Partition Expert Network 
+
+We consider a two-hidden-layer architecture in which the first hidden layer has a single node, and the second hidden layer has nodes V2 = {(2 , j )}j∈[m2]. In the rest of the section, we denote j := (2 , j ). We focus on gradient estimation on the node (1 , 1) ∈ V1 in the first layer, and thus in this section we omit the subscript when referring to this target node . For example, gθ refers to the backpropagated gradient on this target node (1 , 1) ∈ V1.The first layer node computes a d-dim feature representation x = f (z; θ) ∈ Rd, where z is the input sampled from an external source (i.e., from layer l = 0 ). The second layer contains m2 expert nodes, where each expert j ∈ [m2] specializes in a k-dimensional subspace of the feature vector x. Formally, each expert j effectively acts on uj = Pj x, where Pj : Rd → Rk is a projection. Each expert outputs 
+
+yj = fj (uj ) ∈ R. Then, the final node collects the vector of expert outputs y = ( y1, . . . , y m2 ) ∈ Rm2 .Each expert node j solves an independent sub-task, such that the global loss function decomposes across the experts. The global loss function and its gradient to expert node j are respectively 
+
+L := 
+
+> m2
+
+X
+
+> j=1
+
+ℓj (uj , y j ), and gj := ∂L
+
+∂y j
+
+= ∂ℓ j (uj , y j )
+
+∂y j
+
+.
+
+We compare ordinary backpropagation and synthetic-gradient propagation under three sources of stochastic expert feedback, each inspired by a sub-condition in condition (A).• Case 1: noisy terminal feedback. The external feedback carries i.i.d. noise: ˆgj = gj +ξj , E[ξj ] = 0, E[ξ2 
+
+> j
+
+] = σ2.
+
+• Case 2: stochastic expert activation. Each expert is activated with probability p independently every time. The gradient feedback is thus ˆgj = ηj 
+
+> p
+
+gj , ηj ∼ Bernoulli( p).• Case 3: partial observation. In this case, the terminal node sees some other variables z′ 
+
+> j
+
+, independent across j, such that the global loss term L′ = Pm2 
+
+> j=1
+
+ℓj (uj , y j , z′ 
+
+> j
+
+), and its gradient to expert j becomes 
+
+ˆgj = ∂L′ 
+
+> ∂y j
+
+= ∂ℓ j (uj ,y j ,z′  
+
+> j)
+> ∂y j
+
+.The synthetic gradient from expert j to the target node (1 , 1) needs to be estimated: ˆ˜hj (uj ) ≈ Jj E[gj | zj ].To characterize sample efficiency when the synthetic gradient estimator is itself estimated from data, we restrict attention to discrete inputs. This yields a tabular setting, analogous to those commonly used in sample-complexity analyses of TD and MC estimators [9, 11]. We analyze this setting next. Let z ∈ X denote the input variable to our target node (1 , 1) ∈ V1. Let the input space X be partitioned into R = 2 d sets X = FRr=1 Xr . We write zr for the representative input in partition r, and suppose the input variable z is sampled from a uniform distribution over these representative inputs. The target node’s function is piecewise parameterized: 
+
+f (z; θ) = 
+
+> R
+
+X
+
+> r=1
+
+1{z ∈ X r }fθr (z), where θ = ( θ1, . . . , θR).
+
+Let xr = fθr (zr ) ∈ {± 1}d. We assume that the map r 7 → xr is one-to-one and onto {± 1}d. Therefore, drawing r uniformly from [R] is equivalent to drawing xr uniformly from {± 1}d. Let each expert projection Pj selects exactly k coordinates of xr . Thus uj,r := Pj xr ∈ {± 1}k. For any u ∈ {± 1}k, let the equivalent class under this projection be 
+
+Fj (r) := {s ∈ [R] : Pj xs = Pj xr }, and thus ∀r ∈ [R] : |F j (r)| = 2 d−k.
+
+For each expert j and partition r, its has a unique output yj,r = fj (uj ). let 
+
+gj,r := ∂ℓ j (uj,r , y j,r )
+
+∂y j
+
+denote the exact scalar gradient received by expert j. Here, we have fixed all the random variables and thus gj,r becomes a constant. 22 Since the parameter θ = ( θ1, . . . , θR) is also partitioned, by definition of the piecewise function (equa-tion 4), when zr is given, only the parameter θr receives gradient feedback: 
+
+gθr =
+
+> m2
+
+X
+
+> j=1
+
+Jθr 
+
+> r
+
+Jjr gj,r .
+
+Similarly, here gθr becomes a constant vector. Because the parameter blocks θr are specific to the input zr , and each zr is sampled with equal probability, the population mean gradient can be written as 
+
+E gθ = 1
+
+R (gθ1 , . . . , gθR ).
+
+Then, for any gradient estimator ˆ˜gθ = 1 
+
+> R
+
+(ˆ˜gθ1 , . . . , ˆ˜gθR ), the estimation MSE decomposes into the sum of per-partition MSE: 
+
+˜∆2 = E ˆ˜gθ − E gθ 22
+
+= 1
+
+R2
+
+> R
+
+X
+
+> r=1
+
+E ∥ˆ˜gθr − gθr ∥22 = 1
+
+R2
+
+> R
+
+X
+
+> r=1
+
+˜∆2 
+
+> r
+
+, (13) where we denote the per-partition MSE by 
+
+˜∆2 
+
+> r
+
+:= E ∥ˆ˜gθr − gθr ∥22.
+
+For every partition r ∈ [R], we draw n i.i.d. samples. This is analogue to a phased sampling model used in TD learning analyses (e.g., see [ 27 ]) to isolate the statistical mechanism estimators in a single frozen-parameter phase. Thus, the samples can be labeled by (r, i ) ∈ [R] ×[n]. Define the backpropagation estimator to a parameter block θr as 
+
+ˆgθr := 
+
+> m2
+
+X
+
+> j=1
+
+Jθr 
+
+> r
+
+Jjr
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ˆgj,r,i 
+
+!
+
+.
+
+Note that expert j’s local observation is zj = Pj x = uj . As the synthetic-gradient generator approximates 
+
+Jj E[ˆ gj | uj ], let the conditional empirical mean as the synthetic gradient generator: 
+
+ˆ˜hj (uj ) := Jj
+
+ 1
+
+n P 
+
+> r
+
+1(Pj xr = uj )
+
+X
+
+> r,i
+
+1(Pj xr = uj ) ˆ gj,r,i 
+
+ = Jj 1
+
+n|F j (r)|
+
+X 
+
+> s∈F j(r)
+> n
+
+X
+
+> i=1
+
+ˆgj,s,i .
+
+Thus, the synthetic-gradient estimator to a parameter block θr is 
+
+ˆ˜gθr := 
+
+> m2
+
+X
+
+> j=1
+
+Jθr
+
+> r
+
+ˆ˜hj (uj,r ).
+
+Theorem 5. Consider the settings described in this section. Assume that the norm of the gradient feedback to each expert node has a constant norm across experts, i.e., ∀j, j ′ : |gj,r | = |gj′,r |, and for Case 3: 
+
+∀j, j ′ : Var(ˆ gj,r | r) = Var(ˆ gj′,r | r) has a constant variance across experts. Then, for all three cases, we have 
+
+∆2 = 2 d−k ˜∆2.
+
+## G Proof of Theorem 5 
+
+We first prove the following lemma. 
+
+Lemma 4. Fix a state r. Consider the settings and objects described in Theorem 5. Suppose 
+
+ˆgj,s,i = gj,s + εj,s,i ,
+
+where the variables εj,s,i are independent across j, s, i , have mean zero, and have variance 
+
+vj,s := E[ε2
+
+> j,s,i
+
+].
+
+23 We have 
+
+∆2 
+
+> r
+
+= 1
+
+n
+
+> m2
+
+X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2vj,r , and ˜∆2 
+
+> r
+
+= 1
+
+n2d−km2X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2vj,r .
+
+In particular, when vj,r is a constant across expert j, we have 
+
+∆2 
+
+> r
+
+= 2 d−k ˜∆2 
+
+> r
+
+.
+
+Proof. For ordinary backpropagation, define 
+
+εj,r := 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+εj,r,i .
+
+Then 
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ˆgj,r,i = gj,r + εj,r ,
+
+and therefore 
+
+ˆgθr − gθr =
+
+> m2
+
+X
+
+> j=1
+
+Jθr 
+
+> r
+
+Jjr εj,r .
+
+Since E[εj,r ] = 0 , the estimator is unbiased. Also, 
+
+E[ε2 
+
+> j,r
+
+] = vj,r 
+
+n .
+
+The variables εj,r are independent across j. Hence the cross terms vanish, and 
+
+∆2 
+
+> r
+
+= E
+
+h
+
+ˆgθr − gθr 2i
+
+= E
+
+
+
+> m2
+
+X
+
+> j=1
+
+Jθr 
+
+> r
+
+Jjr εj,r 
+
+> 2
+
+
+
+=
+
+> m2
+
+X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2E[ε2 
+
+> j,r
+
+] = 1
+
+n
+
+> m2
+
+X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2vj,r .
+
+We next analyze the synthetic-gradient estimator. Since gj,s = gj,r for every s ∈ F j (r),
+
+ˆ˜hj (xr ) = 1
+
+n|F j (r)|
+
+X 
+
+> s∈F j(r)
+> n
+
+X
+
+> i=1
+
+(gj,s + εj,s,i )= gj,r + 1
+
+n|F j (r)|
+
+X 
+
+> s∈F j(r)
+> n
+
+X
+
+> i=1
+
+εj,s,i .
+
+Define 
+
+eεj,r := 1
+
+n|F j (r)|
+
+X 
+
+> s∈F j(r)
+> n
+
+X
+
+> i=1
+
+εj,s,i .
+
+Then 
+
+ˆ˜hj (xr ) = gj,r + eεj,r .
+
+Since the feedback errors are mean zero, 
+
+E[˜hj (xr )] = gj,r ,
+
+and hence 
+
+E[ˆ˜gθr ] = gθr .
+
+24 Because Pj selects exactly k coordinates and xr ranges uniformly over {± 1}d,
+
+|F j (r)| = 2 d−k.
+
+Using vj,s = vj,r for s ∈ F j (r) and independence, 
+
+E[eε2 
+
+> j,r
+
+] = vj,r 
+
+n|F j (r)| = vj,r 
+
+n2d−k .
+
+Finally, 
+
+ˆ˜gθr − gθr =
+
+> m2
+
+X
+
+> j=1
+
+Jθr 
+
+> r
+
+Jjr eεj,r .
+
+The feedback-error variables are independent across experts j, so the cross terms again vanish. Hence 
+
+˜∆2 
+
+> r
+
+= E
+
+
+
+ˆ˜gθr − gθr
+
+> 2
+
+
+
+=
+
+> m2
+
+X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2E[eε2 
+
+> j,r
+
+]= 1
+
+n2d−km2X
+
+> j=1
+
+∥Jθr 
+
+> r
+
+Jjr ∥2vj,r .
+
+Therefore, when vj,r is a constant across expert j, we have 
+
+∆2 
+
+> r
+
+= 2 d−k ˜∆2 
+
+> r
+
+.
+
+Theorem 5. Consider the settings described in this section. Assume that the norm of the gradient feedback to each expert node has a constant norm across experts, i.e., ∀j, j ′ : |gj,r | = |gj′,r |, and for Case 3: 
+
+∀j, j ′ : Var(ˆ gj,r | r) = Var(ˆ gj′,r | r) has a constant variance across experts. Then, for all three cases, we have 
+
+∆2 = 2 d−k ˜∆2.
+
+Proof. The proof for all three cases are applications of Lemma 4. For Case 1, set εj,s,i = ξj,s,i . Then, εj,s,i is i.i.d. across j, s, i with zero mean and constant variance 
+
+vs = σ2. Invoking Lemma 4 gives the result for Case 1. For Case 2, set 
+
+εj,s,i =
+
+ ηj,s,i 
+
+p − 1
+
+
+
+gj,s .
+
+Since E[ηj,s,i /p ] = 1 , the error has mean zero. Also, 
+
+E
+
+" ηj,s,i 
+
+p − 1
+
+2#
+
+= 1 − pp ,
+
+and hence 
+
+vj,s = 1 − pp g2
+
+> j,s
+
+.
+
+As each g2 
+
+> j,s
+
+is constant across expert j, we know vj,s is constant across experts. Then, invoking Lemma 4 proves the result for Case 2. It remains to prove Case 3. Recall 
+
+ˆgj = ∂L′
+
+∂y j
+
+= ∂ℓ j (uj , y j , z′ 
+
+> j
+
+)
+
+∂y j
+
+.
+
+25 The mean gradient for parameter block θs is 
+
+E gθs 
+
+> s
+
+= E
+
+Jθs
+
+> s
+
+X
+
+> j∈[m2]
+
+Jjs ˆgj | zs
+
+ = Jθs
+
+> s
+
+X
+
+> j∈[m2]
+
+Jjs E [ˆ gj | zs].
+
+Define ¯gj,s := E [ˆ gj | zs] and set 
+
+ϵj,s,i = ˆ gj,s,i − ¯gj,s .
+
+By definition, ϵj,s,i has zero mean, independent across j, s, i . Moreover, by assumption in the theorem statement, its variance vj,s = E[ϵ2
+
+> j,s,i
+
+] is constant across experts. Therefore, invoking Lemma 4 proves: 
+
+∆2 
+
+> r
+
+= 2 d−k ˜∆2 
+
+> r
+
+, ∀r ∈ [R].
+
+Then, applying equation 13 proves the theorem. 
+
+## H Experiment Details 
+
+This section provides the implementation details and full results for the experiments in Section 6. 
+
+H.1 Simulation of the Expert Network 
+
+We first simulate the expert network from Section 5. For each dimension d, the input space is represented by 
+
+R = 2 d partition representatives. The target node output is a bijection onto Boolean states xr ∈ {− 1, +1 }d,and the target node is piecewise parameterized as θ = ( θ1, . . . , θR), so only block θr receives gradient on state r. In the simulation, the local map for each block is linear, fθr (xr ) = Ar θr , with Ar ∼ N (0 , 1 
+
+> d
+
+I);the Boolean state xr is used as the expert-visible representation, while Ar supplies the local Jacobian for pulling gradients back to θr .The second layer contains m expert nodes. Expert j observes a k-coordinate projection uj,r = Pj xr ∈{− 1, +1 }k, computes yj,r = a⊤ 
+
+> j
+
+uj,r + bj , and is trained against a linear target tj (uj,r ) = β⊤ 
+
+> j
+
+uj,r + γj
+
+with squared loss. The clean scalar expert feedback is therefore gj,r = yj,r − tj (uj,r ), which depends only on Pj xr and is constant on the preimage F(r) := {s : Pj xs = Pj xr } of size 2d−k.We compare ordinary backpropagation, which averages stochastic feedback separately at each state, with synthetic-gradient propagation, which estimates the conditional expert feedback table by pooling all states sharing the same projected expert input. The full population gradient is computed by exact enumeration over all R representatives; estimator error is the squared Euclidean distance to this exact gradient. We evaluate the three stochasticity sources from Section 5: noisy terminal feedback, stochastic expert activation, and partial observation. For noisy terminal feedback, each expert receives its clean feedback corrupted by independent additive Gaussian noise, bgj,r = gj,r + ξj , where ξj ∼ N (0 , σ 2). For stochastic expert activation, expert j is active with probability p, and its feedback is reweighted as bgj,r = ( ηj /p )gj,r 
+
+with ηj ∼ Bernoulli( p). For partial observation, the expert target depends on an unobserved zero-mean Gaussian variable qj ∼ N (0 , τ 2), producing feedback bgj,r = gj,r + αj qj , where each αj is a scale constant sampled once from the standard Gaussian for each expert. Each construction is unbiased, so 
+
+E[bgj,r | zr ] = gj,r .The sweep uses d ∈ { 4, . . . , 12 }, k ∈ { 2, 3, 4}, m = 5 experts and 20 Monte Carlo trials. Every possible input variable is sampled once. The reported metric is the ratio ∆2/ ˜∆2 between the squared error of the backpropagation estimator and the squared error of the synthetic-gradient estimator for the full population gradient. 
+
+H.2 SparseNet and Adaptive Gradient Mixing 
+
+The MNIST bandit and POPGym experiments use the same SparseNet neuron template. A SparseNet hidden state is a collection of W neurons, 
+
+H = {hi}Wi=1 , hi ∈ Rq ,
+
+26 (a) Noisy terminal feedback. (b) Stochastic expert activation. (c) Partial observation. 
+
+Figure 4: Finite-partition expert simulation. MSE ratio ∆2/ ˜∆2 between the squared error of the backpropagation estimator and the squared error of the synthetic-gradient estimator for the full population gradient. In all three cases, the ratio grows with dimension reduction d − k, matching the predicted advantage from theory. where q is called the neuron dimension. Each neuron connects to nparents other neurons, where the con-nections are uniformly randomly picked and fixed at initialization. Each neuron observes the concatenated outputs u ∈ Rd from its parent neurons and optionally from external inputs. Each neuron i contains M = nslots slot maps. For slot s, the policy parameters are a key ki,s , a matrix 
+
+Ai,s , and a bias bi,s . The neuron first routes its local input over slots, 
+
+αi,s =exp 
+
+
+
+⟨ui, k i,s ⟩/√d
+
+PMr=1 exp 
+
+
+
+⟨ui, k i,r ⟩/√d
+
+ ,
+
+then computes slot outputs 
+
+yi,s = tanh( Ai,s ui + bi,s ),
+
+and returns the mixture 
+
+¯hi =
+
+> M
+
+X
+
+> s=1
+
+αi,s yi,s .
+
+For MNIST, hidden layers after the first use the residual update implemented in the sweep: 
+
+hℓ,i = tanh( ¯hℓ,i ) + hℓ−1,i , ℓ > 0,
+
+while POPGym uses the sparse transition recurrently through time. The MNIST action layer flattens the final hidden state and forms scaled dot-product logits. The POPGym actor uses an analogous slot mechanism at the action layer: for each action, actor keys route over action slots and the slot logits are mixed to produce the final action logit. This neuron design makes the synthetic gradient predictor convenient in a sparse network: it uses the same local input ui and the same routing weights αi,s , but has predictor-specific slot parameters ˜Ai,s , ˜bi,s :
+
+ˆ˜hi(ui) = 
+
+> M
+
+X
+
+> s=1
+
+αi,s 
+
+ ˜Ai,s ui + ˜bi,s 
+
+
+
+.
+
+Thus, the predictor estimates an incoming hidden-state gradient in Rq using only the information available at that neuron. The adaptive λ rule estimates the per-neuron bias-variance tradeoff from the current mini-batch. Let 
+
+˜pb be the received gradient on this neuron’s parameter on sample b. Let ˜sb be the gradient on this neuron’s parameter induced by its synthetic gradient prediction. We use the batch empirical mean of ˜pb
+
+to approximate the true expected gradient, and use equation 3 to calculate a mixing weight λbatch for this batch. In practice, we found it to be more stable to normalize the gradients to unit ℓ2 norm before estimating the mixing weight. Then, the mixing weight is updated with momentum, 
+
+λ ← μλ + (1 − μ)λbatch .
+
+27 Table 1: MNIST contextual bandit settings. Learning rate are chosen to be their optimal ones respectively according to Figure 6 (a). MLP layers and width are chosen to match the parameter count of SparseNet. Component Setting Value Task Base reward flip probability pflip = 0 .4
+
+Training Steps / seeds 1500 / {0, 1, 2, 3, 4, 5}
+
+Training Batch size / eval batch size 64 / 4000 
+
+SparseNet synthetic grad learning rate 0.005 
+
+SparseNet Layers / width / neuron dim 5 / 200 / 10 
+
+SparseNet Num. of parents 5
+
+SparseNet SGProp Base learning rate 0.005 
+
+SparseNet backprop Base learning rate 0.001 
+
+MLP backprop Layers / width / learning rate 5 / 745 / 2 · 10 −5 
+
+> (a) Training dynamics (b) Compare adaptive and fixed-λ
+
+Figure 5: MNIST contextual bandit. Mean evaluation rewards along training steps. Each curve aggregates six seeds, with the standard error of the mean (SEM) reported. For SparseNet, synthetic gradient improves sample efficiency relative to backpropagation, out performing the dense MLP baseline. The fixed-λ
+
+comparison shows that the benefit depends on balancing synthetic and backpropagated gradients. 
+
+H.3 MNIST Contextual Bandit 
+
+The experiment is a contextual bandit simulation. The context is an MNIST image, and the action set consists of the class predictions {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}. The policy samples an action from its softmax distribution. The true reward is one for a correct sampled label and zero otherwise; during training this reward is flipped with probability pflip , while evaluation uses the noiseless reward. The SparseNet policy is multi-layer sparse feedforward network (SparseNet neuron operation and adaptive gradient-mixing rule detailed in Section H.2). The first layer samples din = qn parents random raw pixel coordinates per neuron, where q is the neuron dimension and nparents is the number of parents. In later layers, each neuron receives input from the concatenation of the states of its nparents parents. Sparse connections are uniformly randomly picked, fixed at initialization. In this experiment, it has five sparse layers of width 200 , neuron output dimension 10 , neuron slots number 5, and number of parents 5 in the base setting. The final action layer flattens the last sparse hidden state and uses learned action keys to produce logits. We compare SparseNet trained by synthetic gradient propagation (sgprop), backpropagation (backprop), and a dense MLP backpropagation baseline. The MLP uses five layers, width 745 , matching the SparseNet parameter count. For every batch, once the gradient is estimated, we use Adam to optimize every network. We plot the evaluation rewards along training steps in Figure 5. We observe that each method has a different optimal learning rate. For example, as synthetic gradient reduces variance, it may benefit from a bigger learning rate. we use their corresponding optimal learning rate according to Figure 6 (a). More ablations (reward noise scale, number of parents, adaptive mixing weight dynamics) are shown in Figure 6; detailed hyperparameters are detailed in Table 1. 
+
+H.4 POPGym Reinforcement Learning 
+
+This experiment tests synthetic gradients in a recurrent SparseNet for partially observable RL. We use two maze navigation environments from POPGym: labyrinth_escape (the agent escapes the maze) and labyrinth_explore (the agent explores the entire maze). If the agent successfully escapes the 28 (a) Learning rate. (b) Scale of the reward noise.    
+
+> (c) Num. of parents. (d) Adaptive λalong training steps.
+
+Figure 6: MNIST contextual bandit ablations. (a) Each method has different optimal learning rate due. (b) Synthetic gradient propagation shows advantages in high variance regime. (c) Synthetic gradient propagation favors sparse connectivity. (d) Dynamics of the adaptive mixing weight along training steps. maze in labyrinth_escape or successfully visits all maze squares in labyrinth_explore , a terminal reward r = 1 is given. For both environments, there is a small penalty r = −0.01 for each step taken. In the exploration task, a reward r = 1 /(total maze squre count ) is given with probability 0.75 for each unseen square the agent visits. For both environments we use maze size (6 , 6) . Both POPGym labyrinth environments are partially observable. The raw maze observation (adjacent tiles) is wrapped with the previous action and then flattened as the resulting observation. A learnable linear mapping is used to map the observation from the environment to an input embedding. For SparseNet, we use 128 neurons, 16 of which are used to receive the input embedding (each receives the same input embedding), while the other neurons only receive inputs from their connected neurons. Training uses a full-episode REINFORCE policy gradient update through backpropagation through time (BPTT): episodes are collected from parallel environments, shorter episodes are padded and masked, discounted Monte Carlo returns are computed, and one policy gradient update is applied. For 
+
+labyrinth_escape we use an episode length of 80 ; for labyrinth_escape we use an episode length of 
+
+40 . Rollout length is the same as the episode length in both environments. As mentioned in Appendix H.2, to estimate the mixing weight adaptively, since the true gradient in equation 3 is not available, we simply use the downstream propagated gradient to replace the true gradient. This, however, could accumulate excessive bias in the gradient estimation, especially for earlier time steps. To make sure that the portion of synthetic gradients is consistent across time steps, we employ the following scheduling heuristic. Each neuron estimates its mixing weight θ normally, but a schedule is applied during gradient propagation through time. For node i in the BPTT graph, let C(i) be its children and define the mean child deficit as 
+
+δt+1 ,i = |C (i)|−1 P
+
+> j∈C (i)
+
+(1 − θt+1 ,j ). The update is θt,i = min {1, θ t+1 ,i + ρ δ t+1 ,i }, so earlier values increase in proportion to the downstream deficit and are maxed out at 1. In this experiment, we use ρ = 0 .1.SparseNet is recurrent in this experiment; the common SparseNet functions and adaptive mixing rule are described in Section H.2. Here, the synthetic gradient mixing is applied during BPTT on the time unrolled computational graph. We compare SparseNet sgprop, SparseNet backprop, GRU [ 12 ], and LSTM [ 50 ]. The GRU and LSTM baselines use backpropagation and use the same observation preprocessing and actor head layout as SparseNet. The recurrent hidden states of all models are reset to zero at the episode starting step. For the baseline choices: LSTM and GRU are both popular RNN architectures, and in particular GRU is shown to be the best in POPGym environments, outperforming other baselines including MLP, LSTM, and Fast Autoregressive Transformers (FART) [26]. 29 (a) escape , 20 envs: training. (b) escape , 20 envs: LR sweep. (c) escape , 20 envs: λ.                  
+
+> (d) escape , 40 envs: training. (e) escape , 40 envs: LR sweep. (f) escape , 40 envs: λ.
+> (g) explore , 20 envs: training. (h) explore , 20 envs: LR sweep. (i) explore , 20 envs: λ.
+> (j) explore , 40 envs: training. (k) explore , 40 envs: LR sweep. (l) explore , 40 envs: λ.
+
+Figure 7: POPGym labyrinth results. Each row shows one environment and parallel-environment setting; columns show training dynamics, learning-rate sensitivity measured by the area-under-curve (AUC) of the success rate curve, and the adaptive mixing weight λ along steps. The more parallel environments, the more sampled trials the agent sees before each parameter update. Results show that synthetic gradient propagation helps the most in few-sample regime. Each model has different optimal learning rate, and the training dynamis show their optimal ones. The results are plotted and discussed in Figure 7. Other detailed experimental settings are shown in Table 2 and Table 3. 30 Table 2: POPGym model dimensions. 
+
+Model Dimensions GRU input size 128 , hidden size 256 , actor hidden size 128 , one recurrent layer LSTM input size 128 , hidden size 256 , actor hidden size 128 , one recurrent layer SparseNet input size 128 , num. of neuron 128 , neuron dim 6, num. of slots 6, input neurons 16 ,each neuron is sparsely connected with 6 parents Table 3: POPGym settings for labyrinth_escape and labyrinth_explore .
+
+Parallel environments {20 , 40 }
+
+Learning rates {2 · 10 −4, 5 · 10 −4, 10 −3, 2 · 10 −3, 4 · 10 −3}
+
+Synhtetic grad predictor learning rate 10 −5
+
+Seeds {0, 1, 2, 3, 4, 5}
+
+Total batches 300 
+
+Discount factor γ = 0 .95 
+
+Entropy coefficient 0.01 
+
+31

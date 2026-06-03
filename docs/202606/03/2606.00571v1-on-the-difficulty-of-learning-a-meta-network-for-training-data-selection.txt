@@ -1,0 +1,5379 @@
+Title: On the Difficulty of Learning a Meta-network for Training Data Selection
+
+URL Source: https://arxiv.org/pdf/2606.00571v1
+
+Published Time: Tue, 02 Jun 2026 00:38:07 GMT
+
+Number of Pages: 45
+
+Markdown Content:
+# On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Zilin Du 1 Junqi Zhao 1 Boyang Albert Li 1
+
+## Abstract 
+
+Synthetic data are increasingly used to train neu-ral networks, yet distributional mismatch with real data limits their effectiveness when used in-discriminately. A common strategy is to learn data weights via bi-level optimization, which we refer to as Meta-learning for Training-data Selec-tion (MTS). Interestingly, in practice, MTS often performs below expectation. We identify two ob-stacles in properly training MTS: a poor gradient signal-to-noise ratio (GSNR), which causes opti-mization difficulties, and lack of informative fea-tures that correlates with data quality. We present a mathematical analysis of MTS, which reveals the dynamics of normalized data weights and the relation between disparate data quality and poor GSNR. The analysis suggests a a simple yet effec-tive solution: increasing the batch size. Further, we propose a set of informative features that cap-ture the positions of training data in their distribu-tions and training dynamics. Experiments across four benchmarks show consistent improvements, achieving average gains of 5.49% over training without selection and 2.89% over the strongest baseline. 1
+
+## 1. Introduction 
+
+It is often desirable to selectively train on a subset of avail-able data, especially when the training and test data are not identically distributed (Lee et al., 2024; Kang et al., 2024; Liu et al., 2024; Xie et al., 2023). A prominent use case scenario these days is training with synthetic data (Fan et al., 2024; Gala & Xie, 2024; Li & Li, 2025), which has become increasingly practical as generative models improve. Never-theless, synthetic data often exhibit distributional shifts or 
+
+> 1
+
+College of Computing and Data Science, Nanyang Technolog-ical University, Singapore. Correspondence to: Boyang Albert Li 
+
+<boyang.li@ntu.edu.sg >.
+
+Proceedings of the 43 rd International Conference on Machine Learning , Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s). 
+
+> 1
+
+Our code is available at https://github.com/ ZILIN003/MTS .
+
+artifacts that distinguish them from real data (Hataya et al., 2023; He et al., 2023; Liu et al., 2025). A popular approach for training data selection is to assign soft weights wi to each training sample (xi, y i) (Ren et al., 2018; Shu et al., 2019) in order to select effective training data or align the training and validation/test distributions. We define wi := sϕ(xi), where sϕ is a data selection net-work parameterized by ϕ. The main network fθ (x) is pa-rameterized by θ. With training data points (xi, y i), valida-tion data (xv 
+
+> i
+
+, y v 
+
+> i
+
+), and per-instance loss ℓ(·), the mini-batch training loss and validation loss are defined as 
+
+Ltrain (θ, ϕ ) := 
+
+ NX
+
+> i=1
+
+wi
+
+−1 NX
+
+> i=1
+
+wiℓ(θ, x i, y i), (1) 
+
+Lval (θ) := N −1
+
+> N
+
+X
+
+> i=1
+
+ℓ(θ, x v 
+
+> i
+
+, y v 
+
+> i
+
+), (2) where N denotes the batch size. To optimize ϕ, prior works adopt a one-step approximation of the complex bi-level optimization. At iteration t:
+
+ϕt+1 = ϕt − ηϕ∇ϕt Lval (θt − ηθ ∇θt Ltrain (θt, ϕ t)) (3) and ηθ and ηϕ are the learning rates. We refer to this frame-work as Meta-learning for Training-data Selection (MTS). Despite its intuitive appeal, MTS often performs under ex-pectation. In Table 2, we show that naive training of MTS with raw image input to sϕ(·) and small batches fails to outperform training without data selection. What causes performance issues of MTS? We identify two obstacles in MTS. First, the gradient signal-to-noise ratio (GSNR) of the selection network is exceed-ingly low (Figure 1). Though moderate levels of variance in the stochastic gradients can serve as implicit regulariza-tion (Smith et al., 2020; Mignacco & Urbani, 2022; Zhou et al., 2020), excessive variance may overwhelm the gradient signal and harm optimization and generalization (Sankarara-man et al., 2020; Liu et al., 2020). We present a comprehensive analysis of the GSNR issue, which shows that the MTS training tends to suppress most data weights wi, which in turn leads to high sensitivity of the gradient update to ϕ to the highest data weight. This 1
+
+> arXiv:2606.00571v1 [cs.LG] 30 May 2026
+
+On the Difficulty of Learning a Meta-network for Training Data Selection 64 128 256 512 1024            
+
+> Batch size
+> 10 2
+> 10 1
+> 10 0
+> GSNR
+> PACS Photo Art
+> 64 128 256 512 1024
+> Batch size
+> 10 1
+> 10 0
+> 10 1
+> Texture
+> Selection Network Classification Network Early Training Stage Middle Training Stage
+
+Figure 1. The gradient signal-to-noise ratio (GSNR) of the selec-tion network is lower than that of the ResNet classification network by roughly one order of magnitude. However, increasing the batch size can help. Early and middle training stages correspond to 20% and 60% of the total training steps. Results are computed as aver-ages over 100 batches. 
+
+directly results in low GSNR. The analysis also presents a simple remedy: increasing the batch size. The second obstacle is that input features to the selection net-work do not correlate well with data effectiveness in training. Even if the network can be trained to convergence due to a good GSNR, it may still lack the information to distinguish between high-quality and low-quality data. We propose a set of informative features, representing the positions of training data in the training and validation distributions and their interaction with the training process. These distribu-tional and dynamic features may be difficult to learn from the raw input xi alone, as they may involve relations among multiple data points and the training process. Good GSNR and high-quality features are both necessary for effective training of the selection network and comple-mentary to each other. Intuitively, high-quality features ensure good solutions exist in the hypothesis space, or the set of all functions representable by the selection net-work; decent GSNR allows us to find such good solutions quickly. Empirically on the task of synthetic data selection, we demonstrate substantial enhancement in MTS perfor-mance when the two solutions are combined, but weak or no improvements when they are employed in isolation. On 4 different datasets and 15 different settings, our method attains strong performance, surpassing the baseline with-out data selection by 5.49% and the strongest baseline by 2.89%. Our contributions are summarized as follows: • We provide a mathematical analysis revealing a funda-mental obstacle that hinder effective training of MTS: a low gradient signal-to-noise ratio (GSNR) in the se-lection network. The theoretical analysis identifies the cause of low GSNR and a simple and effective remedy: increasing the batch size. • We design informative features that correlate with the effectiveness of training data and allow the data selec-tion network to function as intended. 
+
+## 2. Related Work 
+
+2.1. Synthetic Images for Image Classification 
+
+Recent advances in diffusion models have made synthetic images a practical resource for training deep models (Feng et al., 2024; Xie et al., 2024; Du et al., 2023), and this ca-pability has been widely leveraged in image classification (Bulent Sariyildiz et al., 2022; Jiang et al., 2025; Singh et al., 2024; Tian et al., 2024). However, synthetic images often exhibit distributional shifts and artifacts relative to real data, which can degrade generalization if used indiscriminately (Hataya et al., 2023; He et al., 2023). To mitigate these issues, prior work has largely focused on generation-side improvements, including fine-tuning generative models to-ward the target distribution (Kim et al., 2024; Azizi et al., 2023; Wang et al., 2024b), conditioning on real images (Is-lam et al., 2024; Liu et al., 2025; Trabucco et al., 2023), and prompt engineering strategies (Yuan et al., 2024; Shipard et al., 2023; Dunlap et al., 2023; Zhao et al., 2024). 
+
+2.2. Weighing Training Data 
+
+The notion of assigning distinct weights to data points in the training loss finds applications in diverse problems such as data pruning and domain adaptation. Data pruning aims to find a subset of training data that are as effective as the whole training set (Toneva et al., 2019; Paul et al., 2021; Pleiss et al., 2020; Feldman et al., 2020; Xia et al., 2022; Zheng et al., 2023). This is equivalent to binary 0/1 weights. In domain adaptation, the data weights may help align the training data distribution with the validation distribution (Wang et al., 2024a; Sugiyama et al., 2007; Xie et al., 2023; Bickel et al., 2009; Choi et al., 2021), often with continuous weights, rather than 0/1 weights. A closely related line of work is the selection of synthetic training images, which often employs CLIP similarity (Dunlap et al., 2023; Bansal & Grover, 2023; He et al., 2023; Zhao et al., 2024; Li et al., 2024; Wang et al., 2024b) or auxiliary classifier confidence (Bansal & Grover, 2023; Lampis et al., 2023). Despite their success, the weights are largely assigned from heuristic rules rather than learned from data. The current paper focuses on the selection of synthetic training data, but the technique may potentially be applied to other problem settings. In the next subsection, we review techniques that learn data weights using gradient-based optimization. 
+
+2.3. Gradient-based Hyperparameter Optimization 
+
+Gradient-based hyperparameter optimization (Franceschi et al., 2018; Kwon et al., 2023; Dong et al., 2025; Bao et al., 2021) enables automatic tuning of diverse hyperparame-ters, such as learning rates (Maclaurin et al., 2015), dropout 2On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+rates (Lorraine et al., 2020), architectures (Liu et al., 2018; Zhang et al., 2021), and loss functions (Kim & Hospedales, 2025). Meta-learning for Training-data Selection (MTS) is the learning of data weights under this framework. Ren et al. (2018); Wang et al. (2022) employ a separate hyperparam-eter for each data point, but estimating a hyperparameter from a single training data point may cause high variance and limit knowledge sharing. To alleviate this issue, Fan et al. (2023) learn one weight hyperparameter for each data domain, so that knowledge can be shared across data in the same domain. Shu et al. (2019), on the other hand, propose to calculate the data weights using a lightweight neural net-work, which is a generalizable function learned across all training data. However, they only employ a single feature, the training loss, which does not capture rich patterns in data distribution and generalization behavior. In this work, we provide a theoretical analysis that applies to both the individual data weight setting (Ren et al., 2018; Wang et al., 2022) and the data-weight network setting. Fur-ther, we introduce a rich input feature representation for the data-weight network to better characterize the distribu-tional information of training data and their potential for generalization. 
+
+2.4. Gradient Signal-to-Noise Ratio (GSNR) 
+
+Earlier work has shown that stochastic gradient noise can act as an implicit regularizer, improving generalization (Smith et al., 2020; Mignacco & Urbani, 2022) and helping opti-mization escape sharp minima (Zhou et al., 2020). Beyond analyses of gradient noise, some works have investigated the gradient signal-to-noise ratio (GSNR), though this line of research remains relatively underexplored. Theoretically, Liu et al. (2020) show that a large GSNR is beneficial for the generalization of deep networks, while Rainforth et al. (2018) analyze how GSNR varies for the encoder and de-coder of variational autoencoders as the number of impor-tance samples increases. Empirically, GSNR has been used as a heuristic for domain generalization (Michalkiewicz et al., 2023), knowledge distillation (Huang et al., 2025), and neural architecture search (Sun et al., 2023), among others. In this work, we adopt GSNR as a key analytical tool for understanding MTS. 
+
+## 3. Difficulty in Training Selection Network 
+
+In this section, we formalize the MTS problem and provide a theoretical analysis of the cause of the low signal-to-noise ratio in the selection network gradient. 
+
+3.1. Notations and Problem Definition 
+
+We first introduce the notations. We have a training set 
+
+Dtrain = {(xi, y i)}|D train | 
+
+> i=1
+
+, where each input xi is asso-ciated with a class label yi, and a small validation set 
+
+Dval = {(xv 
+
+> j
+
+, y v 
+
+> j
+
+)}|D val | 
+
+> j=1
+
+. We train a classifier network fθ (·),parameterized by θ, and a data selection network sϕ(·), pa-rameterized by ϕ. The data weight for training sample i is defined as wi := sϕ(xi) ∈ (0 , ∞). Let ℓ(xi, y i, θ ) denote the per-sample training loss, such as cross-entropy, and de-fine its gradient as gi(θ) := ∂ℓ (xi, y i, θ )/∂θ . Similarly, for validation samples, we define γi(θ) := ∂ℓ (xv 
+
+> i
+
+, y v 
+
+> i
+
+, θ )/∂θ .We denote the overall training and validation losses by Ltrain 
+
+and Lval , respectively. The gradient of the selection network output is given by hi := ∂s ϕ(xi)/∂ϕ . Finally, we define the normalization scalar S := PNi=1 wi and the normalized weight vector p := [ p1, . . . , p N ] where pi = wi/S .With data weights wi, the mini-batch training loss is defined as 
+
+Ltrain (θ, ϕ ) = 1
+
+S
+
+> N
+
+X
+
+> i=1
+
+wi ℓ(xi, y i, θ ). (4) Normalization by S ensures that the effective weight vector 
+
+p = [ wi/S ]Ni=1 sits on the (N − 1) -dimensional probability simplex. The mini-batch validation loss does not use the data weights: 
+
+Lval (θ) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+ℓ(xv 
+
+> i
+
+, y v 
+
+> i
+
+, θ ). (5) 
+
+3.2. Optimizing the Data Weights 
+
+The central issue is to learn the data selection parameters 
+
+ϕ from data. To this end, we adopt the following nested optimization (Shu et al., 2019; Ren et al., 2018): 
+
+ϕ∗ = arg min 
+
+> ϕ
+
+Lval (θ∗)
+
+s.t. θ∗ = arg min 
+
+> θ
+
+Ltrain (θ, ϕ ) (6) Note that θ∗ does not depend on ϕ directly. Rather, its dependence on ϕ is through the optimization of Ltrain as ϕ
+
+determines the data weights. We seek ϕ∗ that produces a θ∗
+
+that generalizes the best to Lval .Directly optimizing Eq. 6 is intractable as each gradient update of ϕ would require solving an expensive optimiza-tion problem for θ. Following common practice, we adopt an approximate hypergradient for ϕ with a one-step look-ahead update of θ. At iteration t, we perform the following updates: 
+
+ϕt+1 = ϕt − ηϕ
+
+ddϕ t
+
+Lval (θt − ηθ
+
+∂∂θ t
+
+Ltrain (θt, ϕ t)) , (7) 
+
+θt+1 = θt − ηθ
+
+∂∂θ t
+
+Ltrain (θt, ϕ t+1 ), (8) where ηθ and ηϕ are the respective learning rates. Though it is not necessary to perform equal number of updates to θ
+
+3On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+and ϕ, we empirically find equal number of updates to work well. 
+
+Lemma 3.1 (The hypergradient of ϕ). The update to ϕ in 
+
+(7) is computed as 
+
+ϕt+1 = ϕt − ηθ ηϕ∆ϕt, (9) 
+
+where the hypergradient update ∆ϕt := 1 
+
+> ηθ
+> ddϕ t
+
+Lval (θ′
+
+> t
+
+) is (Appendix A.1)        
+
+> ∆ϕt=−1
+> S
+> 1
+> N
+> NX
+> i=1
+> γi(θ′
+> t)
+> !⊤NX
+> i=1
+> gi(θt)hi(ϕt)⊤
+> −wi
+> S
+> NX
+> j=1
+> hj(ϕt)⊤
+> !
+> ,
+> (10)
+
+where θ′ 
+
+> t
+
+is θ after the one-step update: 
+
+θ′ 
+
+> t
+
+= θt − ηθ
+
+S
+
+> N
+
+X
+
+> i=1
+
+wigi(θt), (11) 
+
+and ηθ and ηϕ are learning rates. 
+
+3.3. Dynamics of the Data Weights 
+
+We first analyze dynamics of pi = wi/S in the simplified setting where each wi is a separate hyperparameter, rather than the output of a network. This is basically the setting of Ren et al. (2018); Wang et al. (2022). In the complete set-ting, wi is the output of network sϕ(·) and updated through parameters ϕ. However, the update directions on wi with and without ϕ are similar. The hypergradient of Lval against wi is (Appendix A.2), 
+
+dLval 
+
+dw i
+
+= −ηθ
+
+1
+
+S ¯γ(θ′
+
+> t
+
+)⊤
+
+"
+
+gi(θt) − X
+
+> k
+
+pkgk(θt)
+
+#
+
+, (12) where ¯γ(θ′
+
+> t
+
+) = PNi γi(θ′
+
+> t
+
+). For simplicity, we drop the dependence on θt and define scalars 
+
+ai := ¯ γ⊤gi, ¯a := X
+
+> k
+
+pkak. (13) We can consider ai as a measure of the alignment between the validation gradient γ, estimated over the entire validation batch, and the gradient of the i-th training data point gi.In comparison, ¯a measures the overall alignment weight-averaged over the training batch. Treating wi as separate hyperparameters, the gradient descent update to wi is 
+
+wi ← wi − ηw
+
+dLval 
+
+dw i
+
+= wi + ηθ ηw
+
+S
+
+ ai − ¯a, (14) where ηw > 0 is the learning rate. Therefore, wi will in-crease if ai > ¯a and decrease if ai < ¯a. In other words, examples whose gradient gi is more aligned with the valida-tion gradient ¯γ than the current weight-averaged alignment ¯a
+
+are up-weighted, while examples whose alignment is weaker than ¯a are down-weighted. Overall, this steers the training gradient toward the validation gradient direction. However, this also introduces a competitive, winner-takes-most dynamic: as some samples gain weight, they raise ¯a,making it increasingly difficult for other samples to remain competitive. This may cause a few wi to dominate S and push other wi to zero, resulting in a spiky distribution p.We formalize the above intuition by analyzing the behavior of wi using a “damped” ODE, 
+
+˙wi(t) := 1
+
+S(t)
+
+
+
+ai − ¯a(t)
+
+
+
+, (15) 
+
+dw i
+
+dt (t) := 
+
+
+
+˙wi(t), if wi(t) > δ or ˙wi(t) > 0,
+
+0, if wi(t) = δ and ˙wi(t) < 0.
+
+(16) The damping of (16) is necessary to prevent negative wi.By modifying the raw gradient ˙wi(t), we ensure that wi(t)
+
+never goes below a floor δ ≥ 0 but can leave the floor if 
+
+˙wi(t) > 0. δ is a hyperparameter that can be controlled by the activation function of sϕ(·). Assuming that (ai) stay constant, and there is a dominant index K so that aK >ai, ∀i̸ = K, we can show pK converges to 1, with a formal proof in Appendix B. 
+
+Theorem 3.2 (Convergence of p to a one-hot vector) .
+
+lim  
+
+> t→∞
+
+pK = 1 , and ∀ i̸ = K, lim  
+
+> t→∞
+
+pi = 0 . (17) 
+
+If δ = 0 , pK reaches 1 in finite time. If δ > 0, the time for 
+
+pK to reach 1 − ϵ scales with O(ϵ−3).
+
+The theorem suggests that, given sufficient training, the network will degenerate to a state where one data point dominates and every other data point contributes very little, if at all, to the training loss. The assumption that (ai) are constant may seem an oversimplification. However, empir-ical training dynamics (Figures 2 and 4) are qualitatively consistent with Theorem 3.2, as discussed below. In reality, (pi) are not so extreme for several reasons. First, the ai values are not constant. As the main network fθ (·)
+
+begins to fit the i-th data point, the gradient norm ∥gi∥2
+
+will decrease, causing ai to decrease and preventing pi from reaching 1. Second, we usually do not train sϕ(·) to conver-gence before switching back to training the main network, which may cause ai to change. Finally and importantly, when we use a parameterized network sϕ(·) to predict wi,the network outputs are usually more smooth than a one-hot vector (Ma & Ying, 2021). As a result, pK usually does not reach 1. Nevertheless, empirical training dynamics (Figures 2 and 4) are qualitatively consistent with Theorem 3.2. First, even 4On the Difficulty of Learning a Meta-network for Training Data Selection 10% 30% 50% 70% 90%                                                  
+
+> 0.0
+> 0.2
+> 0.4
+> (a) Mean of wi
+> 10% 30% 50% 70% 90%
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> (b) Maximum pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 0.0
+> 1.0
+> 2.0
+> 3.0
+> 4.0
+> ×10 3(c) Variance of pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 20
+> 40
+> 60
+> (d) Effective Batch Size
+> CelebA PACS Art Sketch Texture
+> (i) Batch size N=64 10% 30% 50% 70% 90%
+> 0.0
+> 0.2
+> 0.4
+> (a) Mean of wi
+> 10% 30% 50% 70% 90%
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> (b) Maximum pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 0.0
+> 1.0
+> 2.0
+> ×10 4(c) Variance of pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 100
+> 200
+> (d) Effective Batch Size
+> CelebA PACS Art Sketch Texture (ii) Batch size N=256
+
+Figure 2. Training dynamics across two batch sizes: (a) the mean unnormalized weight ˆE[wi] = S/N , which decreases over time, (b) the maximum normalized weight max i pi, which increases but to a lower ceiling for N = 256 (c) the variance Var( pi), which increases to a lower ceiling for N = 256 , and (d) the effective batch size Beff = ( P 
+
+> i
+
+p2 
+
+> i
+
+)−1, which is larger for N = 256 . Colors indicate datasets. Shaded regions show mean ± std across independent batches. Additional results for N = 512 and N = 1024 can be found in Figure 4 of Appendix E. 
+
+though the distribution of p does not become one-hot, it does become spiky. In Figure 2, one component out of 64 or 256 captures 1/20 to 1/4 of the total probability mass. Second, the empirical mean of wi decreases during training. This is also consistent with the theory, given a relatively smooth sϕ(·). That is, if we decrease wi for most i, we end up pushing all wi closer to zero. Third, again as the theory predicts, the sample variance of pi, calculated as 
+
+ˆσ2 
+
+> p
+
+:= 1
+
+> N
+
+PNi=1 (pi − 1/N )2, increases. Simultaneously, the effective batch size (EBS), calculated as  P  
+
+> i
+
+p2
+
+> i
+
+−1
+
+decreases. This is expected, since 
+
+EBS := 
+
+ X 
+
+> i
+
+p2
+
+> i
+
+−1
+
+=
+
+
+
+ˆσ2 
+
+> p
+
++ 1
+
+N
+
+−1
+
+. (18) Overall, Theorem 3.2 provides important insights into the root cause of the experimental observations. Notably, one may naturally expect that lowering EBS would increase the variance of ∆ϕ. We analyze that in the next section. 
+
+3.4. What Degrades and Repairs GSNR 
+
+Theorem 3.2 treats wi as independent hyperparameters. In this section, we study the complete setting where (wi) are output of the selection network sϕ(·) and focus on the se-lection network gradient ∆ϕ of (10) . Our main argument is that a spiky alignment between ¯γ and gi, as well as a small 
+
+S, collectively lead to the degradation of the GSNR for the selection network. However, increasing batch size N can alleviate this issue. The GSNR can be seen as a measurement of the quality of gradient 
+
+GSNR := E∆ϕ 22
+
+E ∆ϕ − E∆ϕ 22
+
+ = E∆ϕ 22
+
+Var  ∆ϕ , (19) where Var( ·) denotes the total variance, computed as the trace of the covariance matrix. Intuitively, the GSNR mea-sures how closely each stochastic gradient update tracks the direct path toward the local minimum. Thus, an extremely low GSNR can cause convergence difficulties. Further, Liu et al. (2020) show that high GSNR leads to improved gener-alization. We capture the spikiness of p with Assumption 3.3. With abuse of notation, we treat gi, wi and hi as random variables, so that ai = ¯ γ⊤gi is also a random variable. We impose the following condition on the expectation of (ai). When the expectations are spiky, it is likely for pK to grow and GSNR to degrade. 
+
+Assumption 3.3 (The expectation of vector a is spiky) .
+
+There is a unique dominant index K such that μ(a) 
+
+> K
+
+> μ (a)
+
+> i
+
+for all i̸ = K, where E[ai|wi, h i] = μ(a) 
+
+> i
+
+.
+
+Theorem 3.4. With Assumption 3.3 and some regularity conditions, wK has large influence on ∆ϕ with large prob-ability. More specifically, defining the average gap energy 
+
+Ggap := 
+
+q 1
+
+> N
+
+P 
+
+> i̸=K
+
+(μK − μi)2,
+
+P
+
+ ∂∆ϕ∂w K 2
+
+≥√αG gap 
+
+S2
+
+
+
+≥ (τh − α)2G4
+
+> gap
+
+K1N 9G4 
+
+> gap
+
++ K2N 8 ,
+
+(20) 
+
+where α is an arbitrary value in (0 , τ h); τh, K1, and K2
+
+are positive constants that do not depend on N or Ggap .
+
+5On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+This theorem demonstrates that the sensitivity of the gra-dient ∆ϕ to wK increases linearly with Ggap and 1/S 2.Further, the probability of this event approaches 1 as Ggap 
+
+approaches ∞. However, increasing the batch size N will decrease the probability of the event and the lower bound through S, since E[S] = N E[wi]. It is worth noting that increasing N does not increase Ggap , which is the average over the training batch. One natural thought is that, since ∆ϕ is highly sensitive to wK , randomness in wK may cause high variance in ∆ϕ
+
+and low GSNR. To show this, we need to relate any finite change in wK to the change in ∆ϕ. Such a change is created by resampling (xK , y K ) while keeping all other data points unchanged. This yields a new tuple (egK , ewK , ehK ) and a new gradient of interest ff∆ϕ. With positive probability, the resampling induces a small change to wK , by a bounded second-order derivative and a Taylor-expansion argument, we can show that the ratio 
+
+LK := ∥ ff∆ϕ − ∆ϕ∥2
+
+| ewK − wK | , (21) on the event ewK̸ = wK , is bounded from below, as a direct corollary to Theorem 3.4. 
+
+Corollary 3.5 (Local Lipschitz lower bound under resam-pling, informal) . There exists a constant K3 > 0 depending only on the distribution of (gi, w i, h i) and the validation gradient ¯γ, but not on N or Ggap ,
+
+P
+
+
+
+LK ≥ K3
+
+√α G gap 
+
+S2
+
+
+
+> 0, (22) 
+
+where α is the same constant in Theorem 3.4. 
+
+The main result follows from the lower bound on LK . In plain words, at any snapshot of ϕ and θ, due to the vari-ance induced by random sampling of the data point at the dominant index, (xK , y K ), the GSNR becomes low. We establish an upper bound on GSNR that involves N .
+
+Theorem 3.6 (GSNR upper bound, informal) .
+
+GSNR ≤ CSNR 
+
+N 4 E[S−2]
+
+G2 
+
+> gap
+
+E S−41ELip 
+
+ , (23) 
+
+where constant CSNR > 0 is independent of N and G2
+
+> gap
+
+.
+
+1ELip equals 1 if the lower bound on LK from Corollary 3.5 holds and 0 otherwise. 
+
+The theorem indicates that a small S and a large Ggap de-grade GSNR. A small S is the implication of Theorem 3.2 and their practical existence is confirmed by Figure 2. The theory also hints at an obvious solution: increasing the batch size N . Doing so has the effect of increasing N 4
+
+and increasing S, since E[S] = N E[wi]. This solution aligns well with empirical results of Figures 1, 2, and 4. In particular, according to Theorem 3.2, spiky ai should cause degeneration in data selection and a large max i pi.However, Figures 2 and 4 show that this phenomenon is alleviated by a large batch size. 
+
+## 4. Input Features for the Selection Network 
+
+An effective GSNR ensures that we can learn the selection network. However, the network can only be effective at se-lecting data if it has good features that contain information about data quality. To this end, we devise a rich feature vector that encodes a wide range of signals related to gen-eralization, including local, global, optimization dynamics, and class-indicator features. We assume the availability of a small validation set, whose distribution is similar to the true test, during training. Due to space constraints, we discuss the features briefly here and leave details to Appendix I. 
+
+Local features characterize the local geometry around each input xi through its cosine similarities to K nearest neigh-bors (KNN) in the training and validation sets. Intuitively, if xi is very similar to many training data points, it may be redundant. Conversely, if it is far away from most training or validation instances, it may be an outlier that does not contribute to generalization. Formally, let NK (xi; A) denote the K nearest neigh-bors of xi in the set A. We use the features 
+
+{cos( hi, h j ) | j ∈ N K (xi; A)}, where A can be the current training batch, the validation batch, the training set, and the validation set. We use online encodings hcls from the current classifier fθ (·) for batch-level KNN, and offline encodings 
+
+hgen from an image generation model for dataset-level KNN. Lastly, to identify potential semantic inconsistencies, we compute the label agreement (Zhang et al., 2024) among the K nearest neighbors in Dtrain using hgen , defined as 
+
+> 1
+> K
+
+P  
+
+> j∈N K(xi;Dtrain )
+
+1[yj = yi], where 1[·] is the indicator function. 
+
+Global features are computed as the Euclidean distance and cosine similarity between the encoding of xi and its class centers in the training and the validation sets, respectively. These features reveal the typicality of xi within the class yi.Intuitively, data points at the fringe of the source distribution, or that are prototypical in the target distribution, can be important for transfer learning. Formally, let Ac denote the subset of samples with class 
+
+c in set A. Using offline encodings hgen from an im-age generation model, we compute the class centroid as 
+
+μAc = 1
+
+> |A c|
+
+P  
+
+> xj∈A c
+
+hgen  
+
+> j
+
+. For each sample xi with label yi,we use its ℓ2 distance and cosine similarity to the correspond-ing class centroid, {∥ hgen  
+
+> i
+
+− μAyi ∥2, cos( hgen  
+
+> i
+
+, μ Ayi )}, as global features, where A can be either the training set or the validation set. 6On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Optimization dynamics features characterize how the data point interacts with the optimization process. We train a separate neural classifier without data selection to extract the following features: (i) the number of forgetting events (Toneva et al., 2019) to track longitudinal training stability, and (ii) the gradient norm and error vector norm (Paul et al., 2021) to measure sample difficulty. 
+
+Class-indicator features provide explicit categorical context. We include learnable embeddings for the class label and for the data source (real vs. synthetic), enabling the selection network to distinguish class-specific and generator-related patterns. 
+
+## 5. Experiments 
+
+Datasets. We evaluate on four benchmarks: Waterbirds (Sagawa et al., 2020), CelebA (Yuan et al., 2024), Texture (Geirhos et al., 2019), and PACS (Li et al., 2017). PACS con-tains 4 domains: Art Painting, Cartoon, Photo, and Sketch. We perform pairwise transfer learning with a total of 12 pairs of domains. For each benchmark, the training split differs from the validation and test splits, which share the same target distribution. Following Yuan et al. (2024) and Dunlap et al. (2023), we augment the training data with roughly equal number of synthetic images. Details are in Appendix F. 
+
+Baselines. We compare against a diverse set of data se-lection methods spanning four categories: (i) training-dynamics heuristics, including Forgetting Events (Toneva et al., 2019) and GraNd (Paul et al., 2021). (ii) synthetic image selection heuristics, including CLIP Similarity (Zhao et al., 2024; Li et al., 2024), Auxiliary Classifier (Aux-Clf) (Lampis et al., 2023), and a stronger variant of Aux-Clf, 
+
+Aux-Clf (Val) , which we trained on the validation set to provide a more reliable target-distribution alignment signal, (iii) domain adaptation methods, including NormSim (Wang et al., 2024a) and Importance Weighting (Choi et al., 2021), (iv) a meta-learning method, MetaWeightNet (Shu et al., 2019). For every method except Importance Weighting and 
+
+MetaWeightNet , we create a soft selection version, which uses the data score as weight, and a hard selection version, which thresholds the score into 0/1 weights. Details of these baselines are in Appendix G. 
+
+Implementation. The classification network is ResNet-50, which is initialized with ImageNet-pretrained weights and optimized by SGD with momentum. The selection network is a three-layer MLP with hidden dimension 100 and sigmoid activation function, optimized with AdamW. We use a batch size of N = 1024 , and set K = 3 for 
+
+K nearest neighbors in input feature computation. Data generation and classifier training follow the original settings in Dunlap et al. (2023); Yuan et al. (2024). Further details are shown in Appendix H. 
+
+5.1. Main Results 
+
+Table 1 reports the performance of all methods across four benchmarks. We summarize the key observations below. 
+
+Our method achieves consistently large gains. Our method attains the highest average accuracy of 73.75%, improving upon No Selection by 5.49% and the strongest baseline, hard selection with Aux-Clf (Val), by 2.89%. 
+
+MetaWeightNet performs inconsistently. MetaWeightNet is the most similar to our work, but it differs by (1) using a batch size of 64, (2) using online loss as the only input feature, and (3) does not normalize the output weights. It achieves good performance on Texture ( +3 .37% ) and PACS-Photo ( +4 .08% ) but not other domains. Overall, it only achieves a modest 0.62% average improvement over No Selection. These results corroborates our argument that simplistic application of MTS often underperforms. 
+
+Training dynamics methods and CLIP similarity do not improve performance. Training-dynamics heuristics, in-cluding Forgetting Events and GraNd, underperform the No Selection baseline, with average accuracy drops of 0.53% -
+
+1.37% . Similarly, CLIP Similarity yields only marginal changes between from −0.17% to +0 .02% relative to No Selection. 
+
+Auxiliary classifier–based selection exhibits sharply dif-ferent behaviors depending on its training domain. When trained on training data, Aux-Clf results in substantial per-formance drops of 3.63% -5.39% . However, Aux-Clf (Val), trained on validation data, achieves improvements of up to 
+
+2.60% under Hard Selection and is the best baseline. These results suggest that Aux-Clf is highly dependent on the do-main it is trained on and may amplifying domain disparity. 
+
+Domain adaptation methods exhibit dataset-specific be-havior. For instance, NormSim improves performance on photorealistic datasets such as WaterBirds and CelebA, but degrades accuracy by up to 8.96% on PACS-Sketch. This discrepancy stems from its reliance on pretrained CLIP em-beddings (Radford et al., 2021), which are well-suited to natural images but less reliable for visually atypical domains such as sketches. Similarly, Importance Weight yields un-even results, with a mean performance drop of 0.91% . This instability aligns with known challenges in density-ratio estimation, where limited overlap between source and tar-get distributions can lead to high-variance estimates and unreliable reweighting. 
+
+5.2. Ablation Experiments 
+
+We conduct ablation experiments to analyze the impact of batch size and input feature design. For input features, we 7On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Table 1. Main results. Hard selection discards samples before training, while soft selection reweights samples during training. 
+
+Method WaterBirds CelebA Texture PACS Average 
+
+Art Cartoon Photo Sketch No Selection 70.13 78.52 24.44 82.76 85.23 60.08 76.62 68.26 
+
+Hard Selection Methods 
+
+Forgetting (Toneva et al., 2019) 70.07 78.45 25.03 81.42 83.63 56.63 72.99 66.89 -1.37 
+
+GraNd (Paul et al., 2021) 67.82 81.01 24.06 81.79 84.93 59.52 73.90 67.58 -0.68 
+
+CLIP Similarity (Li et al., 2024) 69.96 78.00 25.17 83.00 84.67 58.87 78.28 68.28 +0.02 
+
+Aux-Clf (Dunlap et al., 2023) 67.01 77.37 21.81 77.59 82.74 46.97 66.57 62.87 -5.39 
+
+Aux-Clf (Val) (Dunlap et al., 2023) 78.07 84.30 27.47 82.13 85.54 61.58 76.96 70.86 +2.60 
+
+NormSim (Wang et al., 2024a) 70.84 78.63 24.76 82.83 84.13 60.24 74.99 68.06 -0.20 
+
+Soft Selection Methods 
+
+Forgetting (Toneva et al., 2019) 69.88 78.63 24.27 81.68 85.39 58.23 73.72 67.40 -0.86 
+
+GraNd (Paul et al., 2021) 69.44 80.24 23.51 81.89 85.34 59.10 74.57 67.73 -0.53 
+
+CLIP Similarity (Li et al., 2024) 70.19 78.42 24.37 82.37 85.24 59.95 76.12 68.09 -0.17 
+
+Aux-Clf (Dunlap et al., 2023) 64.04 76.98 21.60 80.16 84.74 54.28 70.6 64.63 -3.63 
+
+Aux-Clf (Val) (Dunlap et al., 2023) 78.91 84.47 26.67 82.56 85.88 63.20 69.13 70.12 +1.86 
+
+NormSim (Wang et al., 2024a) 70.22 79.05 24.48 82.36 85.05 61.09 67.66 67.13 -1.13 
+
+Importance Weight (Choi et al., 2021) 70.13 75.97 25.73 80.86 84.70 60.64 73.44 67.35 -0.91 
+
+MetaWeightNet (Shu et al., 2019) 72.24 76.04 27.81 83.56 85.41 64.16 72.68 68.84 +0.62 
+
+Ours 81.81 85.01 29.38 83.07 86.79 71.16 79.06 73.75 +5.49 
+
+Table 2. Ablation results showing the impact of batch size and input feature design on selection performance. 
+
+Method WaterBirds CelebA Texture PACS Average 
+
+Art Cartoon Photo Sketch No Selection 70.13 78.52 24.44 82.76 85.23 60.08 76.62 68.26 +0.00 
+
+Ours ( N = 1024 ) 81.81 85.01 29.38 83.07 86.79 71.16 79.06 73.75 +0.00 
+
+Decreasing Batch Size N to ... 
+
+N = 256 81.64 84.68 27.81 82.86 86.79 67.32 77.66 72.68 -1.07 
+
+N = 64 81.82 80.27 28.33 82.27 86.02 64.40 73.62 70.96 -2.79 
+
+Changing Input Features to ... 
+
+Raw Image 78.78 73.63 24.31 80.53 85.30 60.44 74.38 68.20 -5.55 
+
+ResNet Features 80.60 83.39 29.72 82.23 86.19 67.82 72.47 71.77 -1.95 
+
+Training Loss 72.63 78.28 28.96 82.44 85.09 63.45 78.10 69.85 -3.90 
+
+consider three alternatives: (1) Raw Image , where the selec-tion network operates directly on pixel values; (2) ResNet Features , which use the online classifier’s penultimate-layer embeddings; and (3) Training Loss , which relies solely on the scalar per-sample loss. We draw the following observa-tions. The results are shown in Table 2. 
+
+Selection performance strongly depends on batch size. 
+
+Compared to our default setting ( N = 1024 ), reducing the batch size to 256 leads to an average performance degra-dation of 1.07% , which further increases to 2.79% when 
+
+N = 64 . This degradation is particularly pronounced on PACS (Photo and Sketch) and CelebA, where accuracy drops by up to 6.76% . The strong empirical correlation between performance and batch size supports our theoreti-cal analysis, demonstrating that larger batch sizes are crucial for effective MTS. 
+
+The proposed feature set outperforms ResNet features and the training loss feature. Both ResNet Features and Training Loss lag behind the proposed feature design by 1.95%-3.90%. These results demonstrate the necessity to utilize informative features that correlate well with data quality. As our features include distributional information involving the relations between data points, they may not be easily inferred from the feature of a single data point. 
+
+Data selection works poorly on raw inputs. The raw image features result in the largest performance degradation, with an average drop of 5.55%. This is partially attributed to the shallow architecture of the selection network, which could not automatically learn high-quality representations from images directly. However, increasing the parameter count of the selection network would result in substantially increased computational overhead, since computing ∆ϕ
+
+requires two computing and storing two gradient vectors of the same size as ϕ. As a result, scaling to a much larger selection network can be difficult (Liu et al., 2018). Overall, these ablations demonstrate that both large batch 8On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Table 3. Performance under the few-shot validation setting. In the 5-shot setting, each class in the validation set contains only 5 samples. Full-shot results are shown in italics for reference.                              
+
+> Setting Method Waterbirds CelebA Texture Avg. No Selection 70.31 78.52 24.44 57.76 5-shot MW-Net 67.55 78.59 24.89 57.01 5-shot Aux-Clf (Val) 72.78 78.77 24.20 58.58 5-shot Ours 77.51 81.53 25.41 61.48
+> Full-shot Ours 81.81 85.01 29.38 65.40
+
+Table 4. Results with a ViT-Base-Patch32 backbone pretrained on ImageNet-21K. Method Waterbirds CelebA Texture Avg. No Selection 76.93 82.79 39.17 66.30 MW-Net 76.72 80.90 39.90 65.84 Aux-Clf (Val) 79.22 86.36 44.34 69.97 Ours 82.19 85.21 47.40 71.60 
+
+sizes and informative feature representations are critical for stable and effective selection-network training. 
+
+5.3. Few-shot Validation Data 
+
+We evaluate our method in a few-shot validation-set setting, where each class in the validation set contains only 5 sam-ples. As shown in Table 3, the average performance drops by 3.92% compared with the full-shot validation setting, high-lighting the importance of validation data quantity for MTS. Nevertheless, even under this highly constrained setting, our method still outperforms No Selection by 3.72% and the strongest baseline, Aux-Clf (Val), by 2.90% on average. 
+
+5.4. Generalization across Architectures 
+
+To examine whether our method generalizes beyond a spe-cific backbone architecture, we conduct experiments using ViT-Base-Patch32 pretrained on ImageNet-21K 2 as the vi-sual backbone. As shown in Table 4, our method achieves the best average performance among all methods. In partic-ular, it improves over No Selection and MW-Net by 5.30% and 5.76% on average, respectively. These results suggest that our method is architecture-agnostic. 
+
+5.5. Accuracy-memory Trade-off 
+
+One limitation of a large batch is the the high memory foot-print incurred. In Figure 3, we visualize the computational trade-off between accuracy and memory usage, showing the average accuracy values from Tables 1 and 2. The mem-ory usage is shown as the area of the circles. As the batch size N increases, classification accuracy improves at the 
+
+> 2
+
+https://huggingface.co/google/ vit-base-patch32-224-in21k 1.0 1.2 1.4 1.6 1.8 2.0 
+
+> Normalized Training Time (w.r.t. MW-Net)
+> 69
+> 70
+> 71
+> 72
+> 73
+> 74
+> Performance
+> MW-Net
+> M=17GB
+> Ours( N=64)
+> M=17GB
+> Ours( N=256)
+> M=45GB
+> Ours( N=1024)
+> M=180GB
+
+Figure 3. Accuracy-cost trade-off across different batch sizes N .The memory usage is visualized as the area of the circles. The accuracy values reported are the average accuracy from 1 and 2. 
+
+cost of higher memory usage. At a moderate batch size of 
+
+N = 256 , which fits into a single NVIDIA RTX A6000 GPU, our method improves over MW-Net by 3.84%. We note there are computational techniques that increase batch sizes without increasing memory usage. For example, gradient accumulation 3 takes the average gradients from several backward passes for each parameter update. Other techniques such as mixed-precision training and gradient checkpointing may also reduce memory usage. We leave the exploration of those techniques as future work. 
+
+## 6. Conclusion 
+
+In this work, we analyze Meta-learning Training-data Se-lection (MTS) and identify two key obstacles that limit its practical effectiveness, including a low gradient signal-to-noise ratio (GSNR) and lack of informative features corre-lated to data quality. Theoretical analysis reveals the deep cause of the low GSNR and reveals that increasing the batch size provides a simple and effective remedy. In addition, we propose a set of informative distributional and training-dynamics features that correlate well with data usefulness. By jointly addressing these issues, our approach signifi-cantly improves the performance of MTS on synthetic data selection, achieving consistent gains across four datasets and fifteen settings, and outperforming both training without data selection and strong heuristic baselines. 
+
+## Impact Statement 
+
+This paper presents work whose goal is to advance the field of machine learning. There are many potential societal consequences of our work, none of which we feel must be 
+
+> 3
+
+https://huggingface.co/docs/ transformers/grad_accumulation 
+
+9On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+specifically highlighted here. 
+
+## Acknowledgment 
+
+This research is supported, in part, by the RIE2025 In-dustry Alignment Fund – Industry Collaboration Projects (IAF-ICP) (Award I2301E0026), administered by A*STAR, as well as supported by Alibaba Group and NTU Singa-pore through Alibaba-NTU Global e-Sustainability Cor-pLab (ANGEL). The research is also partially funded by National Research Foundation Fellowship (NRFF13-2021-0006), Singapore. 
+
+## References 
+
+Azizi, S., Kornblith, S., Saharia, C., Norouzi, M., and Fleet, D. J. Synthetic data from diffusion models improves ima-genet classification. Transactions on Machine Learning Research , 2023. Bansal, H. and Grover, A. Leaving reality to imagination: Robust classification via generated datasets. In Proceed-ings of the ICLR 2023 Workshop on Trustworthy and Reliable Large-Scale Machine Learning Models , 2023. Bao, F., Wu, G., Li, C., Zhu, J., and Zhang, B. Stability and generalization of bilevel programming in hyperparameter optimization. Advances in neural information processing systems , 34:4529–4541, 2021. Bickel, S., Br ¨uckner, M., and Scheffer, T. Discriminative learning under covariate shift. Journal of Machine Learn-ing Research , 10:2137–2155, 2009. Bulent Sariyildiz, M., Alahari, K., Larlus, D., and Kalan-tidis, Y. Fake it till you make it: Learning transferable representations from synthetic imagenet clones. arXiv e-prints , pp. arXiv–2212, 2022. Choi, K., Liao, M., and Ermon, S. Featurized density ratio estimation. In Uncertainty in Artificial Intelligence , pp. 172–182. PMLR, 2021. Dong, Y., Yang, J., Yao, W., and Zhang, J. Efficient curvature-aware hypergradient approximation for bilevel optimization. In ICML , 2025. Du, Z., Li, Y., Guo, X., Sun, Y., and Li, B. Training multime-dia event extraction with generated images and captions. In Proceedings of the 31st ACM international conference on multimedia , pp. 5504–5513, 2023. Dunlap, L., Umino, A., Zhang, H., Yang, J., Gonzalez, J. E., and Darrell, T. Diversify your vision datasets with automatic diffusion-based augmentation. Advances in neural information processing systems , 36:79024–79034, 2023. Fan, L., Chen, K., Krishnan, D., Katabi, D., Isola, P., and Tian, Y. Scaling laws of synthetic images for model training... for now. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,pp. 7382–7392, 2024. Fan, S., Pagliardini, M., and Jaggi, M. Doge: Do-main reweighting with generalization estimation. arXiv preprint arXiv:2310.15393 , 2023. Feldman, D., Schmidt, M., and Sohler, C. Turning big data into tiny data: Constant-size coresets for k-means, pca, and projective clustering. SIAM Journal on Computing ,49(3):601–657, 2020. Feng, C., Zhong, Y., Jie, Z., Xie, W., and Ma, L. Insta-gen: Enhancing object detection by training on synthetic dataset. In Proceedings of the IEEE/CVF CVPR , pp. 14121–14130, 2024. Franceschi, L., Frasconi, P., Salzo, S., Grazzi, R., and Pontil, M. Bilevel programming for hyperparameter optimiza-tion and meta-learning. In International conference on machine learning , pp. 1568–1577. PMLR, 2018. Gala, J. and Xie, P. Leverage class-specific accuracy to guide data generation for improving image classification. In Forty-first International Conference on Machine Learn-ing , 2024. Geirhos, R., Rubisch, P., Michaelis, C., Bethge, M. B., Wichmann, F. A., and Brendel, W. Imagenet-trained cnns are biased towards texture; increasing shape bias improves accuracy and robustness. In 7th International Conference on Learning Representations, ICLR 2019 ,2019. Hataya, R., Bao, H., and Arai, H. Will large-scale generative models corrupt future datasets? In Proceedings of the IEEE/CVF International Conference on Computer Vision ,pp. 20555–20565, 2023. He, R., Sun, S., Yu, X., Xue, C., Zhang, W., Torr, P., Bai, S., and Qi, X. Is synthetic data from generative models ready for image recognition? The Eleventh International Conference on Learning Representations , 2023. Huang, H., Song, J., Zhang, Y., and Ren, P. Deepkd: A deeply decoupled and denoised knowledge distillation trainer. In NeurIPS , 2025. URL https://arxiv. org/abs/2505.15133 .Islam, K., Zaheer, M. Z., Mahmood, A., and Nandakumar, K. Diffusemix: Label-preserving data augmentation with diffusion models. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition , pp. 27621–27630, 2024. 10 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Jiang, Z., Cai, J., Liu, C., An, D., and Wu, J. Synbalance: Harnessing synthetic data in long-tailed recognition. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision , pp. 6276–6285, 2025. Kang, F., Just, H. A., Sun, Y., Jahagirdar, H., Zhang, Y., Du, R., Sahu, A. K., and Jia, R. Get more for less: Principled data selection for warming up fine-tuning in llms. In The Twelfth International Conference on Learning Represen-tations , 2024. Kim, J. M., Bader, J., Alaniz, S., Schmid, C., and Akata, Z. Datadream: Few-shot guided dataset generation. In 
+
+European Conference on Computer Vision , pp. 252–268. Springer, 2024. Kim, M. and Hospedales, T. A stochastic approach to bi-level optimization for hyperparameter optimization and meta learning. In Proceedings of the AAAI Conference on Artificial Intelligence , pp. 17913–17920, 2025. Kwon, J., Kwon, D., Wright, S., and Nowak, R. A fully first-order method for stochastic bilevel optimization. In 
+
+ICML , 2023. Lampis, A., Lomurno, E., and Matteucci, M. Bridging the gap: Enhancing the utility of synthetic data via post-processing techniques, 2023. Lee, J., Li, B., and Hwang, S. J. Concept-skill transferability-based data selection for large vision-language models. In The Conference on Empirical Meth-ods in Natural Language Processing (EMNLP) , 2024. Li, B., Xu, X., Wang, X., Hou, Y., Feng, Y., Wang, F., Zhang, X., Zhu, Q., and Che, W. Semantic-guided generative image augmentation method with diffusion models for image classification. In Proceedings of the AAAI Confer-ence on Artificial Intelligence , pp. 3018–3027, 2024. Li, D., Yang, Y., Song, Y.-Z., and Hospedales, T. Deeper, broader and artier domain generalization. In International Conference on Computer Vision , 2017. Li, H. and Li, B. Enhancing vision-language compositional understanding with multimodal synthetic data. In Pro-ceedings of the Computer Vision and Pattern Recognition Conference , pp. 24849–24861, 2025. Liu, H., Simonyan, K., and Yang, Y. Darts: Differentiable architecture search. arXiv preprint arXiv:1806.09055 ,2018. Liu, J., Jiang, G., Bai, Y., Chen, T., and Wang, H. Under-standing why neural networks generalize well through gsnr of parameters. arXiv preprint arXiv:2001.07384 ,2020. Liu, Y., Bader, J., and Kim, J. M. Does feasibility mat-ter? understanding the impact of feasibility on synthetic training data. arXiv preprint arXiv:2505.10551 , 2025. Liu, Z., Karbasi, A., and Rekatsinas, T. TSDS: Data selec-tion for task-specific model finetuning. Advances in Neu-ral Information Processing Systems , 37:10117–10147, 2024. Lorraine, J., Vicol, P., and Duvenaud, D. Optimizing mil-lions of hyperparameters by implicit differentiation. In 
+
+International conference on artificial intelligence and statistics , pp. 1540–1552. PMLR, 2020. Ma, C. and Ying, L. On linear stability of sgd and input-smoothness of neural networks. In Proceedings of the 35th International Conference on Neural Information Processing Systems , NIPS ’21, Red Hook, NY, USA, 2021. Curran Associates Inc. ISBN 9781713845393. Maclaurin, D., Duvenaud, D., and Adams, R. Gradient-based hyperparameter optimization through reversible learning. In International conference on machine learn-ing , pp. 2113–2122. PMLR, 2015. Michalkiewicz, M., Faraki, M., Yu, X., Chandraker, M., and Baktashmotlagh, M. Domain generalization guided by gradient signal to noise ratio of parameters. In Pro-ceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pp. 6177–6188, October 2023. Mignacco, F. and Urbani, P. The effective noise of stochas-tic gradient descent. Journal of Statistical Mechanics: Theory and Experiment , 2022(8):083405, 2022. Paul, M., Ganguli, S., and Dziugaite, G. K. Deep learning on a data diet: Finding important examples early in training. In NeurIPS , 2021. Pleiss, G., Zhang, T., Elenberg, E., and Weinberger, K. Q. Identifying mislabeled data using the area under the mar-gin ranking. Advances in Neural Information Processing Systems , 33:17044–17056, 2020. Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., et al. Learning transferable visual models from natural language supervision. In International conference on machine learning , pp. 8748–8763. PmLR, 2021. Rainforth, T., Kosiorek, A., Le, T. A., Maddison, C., Igl, M., Wood, F., and Teh, Y. W. Tighter variational bounds are not necessarily better. In International Conference on Machine Learning , pp. 4277–4285. PMLR, 2018. Ren, M., Zeng, W., Yang, B., and Urtasun, R. Learning to reweight examples for robust deep learning. In Interna-tional conference on machine learning , pp. 4334–4343. PMLR, 2018. 11 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Sagawa, S., Koh, P. W., Hashimoto, T. B., and Liang, P. Distributionally robust neural networks for group shifts: On the importance of regularization for worst-case gener-alization. In 8th International Conference on Learning Representations, ICLR 2020 , 2020. Sankararaman, K. A., De, S., Xu, Z., Huang, W. R., and Goldstein, T. The impact of neural network overparam-eterization on gradient confusion and stochastic gradi-ent descent. In III, H. D. and Singh, A. (eds.), Pro-ceedings of the 37th International Conference on Ma-chine Learning , volume 119 of Proceedings of Machine Learning Research , pp. 8469–8479. PMLR, 13–18 Jul 2020. URL https://proceedings.mlr.press/ v119/sankararaman20a.html .Shipard, J., Wiliem, A., Thanh, K. N., Xiang, W., and Fookes, C. Diversity is definitely needed: Improving model-agnostic zero-shot classification via stable diffu-sion. In Computer Vision and Pattern Recognition Work-shop on Generative Models for Computer Vision , 2023. Shu, J., Xie, Q., Yi, L., Zhao, Q., Zhou, S., Xu, Z., and Meng, D. Meta-weight-net: Learning an explicit mapping for sample weighting. In NeurIPS , 2019. Singh, K., Navaratnam, T., Holmer, J., Schaub-Meyer, S., and Roth, S. Is synthetic data all we need? benchmarking the robustness of models trained with synthetic images. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , pp. 2505–2515, 2024. Smith, S., Elsen, E., and De, S. On the generalization benefit of noise in stochastic gradient descent. In Interna-tional Conference on Machine Learning , pp. 9058–9067. PMLR, 2020. Sugiyama, M., Nakajima, S., Kashima, H., von B ¨unau, P., and Kawanabe, M. Direct importance estimation with model selection and its application to covariate shift adap-tation. In Advances in Neural Information Processing Systems , volume 20, 2007. Sun, Z., Sun, Y., Yang, L., Lu, S., Mei, J., Zhao, W., and Hu, Y. Unleashing the power of gradient signal-to-noise ratio for zero-shot nas. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pp. 5763–5773, October 2023. Tian, Y., Fan, L., Chen, K., Katabi, D., Krishnan, D., and Isola, P. Learning vision from models rivals learning vision from data. In Proceedings of the IEEE/CVF con-ference on computer vision and pattern recognition , pp. 15887–15898, 2024. Toneva, M., Sordoni, A., des Combes, R. T., Trischler, A., Bengio, Y., and Gordon, G. J. An empirical study of example forgetting during deep neural network learning. In International Conference on Learning Representations ,2019. Trabucco, B., Doherty, K., Gurinas, M., and Salakhutdinov, R. Effective data augmentation with diffusion models. 
+
+arXiv preprint arXiv:2302.07944 , 2023. Wang, Y., Guo, J., Wang, J., Wu, C., Song, S., and Huang, G. Meta-semi: A meta-learning approach for semi-supervised learning. CAAI Artificial Intelligence Re-search , 1(2):161–171, 2022. Wang, Y., Chen, Y., Yan, W., Fang, A., Zhou, W., Jamieson, K., and Du, S. S. Cliploss and norm-based data selec-tion methods for multimodal contrastive learning. arXiv preprint arXiv:2405.19547 , 2024a. Wang, Z., Wei, L., Wang, T., Chen, H., Hao, Y., Wang, X., He, X., and Tian, Q. Enhance image classification via inter-class image mixup with diffusion model. In 
+
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pp. 17223–17233, 2024b. Xia, X., Liu, J., Yu, J., Shen, X., Han, B., and Liu, T. Mod-erate coreset: A universal method of data selection for real-world data-efficient deep learning. In The Eleventh International Conference on Learning Representations ,2022. Xie, J., Li, W., Li, X., Liu, Z., Ong, Y. S., and Loy, C. C. Mosaicfusion: Diffusion models as data augmenters for large vocabulary instance segmentation. International Journal of Computer Vision , pp. 1–20, 2024. Xie, S. M., Santurkar, S., Ma, T., and Liang, P. S. Data selection for language models via importance resampling. 
+
+Advances in Neural Information Processing Systems , 36: 34201–34227, 2023. Yuan, J., Pinto, F., Davies, A., and Torr, P. Not just pretty pictures: Toward interventional data augmentation us-ing text-to-image generators. In Forty-first International Conference on Machine Learning , 2024. URL https: //openreview.net/forum?id=b89JtZj9gm .Zhang, H., Balagopalan, A., Oufattole, N., Jeong, H., Wu, Y., Zhu, J., and Ghassemi, M. Lemon: Label error detection using multimodal neighbors. arXiv preprint arXiv:2407.18941 , 2024. Zhang, M., Su, S. W., Pan, S., Chang, X., Abbasnejad, E. M., and Haffari, R. idarts: Differentiable architecture search with stochastic implicit gradients. In International Con-ference on Machine Learning , pp. 12557–12566. PMLR, 2021. 12 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Zhao, Q., Dai, Y., Li, H., Hu, W., Zhang, F., and Liu, J. Ltgc: Long-tail recognition via leveraging llms-driven generated content. In Proceedings of the IEEE/CVF Con-ference on Computer Vision and Pattern Recognition , pp. 19510–19520, 2024. Zheng, H., Liu, R., Lai, F., and Prakash, A. Coverage-centric coreset selection for high pruning rates. In 11th International Conference on Learning Representations, ICLR 2023 , 2023. Zhou, P., Feng, J., Ma, C., Xiong, C., Hoi, S. C. H., et al. Towards theoretically understanding why sgd generalizes better than adam in deep learning. Advances in Neural Information Processing Systems , 33:21285–21296, 2020. 13 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+## Appendix Outline 
+
+A: Derivation of the Hypergradient Expressions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15 B: Theorem 3.2 on the Dynamics of Normalized Data Weights pi . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17 C: Theorem 3.4 and Corollary 3.5 on the Sensitivity of ∆ϕ to wK . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24 D: Theorem 3.6 on the Upper Bound of GSNR . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37 E: Training Dynamics across Batch Sizes 512 and 1024 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40 F: Details of the Datasets . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41 G: Details of the Baselines . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41 H: Additional Experimental Details . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43 I: Details of the Input Features . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43 14 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+## A. Derivation of the Hypergradient Expressions 
+
+A.1. Proof of Lemma 3.1 Lemma 3.1. The update to ϕ is computed as 
+
+ϕt+1 = ϕt − ηθ ηϕ∆ϕt, (9) 
+
+where the hypergradient ∆ϕt is 
+
+∆ϕ := − 1
+
+S
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+γi(θ′
+
+> t
+
+)
+
+!⊤ NX
+
+> i=1
+
+gi(θt) hi(ϕt)⊤ − wi
+
+S
+
+> N
+
+X
+
+> j=1
+
+hj (ϕt)⊤
+
+!
+
+, (10) 
+
+θ′ 
+
+> t
+
+is the result of the one-step update to θ inside (7), 
+
+θ′ 
+
+> t
+
+= θt − ηθ
+
+S
+
+> N
+
+X
+
+> i=1
+
+wigi(θt), (11) 
+
+and ηθ and ηϕ are learning rates. Proof. We make explicit the dependence of wi and S on ϕ:
+
+wi(ϕ) := w(xi, ϕ ), ℓi(θ) := ℓ f (xi, θ ), y i
+
+, S(ϕ) := 
+
+> N
+
+X
+
+> i=1
+
+wi(ϕ). (24) The training and validation losses are 
+
+Ltrain (θ, ϕ ) := 1
+
+S(ϕ)
+
+> N
+
+X
+
+> i=1
+
+wi(ϕ) ℓi(θ), (25) 
+
+Lval (θ) := 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+ℓ f (xv 
+
+> i
+
+, θ ), y v
+
+> i
+
+. (26) Our goal is to compute the total derivative dLval (θ′
+
+> t
+
+)/dϕt, where θ′ 
+
+> t
+
+is obtained by a single gradient step on the training loss: 
+
+θ′ 
+
+> t
+
+= θt − ηθ ∇θ Ltrain (θt, ϕ t), (27) with learning rate ηθ > 0.For notational convenience, define 
+
+gi(θt) := ∇θ ℓi(θt) = ∇θ ℓ f (xi, θ t), y i
+
+, (28) 
+
+hi(ϕt) := ∇ϕwi(ϕt) = ∇ϕw(xi, ϕ t), (29) 
+
+gv 
+
+> i
+
+(θt) := ∇θ ℓ f (xv 
+
+> i
+
+, θ t), y v
+
+> i
+
+, (30) 
+
+gv(θt) := ∇θ Lval (θt) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+gv 
+
+> i
+
+(θt). (31) We treat gradients as column vectors. In (25), only ℓi(θ) depends on θ, hence 
+
+∇θ Ltrain (θt, ϕ t) = 1
+
+S(ϕt)
+
+> N
+
+X
+
+> i=1
+
+wi(ϕt) gi(θt). (32) 15 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Differentiating (32) w.r.t. ϕt, we obtain 
+
+∂∂ϕ t
+
+ ∇θ Ltrain (θt, ϕ t) = 1
+
+S(ϕt)
+
+> N
+
+X
+
+> i=1
+
+gi(θt) hi(ϕt)⊤ − 1
+
+S(ϕt)2
+
+ NX
+
+> i=1
+
+wi(ϕt) gi(θt)
+
+ NX
+
+> j=1
+
+hj (ϕt)
+
+⊤
+
+= 1
+
+S(ϕt)
+
+> N
+
+X
+
+> i=1
+
+gi(θt)
+
+
+
+hi(ϕt) − wi(ϕt)
+
+S(ϕt)
+
+> N
+
+X
+
+> j=1
+
+hj (ϕt)
+
+⊤
+
+. (33) The validation loss after the inner update is 
+
+Lval (θ′
+
+> t
+
+) = Lval 
+
+ θ′
+
+> t
+
+(ϕt), θ′
+
+> t
+
+(ϕt) = θt − ηθ ∇θt Ltrain (θt, ϕ t). (34) By the chain rule, 
+
+ddϕt
+
+Lval (θ′
+
+> t
+
+) =  gv(θ′
+
+> t
+
+)⊤ dθ′
+
+> t
+
+dϕt
+
+, (35) and since θ′
+
+> t
+
+(ϕt) = θt − ηθ ∇θ Ltrain (θt, ϕ t),
+
+dθ′
+
+> t
+
+dϕt
+
+= −ηθ
+
+∂∂ϕ t
+
+ ∇θ Ltrain (θt, ϕ t). (36) Substituting into (35) and using (33) gives 
+
+ddϕt
+
+Lval (θ′
+
+> t
+
+) = −ηθ
+
+ gv(θ′
+
+> t
+
+)⊤
+
+ 1
+
+S(ϕt)
+
+> N
+
+X
+
+> i=1
+
+gi(θt)
+
+
+
+hi(ϕt) − wi(ϕt)
+
+S(ϕt)
+
+> N
+
+X
+
+> j=1
+
+hj (ϕt)
+
+⊤
+
+ . (37) Finally, writing gv(θ′
+
+> t
+
+) = 1
+
+> N
+
+PNi=1 gv 
+
+> i
+
+(θ′
+
+> t
+
+) yields the stated expression for ∆ϕ.
+
+A.2. Hypergradient of Lval w.r.t. wi
+
+We consider the dependence of the post-update validation loss on the individual training weight wi. Recall that the training objective is 
+
+Ltrain (θ, w ) = 1
+
+S
+
+X
+
+> k
+
+wk ℓk(θ), S = X
+
+> k
+
+wk, (38) where ℓk(θ) = ℓ(f (xk, θ ), y k) and wk = w(xk, ϕ ). Let gk := ∇θ ℓk(θ) denote the per-example training gradients. A single gradient step on θ with learning rate ηθ yields 
+
+θ′ = θ − ηθ ∇θ Ltrain (θ, w ) = θ − ηθ
+
+1
+
+S
+
+X
+
+> k
+
+wkgk. (39) We evaluate the validation loss at θ′,
+
+Lval (θ′) = 1
+
+N
+
+> N
+
+X
+
+> j=1
+
+ℓ(f (xj , θ ′), y j ), (40) and denote its gradient by 
+
+γ′ := ∇θ Lval (θ′). (41) Using the chain rule, the total derivative of Lval with respect to an individual weight wi is 
+
+dLval (θ′)
+
+dw i
+
+=
+
+ ∂Lval 
+
+∂θ ′
+
+⊤ ∂θ ′
+
+∂w i
+
+= ( γ′)⊤ ∂θ ′
+
+∂w i
+
+. (42) From the update rule for θ′,
+
+θ′ = θ − ηθ
+
+1
+
+S
+
+X
+
+> k
+
+wkgk ⇒ ∂θ ′
+
+∂w i
+
+= −ηθ
+
+∂∂w i
+
+1
+
+S
+
+X
+
+> k
+
+wkgk
+
+!
+
+. (43) 16 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+∂∂w i
+
+1
+
+S
+
+X
+
+> k
+
+wkgk
+
+!
+
+= 1
+
+S∂ P 
+
+> k
+
+wkgk
+
+∂w i
+
+−
+
+P 
+
+> k
+
+wkgk
+
+S2
+
+∂S ∂w i
+
+= Sg i − P 
+
+> k
+
+wkgk
+
+S2 , (44) as ∂∂w i
+
+P 
+
+> k
+
+wkgk = gi and ∂S ∂w i = 1 . Hence, 
+
+∂θ ′
+
+∂w i
+
+= −ηθ
+
+Sg i − P 
+
+> k
+
+wkgk
+
+S2 , (45) 
+
+dLval 
+
+dw i
+
+= ( γ′)⊤
+
+
+
+−ηθ
+
+Sg i − P 
+
+> k
+
+wkgk
+
+S2
+
+
+
+= −ηθ
+
+1
+
+S (γ′)⊤
+
+"
+
+gi − 1
+
+S
+
+X
+
+> k
+
+wkgk
+
+#
+
+. (46) Since pi = wi/S ,
+
+dLval 
+
+dw i
+
+= −ηθ
+
+1
+
+S (γ′)⊤
+
+"
+
+gi − X
+
+> k
+
+pkgk
+
+#
+
+. (47) 
+
+## B. Theorem 3.2 on the Dynamics of Normalized Data Weights pi
+
+Problem Setup. Let N ≥ 2 and let a1, . . . , a N ∈ R be fixed constants. Assume there is a unique dominant index 
+
+K ∈ { 1, . . . , N } with 
+
+aK > a i for all i̸ = K. (48) Let t ≥ 0 denote the continuous time variable. Consider continuous functions wi(t) ∈ [δ, ∞), i = 1 , . . . , N , where δ ≥ 0.
+
+wi(t) satisfy the following “clamped” dynamics. Define, for all t,
+
+S(t) := 
+
+> N
+
+X
+
+> j=1
+
+wj (t) > 0, pi(t) := wi(t)
+
+S(t) , ¯a(t) := 
+
+> N
+
+X
+
+> j=1
+
+pj (t)aj , ˙wi(t) = 1
+
+S(t)
+
+ ai − ¯a(t) (49) For all t ≥ 0 and every i ∈ { 1, . . . , N },
+
+dw i
+
+dt (t) = 
+
+
+
+˙wi(t), if wi(t) > δ or ˙wi(t) > 0,
+
+0, if wi(t) = δ and ˙wi(t) < 0.
+
+(50) Equivalently, dw i 
+
+> dt
+
+(t) = ˙ wi(t) if and only if i ∈ A(t), where A(t) is the set of active indices: 
+
+A(t) := 
+
+n
+
+i : wi(t) > δ or  wi(t) = δ and ai > ¯a(t)o
+
+. (51) In plain English, each wi follows the original ODE 1 
+
+> S
+
+(ai − ¯a) whenever it is not being pushed below the threshold δ. If 
+
+wi(t) = δ and the ODE pushes it higher, it is allowed to leave the floor. Otherwise, wi(t) is clamped at wi(t) = δ.We assume ∀i, w i(0) > δ so that S(0) > 0.
+
+Theorem 3.2 (Convergence of normalized weights with lower bound) . With the problem defined above, the following hold. (1) ( Convergence of p) For any δ ≥ 0, the normalized weights converge to a one-hot vector with 1 at the dominant index: 
+
+lim  
+
+> t→∞
+
+pK (t) = 1 , lim  
+
+> t→∞
+
+pi(t) = 0 for all i̸ = K. (52) 
+
+(2) ( Finite-time convergence when δ = 0 ) If δ = 0 , there exists a finite time T∗ ≥ 0 such that 
+
+pK (t) = 1 and pi(t) = 0 (i̸ = K) for all t ≥ T∗. (53) 
+
+In other words, the vector p(t) becomes exactly one-hot in finite time. 
+
+17 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+(3) (Polynomial-rate convergence when δ > 0) If δ > 0, then there exist constants T0, C 1, C 2 > 0 (depending on ai, δ,and wi(0) ) such that 
+
+1 − pK (t) ≤ C1
+
+(t − T0)1/3 for all t ≥ T0. (54) 
+
+In particular, for every sufficiently small ϵ ∈ (0 , 1) there exists a time Tϵ ≤ T0 + C2 ϵ−3 such that 
+
+pK (t) ≥ 1 − ϵ for all t ≥ Tϵ. (55) 
+
+Proof. Throughout the proof we write S(t) := P 
+
+> i
+
+wi(t), pi(t) := wi(t)/S (t), and ¯a(t) := P 
+
+> j
+
+pj (t)aj . We denote 
+
+amin := min i ai and amax := aK . ¯a(t) is a convex combination of ai, so amin ≤ ¯a(t) ≤ amax .Since wK (0) > δ and, whenever wK (t) > δ , we have 
+
+dw K
+
+dt (t) = aK − ¯a(t)
+
+S(t) ≥ 0 (because ¯a(t) ≤ aK ), (56) it follows that wK (t) is nondecreasing and 
+
+wK (t) ≥ wK (0) > δ ⇒ S(t) ≥ wK (t) > 0 (57) for all t ≥ 0. Thus S(t) and ¯a(t) are well-defined for all t.
+
+Step 1. Monotonicity and convergence of ¯a(t).
+
+By definition, 
+
+¯a(t) = 1
+
+S(t)
+
+> N
+
+X
+
+> i=1
+
+wi(t)ai, (58) so ¯a(t) is always a convex combination of the ai and hence 
+
+amin ≤ ¯a(t) ≤ amax = aK for all t ≥ 0. (59) Differentiating and using (50), we obtain 
+
+d¯adt = 1
+
+S
+
+X
+
+> i
+
+ai
+
+dw i
+
+dt − ¯aSdS dt . (60) Only indices in A(t) have nonzero derivatives, so 
+
+X
+
+> i
+
+ai
+
+dw i
+
+dt = X
+
+> i∈A(t)
+
+ai
+
+1
+
+S (ai − ¯a), dS dt = X
+
+> i∈A(t)
+
+1
+
+S (ai − ¯a). (61) Therefore d¯adt = 1
+
+S2
+
+X
+
+> i∈A(t)
+
+ai(ai − ¯a) − ¯aS2
+
+X
+
+> i∈A(t)
+
+(ai − ¯a). (62) For each i ∈ A(t), ai(ai − ¯a) − ¯a(ai − ¯a) = ( ai − ¯a)2. Hence 
+
+d¯adt = 1
+
+S(t)2
+
+X
+
+> i∈A(t)
+
+(ai − ¯a(t)) 2 ≥ 0. (63) Thus ¯a(t) is nondecreasing and bounded above by aK , so there is a limit 
+
+¯a∞ := lim  
+
+> t→∞
+
+¯a(t) ∈ [amin , a K ]. (64) 
+
+Step 2. A linear growth bound on S2(t) and divergence of 
+
+Z dt S2 and 
+
+Z dt S .
+
+From (50), dS dt = X
+
+> i∈A(t)
+
+1
+
+S (ai − ¯a), (65) 18 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+hence d(S2)
+
+dt = 2 S dS dt = 2 X
+
+> i∈A(t)
+
+(ai − ¯a(t)) . (66) We have |ai − ¯a(t)| ≤ amax − amin and |A(t)| ≤ N , so 
+
+d(S2)
+
+dt ≤ 2N (amax − amin ). (67) Define C1 := S2(0) and C2 := 2 N (amax − amin ) > 0. By integrating both sides of d(S2) 
+
+> dt
+
+≤ 2N (amax − amin ):
+
+S2(t) ≤ S2(0) + C2t = C1 + C2t for all t ≥ 0. (68) Thus 
+
+S(t) ≤ pC1 + C2t ⇒ 1
+
+S(t)2 ≥ 1
+
+C1 + C2t , 1
+
+S(t) ≥ 1
+
+√C1 + C2t . (69) Consequently Z ∞
+
+> 0
+
+dt S(t)2 ≥
+
+Z ∞
+
+> 0
+
+dt C1 + C2t = ∞, (70) and similarly Z ∞
+
+> 0
+
+dt S(t) ≥
+
+Z ∞
+
+> 0
+
+dt 
+
+√C1 + C2t = ∞. (71) 
+
+Step 3. Convergence of ¯a(t) to aK .
+
+Define V (t) := aK − ¯a(t) ≥ 0. Since ∀i, w i(t) > δ , ¯a(t) < a K , and V (0) > 0.We claim that ¯a(t) converges to aK as t → ∞ . There are two cases. 
+
+Case A: V (t) hits zero in finite time. Assume there exists T ∗ < ∞ with V (T ∗) = 0 , i.e. ¯a(T ∗) = aK . Since ¯a(t) is nondecreasing by (63) and bounded above by aK , we must have 
+
+¯a(t) = aK for all t ≥ T ∗. (72) Hence lim t→∞ ¯a(t) = aK in this case. 
+
+Case B: V (t) > 0 for all t ≥ 0. Then 1/V (t) is well-defined and differentiable for all t. From (63) we have 
+
+dV dt = − d¯adt = − 1
+
+S(t)2
+
+X
+
+> i∈A(t)
+
+(ai − ¯a(t)) 2. (73) Whenever V (t) > 0, we also have K ∈ A(t), because aK > ¯a(t) implies the raw derivative of wK , ˙wK , is positive and the clamping rule does not prevent it from increasing. Thus 
+
+X
+
+> i∈A(t)
+
+(ai − ¯a(t)) 2 ≥ (aK − ¯a(t)) 2 = V (t)2, (74) so dV dt ≤ − V (t)2
+
+S(t)2 . (75) Rewriting, 
+
+ddt 
+
+ 1
+
+V (t)
+
+
+
+= − 1
+
+V (t)2
+
+dV dt ≥ 1
+
+S(t)2 for all t ≥ 0. (76) Integrating from 0 to T yields 
+
+1
+
+V (T ) − 1
+
+V (0) ≥
+
+Z T
+
+> 0
+
+dt S(t)2 . (77) 19 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+By (70), the integral on the right-hand side diverges as T → ∞ , hence 
+
+1
+
+V (T ) −−−−→  
+
+> T→∞
+
+∞ ⇒ V (T ) −−−−→  
+
+> T→∞
+
+0. (78) Thus ¯a(t) → aK as t → ∞ in this case as well. Combining cases A and B, we conclude in all situations that 
+
+lim  
+
+> t→∞
+
+¯a(t) = aK . (79) 
+
+Step 4. Convergence of pK (t) to 1 for all δ ≥ 0.
+
+For i̸ = K, define ∆i := aK − ai > 0 and ∆min := min i̸=K ∆i > 0. Then 
+
+V (t) = aK − ¯a(t) = aK − X
+
+> j
+
+pj (t)aj = X
+
+> j
+
+pj (t)( aK − aj ) = X 
+
+> j̸=K
+
+pj (t)∆ j . (80) Therefore 
+
+V (t) ≥ ∆min 
+
+X 
+
+> j̸=K
+
+pj (t) = ∆ min 
+
+ 1 − pK (t), (81) so 
+
+1 − pK (t) ≤ V (t)∆min 
+
+. (82) Since V (t) → 0, the right-hand side tends to 0 and we obtain 
+
+lim  
+
+> t→∞
+
+pK (t) = 1 . (83) Because P 
+
+> i
+
+pi(t) = 1 and each pi(t) ≥ 0, this implies pi(t) → 0 for all i̸ = K. This proves statement (1). 
+
+Step 5. Finite-time convergence when δ = 0 .
+
+In this step we assume δ = 0 . Recall from (69) that there exist constants C1, C 2 > 0 such that 
+
+S2(t) ≤ C1 + C2t for all t ≥ 0, (84) hence 1
+
+S(t) ≥ 1
+
+√C1 + C2t ,
+
+Z ∞
+
+> 0
+
+dt S(t) = ∞. (85) Recall also that V (t) := aK − ¯a(t) ≥ 0 and, from (76), as long as V (t) > 0, we have 
+
+ddt 
+
+ 1
+
+V (t)
+
+
+
+≥ 1
+
+S(t)2 ≥ 1
+
+C1 + C2t , (86) With V (t) > 0, integrating yields 
+
+1
+
+V (t) − 1
+
+V (0) ≥ 1
+
+C2
+
+log 
+
+ C1 + C2tC1
+
+
+
+, (87) and hence 
+
+V (t) ≤ 11
+
+V (0) + 1
+
+C2
+
+log 
+
+ C1 + C2tC1
+
+ whenever V (t) > 0. (88) Fix an index i̸ = K and set ∆i := aK − ai > 0. We first identify an explicit time after which ¯a(t) stays above the midpoint between ai and aK . Define T0,i as any time satisfying 
+
+¯a(T0,i ) ≥ ai + aK
+
+2 , (89) 20 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+which implies 
+
+V (T0,i ) = aK − ¯a(T0,i ) ≤ aK − ai + aK
+
+2 = aK − ai
+
+2 = ∆i
+
+2 (90) Plugging in (88), 1
+
+V (0) + 1
+
+C2
+
+log 
+
+ C1 + C2T0,i 
+
+C1
+
+
+
+≥ 2∆i
+
+. (91) For instance, if 1  
+
+> V(0)
+
+≥ 2∆i one may take T0,i = 0 ; otherwise any 
+
+T0,i ≥ C1
+
+C2
+
+
+
+exp 
+
+
+
+C2
+
+ 2∆i
+
+− 1
+
+V (0) 
+
+ 
+
+− 1
+
+
+
+(92) satisfies (91). Now consider the evolution of wi(t) for t ≥ T0,i . As long as wi(t) > 0, the clamped dynamics coincide with the original ODE, so dw i
+
+dt (t) = ai − ¯a(t)
+
+S(t) . (93) For t ≥ T0,i with wi(t) > 0 we have 
+
+ai − ¯a(t) ≤ ai − aK + ai
+
+2 = − ∆i
+
+2 , (94) hence dw i
+
+dt (t) ≤ − ∆i
+
+2 · 1
+
+S(t) ≤ − ∆i
+
+2 · 1
+
+√C1 + C2t . (95) Integrating from T0,i to t (while wi > 0) yields 
+
+wi(t) ≤ wi(T0,i ) − ∆i
+
+2
+
+Z tT0,i 
+
+ds 
+
+√C1 + C2s . (96) The integral can be computed explicitly: 
+
+Z tT0,i 
+
+ds 
+
+√C1 + C2s = 2
+
+C2
+
+ p C1 + C2t − pC1 + C2T0,i 
+
+, (97) so 
+
+wi(t) ≤ wi(T0,i ) − ∆i
+
+C2
+
+ p C1 + C2t − pC1 + C2T0,i 
+
+ for all t ≥ T0,i (98) as long as wi(t) > 0.Define T ∗ 
+
+> i
+
+by requiring that the right-hand side of (98) is equal to zero: 
+
+wi(T0,i ) − ∆i
+
+C2
+
+ p C1 + C2T ∗ 
+
+> i
+
+− pC1 + C2T0,i 
+
+ = 0 . (99) It follows that 
+
+T ∗ 
+
+> i
+
+= 1
+
+C2
+
+"pC1 + C2T0,i + C2
+
+∆i
+
+wi(T0,i )
+
+2
+
+− C1
+
+#
+
+, (100) where C1 = S2(0) and C2 = 2 N (amax − amin ) > 0.Since wi(t) ≥ 0 for all t, the inequality (98) implies that wi(t) must hit 0 no later than T ∗ 
+
+> i
+
+< ∞. In fact, once we cross the time T0,i , wi(t) decays at least linearly in √t.For t ≥ T ∗ 
+
+> i
+
+, we still have ¯a(t) ≥ (ai + aK )/2 > a i, so the ˙wi(t) is negative and the clamped dynamics enforce wi(t) ≡ 0
+
+for all t ≥ T ∗ 
+
+> i
+
+.Since i̸ = K was arbitrary, every non-dominant coordinate wi, i̸ = K, hits zero in finite time and stays there. Define 
+
+T∗ := max  
+
+> i̸=K
+
+T ∗ 
+
+> i
+
+< ∞. (101) 21 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+For all t ≥ T∗ we then have 
+
+wi(t) = 0 (i̸ = K), S(t) = wK (t) > 0. (102) Thus ¯a(t) = aK for all t ≥ T∗ and 
+
+dw K
+
+dt (t) = aK − ¯a(t)
+
+S(t) = 0 for t ≥ T∗, (103) so wK (t) is constant on [T∗, ∞) and 
+
+pK (t) = wK (t)
+
+S(t) = 1 , pi(t) = 0 ( i̸ = K), for all t ≥ T∗. (104) This establishes finite-time convergence when δ = 0 and proves statement (2) of the theorem. 
+
+Step 6. Polynomial-rate convergence when δ > 0.
+
+Now assume δ > 0. We first show that each non-dominant weight wi(t), i̸ = K, hits the floor level δ in finite time and then stays there. Fix i̸ = K. As in Step 5, since ¯a(t) → aK > a i there exists T ai such that 
+
+¯a(t) ≥ ai + aK
+
+2 for all t ≥ T ai . (105) For t ≥ T ai and while wi(t) > δ , the index i is active and we have 
+
+dw i
+
+dt (t) = ai − ¯a(t)
+
+S(t) ≤ − ∆i
+
+2 · 1
+
+S(t) . (106) Arguing as before with (71) , the integral R ∞ 
+
+> Tai
+
+(1 /S (t)) dt diverges, so there exists T ∗ 
+
+> i
+
+≥ T ai such that wi(Ti) = δ. For 
+
+t ≥ T ∗ 
+
+> i
+
+we still have ¯a(t) ≥ (ai + aK )/2 > a i, so the raw derivative ˙wi at the boundary is negative and the clamped dynamics enforce wi(t) ≡ δ for all t ≥ Ti.Let 
+
+T0 := max  
+
+> i̸=K
+
+T ∗ 
+
+> i
+
+< ∞. (107) For all t ≥ T0 we then have 
+
+wi(t) = δ (i̸ = K), wK (t) > δ, S(t) = wK (t) + C3, (108) where C3 := ( N − 1) δ is a constant. The average ¯a(t) is 
+
+¯a(t) = wK (t)aK + P 
+
+> i̸=K
+
+δa i
+
+wK (t) + C3
+
+= wa K + δ P 
+
+> i̸=K
+
+ai
+
+w + C3
+
+. (109) Hence 
+
+aK − ¯a(t) = δ(N − 1) aK − P 
+
+> i̸=K
+
+ai
+
+
+
+wK (t) + C3
+
+= C0
+
+wK (t) + C3
+
+, (110) where 
+
+C0 := δ X
+
+> i̸=K
+
+(aK − ai) > 0. (111) Since K is active for all t ≥ T0, its dynamics are 
+
+dw K
+
+dt (t) = aK − ¯a(t)
+
+S(t) = C0
+
+(wK (t) + C3)2 . (112) This scalar ODE can be integrated exactly: 
+
+(wK (t) + C3)2 dw K
+
+dt = C0, (113) 22 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+so Z wK (t) 
+
+> wK(T0)
+
+(u + C3)2 du = C0(t − T0). (114) The antiderivative is (u+C3)3 
+
+> 3
+
+, hence 
+
+(wK (t) + C3)3 − (wK (T0) + C3)3
+
+3 = C0(t − T0), (115) and therefore 
+
+wK (t) + C3 =
+
+
+
+(wK (T0) + C3)3 + 3 C0(t − T0)
+
+1/3
+
+. (116) Now, for t ≥ T0 we have 
+
+pK (t) = wK (t)
+
+S(t) = wK (t)
+
+wK (t) + C3
+
+, (117) so 
+
+1 − pK (t) = C3
+
+wK (t) + C3
+
+= C3
+
+
+
+(wK (T0) + C3)3 + 3 C0(t − T0)
+
+1/3 . (118) This immediately implies 1 − pK (t) → 0 and yields a quantitative rate. For all t ≥ T0,
+
+(wK (T0) + C3)3 + 3 C0(t − T0) ≥ 3C0(t − T0), (119) so from (118) 
+
+1 − pK (t) ≤ C3
+
+ 3C0(t − T0)1/3 = C4
+
+(t − T0)1/3 , (120) where 
+
+C4 := C3
+
+(3 C0)1/3 = (N − 1) δ
+
+ 3δ P 
+
+> i̸=K
+
+(aK − ai)1/3 . (121) This proves the first inequality in statement (3). Finally, fix ϵ ∈ (0 , 1) and consider the exact formula (118). To ensure 1 − pK (t) ≤ ϵ, it suffices that 
+
+C3
+
+wK (t) + C3
+
+≤ ϵ ⇒ wK (t) + C3 ≥ C3
+
+ϵ . (122) By (116) this holds whenever 
+
+(wK (T0) + C3)3 + 3 C0(t − T0) ≥
+
+ C3
+
+ϵ
+
+3
+
+. (123) Equivalently, 
+
+t − T0 ≥ 13C0
+
+ C33
+
+ϵ3 − (wK (T0) + C3)3
+
+
+
+. (124) For all sufficiently small ϵ, the leading term C33 /(3 C0ϵ3) dominates, so there exists a constant C5 > 0 such that for all small 
+
+ϵ one may choose 
+
+Tϵ := T0 + C33
+
+3C0
+
+1
+
+ϵ3 ≤ T0 + C5
+
+ϵ3 , (125) and then 1 − pK (t) ≤ ϵ for all t ≥ Tϵ. This establishes the hitting-time bound in statement (3), completing the proof. 23 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+## C. Theorem 3.4 and Corollary 3.5 on the Sensitivity of ∆ϕ to wK
+
+C.1. Setup and Notations 
+
+For the convenience of the reader, we restate some notations used in this section. These notations are consistent throughout the main text and the appendix of the paper. Let wi > 0, gi ∈ Rdg , hi ∈ Rdh for i = 1 , . . . , N . Restating (10): 
+
+∆ϕt = − 1
+
+S ¯γ⊤
+
+> N
+
+X
+
+> i=1
+
+gi(θt) hi(ϕt)⊤ − wi
+
+S
+
+> N
+
+X
+
+> j=1
+
+hj (ϕt)⊤
+
+!
+
+, (10) where S = PNi=1 wi and ¯γ = 1
+
+> N
+
+PNi=1 γi.We define a few new notations that help simplify the equation 
+
+pi = wi
+
+S , hsum =
+
+> N
+
+X
+
+> j=1
+
+hj , ai = ¯ γ⊤gi, A = ¯ γ⊤
+
+> N
+
+X
+
+> i=1
+
+gih⊤ 
+
+> i
+
+, gsum =
+
+> N
+
+X
+
+> i=1
+
+wigi, B = ¯ γ⊤gsum h⊤
+
+> sum
+
+. (126) So we have 
+
+∆ϕ = 1
+
+S A − 1
+
+S2 B ∈ Rdh . (127) For a specific index K, the partial derivative of ∆ϕ with respect to wK can be written as 
+
+∂∆ϕ∂w K
+
+= 1
+
+S2 VK , VK =
+
+> N
+
+X
+
+> i=1
+
+aivi, (128) where 
+
+vi = (2 pi − 1{i=K}) h⊤ 
+
+> sum
+
+− h⊤ 
+
+> i
+
+∈ Rdh . (129) 
+
+C.2. Assumptions 
+
+Next, we state the moderate assumptions necessary for the proof. 
+
+Assumption C.1 (Across-index independence) . The tuple of random variables (xi, g i, w i, h i) are independent across the index i, but they are not necessarily independent within each tuple. hi are independent across i whether conditioned on 
+
+w = [ w1, . . . , w N ] or not. Similarly, γi are independent across i.
+
+Assumption C.2 (The structure of hi). Conditioning on w = [ w1, . . . , w N ] does not fully eliminate the uncertainty in hi.This is reasonable despite the fact that hi = ∂w i 
+
+> ∂ϕ
+
+because wi is a scalar and hi is a vector, and the function sϕ(xi) = wi
+
+could be many-to-one. Concretely, the conditional covariance satisfies 
+
+Cov( hi | w) ⪰ Σ0, (130) for some fixed positive semi-definite matrix Σ0 ∈ Rdh×dh , with tr(Σ 0) > 0. Further, there exists Mh < ∞ such that, for all i,
+
+E∥hi∥42 | w ≤ Mh. (131) 
+
+Assumption C.3 (The structure of ai). For each i, there exists a constant μi ∈ R such that 
+
+E[ai | w, h ] = μi (132) where w = [ w1, . . . , w N ] and h = [ h1, . . . , h N ]. Notice that ai = ¯ γ⊤gi depends on both the validation gradient ¯γ and training data points xi, so knowing w and h does not completely eliminate the uncertainty in ai.Further, the noise εi := ai − μi satisfies 
+
+E[ε2 
+
+> i
+
+| w, h ] ≤ σ2
+
+> u
+
+, E[ε4 
+
+> i
+
+| w, h ] ≤ Mu (133) for some finite constants σ2
+
+> u
+
+, M u, uniformly in (w, h ).24 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Assumption C.4 (Spiky ai, restatement of Assumption 3.3) . There is a unique dominant index K such that 
+
+μK > μ i for all i̸ = K. (134) Define the “gap energy” Ggap as 
+
+G2 
+
+> gap
+
+:= 1
+
+N
+
+X
+
+> i̸=K
+
+(μK − μi)2 > 0. (135) 
+
+C.3. A Lemma 
+
+We introduce a lemma that is later used by Theorem 3.4. 
+
+Lemma C.5. Fix an index K ∈ { 1, . . . , N }. Let r = ( r1, . . . , r N )⊤ ∈ RN , ri ≥ 0, rK = 0 , P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= 1 . Let 
+
+p = ( p1, . . . , p N )⊤ ∈ RN lie in the (N − 1) -dimensional simplex, i.e. pi ≥ 0, PNi=1 pi = 1 . Define 
+
+frp (r, p ) := 
+
+> N
+
+X
+
+> i=1
+
+ ri − 2
+
+> N
+
+X
+
+> j=1
+
+pj rj
+
+2. (136) 
+
+The minimum of frp (r, p ) is 
+
+min  
+
+> (r,p )
+
+frp (r, p ) = 1
+
+N . (137) 
+
+attained at rK = 0 , p K = N +1 2N , and for all i̸ = K, ri = 1√N −1 , p i = 12N .Proof. Write 
+
+rsum := 
+
+> N
+
+X
+
+> i=1
+
+ri, srp := p⊤r. (138) Expanding the square gives 
+
+frp (r, p ) = 
+
+> N
+
+X
+
+> i=1
+
+(ri − 2srp )2 (139) 
+
+=
+
+> N
+
+X
+
+> i=1
+
+r2 
+
+> i
+
+− 4srp 
+
+> N
+
+X
+
+> i=1
+
+ri + 4 N s 2 
+
+> rp
+
+(140) 
+
+= 1 − 4srp rsum + 4 N s 2
+
+> rp
+
+, (141) using PNi=1 r2 
+
+> i
+
+= P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= 1 .For fixed r, this is a quadratic function of srp :
+
+gr (srp ) := 1 − 4srp rsum + 4 N s 2
+
+> rp
+
+, (142) with unconstrained minimizer at 
+
+s∗ 
+
+> rp
+
+= rsum 
+
+2N . (143) Substituting this back in, 
+
+gr (s∗
+
+> rp
+
+) = 1 − r2
+
+> sum
+
+N . (144) Next we bound r2 
+
+> sum
+
+using Cauchy–Schwarz. Since rK = 0 and P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= 1 , we have 
+
+r2 
+
+> sum
+
+=
+
+ NX
+
+> i=1
+
+ri
+
+2
+
+=
+
+X 
+
+> i̸=K
+
+ri
+
+2
+
+≤ (N − 1) X
+
+> i̸=K
+
+r2 
+
+> i
+
+= N − 1. (145) 25 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Thus 
+
+1 − r2
+
+> sum
+
+N ≥ 1 − N − 1
+
+N = 1
+
+N , (146) and hence for all feasible (r, p ),
+
+frp (r, p ) ≥ 1
+
+N . (147) It remains to show that this bound is tight. Define r by 
+
+rK = 0 , ri = 1
+
+√N − 1 for all i̸ = K. (148) We can verify that P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= ( N − 1) · 1  
+
+> N−1
+
+= 1 , and 
+
+rsum =
+
+> N
+
+X
+
+> i=1
+
+ri = X
+
+> i̸=K
+
+ri = ( N − 1) · 1
+
+√N − 1 = √N − 1. (149) Hence 
+
+gr (s∗
+
+> rp
+
+) = 1 − r2
+
+> sum
+
+N = 1 − N − 1
+
+N = 1
+
+N . (150) We now construct p so that srp = s∗ 
+
+> rp
+
+= rsum /(2 N ). Take 
+
+pK = N + 1 2N , pi = 12N for all i̸ = K. (151) We can verify that pi ≥ 0, P 
+
+> i
+
+pi = 1 , and 
+
+srp =
+
+> N
+
+X
+
+> i=1
+
+piri = X
+
+> i̸=K
+
+12N · 1
+
+√N − 1 = N − 12N √N − 1 =
+
+√N − 12N = s∗
+
+> rp
+
+. (152) Therefore, for this choice of (r, p ),
+
+frp (r, p ) = gr (s∗
+
+> rp
+
+) = 1
+
+N , (153) showing that the lower bound is attained. Hence 
+
+min  
+
+> (r,p )
+
+frp (r, p ) = 1
+
+N , (154) as claimed. 
+
+C.4. Theorem 3.4 and Its Proof Theorem 3.4 (Gradient lower bound in a spiky regime, restated) . Define the gap energy Ggap as Ggap := q 1
+
+> N
+
+P 
+
+> i̸=K
+
+(μK − μi)2. Given Assumptions C.1 to C.4, we have 
+
+P
+
+ ∂∆ϕ∂w K 2
+
+≥√αG gap 
+
+S2
+
+
+
+≥ (τh − α)2G4
+
+> gap
+
+K1N 9G4 
+
+> gap
+
++ K2N 8 , , (155) 
+
+where α is an arbitrary value in (0 , τ h); τh, K1, and K2 are positive constants that depend only on the distribution of 
+
+(wi, g i, h i) and not on N or Ggap .Proof. We first compute VK explicitly and then lower bound its typical value. 26 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Step 1: Expression for VK and its conditional mean. By differentiating ∆ϕ = S−1A − S−2B with respect to wK and using the identities 
+
+∂S −1
+
+∂w K
+
+= − 1
+
+S2 , ∂S −2
+
+∂w K
+
+= − 2
+
+S3 , ∂B ∂w K
+
+= ¯ γ⊤gK h⊤
+
+> sum
+
+, (156) one checks that ∂∆ϕ∂w K
+
+= − AS2 − 1
+
+S2 ¯γ⊤gK h⊤ 
+
+> sum
+
++ 2
+
+S3 B = 1
+
+S2
+
+
+
+− A + ¯ γ⊤(2¯ g − gK )h⊤
+
+> sum
+
+
+
+, (157) where ¯g = P 
+
+> i
+
+pigi. Writing ai = ¯ γ⊤gi and hsum = P 
+
+> j
+
+hj , one can rewrite this as 
+
+VK = −A + ¯ γ⊤(2¯ g − gK )h⊤ 
+
+> sum
+
+=
+
+> N
+
+X
+
+> i=1
+
+aivi, (158) with 
+
+vi = (2 pi − 1{i=K})h⊤ 
+
+> sum
+
+− h⊤ 
+
+> i
+
+. (159) Define mean conditioned on 
+
+m(w, h ) := E[VK | w, h ]. (160) By Assumption C.4, E[ai | w, h ] = μi, and vi is a deterministic function of (w, h ), hence 
+
+m(w, h ) = 
+
+> N
+
+X
+
+> i=1
+
+μivi. (161) Moreover, 
+
+E∥VK ∥22 | w, h  = ∥m(w, h )∥22 + tr  Cov( VK | w, h ) ≥ ∥ m(w, h )∥22. (162) 
+
+Step 2: Writing m(w, h ) as a linear combination of hi. Using h⊤ 
+
+> sum
+
+= P 
+
+> j
+
+h⊤ 
+
+> j
+
+, we have 
+
+m(w, h ) = X
+
+> i
+
+μi
+
+(2 pi − 1{i=K})h⊤ 
+
+> sum
+
+− h⊤
+
+> i
+
+ = α0(w) X
+
+> i
+
+h⊤ 
+
+> i
+
+− X
+
+> i
+
+μih⊤ 
+
+> i
+
+, (163) where 
+
+α0(w) := X
+
+> i
+
+μi(2 pi − 1{i=K}) = 2 X
+
+> i
+
+piμi − μK . (164) Thus there are scalar coefficients 
+
+ci(w) := α0(w) − μi (165) such that 
+
+m(w, h ) = 
+
+> N
+
+X
+
+> i=1
+
+ci(w) hi. (166) 
+
+Step 3: Conditional second moment of m given w. Assumptions C.1 and C.2 tell us that given w, hi are conditionally independent and 
+
+Cov( hi | w) ⪰ Σ0. (167) Hence 
+
+Cov( m | w) = X
+
+> i
+
+ci(w)2 Cov( hi | w), (168) so that 
+
+Eh
+
+∥m(w, h )∥22 | w = tr  Cov( m | w) + ∥Eh(m | w)∥22 ≥ X
+
+> i
+
+ci(w)2 tr(Cov( hi | w)) . (169) By Cov( hi | w) ⪰ Σ0 we have tr(Cov( hi | w)) ≥ τh := tr(Σ 0), hence 
+
+Eh
+
+∥m(w, h )∥22 | w ≥ τh
+
+X
+
+> i
+
+ci(w)2. (170) 27 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Step 4: Relating P 
+
+> i
+
+ci(w)2 to the gap energy. Define 
+
+G2 
+
+> gap
+
+:= 1
+
+N
+
+X
+
+> i̸=K
+
+(μK − μi)2 > 0. (171) We claim that for all w, NX
+
+> i=1
+
+ci(w)2 ≥ G2
+
+> gap
+
+. (172) To see this, fix the vector (μi) and consider the normalized gaps ri, defined as 
+
+ri := ( μK − μi)/(√N G gap ) for i̸ = K, and rK = 0 , (173) so that P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= 1 . We can show that 
+
+X
+
+> i
+
+ci(w)2 = N G 2
+
+> gap
+
+frp (r, p ), frp (r, p ) := 
+
+> N
+
+X
+
+> i=1
+
+
+
+ri − 2
+
+> N
+
+X
+
+> j=1
+
+pj rj
+
+2
+
+. (174) The following steps show how (174) is derived. For all i we can write 
+
+μi = μK − √N G gap ri. (175) Hence, X
+
+> i
+
+piμi = X
+
+> i
+
+pi(μK − √N G gap ri) = μK − √N G gap 
+
+X
+
+> i
+
+piri, (176) 
+
+α0(w) = 2  μK − √N G gap 
+
+X
+
+> i
+
+piri
+
+ − μK = μK − 2√N G gap 
+
+X
+
+> i
+
+piri. (177) Therefore 
+
+ci(w) := α0(w) − μi (178) 
+
+=  μK − 2√N G gap 
+
+X
+
+> j
+
+pj rj
+
+ −  μK − √N G gap ri
+
+ (179) 
+
+= √N G gap 
+
+
+
+ri − 2 X
+
+> j
+
+pj rj
+
+
+
+, (180) and the exact form of frp follows. By Lemma C.5, under the constraints ri ≥ 0, P 
+
+> i̸=K
+
+r2 
+
+> i
+
+= 1 , p i ≥ 0, P 
+
+> i
+
+pi = 1 ,
+
+min frp (r, p ) = 1
+
+N . (181) Therefore (172) holds for all w.Combining (170) and (172), we obtain a bound independent of w and h:
+
+Eh
+
+∥m(w, h )∥22 | w ≥ τhG2
+
+> gap
+
+. (182) 
+
+Step 5: Lower bound for E[∥VK ∥22]. Set 
+
+Z := ∥VK ∥22. (183) Recall that m(w, h ) = E[VK | w, h ], and the second moment is lower bounded by the square of the mean, 
+
+E[Z] = E∥VK ∥22
+
+ = Ew,h 
+
+ E[∥VK ∥22 | w, h ] ≥ Ew,h 
+
+∥m(w, h )∥22
+
+ (184) Using the bound (182), 
+
+Ew,h 
+
+∥m(w, h )∥22
+
+ = Ew
+
+h
+
+Eh[∥m(w, h )∥22 | w]
+
+i
+
+≥ τhG2
+
+> gap
+
+. (185) Hence 
+
+E[Z] ≥ τhG2
+
+> gap
+
+. (186) 28 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Step 6: Upper bound for E[Z2] with explicit N -dependence. Recall that 
+
+Z := ∥VK ∥22, VK =
+
+> N
+
+X
+
+> i=1
+
+aivi, ai = μi + εi ∈ R. (187) 
+
+Step 6(a). Re-centering the means. Define the average 
+
+¯μ := 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+μi, δi := μi − ¯μ, (188) so that PNi=1 δi = 0 and ai = ¯ μ + δi + εi. Using the definitions vi = (2 pi − 1{i=K})hsum − hi, h sum = PNj=1 hj , we obtain 
+
+> N
+
+X
+
+> i=1
+
+vi =
+
+> N
+
+X
+
+> i=1
+
+(2 pi − 1{i=K})hsum −
+
+> N
+
+X
+
+> i=1
+
+hi (189) 
+
+= (2 
+
+> N
+
+X
+
+> i=1
+
+pi − 1) hsum − hsum = (2 − 1) hsum − hsum = 0 . (190) Therefore 
+
+VK =
+
+> N
+
+X
+
+> i=1
+
+aivi =
+
+> N
+
+X
+
+> i=1
+
+(¯ μ + δi + εi)vi =
+
+> N
+
+X
+
+> i=1
+
+δivi +
+
+> N
+
+X
+
+> i=1
+
+εivi. (191) where we used PNi=1 vi = 0 .Using the inequality (x + y)4 ≤ 8( x4 + y4) for all x, y ∈ R, applied to norms, we obtain 
+
+Z2 = ∥VK ∥42 ≤ 8
+
+> N
+
+X
+
+> i=1
+
+δivi
+
+> 42
+
++ 8 
+
+> N
+
+X
+
+> i=1
+
+εivi
+
+> 42
+
+. (192) 
+
+Step 6(b). A bound on E∥vi∥42. Recall 
+
+vi = (2 pi − 1{i=K}) hsum − hi, hsum =
+
+> N
+
+X
+
+> j=1
+
+hj . (193) Since |2pi − 1{i=K}| ≤ 2, there exists a constant C3 > 0 such that 
+
+∥vi∥2 ≤ C3
+
+ ∥hsum ∥2 + ∥hi∥2
+
+, (194) and hence, by (a + b)4 ≤ 8( a4 + b4),
+
+∥vi∥42 ≤ C4
+
+
+
+∥hsum ∥42 + ∥hi∥42
+
+
+
+(195) for some constant C4 > 0 independent of N .Write hj = m + zj , where m := E[h1] and E[zj ] = 0 . Then 
+
+hsum =
+
+> N
+
+X
+
+> j=1
+
+hj = N m +
+
+> N
+
+X
+
+> j=1
+
+zj , (196) so 
+
+∥hsum ∥42 ≤ 8 ∥N m ∥42 + 8 
+
+> N
+
+X
+
+> j=1
+
+zj
+
+> 42
+
+. (197) 29 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Standard fourth-moment bounds for sums of independent mean-zero random vectors imply that there is a constant C5 > 0
+
+(depending only on the one-sample distribution of hi and the dimension dh, but not on N ) such that 
+
+E
+
+> N
+
+X
+
+> j=1
+
+zj
+
+> 42
+
+≤ C5N 2. (198) Therefore, 
+
+E∥hsum ∥42 ≤ 8N 4∥m∥42 + 8 C5N 2. (199) Taking expectations in (195) and using Assumption C.2, which guarantees E∥hi∥42 ≤ Mh, we obtain 
+
+E∥vi∥42 ≤ C4
+
+
+
+E∥hsum ∥42 + E∥hi∥42
+
+
+
+≤ C4
+
+ 8N 4∥m∥42 + 8 C5N 2 + Mh
+
+ ≤ Cv N 4, (200) for some constant Cv > 0 depending only on the one-sample distribution of hi, but not on N or Ggap .
+
+Step 6(c). Bounding the signal term E PNi=1 δivi
+
+> 42
+
+. For arbitrary vectors β1, . . . , β N ,
+
+> N
+
+X
+
+> i=1
+
+βi
+
+> 42
+
+≤
+
+ NX
+
+> i=1
+
+∥βi∥2
+
+4
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+∥βi∥42. (201) Applying this with βi := δivi gives NX
+
+> i=1
+
+δivi
+
+> 42
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+|δi|4 ∥vi∥42. (202) Taking expectations and using the bound on E∥vi∥42 from (200), 
+
+E
+
+> N
+
+X
+
+> i=1
+
+δivi
+
+> 42
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+|δi|4 E∥vi∥42 ≤ N 3
+
+> N
+
+X
+
+> i=1
+
+|δi|4 Cv N 4 = Cv N 7
+
+> N
+
+X
+
+> i=1
+
+δ4 
+
+> i
+
+. (203) Next, we relate the centered means (δi) to the gap energy Ggap =
+
+q 1
+
+> N
+
+P 
+
+> i̸=K
+
+(μK − μi)2. Recall μi = ¯ μ + δi. Then 
+
+μK − μi = (¯ μ + δK ) − (¯ μ + δi) = δK − δi, (204) so 
+
+G2 
+
+> gap
+
+= 1
+
+N
+
+X
+
+> i̸=K
+
+(δK − δi)2 = 1
+
+N
+
+X
+
+> i̸=K
+
+ δ2 
+
+> K
+
+− 2δK δi + δ2
+
+> i
+
+
+
+= 1
+
+N
+
+(N − 1) δ2 
+
+> K
+
+− 2δK
+
+X
+
+> i̸=K
+
+δi + X
+
+> i̸=K
+
+δ2
+
+> i
+
+ .
+
+Using PNi=1 δi = 0 gives P 
+
+> i̸=K
+
+δi = −δK , hence 
+
+N G 2 
+
+> gap
+
+= ( N − 1) δ2 
+
+> K
+
++ 2 δ2 
+
+> K
+
++ X
+
+> i̸=K
+
+δ2 
+
+> i
+
+= ( N + 1) δ2 
+
+> K
+
++ X
+
+> i̸=K
+
+δ2 
+
+> i
+
+≥
+
+> N
+
+X
+
+> i=1
+
+δ2 
+
+> i
+
+. (205) Thus NX
+
+> i=1
+
+δ2 
+
+> i
+
+≤ N G 2
+
+> gap
+
+. (206) Since all δ2 
+
+> i
+
+≥ 0, we have NX
+
+> i=1
+
+δ4 
+
+> i
+
+≤
+
+ NX
+
+> i=1
+
+δ2
+
+> i
+
+2
+
+≤ N 2G4
+
+> gap
+
+. (207) 30 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Substituting into (203) yields 
+
+E
+
+> N
+
+X
+
+> i=1
+
+δivi
+
+> 42
+
+≤ Cv N 9G4
+
+> gap
+
+. (208) 
+
+Step 6(d). Bounding the noise term E PNi=1 εivi
+
+> 42
+
+. Applying the inequality (201) with βi := εivi,
+
+> N
+
+X
+
+> i=1
+
+εivi
+
+> 42
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+|εi|4 ∥vi∥42. (209) Taking expectations, 
+
+E
+
+> N
+
+X
+
+> i=1
+
+εivi
+
+> 42
+
+= E
+
+h
+
+N 3
+
+> N
+
+X
+
+> i=1
+
+|εi|4 ∥vi∥42
+
+i
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+E
+
+h
+
+∥vi∥42 E|εi|4 | w, h i
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+E
+
+h
+
+∥vi∥42Mu
+
+i
+
+(by Assumption C.3) 
+
+≤ N 3
+
+> N
+
+X
+
+> i=1
+
+Mu E∥vi∥42 ≤ N 3
+
+> N
+
+X
+
+> i=1
+
+Mu · Cv N 4
+
+= Cv MuN 8. (210) 
+
+Step 6(e). Putting the bounds together. Combining (192), (208), and (210), we obtain 
+
+E[Z2] = E∥VK ∥42 ≤ 8 E
+
+> N
+
+X
+
+> i=1
+
+δivi
+
+> 42
+
++ 8 E
+
+> N
+
+X
+
+> i=1
+
+εivi
+
+> 42
+
+≤ 8Cv N 9G4 
+
+> gap
+
++ 8 Cv MuN 8. (211) Define 
+
+K1 := 8 Cv , K2 := 8 Cv Mu. (212) Thus 
+
+E[Z2] ≤ K1N 9G4 
+
+> gap
+
++ K2N 8. (213) 
+
+Step 7: Paley–Zygmund inequality. Recall from Step 5 that 
+
+E[Z] = E∥VK ∥22
+
+ ≥ τhG2
+
+> gap
+
+. (186) We now apply the Paley–Zygmund inequality to the nonnegative random variable Z. For any λ ∈ (0 , E[Z]) ,
+
+P(Z ≥ λ) ≥ (E[Z] − λ)2
+
+E[Z2] . (214) We choose λ proportional to G2
+
+> gap
+
+:
+
+λ := α G 2 
+
+> gap
+
+(215) for some 0 < α < τ h/N . Then 0 < λ < E[Z] and 
+
+E[Z] − λ ≥ (τh − α)G2
+
+> gap
+
+. (216) Using the lower bound on E[Z] and the upper bound (213) on E[Z2], we obtain 
+
+P Z ≥ αG 2
+
+> gap
+
+ ≥ (τh − α)2G4
+
+> gap
+
+K1N 9G4 
+
+> gap
+
++ K2N 8 . (217) 31 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Recall that 
+
+∂∆ϕ∂w K
+
+= 1
+
+S2 VK , S =
+
+> N
+
+X
+
+> i=1
+
+wi, (218) so on the event {Z ≥ λ} (equivalently {∥ VK ∥2 ≥ √λ}) we have 
+
+∂∆ϕ∂w K 2
+
+= ∥VK ∥2
+
+S2 ≥√λS2 =
+
+√α G gap 
+
+S2 . (219) Therefore, 
+
+P
+
+ ∂∆ϕ∂w K 2
+
+≥√α G gap 
+
+S2
+
+
+
+≥ (τh − α)2G4
+
+> gap
+
+K1N 9G4 
+
+> gap
+
++ K2N 8 , (220) for any α ∈ (0 , τ h), where τh, K1, and K2 are positive constants depending only on the distribution of (wi, g i, h i) and not on N or Ggap .
+
+C.5. Corollary 3.5: A Local Lower Bound on the Lipschitz-like Ratio ∥ ff∆ϕ−∆ϕ∥2   
+
+> |ewK−wK|
+
+In this subsection, we consider the effect of resampling the dominant data point (xK , y K ), which enters the calculation through the following: wi = sϕ(xi), h i = ∂s ϕ(xi) 
+
+> ∂ϕ
+
+and gi = ∂f (xi) 
+
+> ∂θ
+
+. Hence, this is equivalent to resampling the tuple 
+
+(gK , w K , h K ). More formally, we consider the following setting: 
+
+Definition C.7 (Resampled configuration) . Let (gi, w i, h i)Ni=1 be the original sample and let ∆ϕ be defined as in (10) . Let 
+
+(g′ 
+
+> K
+
+, w ′ 
+
+> K
+
+, h ′ 
+
+> K
+
+) be an i.i.d copy of (gK , w K , h K ), and set 
+
+(g† 
+
+> i
+
+, w † 
+
+> i
+
+, h † 
+
+> i
+
+) := 
+
+(
+
+(gi, w i, h i), i̸ = K, 
+
+(g′ 
+
+> K
+
+, w ′ 
+
+> K
+
+, h ′ 
+
+> K
+
+), i = K. (221) Let ff∆ϕ be the quantity obtained by applying (10) to the resampled tuples (g† 
+
+> i
+
+, w † 
+
+> i
+
+, h † 
+
+> i
+
+)Ni=1 , and let δw := w′ 
+
+> K
+
+− wK .
+
+We also need one more mild assumption: 
+
+Assumption C.8 (Non-degenerate support of (gi, w i, h i)). In addition to Assumption C.1, assume that the law of 
+
+(gi, w i, h i) ∈ Rdg × (0 , ∞) × Rdh is absolutely continuous with respect to Lebesgue measure. That is, there exists a Borel-measurable function f : Rdg +1+ dh → [0 , ∞) such that for every Borel set A,
+
+P  (gi, w i, h i) ∈ A =
+
+Z
+
+> A
+
+f (z) dz. (222) Moreover, there exists a nonempty open set D ⊂ Rdg +1+ dh such that f (z) > 0 for all z ∈ D. With the event Egrad :=  ∂∆ϕ∂w K
+
+> 2
+
+≥
+
+> √αG gap
+> S2
+
+
+
+, P (Egrad ∩ DN ) > 0.
+
+Corollary 3.5 (Local Lipschitz-type lower bound under resampling, restated) . Let K ∈ { 1, . . . , N } be the dominant index. Suppose Assumptions C.1, C.2, C.3, C.4, and C.8 hold. Let (g† 
+
+> i
+
+, w † 
+
+> i
+
+, h † 
+
+> i
+
+) and the associated ff∆ϕ be defined as in Definition C.7. Then there exists a constant K3 > 0, depending only on the distribution and dimensions of (gi, w i, h i) and the validation gradient ¯γ (but not on N or Ggap ), such that for every α ∈ (0 , τ h),
+
+P
+
+ ∥ ff∆ϕ − ∆ϕ∥2
+
+|δw | ≥ K3
+
+√α G gap 
+
+S2
+
+
+
+> 0. (223) 
+
+Proof. The proof has three parts. We first show that there exists a deterministic configuration where the directional derivative of ∆ϕ with respect to wK is nonzero. We then use a Taylor expansion in wK to produce a finite-difference lower bound at that configuration. Finally, we invoke absolute continuity of the joint distribution and continuity of ∆ϕ to lift this to an event of strictly positive probability under the resampling scheme. 32 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Step 1: Existence of a configuration with large ∂∆ϕ/∂w K . This step is mostly just bookkeeping required by mathemat-ical rigor. By Theorem 3.4, under Assumptions C.1, C.2, C.3, and C.4, there exist constants τh, K 1, K 2 > 0 (independent of 
+
+N and Ggap ) such that for all α ∈ (0 , τ h),
+
+P
+
+ ∂∆ϕ∂w K 2
+
+≥√αG gap 
+
+S2
+
+
+
+≥ (τh − α)2G4gap 
+
+K1N 9G4gap + K2N 8 > 0. (224) Define the gradient event 
+
+Egrad := 
+
+ ∂∆ϕ∂w K 2
+
+≥√αG gap 
+
+S2
+
+
+
+. (225) Then P (Egrad ) > 0.Let Z denote the full configuration 
+
+Z := ( z1, . . . , z N ) with zi := ( gi, w i, h i) ∈ Rdg +1+ dh , (226) viewed as a random vector in  Rdg × (0 , ∞) × Rdh
+
+N . By Assumption C.8, each zi has density f > 0 on the open set 
+
+D ⊂ Rdg +1+ dh , so Z has joint density 
+
+fZ (Z) = 
+
+> N
+
+Y
+
+> i=1
+
+f (zi), (227) which is strictly positive on DN . In particular, the law of Z is supported on DN and fZ (Z) > 0 for all Z ∈ DN .Since P (Egrad ∩ DN ) > 0 and Z has density fZ , the integral 
+
+Z
+
+> Egrad ∩DN
+
+fZ (Z) dZ > 0, (228) so there exists at least one point 
+
+Z⋆ = ( z⋆ 
+
+> 1
+
+, . . . , z ⋆N ) = ( g⋆ 
+
+> 1
+
+, w ⋆ 
+
+> 1
+
+, h ⋆
+
+> 1
+
+, . . . , g ⋆N , w ⋆N , h ⋆N ) ∈ Egrad ∩ DN (229) such that fZ (Z⋆) > 0. In particular, each triple (g⋆i , w ⋆i , h ⋆i ) ∈ D, and the corresponding sum of weights 
+
+S⋆ := 
+
+> N
+
+X
+
+> i=1
+
+w⋆i > 0. (230) At this fixed configuration Z⋆, define 
+
+G⋆ := ∂∆ϕ∂w K
+
+(Z⋆)
+
+> 2
+
+. (231) From Z⋆ ∈ Egrad , we have 
+
+G⋆ ≥√αG gap 
+
+(S⋆)2 , (232) where S⋆ = PNi=1 w⋆i .
+
+Step 2: Local finite-difference lower bound around Z⋆. We would like to apply a Taylor-style argument, but ∂∆ϕ∂w K is a vector, which creates some difficulties. To work around that, we single out one component, indexed by j⋆, from the vector and focus the Taylor argument there. We define j⋆ as an index in the vector ∂∆ϕ∂w K (Z⋆) that takes on the maximum absolute value. 
+
+j⋆ := arg max 
+
+> 1≤j≤dh
+
+ ∂∆ϕ∂w K
+
+(Z⋆)
+
+
+
+> j
+
+(233) 33 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+We now treat [∆ ϕ]j⋆ as a scalar function of wK while keeping all other coordinates fixed at Z⋆.Define the scalar function 
+
+ψ(w) := [∆ ϕ(Z(w))] j⋆ , (234) where Z(w) denotes the configuration obtained from Z⋆ by replacing w⋆K with w:
+
+Z(w) :=  g⋆ 
+
+> 1
+
+, w ⋆ 
+
+> 1
+
+, h ⋆
+
+> 1
+
+, . . . , g ⋆K , w, h ⋆K , . . . , g ⋆N , w ⋆N , h ⋆N
+
+. (235) Because wi > 0 for all i, the sum 
+
+S(w) = X
+
+> i̸=K
+
+w⋆i + w (236) is strictly positive for all w in a neighborhood of w⋆K . The map Z 7 → ∆ϕ(Z) is rational in the weights (w1, . . . , w N ) with denominators S and S2, so it is twice continuously differentiable ( C2) in any region where S > 0. Therefore ψ is C2 in a neighborhood of w⋆K .Let 
+
+ψ′(w⋆K ) := 
+
+ ∂∆ϕ∂w K
+
+(Z⋆)
+
+
+
+> j⋆
+
+. (237) Then from the preceding bound (232) we have 
+
+|ψ′(w⋆K )| ≥ √α
+
+√dh
+
+Ggap 
+
+(S⋆)2 . (238) By C2-smoothness, there exists r1 > 0 such that [w⋆K − r1, w ⋆K + r1] ⊂ (0 , ∞) and ψ′′ is continuous on this interval. Define 
+
+L1 := sup  
+
+> |w−w⋆K|≤ r1
+
+|ψ′′ (w)| < ∞. (239) Now set 
+
+r2 := min 
+
+(
+
+r1, |ψ′(w⋆K )|
+
+4L1 + 1 
+
+)
+
+> 0. (240) For any w with 0 < |w − w⋆K | ≤ r2, Taylor’s theorem gives 
+
+ψ(w) − ψ(w⋆K ) = ψ′(w⋆K )( w − w⋆K ) + 12 ψ′′ (ξ)( w − w⋆K )2 (241) for some ξ between w⋆K and w. Dividing by |w − w⋆K |,
+
+|ψ(w) − ψ(w⋆K )||w − w⋆K | ≥ | ψ′(w⋆K )| − 12 |ψ′′ (ξ)| | w − w⋆K |. (242) Using |ψ′′ (ξ)| ≤ L1 and |w − w⋆K | ≤ r2,
+
+12 |ψ′′ (ξ)| | w − w⋆K | ≤ 12 L1r2 ≤ 12 L1
+
+|ψ′(w⋆K )|
+
+4L1 + 1 ≤ 14 |ψ′(w⋆K )|. (243) Hence, for all w with 0 < |w − w⋆K | ≤ r2,
+
+|ψ(w) − ψ(w⋆K )||w − w⋆K | ≥ 34 |ψ′(w⋆K )|. (244) Now choose any w† such that 
+
+0 < |w† − w⋆K | ≤ r2 (245) and such that 
+
+z† 
+
+> K
+
+:= ( g⋆K , w †, h ⋆K ) ∈ D, (246) 34 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+which is possible because D is open and (g⋆K , w ⋆K , h ⋆K ) ∈ D. Let Z† 
+
+> ⋆
+
+denote the configuration obtained from Z⋆ by replacing the Kth triple (g⋆K , w ⋆K , h ⋆K ) with z† 
+
+> K
+
+; denote by ∆ϕ† 
+
+> ⋆
+
+the corresponding update, and let 
+
+δw ⋆ := w† − w⋆K . (247) Then ∆ϕ† 
+
+> ⋆
+
+= ∆ ϕ(Z(w†)) and ∆ϕ⋆ = ∆ ϕ(Z(w⋆K )) , so by (244) and (238), 
+
+∥∆ϕ† 
+
+> ⋆
+
+− ∆ϕ⋆∥2
+
+|δw ⋆| ≥ |ψ(w†) − ψ(w⋆K )||δw ⋆| ≥ 34 |ψ′(w⋆K )| ≥ 34√dh
+
+√αG gap 
+
+(S⋆)2 . (248) Define 
+
+K4 := 34√dh
+
+. (249) We have thus found a deterministic pair of configurations (Z⋆, Z † 
+
+> ⋆
+
+) such that 
+
+∥∆ϕ† 
+
+> ⋆
+
+− ∆ϕ⋆∥2
+
+|δw ⋆| ≥ K4
+
+√αG gap 
+
+(S⋆)2 . (250) 
+
+Step 3: From a good point to a positive-probability neighborhood. We now connect the deterministic pair (Z⋆, Z † 
+
+> ⋆
+
+)
+
+from Step 2 to the random resampled configuration of Definition C.7, and turn the pointwise lower bound (250) into a positive-probability event. 
+
+Step 3(a). A basic continuity fact. We first recall the simple fact from real analysis that we will use repeatedly: 
+
+Let a function F : Rm → R be continuous, and suppose F (x0) > 0 at some point x0 ∈ Rm. Then there exists a neighborhood B around x0 such that F (x) ≥ F (x0)/2 for all x ∈ B.
+
+Indeed, set ε := F (x0)/2 > 0 and use continuity of F at x0 to obtain δ > 0 such that ∥x−x0∥ < δ implies |F (x)−F (x0)| <ε. Then ∥x − x0∥ < δ implies 
+
+F (x) ≥ F (x0) − | F (x) − F (x0)| ≥ F (x0) − ε = F (x0)2 . (251) We will apply this to a function F defined on the product space of configurations and resampled triples. 
+
+Step 3(b). Defining a continuous finite-difference functional. For any configuration Z = ( g1, w 1, h 1, . . . , g N , w N , h N ) and any triple (egK , ewK , ehK ), let Z† denote the configuration obtained by replacing the Kth triple of Z with (egK , ewK , ehK ).Define 
+
+δw (Z, ewK ) := ewK − wK , S(Z) := 
+
+> N
+
+X
+
+> i=1
+
+wi, (252) and consider the scalar functional 
+
+F (Z, egK , ewK , ehK ) := S(Z)2
+
+√αG gap 
+
+· ∥∆ϕ(Z†) − ∆ϕ(Z)∥2
+
+|δw (Z, ewK )| , (253) defined on the domain where all weights are positive and δw (Z, ewK )̸ = 0 . With the definition of F , we can see that (250) is 
+
+F (Z⋆, g ⋆K , w †, h ⋆K ) ≥ K4 > 0. (254) We also need to show F is continuous. By the explicit formula 
+
+∆ϕ(Z) = 1
+
+S(Z) A(Z) − 1
+
+S(Z)2 B(Z), (255) 35 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+with A(Z) and B(Z) linear in (gi, w i, h i), the map Z 7 → ∆ϕ(Z) is continuous whenever S(Z) > 0. The same is true for 
+
+Z†. The maps (Z, egK , ewK , ehK ) 7 → S(Z) and (Z, egK , ewK , ehK ) 7 → δw (Z, ewK ) are also continuous. Thus F is continuous at any point where S(Z) > 0, ewK > 0, and δw (Z, ewK )̸ = 0 .At the point 
+
+(Z⋆, g ⋆K , w †, h ⋆K ), (256) constructed in Step 2, we have S(Z⋆) = S⋆ > 0, ewK = w† > 0, and δw (Z⋆, w †) = δw ⋆ := w† − w⋆K̸ = 0 , so F is continuous there. 
+
+Step 3(c). A product neighborhood where F stays large. We now apply the basic continuity fact from Step 3(a) to the function F at the point 
+
+x0 := ( Z⋆, g ⋆K , w †, h ⋆K ). (257) Since F is continuous at x0 and F (x0) ≥ K4, there exists a neighborhood 
+
+N ⊂
+
+ Rdg × (0 , ∞) × Rdh
+
+N × Rdg +1+ dh
+
+
+
+(258) of x0 such that 
+
+F (Z, egK , ewK , ehK ) ≥ K4
+
+2 for all (Z, egK , ewK , ehK ) ∈ N. (259) The product space  Rdg × (0 , ∞) × Rdh
+
+N × Rdg +1+ dh can be factorized into open sets U × V , where U ⊂  Rdg ×
+
+(0 , ∞) × Rdh
+
+N , V ⊂ Rdg +1+ dh are open. Recall that F (·) > K 4 on (Z⋆, g ⋆K , w †, h ⋆K ). Therefore, we may choose two specific open sets U and V such that (Z⋆, g ⋆K , w †, h ⋆K ) ∈ U × V , and that for every Z ∈ U and every (egK , ewK , ehK ) ∈ V ,
+
+F (Z, egK , ewK , ehK ) ≥ K4
+
+2 . (260) Finally, the map 
+
+(Z, ewK ) 7 → δw (Z, ewK ) = ewK − wK (261) is continuous, and at (Z⋆, w †) we have δw ⋆̸ = 0 . Hence there exists a smaller product neighborhood U ′ × V ′ with U ′ ⊂ U
+
+and V ′ ⊂ V , still containing (Z⋆, g ⋆K , w †, h ⋆K ), such that 
+
+δw (Z, ewK )̸ = 0 for all Z ∈ U ′, (egK , ewK , ehK ) ∈ V ′. (262) On this smaller neighborhood, F is well-defined and the bound (260) continues to hold. In particular, for all Z ∈ U ′ and 
+
+(egK , ewK , ehK ) ∈ V ′,
+
+∥∆ϕ(Z†) − ∆ϕ(Z)∥2
+
+|δw (Z, ewK )| ≥ K4
+
+2
+
+√αG gap 
+
+S(Z)2 . (263) 
+
+Step 3(d). Positive probability. By Assumption C.8, the joint density of Z is strictly positive on DN and Z⋆ ∈ DN , so 
+
+P (Z ∈ U ′) > 0. (264) Similarly, the resampled triple (egK , ewK , ehK ) has density f > 0 on D and (g⋆K , w †, h ⋆K ) ∈ D, so 
+
+P  (egK , ewK , ehK ) ∈ V ′ > 0. (265) Since (egK , ewK , ehK ) is independent of Z,
+
+P  Z ∈ U ′, (egK , ewK , ehK ) ∈ V ′ = P (Z ∈ U ′) P  (egK , ewK , ehK ) ∈ V ′ > 0. (266) On this event, the inequality (260) holds and S(Z) > 0, so by the definition of F we have 
+
+∥∆ϕ(Z†) − ∆ϕ(Z)∥2
+
+|δw (Z, ewK )| ≥ K4
+
+2
+
+√αG gap 
+
+S(Z)2 . (267) 36 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Recalling that in the resampling construction we write ff∆ϕ = ∆ ϕ(Z†) and ∆ϕ = ∆ ϕ(Z), and setting K3 := K4/2 = 3/(8 √dh), we obtain 
+
+P
+
+ ∥ ff∆ϕ − ∆ϕ∥2
+
+|δw | ≥ K3
+
+√αG gap 
+
+S2
+
+
+
+≥ P  Z ∈ U ′, (egK , ewK , ehK ) ∈ V ′ > 0, (268) which is the desired positive-probability lower bound. 
+
+## D. Theorem 3.6 on the Upper Bound of GSNR 
+
+D.1. Common Notation 
+
+For the convenience of the reader, we restate some notations used in this section. These notations are consistent throughout the main text and the appendix of the paper. Fix an integer N ≥ 1. For each i ∈ { 1, . . . , N } we are given random variables 
+
+wi ∈ (0 , ∞), gi ∈ Rdg , hi ∈ Rdh , γi ∈ Rdg . (269) Define 
+
+¯γ := 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+γi, S := 
+
+> N
+
+X
+
+> i=1
+
+wi > 0, pi := wi
+
+s , hsum := 
+
+> N
+
+X
+
+> j=1
+
+hj . (270) As introduced in (10), the random gradient vector ∆ϕ ∈ Rdh is given by 
+
+∆ϕ = 1
+
+S ¯γ⊤
+
+> N
+
+X
+
+> i=1
+
+gi
+
+
+
+h⊤ 
+
+> i
+
+− wi
+
+s
+
+> N
+
+X
+
+> j=1
+
+h⊤
+
+> j
+
+
+
+= 1
+
+S ¯γ⊤
+
+> N
+
+X
+
+> i=1
+
+gi
+
+ h⊤ 
+
+> i
+
+− pih⊤
+
+> sum
+
+. (10) For convenience, define 
+
+A := ¯ γ⊤
+
+> N
+
+X
+
+> i=1
+
+gih⊤ 
+
+> i
+
+∈ RD , gsum := 
+
+> N
+
+X
+
+> i=1
+
+wigi, B := ¯ γ⊤gsum h⊤ 
+
+> sum
+
+∈ RD . (271) Then (10) can be rewritten as 
+
+∆ϕ = 1
+
+S A − 1
+
+S2 B. (272) We measure the variance of ∆ϕ by 
+
+Var(∆ ϕ) := E∥∆ϕ − E[∆ ϕ]∥22
+
+ = tr  Cov(∆ ϕ). (273) The gradient signal-to-noise ratio (GSNR) is 
+
+GSNR(∆ ϕ) := ∥ E[∆ ϕ]∥22
+
+Var(∆ ϕ) . (274) 
+
+D.2. Common Assumptions 
+
+We work under the following additional assumptions. 
+
+Assumption D.1 (Maximum range of random variables) . The norms ∥γi∥2, ∥gi∥2, ∥hi∥2 and wi are bounded. For all i, ∥γi∥2 + ∥gi∥2 + ∥hi∥2 + |wi| < ∞ (275) 
+
+Remark D.2 . Assumption D.1 may seem slightly strong in a mathematical sense, though it is always true in an engineering setting (since there is a maximum value for floating-point numbers represented by a finite number of bits). Strictly speaking, it is not needed. With assumptions on higher moments of the random variables, we can derive a bound similar to (302) ,which would include a higher order of N . We choose the simpler path that yields a tighter bound. 37 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Assumption D.3 (Negative moments of S).
+
+E[S−4] < ∞. (276) 
+
+Assumption D.4 (Remaining variance of the dominant weight) . Let G := σ (wi, g i, h i)i̸=K , (γi)Ki=1 
+
+ be the σ-field generated by all random variables excluding wK , g K and hK ,
+
+Var( wK | G ) = σ2 
+
+> w
+
+> 0 (277) Given a fixed sϕ(·) and a fixed fθ (·), wi and hi are both deterministic functions of ϕ and xi, and gi is a deterministic function of θ and xi. By Assumption C.1, (xi) are independent across i, so wi is independent from wj , hj , and gj , for all 
+
+i̸ = j. Therefore, Var( wK | G ) = Var( wK ). Hence, this assumption boils down to Var( wK ) = σ2 
+
+> w
+
+> 0.
+
+D.3. A Lower Bound on Var(∆ ϕ)
+
+Lemma D.5. Suppose Assumption C.1, and Assumptions D.1-D.4 hold, and the necessary assumptions for Corollary 3.5 hold. Then 
+
+Var(∆ ϕ) ≥ C2
+
+> Lip
+
+G2
+
+> gap
+
+σ2 
+
+> w
+
+E S−41ELip 
+
+, (278) 
+
+where 1ELip is the indicator of the event ELip , on which the lower bound for ∥∆ϕ− ff∆ϕ∥2    
+
+> |wK−ewK|
+
+from Corollary 3.5 holds. Proof. The core idea of the proof is as follows: when the lower bound on LK = ∥∆ϕ− ff∆ϕ∥2    
+
+> |wK−ewK|
+
+from Corollary 3.5 holds, we can related Var( wK ) with Var(∆ ϕ). As wk and ewK are i.i.d., E[( wk − ewK )2] = 2Var( wK ). Applying the same idea, we can lower bound Var(∆ ϕ). Here we need to condition on G, E[∥∆ϕ − ff∆ϕ∥2] = 2Var(∆ ϕ | G ).Let K be the dominant index, and G := σ (wi, g i, h i)i̸=K , (γi)Ki=1 
+
+ be the σ-field generated by all random variables excluding wK , g K and hK . By Assumption C.1, conditionally on G the only remaining randomness is in the K-th block 
+
+(wK , g K , h K ).Given G, we resample training data point (xK , y K ), which yields a new tuple ( ewK , egK , ehK ), and the new vector ff∆ϕ. By Corollary 3.5, on some event ELIP with positive probability and a constant CLip > 0, which is independent of N , we have 
+
+∥∆ϕ − ff∆ϕ∥2
+
+|wK − ewK | ≥ CLip Ggap 
+
+S2 . (279) Squaring and taking conditional expectation given G,
+
+E ∥∆ϕ − ff∆ϕ∥22 | G  ≥ C2
+
+> Lip
+
+G2
+
+> gap
+
+S4 E (wK − ewK )2 | G  1ELIP , (280) where 1ELip is the indicator function that the lower bound of (279) happens 
+
+1ELip := 
+
+(
+
+1 if ELip happens. 
+
+0 otherwise. (281) 
+
+wK and ewK are i.i.d. (whether conditioned on G or not), so 
+
+E[( wK − ewK )2 | G ] = 2 Var( wK | G ). (282) Conditioning on G makes ∆ϕ and ∆ϕ′ i.i.d., so 
+
+E ∥∆ϕ − ff∆ϕ∥22 | G  = 2Var(∆ ϕ | G ) (283) 
+
+Var(∆ ϕ | G ) ≥ c2
+
+> SP
+
+4S4 Var( wK | G ) 1ELip . (284) 38 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+By Assumption D.4, Var( wK | G ) = Var( wK ) = σ2 
+
+> w
+
+> 0, so 
+
+Var(∆ ϕ | G ) ≥ C2
+
+> Lip
+
+G2
+
+> gap
+
+σ2
+
+> w
+
+S4 1ELip . (285) Taking total expectation and using the law of total variance, 
+
+Var(∆ ϕ) ≥ E Var(∆ ϕ | G ) ≥ C2
+
+> Lip
+
+G2
+
+> gap
+
+σ2 
+
+> w
+
+E S−41ELip 
+
+, (286) which is the desired bound. 
+
+D.4. Upper Bound on ∥ E[∆ ϕ]∥22 and SNR 
+
+We now bound the numerator of the SNR. 
+
+Lemma D.6. Under Assumptions C.1 and D.1-D.3, there exists a constant Cm < ∞ independent of N such that 
+
+∥ E[∆ ϕ]∥22 ≤ Cm N 4 E[S−2]. (287) 
+
+Proof. From (10), 
+
+∆ϕ = 1
+
+S ¯γ⊤
+
+> N
+
+X
+
+> i=1
+
+gi(h⊤ 
+
+> i
+
+− pih⊤
+
+> sum
+
+). (288) Taking norms and with triangle inequality, 
+
+∥∆ϕ∥2 ≤ 1
+
+S
+
+> N
+
+X
+
+> i=1
+
+|¯γ⊤gi|∥ hi − pihsum ∥2. (289) Using Cauchy-Schwarz, 
+
+∥∆ϕ∥2 ≤ 1
+
+S ∥¯γ∥2
+
+> N
+
+X
+
+> i=1
+
+∥gi∥2 ∥hi − pihsum ∥2. (290) Therefore 
+
+∥∆ϕ∥22 ≤ 1
+
+S2 ∥¯γ∥22
+
+ NX
+
+> i=1
+
+∥gi∥2 ∥hi − pihsum ∥2
+
+2
+
+. (291) Applying Cauchy-Schwarz to the sum, 
+
+ NX
+
+> i=1
+
+∥gi∥2 ∥hi − pihsum ∥2
+
+2
+
+≤
+
+ NX
+
+> i=1
+
+∥gi∥22
+
+ NX
+
+> i=1
+
+∥hi − pihsum ∥22
+
+
+
+. (292) Hence 
+
+∥∆ϕ∥22 ≤ 1
+
+S2 ∥¯γ∥22
+
+ NX
+
+> i=1
+
+∥gi∥22
+
+ NX
+
+> i=1
+
+∥hi − pihsum ∥22
+
+
+
+. (293) By Assumption D.1, we define finite constants Γmax , G max , H max < ∞ such that, for all i,
+
+∥γi∥2 ≤ Γmax , ∥gi∥2 ≤ Gmax , ∥hi∥2 ≤ Hmax (294) First, by convexity of the norm, 
+
+∥¯γ∥2 = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+γi 2
+
+≤ 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+∥γi∥2 ≤ Γmax . (295) Next, ∥gi∥2 ≤ Gmax for all i.39 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+For the h-terms, we first bound 
+
+∥hsum ∥2 =
+
+> N
+
+X
+
+> j=1
+
+hj 2
+
+≤
+
+> N
+
+X
+
+> j=1
+
+∥hj ∥2 ≤ N H max . (296) Since pi = wi/S ∈ (0 , 1] , we have 
+
+∥hi − pihsum ∥2 ≤ ∥ hi∥2 + |pi| ∥ hsum ∥2 ≤ Hmax + N H max = ( N + 1) Hmax , (297) for all i.Substituting these bounds into (293), we obtain 
+
+∥∆ϕ∥2 ≤ 1
+
+S Γmax 
+
+> N
+
+X
+
+> i=1
+
+Gmax (N + 1) Hmax = 1
+
+S Γmax Gmax Hmax N (N + 1) . (298) Squaring both sides yields 
+
+∥∆ϕ∥22 ≤ Γ2max G2max H2max 
+
+S2 N 2(N + 1) 2. (299) For N ≥ 1 we have (N + 1) 2 ≤ 4N 2, hence 
+
+∥∆ϕ∥22 ≤ 4 Γ 2max G2max H2max 
+
+S2 N 4. (300) Taking expectations and using Assumption D.3, 
+
+E ∥∆ϕ∥22
+
+ ≤ 4 Γ 2max G2max H2max N 4 E[S−2]. (301) Finally, by Jensen’s inequality for the convex function x 7 → ∥ x∥22,
+
+∥ E[∆ ϕ]∥22 ≤ E ∥∆ϕ∥22
+
+ ≤ CmN 4 E[S−2], (302) where Cm(N ) := 4 Γ 2max G2max H2max > 0 is independent of N and wi.
+
+D.5. Theorem 3.6 
+
+Combining Lemmas D.5 and D.6 yields an SNR upper bound in terms of moments of S and G2
+
+> gap
+
+.
+
+Theorem 3.6 (SNR upper bound) . Under Assumptions C.1, D.1-D.4, 
+
+SNR(∆ ϕ) := ∥ E[∆ ϕ]∥22
+
+Var(∆ ϕ) ≤ CSNR 
+
+N 4 E[S−2]
+
+G2 
+
+> gap
+
+E S−41ELip 
+
+ , (303) 
+
+where CSNR = Cm
+
+> C2
+> Lip σwi
+
+> 0 is independent of N and G2 
+
+> gap
+
+.
+
+## E. Training Dynamics across Batch Sizes 512 and 1024 
+
+In Figure 4, we provide additional training dynamics for larger batch sizes, N = 512 and N = 1024 , complementing Figure 2. The results exhibit trends consistent with those in Figure 2. First, the distribution of p is quite spiky. Second, the empirical mean of wi decreases during training. Third, the sample variance of pi, calculated as ˆσ2 
+
+> p
+
+:= 1
+
+> N
+
+PNi=1 (pi − 1/N )2,increases. Simultaneously, the effective batch size (EBS), calculated as  P  
+
+> i
+
+p2
+
+> i
+
+−1 decreases. These observations corroborate our theoretical analysis of data weights dynamics in Section 3.3. 40 On the Difficulty of Learning a Meta-network for Training Data Selection 10% 30% 50% 70% 90%                                                   
+
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> (a) Maximum pi
+> 10% 30% 50% 70% 90%
+> 0.0
+> 0.2
+> 0.4
+> (b) Mean of wi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 0.0
+> 2.0
+> 4.0
+> ×10 5(c) Variance of pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 200
+> 400
+> (d) Effective Batch Size
+> CelebA PACS Art Sketch Texture
+> (i) Batch size N= 512 10% 30% 50% 70% 90%
+> 0.00
+> 0.02
+> 0.04
+> (a) Maximum pi
+> 10% 30% 50% 70% 90%
+> 0.0
+> 0.2
+> 0.4
+> (b) Mean of wi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 0.0
+> 0.5
+> 1.0
+> 1.5 ×10 5(c) Variance of pi
+> 10% 30% 50% 70% 90%
+> Training Process
+> 250
+> 500
+> 750
+> 1000
+> (d) Effective Batch Size
+> CelebA PACS Art Sketch Texture (ii) Batch size N= 1024
+
+Figure 4. Training dynamics under batch sizes 512 and 1024 : (a) the mean unnormalized weight ˆE[wi] = S/N , which decreases over time, (b) the maximum normalized weight max i pi, which increases but to a lower ceiling for N = 1024 (c) the variance Var( pi), which increases to a lower ceiling for N = 1024 , and (d) the effective batch size Beff = ( P 
+
+> i
+
+p2 
+
+> i
+
+)−1, which is larger for N = 1024 . Colors indicate datasets. Shaded regions show mean ± std across independent batches. 
+
+## F. Details of the Datasets 
+
+We evaluate all methods on four benchmarks designed to assess robustness to different forms of spurious correlation and distributional variation. Dataset statistics refers to Table 5. 1. Waterbirds (Sagawa et al., 2020) evaluates robustness to spurious background correlations. The training set contains only land birds on forest backgrounds and waterbirds on water backgrounds, inducing a correlation between bird type and background. Validation and test sets are balanced across bird types and backgrounds. 2. CelebA (Yuan et al., 2024) evaluates spurious correlations between hair color and gender. We subsample the training set to contain only blonde females and non-blonde males. Validation and test sets are balanced across both attributes. 3. Texture (Yuan et al., 2024) evaluates texture bias using cue-conflict images from CCS (Geirhos et al., 2019), in which shape and texture cues disagree. The training set consists of standard ImageNet images restricted to the CCS classes. The CCS dataset is split into validation and test sets using a 25%/75% ratio for evaluation. 4. PACS (Li et al., 2017) evaluates domain generalization across four visual domains. We use the single-source single-target setting, resulting in 12 ordered source →target pairs. We train a separate model for each pair. For example, in the Art →Photo setting, training data is from the Art domain, while validation and test data are from the Photo domain. In Table 1, the four sub-columns (Art/Cartoon/Photo/Sketch) group these pairwise results by source domain: each entry is the average accuracy over the three target domains corresponding to that source. For example, the value under Art is the average performance across the settings Art →Photo, Art →Cartoon, and Art →Sketch. 
+
+## G. Details of the Baselines 
+
+We provide implementation details for all the baselines considered in this paper. In hard selection, we discard a fixed fraction p% of training samples with the lowest scores, corresponding to those deemed less informative. We evaluate 
+
+p ∈ { 5, 10 , 20 , 30 } for each dataset and consistently observe that p = 5% yields the best performance. We therefore adopt this setting throughout. In soft selection, all training samples are retained and reweighted according to their scores. 
+
+Training-Dynamics Heuristics. We first train a classifier on the full training set without data selection and record its training dynamics. We consider two per-sample signals: forgetting events and gradient norms . For each sample i in soft selection, we convert the score si into a weight in (0 , 1] as wi = 1 / 1 + log(1 + si), so that samples with higher forgetting counts receive smaller weights. This monotonic transformation preserves the ranking induced by the original scores while keeping the resulting weights bounded. 41 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Dataset Train Validation Test Real Synthetic 
+
+Waterbirds 1139 839 1439 5794 CelebA-sub 3535 3535 500 1000 Texture 9600 9600 320 960 PACS Art Painting 1840 1840 208 2048 PACS Cartoon 2107 2107 237 2344 PACS Photo 1499 1499 171 1670 PACS Sketch 3531 3531 398 3929  
+
+> Table 5. Dataset statistics for training, validation, and test splits.
+
+Forgetting Events. For each sample, we compute a forgetting count, defined as the number of times the model’s prediction for that sample transitions from correct to incorrect during training, following Toneva et al. (2019). 
+
+GraNd (Gradient Norm). For each sample, we compute its GraNd score as the ℓ2 norm of the gradient of the sample loss with respect to the model parameters, following Paul et al. (2021). 
+
+Synthetic Image Selection Heuristics. These heuristics score synthetic samples according to their semantic alignment with the target label or their predictive confidence under an auxiliary model. 
+
+CLIP Similarity. For each sample i, we compute the cosine similarity between its CLIP image embedding and the CLIP text embedding of its ground-truth label. We denote this score by sCLIP  
+
+> i
+
+and map it to a non-negative weight as 
+
+wi = (1 + sCLIP  
+
+> i
+
+)/2. This linear transformation preserves the score ranking used for hard selection and ensures non-negative weights for stable soft reweighting. 
+
+Auxiliary Classifier Confidence (Aux-Clf). We train an auxiliary classifier faux on the real training set and use its predicted probability for the ground-truth label as the sample weight: wi = pfaux (yi | xi). For Aux-Clf (Val) , we instead train the auxiliary classifier on the labeled validation set, which provides a stronger signal of alignment with the target distribution. 
+
+CLIP Similarity. For each sample i, we compute the cosine similarity between its CLIP image embedding and the CLIP text embedding of its ground-truth label. We map this similarity to [0 , 1] using wi = 1+ sCLIP  
+
+> i
+> 2
+
+. This transformation is linear and strictly monotonic. It preserves the ranking of samples for hard selection and avoids negative weights during soft reweighting. 
+
+Domain Adaptation Methods. These methods assess how closely each training sample matches the target (validation) distribution. 
+
+NormSim. We compute CLIP image embeddings for all training samples and validation samples. For each training sample 
+
+xi, we define its weight as the ℓ2 norm of its similarity vector to all validation samples: 
+
+wi = NormSim( xi) = 
+
+h
+
+f (xi), f (xval 1 ) , . . . , 
+
+D
+
+f (xi), f (xval 
+
+> |D val |
+
+)
+
+Ei 
+
+> 2
+
+,
+
+where |D val | denotes the number of validation samples. This score measures how strongly xi aligns with the target validation distribution in CLIP space. 
+
+Importance Weighting. We follow Choi et al. (2021), using CLIP embeddings in place of the learned features used in their original implementation. Specifically, we train a binary classifier c : X → [0 , 1] to distinguish training samples from validation samples, where training samples are labeled as y = 0 and validation samples as y = 1 . For each training sample 
+
+xi, we estimate its importance weight by the density ratio between the validation and training distributions: 
+
+wi = r(xi) = p(xi | yi = 1) 
+
+p(xi | yi = 0) = c∗(xi)1 − c∗(xi) ,
+
+where c∗(xi) denotes the probability assigned by the optimal classifier that xi comes from the validation distribution. 42 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Parameter Value 
+
+Inference steps 30 Image strength 0.75 Guidance scale 2.0 Sampler UniPC  
+
+> Table 6. Generator hyperparameters used for image-conditioned editing with Stable Diffusion.
+
+## H. Additional Experimental Details 
+
+The classifier is a pretrained ResNet-50 optimized using SGD with momentum and a learning rate of 1 × 10 −3. The selection network is a three-layer MLP with a hidden dimension of 100 and a sigmoid output, optimized using AdamW. During training, the two networks are updated in an alternating manner: each optimization step of the selection network is followed by one optimization step of the classifier. Unless otherwise specified, we use a batch size of N = 1024 and set K = 3 for the K nearest neighbors used in input feature computation. We generate data following the original setup of Dunlap et al. (2023); the corresponding hyperparameters are provided in Table 6. We train the classifier following the original recipe of Yuan et al. (2024). The generated data for WaterBirds are publicly available in Dunlap et al. (2023), and we directly use the released dataset. We generate the remaining three datasets, CelebA, Texture, and PACS, ourselves, as they are not publicly available. For prompt design on these datasets, we follow Yuan et al. (2024) and use dataset-specific textual prompts for image-conditioned editing with Stable Diffusion v1.5 4:
+
+PACS. Prompts follow the template “A [DOMAIN] of [CLASS LABEL]”, where DOMAIN corresponds to the target PACS domain (Art Painting, Cartoon, Photo, or Sketch). 
+
+CelebA. Prompts are constructed to preserve the target label (hair color) while flipping the spurious attribute (gender). Specifically, for images labeled as blonde , we use the prompt “blonde male”, and for images labeled as non-blonde , we use the prompt “non-blonde female”. 
+
+Texture. Prompts follow the template “[STYLE] [CLASS LABEL]”. We use the following set of style templates: pointillism, rubin statue, rusty statue, ceramic, vaporwave, stained glass, wood statue, metal statue, bronze statue, iron statue, marble statue, stone statue, mosaic, furry, corel draw, simple sketch, stroke drawing, black ink painting, silhouette painting, black pen sketch, quickdraw sketch, grainy, surreal art, oil painting, fresco, naturalistic painting, stylised painting, watercolor painting, impressionist painting, cubist painting, expressionist painting, artistic painting 
+
+## I. Details of the Input Features 
+
+This section provides the details of the input features used by the selection network. For a training sample (xi, y i), we use two types of representations. Let hcls  
+
+> i
+
+denote the online embedding extracted from the penultimate layer of the current classifier, and let hgen  
+
+> i
+
+denote the offline embedding extracted from the image generation model. 
+
+Local Features. Let Btrain and Bval denote the current training batch and validation batch, respectively. Using online encodings hcls , we compute cosine similarities between xi and its K nearest neighbors within the current batches: 
+
+Strain -batch (xi) = cos  hcls  
+
+> i
+
+, h cls 
+
+> j
+
+ j ∈ N K (xi; Btrain ) ,
+
+Sval -batch (xi) = cos  hcls  
+
+> i
+
+, h cls 
+
+> j
+
+ j ∈ N K (xi; Bval ) ,
+
+where NK (xi; B) denotes the indices of the K nearest neighbors of xi within set B under cosine distance. Let Dtrain and Dval denote the whole training dataset and validation dataset, respectively. We use offline encodings hgen to 
+
+> 4https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5
+
+43 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+compute dataset-level neighborhood features. We compute: 
+
+Strain (xi) = cos  hgen  
+
+> i
+
+, h gen 
+
+> j
+
+ j ∈ N K (xi; Dtrain ) ,
+
+Sval (xi) = cos  hgen  
+
+> i
+
+, h gen 
+
+> j
+
+ j ∈ N K (xi; Dval ) ,
+
+where NK (xi; D) denotes the indices of the K nearest neighbors of xi within the whole dataset D under cosine distance. We additionally compute the label agreement score (Zhang et al., 2024). Specifically, we first find the K nearest neighbors of xi in the training set Dtrain using the offline embedding hgen . The label agreement is then defined as the fraction of these neighbors that share the same label as xi:
+
+sLA (xi) = 1
+
+K
+
+X
+
+> j∈N K(xi;Dtrain )
+
+1[yj = yi].
+
+Global Features. Let Dc 
+
+> train
+
+and Dc 
+
+> val
+
+denote the training set and validation set of class c, respectively. For each class c,we compute class centroids separately for the training and validation sets with offline embeddings: 
+
+μc 
+
+> train
+
+= 1
+
+|D c
+
+> train
+
+|
+
+X 
+
+> xj∈D c
+> train
+
+hgen j , μc 
+
+> val
+
+= 1
+
+|D c
+
+> val
+
+|
+
+X 
+
+> xj∈D c
+> val
+
+hgen j .
+
+For each sample xi with label yi, we compute its Euclidean distance and cosine similarity to both centroids: 
+
+strain  
+
+> ℓ2
+
+(xi) = ∥hgen i − μyi
+
+> train
+
+∥2, sval  
+
+> ℓ2
+
+(xi) = ∥hgen i − μyi
+
+> val
+
+∥2,strain  
+
+> cos
+
+(xi) = cos( hgen i , μ yi
+
+> train
+
+), sval 
+
+> cos
+
+(xi) = cos( hgen i , μ yi
+
+> val
+
+).
+
+In addition, we compute an online validation-batch centroid to capture the current target distribution during training. Let 
+
+Bval denote the validation batch samples. Using online encodings hcls , we compute 
+
+μval -batch = 1
+
+|B val |
+
+X 
+
+> xj∈B val
+
+hcls  
+
+> j
+
+.
+
+For each training sample xi, we further compute its cosine similarity to the corresponding online validation-batch centroid: 
+
+sval -batch cos (xi) = cos  hcls  
+
+> i
+
+, μ val -batch 
+
+ .
+
+Optimization Dynamics Features. We train an auxiliary classifier without data selection and extract optimization-dynamics features, including forgetting events (Toneva et al., 2019), as well as the gradient norm and error vector norm 
+
+(Paul et al., 2021), following the exactly original implementations in the respective papers. 
+
+Class-Indicator Features. We use a 4-dimensional learnable embedding for the class label yi and a separate 1-dimensional learnable embedding to indicate the data source (real vs. synthetic). 
+
+## J. Algorithm Details 
+
+In this section, we describe the implementation details of our method summarized in Algorithm 1. Following Liu et al. (2018), we reduce the computational cost of hypergradient computation by adopting a finite-difference approximation 5.When training with large batch sizes across multiple GPUs, we compute the normalization term S = P 
+
+> i
+
+wi using 
+
+torch.distributed.nn.functional.all reduce 6. This operation has an autograd kernel registered and is therefore fully differentiable, allowing gradients to be correctly propagated across GPUs during backpropagation. 
+
+> 5
+
+https://en.wikipedia.org/wiki/Finite_difference 
+
+> 6
+
+https://github.com/pytorch/pytorch/blob/main/torch/distributed/nn/functional.py#L205 
+
+44 On the Difficulty of Learning a Meta-network for Training Data Selection 
+
+Algorithm 1 One-step Meta-learning for Training-data Selection (MTS) 
+
+Require: Training set Dtrain , validation set Dval ; learning rates ηθ , η ϕ; finite-difference step ϵ > 0; total iterations T
+
+1: Initialize classifier parameters θ0 and selection network parameters ϕ0
+
+2: for iteration t = 0 , 1, . . . , T − 1 do 
+
+3: Sample a training batch Btrain = {(xi, y i)}Ni=1 ⊂ D train and a validation batch Bval = {(xv 
+
+> i
+
+, y v 
+
+> i
+
+)}Ni=1 ⊂ D val 
+
+4: Compute data weights wi = sϕt (xi) and normalization term S = PNi=1 wi
+
+5: Perform one-step look-ahead classifier update: 
+
+θ′ 
+
+> t
+
+← θt − ηθ ∇θ Ltrain (θt, ϕ t), where Ltrain (θt, ϕ t) = 1
+
+S
+
+> N
+
+X
+
+> i=1
+
+wi ℓ(xi, y i, θ t)
+
+6: Compute validation gradient at the look-ahead point: 
+
+∇θ Lval (θ′
+
+> t
+
+) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+∇θ ℓ(xv 
+
+> i
+
+, y v 
+
+> i
+
+, θ ′
+
+> t
+
+)
+
+7: Perturb classifier parameters: 
+
+θ+ ← θt + ϵ ∇θ Lval (θ′
+
+> t
+
+), θ− ← θt − ϵ ∇θ Lval (θ′
+
+> t
+
+)
+
+8: Compute training losses Ltrain (θ+, ϕ t) and Ltrain (θ−, ϕ t) on Btrain 
+
+9: Estimate hypergradient via finite differences: 
+
+∇ϕt ← − ηθ
+
+∇ϕLtrain (θ+, ϕ t) − ∇ ϕLtrain (θ−, ϕ t)2ϵ
+
+10: Update selection network: 
+
+ϕt+1 ← ϕt − ηϕ ∇ϕt
+
+11: Update classifier: 
+
+θt+1 ← θt − ηθ ∇θ Ltrain (θt, ϕ t+1 )
+
+12: end for 
+
+13: return classifier fθT
+
+45

@@ -1,0 +1,901 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-03T22:53:09.898873+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 32,
+    "deep_cap": 7,
+    "deep_selected": 10,
+    "quick_candidates": 49,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2606.00537v1",
+      "source": "arxiv",
+      "title": "PACE: Phase-Aware Chunk Execution for Robot Policies with Action Chunking",
+      "abstract": "Recent vision-language-action and diffusion-based robot policies often use action chunking, where each policy query predicts a sequence of future actions and the robot executes an open-loop prefix before re-querying. While this interface improves local motion continuity, deployment still requires choosing the execution horizon: how much of each predicted chunk should be executed before acquiring a new observation. However, our experiments show that success is strongly task-dependent and non-monotonic with respect to the execution horizon, making a single constant horizon an unreliable deployment rule. We propose PACE (Phase-Aware Chunk Execution), a training-free test-time execution method that selects the execution horizon online from the predicted chunk itself. PACE exploits the phase-dependent kinematic structure of manipulation trajectories by identifying low-speed transition points in the predicted speed profile and using them as candidate replanning boundaries. Because PACE uses only the predicted action chunk, it is plug-and-play and requires no retraining or access to policy internals. We validate PACE through large-scale evaluations in both simulation and real-robot settings. On 50 RoboTwin2.0 tasks, PACE raises the average success rate from 57.8% to 64.2%. In real-robot experiments on bimanual ALOHA and single-arm Franka platforms, PACE improves the average task score from 60.7 to 77.7 and the average success rate from 50.7% to 70.4%. Ablations and rollout-level analyses show that PACE adapts execution horizons across manipulation phases, shortening near transitions while preserving longer execution during coherent motion.",
+      "authors": [
+        "Junnan Nie",
+        "Jiayi Li",
+        "Jiachen Zhang",
+        "Junyi Lao",
+        "Chenghao Liu",
+        "Tianle Zhang",
+        "Songfang Huang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-30T05:11:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.00537v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "phase-aware execution for VLA robot policies",
+      "llm_evidence_cn": "针对VLA机器人策略的相位感知执行",
+      "llm_evidence": "针对VLA机器人策略的相位感知执行",
+      "canonical_evidence": "针对VLA机器人策略的相位感知执行",
+      "llm_tldr_en": "Proposes PACE, a training-free method that selects execution horizon online from predicted chunk dynamics for VLA and diffusion-based robot policies, improving task success.",
+      "llm_tldr_cn": "该论文针对视觉-语言-动作(VLA)和扩散机器人策略中动作块执行的执行视野选择问题，提出相位感知块执行(PACE)方法。PACE无需训练，在线从预测块中选择执行视野，实验表明该方法显著优于固定视野策略，适用于多种物体操作任务。",
+      "llm_tldr": "该论文针对视觉-语言-动作(VLA)和扩散机器人策略中动作块执行的执行视野选择问题，提出相位感知块执行(PACE)方法。PACE无需训练，在线从预测块中选择执行视野，实验表明该方法显著优于固定视野策略，适用于多种物体操作任务。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.00780v1",
+      "source": "arxiv",
+      "title": "Behavior-Invariant Task Representation Learning with Transformer-based World Models for Offline Meta-Reinforcement Learning",
+      "abstract": "Offline meta-reinforcement learning leverages static datasets to enable agents to generalize to unseen environments by combining offline efficiency with meta-learning adaptability, yet it faces key challenges from context and policy distribution shifts. These issues hinder agents from adapting to online environments, and are further exacerbated under sparse-reward settings. As a result, agents often become trapped in an inherent pattern dilemma, failing to achieve robust generalization. In this work, we propose a novel framework that integrates information-theoretic task representation learning with a Transformer-based stochastic world model. Our approach extracts task-defining latent variables that are invariant to behavior policy, thereby effectively mitigating the context distribution shift. To further handle policy shift and model exploitation, we apply a conservative value penalty to imagination-based rollouts, preventing the policy from exploiting model inaccuracies while maintaining robust adaptation. Extensive evaluations demonstrate that our method outperforms state-of-the-art approaches, with superior stability and generalization under out-of-distribution and sparse-reward settings.",
+      "authors": [
+        "Fuyuan Qian",
+        "Menglong Zhang",
+        "Song Wang",
+        "Quanying Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-30T15:53:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.00780v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Integration of world model and task representation learning for offline meta-RL",
+      "llm_evidence_cn": "世界模型与任务表示学习结合，用于离线元强化学习",
+      "llm_evidence": "世界模型与任务表示学习结合，用于离线元强化学习",
+      "canonical_evidence": "世界模型与任务表示学习结合，用于离线元强化学习",
+      "llm_tldr_en": "Proposes a framework combining info-theoretic task representation learning with Transformer-based stochastic world model for offline meta-RL, addressing distribution shifts.",
+      "llm_tldr_cn": "本文提出一种结合信息论任务表示学习和Transformer随机世界模型的框架，用于离线元强化学习。该方法提取任务定义潜变量，缓解上下文和策略分布偏移问题，特别在稀疏奖励设置下有效。实验表明该方法在未见环境中实现更强的泛化，解决了模式困境。该工作融合了世界模型、表示学习和元RL。",
+      "llm_tldr": "本文提出一种结合信息论任务表示学习和Transformer随机世界模型的框架，用于离线元强化学习。该方法提取任务定义潜变量，缓解上下文和策略分布偏移问题，特别在稀疏奖励设置下有效。实验表明该方法在未见环境中实现更强的泛化，解决了模式困境。该工作融合了世界模型、表示学习和元RL。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01047v1",
+      "source": "arxiv",
+      "title": "Learning Multi-Modal Trajectory Policies for Data-Efficient Robotic Manipulation",
+      "abstract": "Robotic manipulation requires the effective integration of heterogeneous inputs, including visual observations, language instructions, and trajectory representations, to generate accurate actions. Existing transformer-based policies typically process these heterogeneous modalities within a shared parameter space, which often leads to modality interference and inefficient representation learning, especially in data-scarce scenarios. While Mixture-of-Experts (MoE) offers a scalable solution through expert specialization, conventional routing mechanisms are often sensitive to such cross-modal representation discrepancies, resulting in unstable expert assignment and expert collapse. In this work, we propose MATE (Multi-ModAl TrajEctory Policies), a novel trajectory prediction framework built upon MoE. Specifically, we introduce a Multi-Modal MoE architecture to achieve fine-grained sub-token feature decoupling, and design a cross-modal cosine router for stable and scale-invariant expert assignment across heterogeneous modalities. We further employ temperature-controlled routing and stochastic noise injection to improve expert balance and prevent premature routing collapse under scarce demonstrations. Experiments on the LIBERO benchmark show that our MATE consistently outperforms prior work under data scarcity. It achieves a 4.75% improvement in average success rate over the trajectory-guided counterpart. Real-world experiments on robotic ping-pong also suggest that the predicted trajectories can provide useful guidance for downstream robotic execution, further indicating the practical feasibility of our algorithm.",
+      "authors": [
+        "Zijia Chen",
+        "Yuenan Hou",
+        "Xinhua Jiang",
+        "Yu Li",
+        "Weijie Li",
+        "Li Liu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-05-31T06:35:10+00:00",
+      "link": "https://arxiv.org/pdf/2606.01047v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "addresses multi-modal trajectory policies for robotic manipulation with vision-language inputs",
+      "llm_evidence_cn": "针对机器人操作，结合视觉语言输入的多模态轨迹策略",
+      "llm_evidence": "针对机器人操作，结合视觉语言输入的多模态轨迹策略",
+      "canonical_evidence": "针对机器人操作，结合视觉语言输入的多模态轨迹策略",
+      "llm_tldr_en": "Proposes MATE, a Mixture-of-Experts policy for robotic manipulation that separates modality-specific experts to avoid interference, enabling data-efficient learning from vision, language, and trajectories.",
+      "llm_tldr_cn": "该论文提出MATE，利用混合专家模型处理机器人操作中的多模态输入（视觉、语言、轨迹），通过专家专业化避免模态干扰，在数据稀缺场景下提升表征效率和策略性能。在机器人操作任务上验证了数据高效性。",
+      "llm_tldr": "该论文提出MATE，利用混合专家模型处理机器人操作中的多模态输入（视觉、语言、轨迹），通过专家专业化避免模态干扰，在数据稀缺场景下提升表征效率和策略性能。在机器人操作任务上验证了数据高效性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01095v1",
+      "source": "arxiv",
+      "title": "Beyond Task Success: Behavioral and Representational Diagnostics for WAM and VLA",
+      "abstract": "Vision-language-action (VLA) policies and World-Action Models (WAM) represent two increasingly important paradigms for robotic manipulation. However, it remains unclear whether future prediction in WAMs leads to behaviorally meaningful improvements beyond final task success. In this paper, we ask whether WAMs merely add future prediction, or whether they change robot behavior and internal representations in ways that are actionable for control. We introduce a model-agnostic diagnostic framework that compares WAMs and VLAs through two complementary lenses: behavioral rollout analysis and sparse-autoencoder-based feature analysis. The behavioral protocol measures action dynamics consistency, target-object progress, distractor disturbance, and runtime cost. The feature-space protocol characterizes internal representations as memorized, reactive, or predictive, revealing whether models encode future-oriented structure. Across LIBERO and RoboTwin2.0, we evaluate 7 policies spanning direct VLAs and joint, sequential, and auxiliary WAMs. Our results show that success alone hides key differences: WAMs often improve object-level behavior and target selectivity, but their gains depend on architecture and incur higher inference cost. Sequential WAMs show the clearest predictive structure, while auxiliary and joint WAMs respectively compress or entangle future information. These findings suggest future directions for WAMs design to preserve behaviorally actionable future representations for efficient manipulation.",
+      "authors": [
+        "Hung Mai",
+        "Bin Zhu",
+        "Tuan Do"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-05-31T08:35:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.01095v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "diagnosing VLA and world-action models for robotic manipulation",
+      "llm_evidence_cn": "诊断VLA和世界动作模型在机器人操作中的表现",
+      "llm_evidence": "诊断VLA和世界动作模型在机器人操作中的表现",
+      "canonical_evidence": "诊断VLA和世界动作模型在机器人操作中的表现",
+      "llm_tldr_en": "Introduces a diagnostic framework comparing VLA and WAM paradigms for robotic manipulation, revealing behavioral and representational differences beyond task success.",
+      "llm_tldr_cn": "论文针对VLA策略和世界动作模型（WAM）在机器人操作中的差异，提出了模型无关的诊断框架，通过行为展开分析和稀疏自编码器特征分析两个视角，揭示WAM除了预测未来外是否带来行为上有意义的改进。实验发现WAM在动作一致性和目标进展上优于VLA，为模型选择提供了指导。",
+      "llm_tldr": "论文针对VLA策略和世界动作模型（WAM）在机器人操作中的差异，提出了模型无关的诊断框架，通过行为展开分析和稀疏自编码器特征分析两个视角，揭示WAM除了预测未来外是否带来行为上有意义的改进。实验发现WAM在动作一致性和目标进展上优于VLA，为模型选择提供了指导。",
+      "llm_tags": [
+        "query:rl-vla-world:composite"
+      ],
+      "matched_query_tag": "query:rl-vla-world:composite",
+      "matched_query_text": "Papers central to 查找RL，VLA，world model，robot manipulation相关的论文, especially work that connects or combines: reinforcement learning methods and algorithms; vision language action models for robotics; world model in reinforcement learning and robotics; robot manipulation using learning methods; Reinforcement learning for robot manipulation with world models; Vision language action models in robot manipulation; Integration of vision language action and reinforcement learning.",
+      "matched_requirement_id": "req-composite-rl-vla-world",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.01151v1",
+      "source": "arxiv",
+      "title": "Lagrangian Perturbation Diffusion Steering: Latent Reinforcement Learning for Generative Policies",
+      "abstract": "Behavior cloning with high-capacity generative policies achieves strong imitation performance, but is often limited by demonstration coverage and distribution shift. Direct reinforcement learning fine-tuning can improve performance, but updating large action decoders is frequently unstable and sample inefficient. We propose Lagrangian Perturbation Diffusion Steering (LP-DS), a lightweight adaptation method that improves a frozen generative policy by learning a compact noise-space perturbation before decoding. LP-DS optimizes this perturbation with a Lagrangian trust-region objective, improving downstream value while constraining deviation from the latent prior. Across RoboMimic manipulation, OpenAI Gym locomotion, and Adroit dexterous manipulation benchmarks, LP-DS improves sample efficiency, success, and return while maintaining higher action-space entropy than unconstrained noise-space steering, with return improvements of up to 25% over prior baselines. Additional evaluations with flow-matching backbones, a large vision-language-action model, and physical Franka deployment show that LP-DS is not limited to compact diffusion policies or simulated benchmarks. Project page: https://sites.google.com/view/lp-ds/home.",
+      "authors": [
+        "Hikmet Simsir",
+        "Ozgur S. Oguz"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-31T10:40:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.01151v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "latent RL for generative policies, robot manipulation",
+      "llm_evidence_cn": "潜空间强化学习用于生成策略，机器人操作",
+      "llm_evidence": "潜空间强化学习用于生成策略，机器人操作",
+      "canonical_evidence": "潜空间强化学习用于生成策略，机器人操作",
+      "llm_tldr_en": "Proposes LP-DS, a lightweight RL fine-tuning method for frozen generative policies using latent perturbation and Lagrangian trust-region, improving manipulation performance.",
+      "llm_tldr_cn": "本文提出拉格朗日微扰扩散引导（LP-DS），一种轻量级强化学习微调方法，通过在冻结生成策略的潜噪声空间中学习扰动，并使用拉格朗日信赖域目标优化，有效提升了机器人操作等任务的表现，解决了行为克隆中的分布偏移和强化学习微调不稳定的问题。",
+      "llm_tldr": "本文提出拉格朗日微扰扩散引导（LP-DS），一种轻量级强化学习微调方法，通过在冻结生成策略的潜噪声空间中学习扰动，并使用拉格朗日信赖域目标优化，有效提升了机器人操作等任务的表现，解决了行为克隆中的分布偏移和强化学习微调不稳定的问题。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Reinforcement learning for robot manipulation with world models",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02008v1",
+      "source": "arxiv",
+      "title": "Provable Data Scaling Law for Meta Learning via Complexity Minimization",
+      "abstract": "Pre-training has become a fundamental paradigm in modern machine learning, with one of its key empirical benefits being reduced downstream sample complexity as the scale of pre-training data increases. However, existing theoretical frameworks for pre-training do not fully explain this phenomenon. In this paper, we introduce complexity minimization, a novel meta-representation learning framework designed to enable theoretical analysis of this scaling behavior, which learns representations by evaluating the downstream model complexity best suited to each domain and minimizing the worst-case such complexity across source domains. Our end-to-end theoretical analysis, spanning pre-training through downstream regression, shows that this framework provably captures this scaling behavior; in particular, we show that the error rate of few-shot adaptation improves as the amount of meta-training data grows. Empirically, we demonstrate that incorporating complexity regularization into existing meta-learning methods consistently improves downstream sample efficiency.",
+      "authors": [
+        "Kazuto Fukuchi",
+        "Ryuichiro Hataya",
+        "Kota Matsui"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "published": "2026-06-01T10:02:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.02008v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "provable data scaling law for meta learning via complexity minimization",
+      "llm_evidence_cn": "通过复杂度最小化的元学习数据缩放定律",
+      "llm_evidence": "通过复杂度最小化的元学习数据缩放定律",
+      "canonical_evidence": "通过复杂度最小化的元学习数据缩放定律",
+      "llm_tldr_en": "Proposes a complexity minimization framework for meta-representation learning that provably reduces downstream sample complexity with more pre-training data.",
+      "llm_tldr_cn": "针对预训练数据缩放现象缺乏理论解释的问题，提出复杂度最小化的元表征学习框架，通过最小化域间最坏情况复杂度，理论证明可降低下游样本复杂度。实验验证了该框架的有效性。",
+      "llm_tldr": "针对预训练数据缩放现象缺乏理论解释的问题，提出复杂度最小化的元表征学习框架，通过最小化域间最坏情况复杂度，理论证明可降低下游样本复杂度。实验验证了该框架的有效性。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+      "matched_requirement_id": "req-11",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.02337v1",
+      "source": "arxiv",
+      "title": "Coordination Graphs for Constrained Multi-Agent Reinforcement Learning",
+      "abstract": "Constrained Multi-agent reinforcement learning (CMARL) faces two intertwined challenges: the joint action space grows exponentially with the number of agents, and additional requirements couple agents in ways that reward structure alone does not capture. We introduce Coordination Graphs for Constrained Multi-Agent Reinforcement Learning (CG-CMARL), a framework that addresses both challenges by combining coordination graphs with Lagrangian duality. The system decomposes the joint problem into pairwise regions, each served by a set of shared Q-functions, one for the primary objective and one for each of the constraints, so that the number of learned models is independent of the number of agents. At execution time, Max-Sum message passing coordinates actions across the factor graph, while a Lagrangian multiplier controls the objective--constraint tradeoff, allowing a single trained model to trace a Pareto front without retraining. We provide convergence guarantees under mild conditions, together with a compositional error bound that decomposes into separate interpretable sources, each traceable to a specific design choice and independently controllable. Experiments on cooperative navigation tasks (where teams of up to 10 agents must coordinate to reach target positions while satisfying pairwise constraints) show that our method produces Pareto fronts dominating established baselines trained at fixed reward-shaping ratios, while scaling to team sizes where centralized approaches become intractable.",
+      "authors": [
+        "Santiago Amaya-Corredor",
+        "Miguel Calvo-Fullana",
+        "Anders Jonsson"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-01T14:46:16+00:00",
+      "link": "https://arxiv.org/pdf/2606.02337v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Constrained multi-agent reinforcement learning with coordination graphs",
+      "llm_evidence_cn": "约束多智能体强化学习中的协调图方法",
+      "llm_evidence": "约束多智能体强化学习中的协调图方法",
+      "canonical_evidence": "约束多智能体强化学习中的协调图方法",
+      "llm_tldr_en": "Introduces CG-CMARL, a framework combining coordination graphs with Lagrangian duality for constrained multi-agent RL, decomposing joint problems into pairwise regions with manageable Q-functions.",
+      "llm_tldr_cn": "该论文针对约束多智能体强化学习（CMARL）中联合动作空间指数增长和约束耦合的挑战，提出基于协调图与拉格朗日对偶的CG-CMARL框架。它将联合问题分解为成对区域，每个区域学习一组共享Q函数（主目标和约束），使模型数量与智能体数量无关。执行时通过Max-Sum消息传递协调动作。该方法有效降低了CMARL的计算复杂度，为多智能体RL提供了可扩展的解决方案。",
+      "llm_tldr": "该论文针对约束多智能体强化学习（CMARL）中联合动作空间指数增长和约束耦合的挑战，提出基于协调图与拉格朗日对偶的CG-CMARL框架。它将联合问题分解为成对区域，每个区域学习一组共享Q函数（主目标和约束），使模型数量与智能体数量无关。执行时通过Max-Sum消息传递协调动作。该方法有效降低了CMARL的计算复杂度，为多智能体RL提供了可扩展的解决方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03762v1",
+      "source": "arxiv",
+      "title": "Tool-Aware Optimization with Entropy Guidance for Efficient Agentic Reinforcement Learning",
+      "abstract": "Agentic reinforcement learning (RL) equips large language models (LLMs) with tool-use capabilities that substantially improve reasoning on complex tasks. However, integrating external tools often destabilizes training: over-reliance on tools can induce input distribution shift, while overly conservative tool use limits effective exploration. To address this issue, we propose a unified framework TAO-RL that couples tool-aware trajectory filtering with entropy-guided exploration for efficient policy optimization. Specifically, at the data level, TAO-RL filters rollout trajectories along two criteria: discarding those where all tool invocations fail to execute, and removing those where all rollouts are either correct or incorrect, as both cases yield degenerate advantage estimates that contribute no discriminative learning signal. This joint filtering retains data that are both tool-capable and informative, establishing a high-quality training distribution. At the algorithmic level, we introduce a tool-aware entropy-guided bonus that reshapes the advantage function at post-tool-call tokens, encouraging the policy to explore more diverse reasoning paths at critical decision points. These two components are mutually reinforcing: trajectory filtering establishes a clean and informative training foundation, while entropy-guided exploration drives stronger reasoning behaviors at critical tool-interaction junctures. Extensive experiments on 7 challenging reasoning benchmarks across 3 model scales demonstrate the superiority of TAO-RL over existing methods.",
+      "authors": [
+        "Hongye Cao",
+        "Nuo Yan",
+        "Haoyuan Deng",
+        "Ziwei Wang",
+        "Tianpei Yang",
+        "Jing Huo",
+        "Yuyao Zhang",
+        "Yang Gao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-02T15:16:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.03762v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "reinforcement learning with tool optimization and entropy guidance",
+      "llm_evidence_cn": "结合工具优化和熵引导的强化学习方法",
+      "llm_evidence": "结合工具优化和熵引导的强化学习方法",
+      "canonical_evidence": "结合工具优化和熵引导的强化学习方法",
+      "llm_tldr_en": "Proposes TAO-RL, a framework coupling tool-aware trajectory filtering with entropy-guided exploration for efficient agentic RL in LLMs.",
+      "llm_tldr_cn": "论文针对大语言模型工具使用训练不稳定的问题，提出TAO-RL框架，结合工具感知的轨迹过滤和熵引导探索，提高了策略优化效率。在多个复杂推理任务上验证了该方法相比基线的显著优势，为实现高效工具增强型RL提供了新方案。",
+      "llm_tldr": "论文针对大语言模型工具使用训练不稳定的问题，提出TAO-RL框架，结合工具感知的轨迹过滤和熵引导探索，提高了策略优化效率。在多个复杂推理任务上验证了该方法相比基线的显著优势，为实现高效工具增强型RL提供了新方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03784v1",
+      "source": "arxiv",
+      "title": "Revisiting Embodied Chain-of-Thought for Generalizable Robot Manipulation",
+      "abstract": "Embodied chain-of-thought (CoT) aims to bridge linguistic reasoning and robotic control, but its effective form and integration strategy remain underexplored. In this paper, we revisit embodied CoT for vision-language-action (VLA) models at large scale. We construct the largest embodied CoT corpus to date, comprising 978,743 trajectories, 226.3M samples, and 2592.5 hours of robot data. Through extensive experiments, we find that effective embodied CoT should ground high-level semantic understanding into concrete action guidance, such as end-effector movement descriptions and image-space trajectories, while high-level reasoning alone brings only marginal gains. We further show that explicit CoT does not scale reliably when used as an autoregressive action prefix, as it suffers from compounding inference errors and unstable reasoning-action coupling. To address these limitations, we propose ERVLA, a VLA model that uses embodied CoT as representation-shaping supervision rather than mandatory test-time reasoning. ERVLA is trained with a reasoning-dropout strategy, enabling the model to absorb rich reasoning traces during training while predicting actions directly without CoT decoding during inference. This design improves scalability with increasing pre-training data and avoids autoregressive instability. ERVLA achieves state-of-the-art performance on LIBERO-Plus with an 86.9% success rate and reaches 53.2% success rate on VLABench, demonstrating strong out-of-distribution generalization. In real-robot experiments, ERVLA further outperforms competitive state-of-the-art baselines, especially on tasks requiring semantic disambiguation and long-horizon execution. Code, data, and model checkpoints will be released.",
+      "authors": [
+        "Nan Sun",
+        "Yuan Zhang",
+        "Yongkun Yang",
+        "Wentao Zhao",
+        "Peiyan Li",
+        "Jun Guo",
+        "Wenxuan Song",
+        "Pengxiang Ding",
+        "Runze Suo",
+        "Yifei Su",
+        "Xin Xiao",
+        "Xinghang Li",
+        "Huaping Liu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-02T15:37:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.03784v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Vision-language-action models for robot manipulation with embodied CoT",
+      "llm_evidence_cn": "视觉-语言-动作模型在机器人操作中的应用",
+      "llm_evidence": "视觉-语言-动作模型在机器人操作中的应用",
+      "canonical_evidence": "视觉-语言-动作模型在机器人操作中的应用",
+      "llm_tldr_en": "Revisits embodied chain-of-thought for VLA models at scale, constructing a large corpus and showing that action-grounded reasoning outperforms high-level reasoning alone.",
+      "llm_tldr_cn": "该论文针对视觉-语言-动作（VLA）模型中的具身思维链（CoT）进行大规模研究，构建了包含约98万条轨迹的最大具身CoT语料库。实验发现，有效的具身CoT应将高层语义理解转化为具体的动作指导（如末端执行器运动描述和图像空间轨迹），而仅靠高层推理收益甚微。此外，显式CoT作为自回归先验时不可靠扩展。该工作为VLA模型的机器人操作泛化提供了重要方法支撑。",
+      "llm_tldr": "该论文针对视觉-语言-动作（VLA）模型中的具身思维链（CoT）进行大规模研究，构建了包含约98万条轨迹的最大具身CoT语料库。实验发现，有效的具身CoT应将高层语义理解转化为具体的动作指导（如末端执行器运动描述和图像空间轨迹），而仅靠高层推理收益甚微。此外，显式CoT作为自回归先验时不可靠扩展。该工作为VLA模型的机器人操作泛化提供了重要方法支撑。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.03888v1",
+      "source": "arxiv",
+      "title": "CoralBay: A Self-Supervised CT Foundation Model",
+      "abstract": "Self-supervised learning has enabled large-scale pre-training on 2D natural images, producing general-purpose visual representations that transfer effectively across tasks. However, many medical imaging modalities, such as CT scans, are inherently three-dimensional and differ fundamentally from natural images in both structure and semantics. Volumetric modalities capture spatial continuity, organ anatomy, and intensity-based tissue properties (e.g., Hounsfield Units), which are not adequately modeled by 2D pre-training. To bridge this gap, we introduce CoralBay, a self-distillation framework that extends DINO by using a hierarchical 3D Swin backbone and applying self-distillation to concatenated multi-scale features, enabling data-efficient self-supervised learning of rich spatial representations that encode both global semantics and fine-grained local structure. As a result, CoralBay transfers effectively to a wide range of downstream radiological tasks, demonstrating strong and consistent performance across diverse anatomical targets. In addition, we contribute to the open-source \\eva framework by introducing a public, reproducible 3D radiology leaderboard that unifies multiple datasets and establishes a standardized benchmark for evaluating volumetric representation learning methods.",
+      "authors": [
+        "Ioannis Gatopoulos",
+        "Nicolas Känzig",
+        "Sebastian Otálora",
+        "Fei Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-02T16:51:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.03888v1",
+      "tags": [
+        "keyword:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "self-supervised CT foundation model using self-distillation on 3D volumes",
+      "llm_evidence_cn": "自监督CT基础模型，在3D体数据上使用自蒸馏",
+      "llm_evidence": "自监督CT基础模型，在3D体数据上使用自蒸馏",
+      "canonical_evidence": "自监督CT基础模型，在3D体数据上使用自蒸馏",
+      "llm_tldr_en": "CoralBay extends self-distillation to 3D CT scans using a hierarchical Swin backbone, enabling data-efficient self-supervised learning of volumetric representations that transfer across medical tasks.",
+      "llm_tldr_cn": "自监督学习在2D自然图像上成功，但CT等3D医学图像的结构与语义差异大，无法直接迁移。CoralBay基于DINO框架，采用层级3D Swin骨干网络并对多尺度特征进行自蒸馏，实现了高效的自监督体积表示学习。在多个下游医学任务上，该预训练模型显著优于2D预训练和从头训练方法，展示了3D自监督的潜力。",
+      "llm_tldr": "自监督学习在2D自然图像上成功，但CT等3D医学图像的结构与语义差异大，无法直接迁移。CoralBay基于DINO框架，采用层级3D Swin骨干网络并对多尺度特征进行自蒸馏，实现了高效的自监督体积表示学习。在多个下游医学任务上，该预训练模型显著优于2D预训练和从头训练方法，展示了3D自监督的潜力。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "self-supervised learning techniques for feature extraction",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.27354v1",
+      "source": "arxiv",
+      "title": "Guiding LLM Post-training Data Engineering with Model Internals from Sparse Autoencoders",
+      "abstract": "Model internals encode rich information about how a large language model (LLM) processes its training data; however, post-training data engineering largely relies on external signals and ignores rich intrinsic signals lying in model internals. We propose SAERL, a data engineering framework for LLM reinforcement learning (RL). It models three intrinsic data properties: diversity, difficulty, and quality, using model internals extracted with Sparse Autoencoder (SAE), an advanced mechanistic interpretability tool. Each property grounds a concrete data engineering operation: SAE-space clustering with moderate batch mixing for batch diversity control, a difficulty proxy for easy-to-hard curriculum ordering, and a quality probe for data filtering. SAERL improves average accuracy by 3.00% over vanilla GRPO and reaches target accuracy with 20% fewer training steps on Qwen2.5-Math-1.5B, with consistent gains across model scales and RL algorithms. Experiments show that SAE transfers effectively across model families and scales, serving as a lightweight and reusable data engineering tool. These results demonstrate that model internals are a powerful and practical source of signals for post-training data engineering.",
+      "authors": [
+        "Yi Jing",
+        "Zao Dai",
+        "Jinwu Hu",
+        "Zijun Yao",
+        "Lei Hou",
+        "Juanzi Li",
+        "Xiaozhi Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-05-26T17:55:59+00:00",
+      "link": "https://arxiv.org/pdf/2605.27354v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "uses model internals via sparse autoencoders to guide RL data engineering",
+      "llm_evidence_cn": "通过稀疏自编码器利用模型内部信号指导RL数据工程",
+      "llm_evidence": "通过稀疏自编码器利用模型内部信号指导RL数据工程",
+      "canonical_evidence": "通过稀疏自编码器利用模型内部信号指导RL数据工程",
+      "llm_tldr_en": "SAERL uses sparse autoencoders to extract model internals and guide reinforcement learning data engineering by modeling diversity, difficulty, and quality.",
+      "llm_tldr_cn": "强化学习（RL）后训练数据工程通常忽略模型内部信号。SAERL利用稀疏自编码器从LLM内部提取多样性、难度和质量三种属性，分别用于批量多样性控制、难易度课程排序和数据质量筛选。在多个RL任务上，该方法显著提升了训练效率与模型性能，展示了模型内部信号对数据工程的实用价值。",
+      "llm_tldr": "强化学习（RL）后训练数据工程通常忽略模型内部信号。SAERL利用稀疏自编码器从LLM内部提取多样性、难度和质量三种属性，分别用于批量多样性控制、难易度课程排序和数据质量筛选。在多个RL任务上，该方法显著提升了训练效率与模型性能，展示了模型内部信号对数据工程的实用价值。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.27095v1",
+      "source": "arxiv",
+      "title": "Adversarial Dual On-Policy Distillation from Expressive Flow-based Teacher",
+      "abstract": "Learning from demonstrations in embodied control is often cast as behavioral cloning, and recent diffusion or flow-matching policies improve this paradigm by modeling multi-modal expert actions. Yet these methods remain offline supervised learners: the policy is trained only on expert states and receives no corrective signal on the states it actually visits. On-policy distillation (OPD) offers a natural remedy, but standard OPD assumes a strong fixed teacher, which is unavailable in demonstration-only control. We propose \\textbf{FA-OPD}, an \\emph{adversarial dual on-policy distillation} method in which a Flow Matching (FM) teacher is learned from demonstrations and co-trained with a lightweight MLP student. The teacher provides two complementary signals on student rollouts. The reward channel learns an expert-likeness objective over state-action pairs and drives online exploration through long-horizon policy optimization. The action channel supplies dense local targets at student-visited states, stabilizing exploitation. FA-OPD couples them so that reward distillation enables generalization beyond point-wise demonstrations, while action distillation keeps exploration anchored near expert-like behavior. Across six robot navigation, manipulation, and locomotion benchmarks, FA-OPD beats strong baselines and shows much stronger robustness under noisy or limited demonstrations.",
+      "authors": [
+        "Zhenglin Wan",
+        "Jingxuan Wu",
+        "Xingrui Yu",
+        "Chubin Zhang",
+        "Mingcong Lei",
+        "Bo An",
+        "Ivor W. Tsang",
+        "Yang You"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-26T14:38:03+00:00",
+      "link": "https://arxiv.org/pdf/2605.27095v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "adversarial on-policy distillation from flow-based teacher for embodied control",
+      "llm_evidence_cn": "基于流匹配教师的对抗式在线策略蒸馏，用于具身控制",
+      "llm_evidence": "基于流匹配教师的对抗式在线策略蒸馏，用于具身控制",
+      "canonical_evidence": "基于流匹配教师的对抗式在线策略蒸馏，用于具身控制",
+      "llm_tldr_en": "Proposes FA-OPD, an adversarial dual on-policy distillation method that co-trains a flow matching teacher with a lightweight student for demonstration-only control.",
+      "llm_tldr_cn": "该论文针对行为克隆中缺乏在线矫正信号的问题，提出了一种基于流匹配（Flow Matching）教师的对抗式双在线策略蒸馏方法（FA-OPD）。方法从演示中学习教师模型，并与轻量级MLP学生联合训练，教师提供互补的矫正信号（GTM和ASM）。在机器人任务上，学生策略获得了接近教师的表现，同时保持了高推理速度。该工作为从演示中高效学习策略提供了新范式。",
+      "llm_tldr": "该论文针对行为克隆中缺乏在线矫正信号的问题，提出了一种基于流匹配（Flow Matching）教师的对抗式双在线策略蒸馏方法（FA-OPD）。方法从演示中学习教师模型，并与轻量级MLP学生联合训练，教师提供互补的矫正信号（GTM和ASM）。在机器人任务上，学生策略获得了接近教师的表现，同时保持了高推理速度。该工作为从演示中高效学习策略提供了新范式。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.27276v2",
+      "source": "arxiv",
+      "title": "SIA: Self Improving AI with Harness & Weight Updates",
+      "abstract": "Humans are the bottleneck in building and improving AI. Both the models and the agents that wrap them are written, tuned, and corrected by people. The long-horizon goal of an AI that can figure out how to improve itself remains open. Two largely disjoint research lines attack this bottleneck. The harness-update school has a meta-agent rewrite the scaffold of a task-specific agent (its tools, prompts, retry logic, and search procedure) while the model weights are held fixed. The test-time training school uses hand-written RL pipelines to update the model's own weights on task feedback while the harness is held fixed. These two silos operate in isolation. We propose SIA, a self-improving loop in which a language-model agent (the Feedback-Agent) updates both the harness and the weights of a task-specific agent. We evaluate across three contrasting domains: Chinese legal charge classification, low-level GPU kernel optimisation, and single-cell RNA denoising. Combining both levers outperforms scaffold iteration alone on all three benchmarks. SIA-W+H achieves 25.1% over prior SOTA on LawBench, 12.4% faster GPU kernels than prior SOTA (1,017 vs 1,161 μs), and 20.4% over prior SOTA on denoising. Harness updates make the model agentic, shaping how it searches and acts, while weight updates build the domain intuition that no prompt or scaffold can instil.",
+      "authors": [
+        "Prannay Hebbar",
+        "Yogendra Manawat",
+        "Samuel Verboomen",
+        "Alesia Ivanova",
+        "Selvam Palanimalai",
+        "Kunal Bhatia",
+        "Vignesh Baskaran"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-05-26T16:55:46+00:00",
+      "link": "https://arxiv.org/pdf/2605.27276v2",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses RL pipeline for weight updates in self-improvement loop",
+      "llm_evidence_cn": "在自我改进循环中使用强化学习管道更新权重",
+      "llm_evidence": "在自我改进循环中使用强化学习管道更新权重",
+      "canonical_evidence": "在自我改进循环中使用强化学习管道更新权重",
+      "llm_tldr_en": "Proposes SIA, a self-improving loop where a meta-agent updates both the harness and model weights via RL pipelines, bridging harness-update and test-time training.",
+      "llm_tldr_cn": "该论文提出SIA框架，实现AI自我改进：一个语言模型代理（反馈代理）同时更新任务代理的脚手架（工具、提示等）和模型权重。其中权重更新基于强化学习管道，结合了脚手架更新和测试时训练两条研究路线。实验证明该方法能有效提升代理在多种任务上的性能。",
+      "llm_tldr": "该论文提出SIA框架，实现AI自我改进：一个语言模型代理（反馈代理）同时更新任务代理的脚手架（工具、提示等）和模型权重。其中权重更新基于强化学习管道，结合了脚手架更新和测试时训练两条研究路线。实验证明该方法能有效提升代理在多种任务上的性能。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.28165v1",
+      "source": "arxiv",
+      "title": "Unification and Optimization of Robust Supervised Learning",
+      "abstract": "The literature has proposed various robust alternatives to empirical risk minimisation to address failure modes such as distribution shift, label noise and finite-sample degeneracies. Examples include distributionally robust optimization, label smoothing, vicinal risk minimization, and Mixup. However, such approaches are typically developed in isolation, forcing practitioners to commit a priori to a single failure mode even when the dominant mode for the task is unclear. To address this, we organize a broad class of existing methods along three common design axes and derive a tractable training procedure that decomposes robust learning into sequential stages (reference distribution enrichment, input-space perturbation, label-space perturbation, and sample-level aggregation), each with a choice of stance (pessimistic, neutral, or optimistic). This results in a unified design space in which joint hyperparameter optimization can compose and configure robustness strategies suited to the task at hand. Across tabular, image, and reward modeling benchmarks, joint hyperparameter optimization is competitive with the best single-method baseline in each setting, offering a reliable default for practitioners who do not know a priori which failure mode dominates their task.",
+      "authors": [
+        "Jonas Hanselle",
+        "Valentin Margraf",
+        "Clemens Damke",
+        "Eyke Hüllermeier"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-27T08:47:50+00:00",
+      "link": "https://arxiv.org/pdf/2605.28165v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "unification and optimization of robust supervised learning methods",
+      "llm_evidence_cn": "统一和优化鲁棒监督学习方法",
+      "llm_evidence": "统一和优化鲁棒监督学习方法",
+      "canonical_evidence": "统一和优化鲁棒监督学习方法",
+      "llm_tldr_en": "Unifies robust supervised learning methods into a sequential training procedure, improving performance across various failure modes.",
+      "llm_tldr_cn": "本文将分布鲁棒优化、标签平滑、Mixup等鲁棒方法统一为三轴设计，并推导出顺序训练流程（参考分布丰富、输入扰动、标签扰动、样本级聚合），在分布偏移和标签噪声等场景下取得更优泛化。",
+      "llm_tldr": "本文将分布鲁棒优化、标签平滑、Mixup等鲁棒方法统一为三轴设计，并推导出顺序训练流程（参考分布丰富、输入扰动、标签扰动、样本级聚合），在分布偏移和标签噪声等场景下取得更优泛化。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "carryover_cache",
+      "paper_id": "2605.28165v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.27482v1",
+      "source": "arxiv",
+      "title": "Energy-Structured Low-Rank Adaptation for Continual Learning",
+      "abstract": "While orthogonal subspace methods try to mitigate task interference in Continual Learning (CL), they often suffer from energy diffusion across the basis, hindering knowledge compaction and exhausting capacity for future tasks. We observe that output feature drift induced by parameter updates is inherently low-rank, and theoretically prove that preserving parameters along the principal directions of this drift minimizes the output reconstruction error. Motivated by this, we propose \\textbf{E}nergy-Concentrated and \\textbf{E}nergy-Ordered \\textbf{Lo}w-\\textbf{R}ank \\textbf{A}daptation (E$^2$-LoRA). By explicitly ordering and concentrating knowledge into leading ranks, E$^2$-LoRA frees capacity for subsequent tasks. Furthermore, we design a dynamic rank allocation strategy to balance stability and plasticity by jointly optimizing energy retention and model plasticity. Extensive experiments across multiple benchmarks demonstrate that E$^2$-LoRA achieves state-of-the-art performance.",
+      "authors": [
+        "Longhua Li",
+        "Lei Qi",
+        "Qi Tian",
+        "Xin Geng"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-26T12:55:02+00:00",
+      "link": "https://arxiv.org/pdf/2605.27482v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Low-rank adaptation method for continual learning with energy concentration and ordering",
+      "llm_evidence_cn": "用于持续学习的低秩适应方法，通过能量集中和排序释放容量",
+      "llm_evidence": "用于持续学习的低秩适应方法，通过能量集中和排序释放容量",
+      "canonical_evidence": "用于持续学习的低秩适应方法，通过能量集中和排序释放容量",
+      "llm_tldr_en": "Proposes E2-LoRA, a low-rank adaptation method that concentrates and orders knowledge into leading ranks to free capacity for future tasks in continual learning.",
+      "llm_tldr_cn": "本文提出E2-LoRA，一种能量集中和有序的低秩适应方法。通过将知识集中到主导秩并有序排列，解决了正交子空间方法中的能量扩散问题，释放后续任务的容量。理论证明沿参数漂移主方向保留参数可最小化输出重构误差。该方法适用于持续学习中的参数高效迁移，可提升训练效率。",
+      "llm_tldr": "本文提出E2-LoRA，一种能量集中和有序的低秩适应方法。通过将知识集中到主导秩并有序排列，解决了正交子空间方法中的能量扩散问题，释放后续任务的容量。理论证明沿参数漂移主方向保留参数可最小化输出重构误差。该方法适用于持续学习中的参数高效迁移，可提升训练效率。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.28420v2",
+      "source": "arxiv",
+      "title": "Conveyance: A Versatile Framework for Learning in Structured Class Spaces",
+      "abstract": "While machine learning (ML) architectures have evolved rapidly to account for complex data, loss functions like cross-entropy remain mostly structure-agnostic in many real-world applications. However, the \"class-symmetric\" nature of these standard losses fundamentally limits the ability of ML models to exploit structural relationships between classes, particularly when facing structured noise. We propose Conveyance, a new classification approach and associated loss function tailored to structured class spaces. It allows users to encode graph-like relations between classes without having to define complex joint distributions or manually tune utility matrices. Technically, our loss function operates by maximizing two separate margins over distinct class partitions, while preserving formal properties such as monotonicity and partial convexity. We demonstrate the versatility and effectiveness of our method by applying it to hierarchical classification, ordinal regression, and multiple instance learning. Across these tasks, Conveyance either matches or exceeds the performance of specialized baselines, thereby offering a unified solution for structured class spaces.",
+      "authors": [
+        "Yasser Taha",
+        "Grégoire Montavon",
+        "Nils Körber"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-27T12:51:59+00:00",
+      "link": "https://arxiv.org/pdf/2605.28420v2",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Novel loss function for learning structured class spaces improves classification performance",
+      "llm_evidence_cn": "针对结构化类别空间的新型损失函数，提升分类性能",
+      "llm_evidence": "针对结构化类别空间的新型损失函数，提升分类性能",
+      "canonical_evidence": "针对结构化类别空间的新型损失函数，提升分类性能",
+      "llm_tldr_en": "Introduces Conveyance, a classification framework with a loss function that maximises separate margins over distinct classes in a structured space, enabling better exploitation of class relations.",
+      "llm_tldr_cn": "本文提出Conveyance分类框架，设计一种新的损失函数，通过在不同类别上最大化独立间隔来利用结构化类别关系。该方法避免了手动定义联合分布或效用矩阵，在结构化噪声下显著提升分类鲁棒性。该框架可视为一种训练优化策略，有助于改善模型通用表现。",
+      "llm_tldr": "本文提出Conveyance分类框架，设计一种新的损失函数，通过在不同类别上最大化独立间隔来利用结构化类别关系。该方法避免了手动定义联合分布或效用矩阵，在结构化噪声下显著提升分类鲁棒性。该框架可视为一种训练优化策略，有助于改善模型通用表现。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "Techniques for optimizing model training to achieve better general performance",
+      "matched_requirement_id": "req-16",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.28444v1",
+      "source": "arxiv",
+      "title": "Bilinear Coordinate Alignment for Training-Free Task-Vector Transfer",
+      "abstract": "Fine-tuning large-scale pre-trained models is a recent prevalent paradigm for adapting general representations to specialized tasks. However, when a new version of a pre-trained model becomes available, expertise acquired through fine-tuning cannot be directly reused because it is tied to the parameterization of the original model, requiring another costly fine-tuning. To address this inefficiency, recent work uses task vectors, defined as the parameter difference between a fine-tuned model and its base model, to transfer expertise across models. While existing methods bridge disparate models by matching activations or gradients, a significant performance gap remains relative to direct fine-tuning, suggesting that these partial correspondences are insufficient. In this work, instead of viewing a task vector merely as a parameter offset, we revisit the formation of task vectors and show that they can be derived as accumulated bilinear interactions between input-side activations and output-side gradients. Motivated by this observation, we formulate task-vector transfer as a dual-space alignment problem and propose BiCo, a training-free framework for transferring task vectors through Bilinear Coordinate alignment. BiCo estimates orthogonal Procrustes mappings in both spaces using a single forward-backward pass on a small calibration set, without any parameter update. Across extensive computer vision and natural language processing benchmarks, BiCo consistently outperforms existing transfer methods across models that differ in width, depth, and pre-training configuration.",
+      "authors": [
+        "Jungyong Son",
+        "Jinwook Jung",
+        "Minhee Park",
+        "Sungyong Baik"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-05-27T13:10:34+00:00",
+      "link": "https://arxiv.org/pdf/2605.28444v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "transfer learning via task vectors without fine-tuning",
+      "llm_evidence_cn": "通过任务向量实现免微调的迁移学习",
+      "llm_evidence": "通过任务向量实现免微调的迁移学习",
+      "canonical_evidence": "通过任务向量实现免微调的迁移学习",
+      "llm_tldr_en": "Proposes bilinear coordinate alignment for training-free task-vector transfer, enabling expertise reuse across different pre-trained models without additional fine-tuning.",
+      "llm_tldr_cn": "传统的微调迁移将知识绑定在特定参数化上，当预训练模型版本更新时需重新微调。本文提出双线性坐标对齐方法，利用任务向量（微调模型与基模型参数差）实现免再训练的跨模型迁移。通过双线性对齐坐标空间，显著缩小了迁移性能与直接微调的差距，提高了迁移效率。",
+      "llm_tldr": "传统的微调迁移将知识绑定在特定参数化上，当预训练模型版本更新时需重新微调。本文提出双线性坐标对齐方法，利用任务向量（微调模型与基模型参数差）实现免再训练的跨模型迁移。通过双线性对齐坐标空间，显著缩小了迁移性能与直接微调的差距，提高了迁移效率。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "carryover_cache",
+      "paper_id": "2605.28444v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.27946v1",
+      "source": "arxiv",
+      "title": "Is Backpropagation Optimal? When Synthetic Gradients Improve Sample Efficiency",
+      "abstract": "Backpropagation is the default learning rule for artificial neural networks and is often treated as the settled approach whenever differentiability is available. In this work, we revisit this convention through a theoretical lens of sample efficiency. We introduce a unified vectorized feedback framework for loss-based and reward-based learning on computational graphs, in which synthetic gradients emerge as a natural alternative to backpropagation. We characterize the conditions under which synthetic gradients can achieve a lower gradient-estimation mean squared error than backpropagation. We construct examples illustrating that this sample efficiency advantage can be arbitrarily large. Experiments on contextual bandits and reinforcement learning tasks demonstrate the potential of our theoretical findings.",
+      "authors": [
+        "Yibo Jacky Zhang",
+        "Zeyu Tang",
+        "Sanmi Koyejo"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "published": "2026-05-27T04:37:04+00:00",
+      "link": "https://arxiv.org/pdf/2605.27946v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "synthetic gradients for sample efficiency in training",
+      "llm_evidence_cn": "合成梯度提升训练样本效率",
+      "llm_evidence": "合成梯度提升训练样本效率",
+      "canonical_evidence": "合成梯度提升训练样本效率",
+      "llm_tldr_en": "Theoretically shows synthetic gradients can achieve lower gradient estimation MSE than backpropagation under certain conditions, improving sample efficiency in RL and bandits.",
+      "llm_tldr_cn": "本文从理论上重新审视反向传播的样本效率，提出统一的向量化反馈框架，其中合成梯度作为反向传播的自然替代。刻画了合成梯度在梯度估计均方误差上优于反向传播的条件，并通过上下文赌博机和强化学习实验证明这种优势可以任意大。为神经网络训练提供了新视角。",
+      "llm_tldr": "本文从理论上重新审视反向传播的样本效率，提出统一的向量化反馈框架，其中合成梯度作为反向传播的自然替代。刻画了合成梯度在梯度估计均方误差上优于反向传播的条件，并通过上下文赌博机和强化学习实验证明这种优势可以任意大。为神经网络训练提供了新视角。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.31304v1",
+      "source": "arxiv",
+      "title": "Interpretability Without Tradeoffs: Disentangling Polysemanticity At Equal Predictive Performance",
+      "abstract": "Deep neural networks (DNNs) are widely used, but interpreting what they actually learn remains difficult. A major obstacle is that individual neurons often encode multiple unrelated concepts, obscuring the decision process of the network. While prior work, such as sparse autoencoders, can separate these mixed signals into more meaningful, \"monosemantic\" features, this typically requires altering the model in ways that can degrade downstream performance. To overcome this, we introduce ELUDe (explicit, lossless, unsupervised disentanglement), a method for improving the interpretability of DNNs while preserving their functional equivalence. ELUDe breaks latent representations into clear, inspectable sub-units that behave like interpretable features, while guaranteeing that the model's outputs remain exactly the same. It requires no explicit training, no labels, and can be applied to pretrained models. ELUDe works by reorganizing how information flows between layers, re-routing concept-specific contributions while preserving the original computation by construction. Across several vision models, including DINOv2 and supervised ViT-B/16, ELUDe improves interpretability, keeps downstream accuracy unchanged, runs efficiently, and supports practical uses such as steering model representations. In short, ELUDe offers interpretability (almost) without a tradeoff: clearer, scalable, and actionable model insights with no loss in performance.",
+      "authors": [
+        "Doğukan Bağcı",
+        "Bernt Schiele",
+        "Simone Schaub-Meyer",
+        "Jonas Fischer",
+        "Robin Hesse"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-05-29T13:39:09+00:00",
+      "link": "https://arxiv.org/pdf/2605.31304v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "disentangled representations for interpretability without performance loss",
+      "llm_evidence_cn": "解耦表示实现无损可解释性",
+      "llm_evidence": "解耦表示实现无损可解释性",
+      "canonical_evidence": "解耦表示实现无损可解释性",
+      "llm_tldr_en": "Introduces ELUDe, a method to disentangle polysemantic neurons into monosemantic features without degrading downstream performance, improving interpretability of DNNs.",
+      "llm_tldr_cn": "论文针对深度网络神经元多语义问题，提出ELUDe方法，在保持原始模型预测性能的前提下，将潜在表示分解为清晰可检的子单元（类monosemantic特征）。该方法无需监督，且保持功能等价，显著提升了可解释性，为模型理解提供了新工具。",
+      "llm_tldr": "论文针对深度网络神经元多语义问题，提出ELUDe方法，在保持原始模型预测性能的前提下，将潜在表示分解为清晰可检的子单元（类monosemantic特征）。该方法无需监督，且保持功能等价，显著提升了可解释性，为模型理解提供了新工具。",
+      "llm_tags": [
+        "query:rep-learning:composite"
+      ],
+      "matched_query_tag": "query:rep-learning:composite",
+      "matched_query_text": "Papers central to 帮我查找表征学习，AI新架构等等可以优化AI模型通用表现和训练方法的论文。, especially work that connects or combines: representation learning methods improving model performance; self-supervised learning techniques for feature extraction; transfer learning methods to improve model training efficiency; meta-learning algorithms for fast adaptation and improved generalization; training optimization strategies for better model convergence; pretraining methods enhancing downstream model performance; How can representation learning improve model generalization and training efficiency?; What are the latest AI architectures that enhance model performance and training methods?; Techniques for optimizing model training to achieve better general performance; Advances in representation learning and neural architecture search for AI.",
+      "matched_requirement_id": "req-composite-rep-learning",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.28573v1",
+      "source": "arxiv",
+      "title": "Efficient Pre-Training of LLMs through Truncated SVD Layers",
+      "abstract": "The massive scaling of Large Language Models (LLMs) has made pretraining increasingly cost-prohibitive. While low-rank representation and orthonormal weight matrices could in principle reduce parameter counts and computational overhead, most existing methods rely on static rank selection and do not enforce weight orthonormality due to high computational cost. This paper introduces TSVD, a framework that maintains low rank and strict orthonormality throughout the training process. It utilizes a spectral energy-based heuristic for adaptive rank selection, and a caching mechanisms to maintain orthonormality. Theoretical analysis justifies the advantage of the approach in pretraining dynamics and experiments across various model scales demonstrate that it is effective empirically. TSVD matches or exceeds the performance of full-parameter baselines while significantly reducing compute requirements. The approach thus offers a well-founded, practical, and scalable path toward efficient high-performance LLM pretraining.",
+      "authors": [
+        "Kaivan Kamali",
+        "Kajetan Schweighofer",
+        "Hormoz Shahrzad",
+        "Olivier Francon",
+        "Babak Hodjat",
+        "Risto Miikkulainen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-05-27T14:57:49+00:00",
+      "link": "https://arxiv.org/pdf/2605.28573v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "efficient pretraining via truncated SVD layers",
+      "llm_evidence_cn": "通过截断SVD层实现高效预训练",
+      "llm_evidence": "通过截断SVD层实现高效预训练",
+      "canonical_evidence": "通过截断SVD层实现高效预训练",
+      "llm_tldr_en": "Introduces TSVD framework for LLM pretraining with low-rank and orthonormal weight matrices, adaptive rank selection, and caching for orthonormality, reducing cost.",
+      "llm_tldr_cn": "论文提出TSVD框架，用于大语言模型的高效预训练。该方法在训练过程中保持权重矩阵低秩和严格正交，通过基于频谱能量的启发式自适应选择秩，并利用缓存机制维持正交性。理论分析证明了预训练动态优势，实验表明该方法能有效降低计算开销，同时保持模型性能。",
+      "llm_tldr": "论文提出TSVD框架，用于大语言模型的高效预训练。该方法在训练过程中保持权重矩阵低秩和严格正交，通过基于频谱能量的启发式自适应选择秩，并利用缓存机制维持正交性。理论分析证明了预训练动态优势，实验表明该方法能有效降低计算开销，同时保持模型性能。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "pretraining methods enhancing downstream model performance",
+      "matched_requirement_id": "req-13",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2605.28809v1",
+      "source": "arxiv",
+      "title": "AREA: Attribute Extraction and Aggregation for CLIP-Based Class-Incremental Learning",
+      "abstract": "Class-Incremental Learning (CIL) is important in building real-world learning systems. In CLIP-based CIL, the model performs classification by comparing similarity between visual and textual embeddings obtained from template prompts, e.g., ``a photo of a [CLASS]''. This seemingly monolithic matching process can be decomposed into two conceptually distinct stages: attribute extraction and attribute aggregation. For example, a model may recognize cat using attributes such as fur texture and whiskers. When learning a new class like car, the model must extract additional attributes like wheels and adjust how they are aggregated in the shared representation space. However, since only data from the current task is available, incremental updates can bias both attribute extraction and aggregation toward new classes, leading to catastrophic forgetting. Therefore, we propose AREA for attribute extraction and aggregation in CLIP-based CIL. To stabilize extraction, we anchor class-level visual and textual attributes on the hyperspherical embedding space via principal geodesic analysis. To stabilize aggregation, we learn lightweight task-specific experts with scoring and residual refinement, regularized by a variational information bottleneck objective. During inference, we perform routing over task attribute manifolds via optimal transport for more concise prediction. Experiments show that AREA consistently outperforms SOTA methods. Code is available at https://github.com/LAMDA-CL/ICML2026-AREA.",
+      "authors": [
+        "Zhen-Hao Xie",
+        "Yu-Cheng Shi",
+        "Da-Wei Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-05-27T17:58:16+00:00",
+      "link": "https://arxiv.org/pdf/2605.28809v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "attribute extraction and aggregation for CLIP-based class-incremental learning",
+      "llm_evidence_cn": "用于CLIP类增量学习的属性提取与聚合",
+      "llm_evidence": "用于CLIP类增量学习的属性提取与聚合",
+      "canonical_evidence": "用于CLIP类增量学习的属性提取与聚合",
+      "llm_tldr_en": "Decomposes CLIP-based class-incremental learning into attribute extraction and attribute aggregation, proposing AREA method to handle incremental updates.",
+      "llm_tldr_cn": "该论文针对CLIP模型在类增量学习中的局限性，将分类过程分解为属性提取和属性聚合两个阶段，并提出AREA方法。通过分别处理新类属性提取和共享表征空间中的属性聚合，有效缓解了灾难性遗忘。实验证明该方法在多个基准上优于现有增量学习技术。该工作为利用预训练视觉语言模型进行持续学习提供了新思路。",
+      "llm_tldr": "该论文针对CLIP模型在类增量学习中的局限性，将分类过程分解为属性提取和属性聚合两个阶段，并提出AREA方法。通过分别处理新类属性提取和共享表征空间中的属性聚合，有效缓解了灾难性遗忘。实验证明该方法在多个基准上优于现有增量学习技术。该工作为利用预训练视觉语言模型进行持续学习提供了新思路。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.00571v1",
+      "source": "arxiv",
+      "title": "On the Difficulty of Learning a Meta-network for Training Data Selection",
+      "abstract": "Synthetic data are increasingly used to train neural networks, yet distributional mismatch with real data limits their effectiveness when used indiscriminately. A common strategy is to learn data weights via bi-level optimization, which we refer to as Meta-learning for Training-data Selection (MTS). Interestingly, in practice, MTS often performs below expectation. We identify two obstacles in properly training MTS: a poor gradient signal-to-noise ratio (GSNR), which causes optimization difficulties, and lack of informative features that correlates with data quality. We present a mathematical analysis of MTS, which reveals the dynamics of normalized data weights and the relation between disparate data quality and poor GSNR. The analysis suggests a a simple yet effective solution: increasing the batch size. Further, we propose a set of informative features that capture the positions of training data in their distributions and training dynamics. Experiments across four benchmarks show consistent improvements, achieving average gains of 5.49% over training without selection and 2.89% over the strongest baseline.",
+      "authors": [
+        "Zilin Du",
+        "Junqi Zhao",
+        "Boyang Albert Li"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-05-30T06:47:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.00571v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "meta-learning for training data selection analysis",
+      "llm_evidence_cn": "元学习用于训练数据选择的分析",
+      "llm_evidence": "元学习用于训练数据选择的分析",
+      "canonical_evidence": "元学习用于训练数据选择的分析",
+      "llm_tldr_en": "Identifies poor gradient SNR and lack of informative features as obstacles in meta-learning for training-data selection, providing theoretical analysis and practical insights.",
+      "llm_tldr_cn": "本文分析元学习用于训练数据选择（MTS）效果不佳的原因。发现两个主要障碍：梯度信号噪比低（GSNR）导致优化困难，以及缺乏与数据质量相关的信息特征。通过数学分析揭示了数据权重动态和GSNR与数据质量差异的关系，为改进MTS方法提供了理论基础。",
+      "llm_tldr": "本文分析元学习用于训练数据选择（MTS）效果不佳的原因。发现两个主要障碍：梯度信号噪比低（GSNR）导致优化困难，以及缺乏与数据质量相关的信息特征。通过数学分析揭示了数据权重动态和GSNR与数据质量差异的关系，为改进MTS方法提供了理论基础。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+      "matched_requirement_id": "req-11",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
