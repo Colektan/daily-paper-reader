@@ -1,0 +1,4221 @@
+Title: Semi-Supervised Learning with Noisy Proxy Covariates: Generalization Bounds and Distribution Regression
+
+URL Source: https://arxiv.org/pdf/2606.00512v1
+
+Published Time: Tue, 02 Jun 2026 00:33:13 GMT
+
+Number of Pages: 29
+
+Markdown Content:
+# Semi-Supervised Learning with Noisy Proxy Covariates: Generalization Bounds and Distribution Regression 
+
+Kwangho Kim 1 Jisu Kim 2
+
+## Abstract 
+
+In many modern machine learning pipelines, abun-dant pretrained representations serve as noisy proxy covariates, while task-specific labels re-main scarce. We study semi-supervised regres-sion in this setting, and propose a simple two stage estimator that learns kernel eigenfeatures from all proxy covariates and fits a ridge predictor on labeled data. We derive finite sample bounds showing that fast labeled sample rates are recov-ered when proxy perturbation is controlled and unlabeled proxy covariates are sufficiently abun-dant. We also show that distribution regression is a direct special case, with analogous guarantees when the finite bag size is large enough. Experi-ments show consistent gains over supervised and semi-supervised baselines, especially in low label regimes. 
+
+## 1. Introduction 
+
+Semi-supervised learning (SSL) seeks provable gains from combining a small labeled sample with a large unlabeled sample (van Engelen & Hoos, 2020; Zhu & Goldberg, 2009). Classical theory typically explains such gains through struc-ture in the marginal covariate distribution, most notably the manifold and cluster (low-density separation) assumptions (Belkin & Niyogi, 2004; 2008; Belkin et al., 2006; Lafferty & Wasserman, 2007; Niyogi, 2013; Rigollet, 2007; Singh et al., 2008; Sinha & Belkin, 2009; Zhu et al., 2003). While these assumptions yield fast rates in idealized regimes, they are hard to validate from limited labels, and prior theory shows that unlabeled data need not improve performance unless the marginal covariate distribution is informative about the regression or decision function. Recent work also sharpens the picture for graph-based regularization by char-
+
+> 1
+
+Department of Statistics, Korea University, Seoul, Korea 
+
+> 2
+
+Department of Statistics, Seoul National University, Seoul, Korea. Correspondence to: Jisu Kim <jkim82133@snu.ac.kr >.
+
+Proceedings of the 43 rd International Conference on Machine Learning , Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s). 
+
+acterizing when Laplacian-based SSL does and does not help (Cabannes et al., 2021). This paper studies a complementary obstacle that is ubiqui-tous in modern machine learning pipelines: the covariates available to the learner are often noisy proxies. In con-temporary systems, including foundation-model pipelines, downstream predictors are trained on representations pro-duced from massive unlabeled corpora, but these represen-tations are imperfect, domain-dependent measurements of latent variables. Empirically, data curation and distributional mismatch can dominate performance even when unlabeled scale is enormous (Gadre et al., 2023). From a statistical viewpoint, this motivates SSL with noisy covariates: we observe labeled pairs ( bXi, Y i)ni=1 and additional unlabeled covariates bXn+1: N , where bX is a contaminated or proxy observation for an unobserved latent covariate X. The basic question is whether, and under what conditions, unlabeled proxy covariates improve generalization despite measure-ment error. Relatedly, recent theory on learning with noisy features underscores that “more data” and “more features” can interact in nonclassical ways even in supervised settings (Li et al., 2023), reinforcing the need for SSL analyses that explicitly model covariate noise. Our approach is based on spectral methods and reproducing kernel Hilbert spaces. Using the unlabeled proxy covariates, we estimate leading eigenspaces of an empirical integral operator and fit the labeled regression on the resulting eigen-features, following the kernel projection viewpoint (Guo & Zhou, 2012; Ji et al., 2012). The technical core is a generalization analysis that tracks (i) approximation error from projecting onto a finite eigenspace, (ii) operator and eigenspace estimation error induced by finite N and proxy perturbation, (iii) coefficient estimation error from n labels, and (iv) ridge shrinkage. The bounds identify when suf-ficiently accurate unlabeled proxy covariates recover the oracle feature rate under polynomial eigenvalue decay. 
+
+1.1. Measurement Error and Distribution Regression 
+
+Measurement error (or errors-in-variables) models replace latent covariates X by noisy observations bX; while classical work is extensive, nonparametric measurement error with unknown error mechanisms remains challenging, and SSL 1
+
+> arXiv:2606.00512v1 [cs.LG] 30 May 2026 Semi-supervised Learning with Measurement Error
+
+versions of such problems are largely unexplored (Carroll et al., 2009; Schennach, 2016). Our framework treats SSL with noisy covariates as the primary object. Distribution regression is a key special case, in which each covariate is a probability distribution P , observed only through a finite bag of samples, and one predicts Y from P
+
+(Oliva et al., 2013; P ´oczos et al., 2013; Szab ´o et al., 2016). This fits our framework by viewing bP , constructed from finitely many samples, as a proxy for P . We develop theory for this case as well. Recent work on kernel based repre-sentations of distributions (Kachaiev & Recanatesi, 2024) further underscores the role of distribution valued covariates as a modern learning primitive. 
+
+1.2. Main results and contributions 
+
+We analyze a kernel projection semi-supervised estimator that first learns spectral features from all proxy covariates 
+
+bX1: N and then fits a regularized linear predictor using the labeled pairs ( bXi, Y i)ni=1 . The main result is a finite sample excess risk bound that separates spectral truncation, proxy based operator error, labeled estimation, and ridge shrinkage. Under the stronger two sided polynomial decay condition 
+
+λs ≍ s−q , the bound yields the oracle feature rate n−q/ (q+1) 
+
+whenever the operator learning and proxy perturbation terms are negligible at the oracle truncation level. In the labeled only regime, when N = n, the additional operator learn-ing term remains and its effect depends explicitly on the local eigengap sequence. We also show that distribution regression is a direct special case: the latent covariate is a distribution P observed through a finite sample proxy bP ,and the generic proxy perturbation term becomes a bag size dependent error envelope. Our contributions are fourfold. First, we develop finite sam-ple generalization bounds for semi-supervised regression with noisy proxy covariates, allowing both well specified and misspecified regression functions and explicitly tracking the proxy perturbation floor. Second, the bounds character-ize when unlabeled proxy covariates remove the statistical cost of learning the spectral representation, with explicit dependence on unlabeled sample size, local eigengap, proxy quality, and ridge regularization. Third, we show that distri-bution regression fits the same framework by viewing the empirical distribution bP as a proxy for a latent distribution 
+
+P . Fourth, we provide implementable guarantees for vali-dation based tuning and approximate eigendecomposition, showing that the same rates are preserved up to logarithmic and subspace approximation terms. 
+
+## 2. Set Up and Notation 
+
+Our goal is to establish a unified framework for semi-supervised regression with noisy proxy covariates. Let U be a compact metric space with metric d, and let (U, Y ) ∼ P,where U ∈ U and Y ∈ R. We observe N covariate in-stances, of which only the first n are labeled, with n ≤ N .For labeled observations, the latent regression model is 
+
+Yi = f (Ui) + μi, i = 1 , . . . , n, (1) where f : U → R is unknown and the noise variables μi
+
+are independent, mean zero, and sub-Gaussian. We write 
+
+τ 20 = E[μ2 
+
+> i
+
+]. Throughout, we assume the proxy mechanism does not introduce outcome-noise bias, so that 
+
+E[μi | Ui, bUi] = 0 .
+
+This holds, for example, when the proxy bUi is generated conditionally independently of μi given Ui.The latent covariate Ui is not observed. Instead, we observe proxy covariates 
+
+bUi ∼ M(· | Ui), i = 1 , . . . , N, 
+
+generated from a possibly unknown measurement channel 
+
+M, with bUi ∈ U . The observed sample is 
+
+Dobs  
+
+> U
+
+= {( bUi, Y i)}ni=1 ∪ { bUi}Ni=n+1 .
+
+This formulation covers settings where downstream predic-tors use noisy proxies of latent features, such as representa-tions produced by large scale pretraining. We next introduce the hypothesis space and target predictor. Let Hκ be a reproducing kernel Hilbert space (RKHS) on 
+
+U with bounded Mercer kernel κ : U × U → R. Define the best-in-class predictor 
+
+g ∈ arg min 
+
+> h∈H κ
+
+E(f (U ) − h(U )) 2 , (2a) 
+
+∈ arg min 
+
+> h∈H κ
+
+E(Y − h(U )) 2 , (2b) 
+
+ϵ2 = min 
+
+> h∈H κ
+
+E(f (U ) − h(U )) 2 . (2c) The two minimization problems in (2) have the same solu-tion because Y = f (U )+ μ and E[μ | U ] = 0 . Thus g is the best-in-class latent predictor, and ϵ2 is the approximation error; ϵ2 = 0 in the well-specified case. For h ∈ H κ, define the population kernel integral operator 
+
+L (h)( ·) = E[κ(U, ·)h(U )] .
+
+Given samples, define the latent empirical operator and the proxy empirical operator by 
+
+LN (h)( ·) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ(Ui, ·)h(Ui),
+
+cLN (h)( ·) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ( bUi, ·)h( bUi).
+
+2Semi-supervised Learning with Measurement Error 
+
+Our analysis controls ∥ cLN −L ∥, which captures both finite sample operator error and proxy perturbation. Let {(bλj , bϕj )}j≥1 denote the eigenpairs of cLN , ordered by nonincreasing eigenvalues, with eigenfunctions normalized in Hκ. For s ≥ 1, the estimator uses the leading eigen-functions { bϕj }sj=1 . We write ∥ · ∥ Hκ for the RKHS norm. Population eigenfunctions used in the analysis are normal-ized in L2(PU ), and the relevant norm is written explicitly when needed. The framework specializes to the two settings studied in this paper. First, for noisy Euclidean covariates analyzed in Section 3, we take U = X ⊂ Rd, set U = X, and let 
+
+bU = bX be a noisy proxy of X. Second, for distribution regression, we take U = P, a metric space of probability measures with d = D, as specified in Section 4, set U =
+
+P , and let bU = bP be a finite-sample estimator of P . In both cases, the observed semi-supervised sample has the form Dobs  
+
+> U
+
+, so the same algorithm and analysis apply after instantiating (U, d, κ, M).
+
+## 3. SSL with Noisy Proxy Covariates 
+
+We study semi-supervised regression when the latent covari-ate X is not observed and only a noisy proxy bX is available. The goal is to use the full proxy sample { bXi}Ni=1 (labeled and unlabeled) to learn a low-dimensional spectral represen-tation of the covariate geometry, and then fit the best-in-class predictor using the labeled responses. 
+
+3.1. Estimation 
+
+We now describe the estimation procedure explicitly. The method has two stages: (i) learn a data-dependent feature map from all proxy covariates, and (ii) fit a ridge-type re-gressor on the labeled data using these features. 
+
+Stage 1: spectral feature extraction from proxy covari-ates. Let Hκ be an RKHS on X with bounded Mercer kernel κ : X × X → R. Define the population operator 
+
+L (h)( ·) = Eκ(X, ·) h(X), h ∈ H κ, (3) and the proxy empirical operator based on the observed covariates bX1, . . . , bXN ,
+
+cLN (h)( ·) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ( bXi, ·) h( bXi). (4) Let {(ˆλj , ˆϕj )}j≥1 be the eigenpairs of cLN ordered by non-increasing ˆλj , with { ˆϕj } orthonormal in Hκ. For a chosen dimension s ≥ 1, define the feature map 
+
+ˆΦs(x) = ( ˆϕ1(x), . . . , ˆϕs(x)) ⊤ ∈ Rs.
+
+Stage 2: ridge regression using labeled examples. Using only the labeled pairs {( bXi, Y i)}ni=1 , fit 
+
+ˆγ ∈ arg min 
+
+> γ∈Rs
+
+(
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ Yi − ⟨ γ, ˆΦs( bXi)⟩2 + ξ∥γ∥22
+
+)
+
+,
+
+ˆg(·) = ⟨ˆγ, ˆΦs(·)⟩,
+
+(5) where ξ ≥ 0 is a regularization parameter, and ˆg denotes the fitted predictor. Thus, unlabeled and labeled proxy co-variates jointly determine the feature map ˆΦs, while labels enter only through the ridge fit for ˆγ.
+
+Kernel-matrix form. For implementation, it is convenient to express the eigenfunctions of cLN in terms of the finite kernel matrix constructed from the proxy covariates. Let 
+
+K ∈ RN ×N with entries Kij = κ( bXi, bXj ). If (vj , σ j ) are the leading eigenpairs of K (descending σj ), then ˆλj =
+
+σj /N and 
+
+ˆϕj (·) = σ−1/2
+
+> jN
+
+X
+
+> i=1
+
+(vj )i κ( bXi, ·). (6) In particular, ˆΦs( bXi) is obtained by evaluating (6) at bXi,and (5) becomes ordinary ridge regression in Rs with design vectors { ˆΦs( bXi)}ni=1 .
+
+3.2. Generalization Error Bounds 
+
+We first state a minimal set of assumptions under which we derive finite-sample generalization bounds and fast rates. • (A1) Sub-Gaussian noise and controlled measurement error. The regression noise μi is independent and iden-tically distributed, mean-zero, sub-Gaussian. Moreover, for every k ≥ 1 there exists θ > 0 such that 
+
+E
+
+h
+
+D2( bX, X )k | X
+
+i
+
+≤ (θ/ 2) k.
+
+• (A2) Bounded H ¨older kernel. The kernel is bounded, 
+
+|κ(x, x )| ≤ 1, and κ(x, ·) is H ¨older in Hκ: there exist 
+
+Lκ > 0 and 0 < β κ ≤ 1 such that 
+
+∥κ(·, x ) − κ(·, x ′)∥Hκ ≤ Lκ D2(x, x ′)βκ , ∀x, x ′ ∈ X .
+
+• (A3) Polynomial eigenvalue decay. Let {λj }j≥1 be the eigenvalues of L in (3) . There exist a > 0 and q > 2
+
+such that λj ≤ a2j−q for all j ≥ 1.• (A4) Regular eigenfunctions. Let {ϕj }j≥1 be the eigen-functions of L . There exists Mϕ < ∞ such that 
+
+sup x∈X sup j≥1 |ϕj (x)| ≤ Mϕ. Moreover each ϕj is H ¨older in x with exponent 0 < β ϕ ≤ 1 and constants 
+
+{Lϕj } satisfying P 
+
+> j≥1
+
+λj L2 
+
+> ϕj
+
+< ∞.3Semi-supervised Learning with Measurement Error 
+
+• (A5) Sample size and eigengap condition. Let 
+
+∆s = λs − λs+1 . (7) Assume ∆s > 0 and that n and N are large enough so that, with high probability, 
+
+∥ cLN − L ∥op ≤ ∆s/2, (8) which guarantees that the top-s eigenspace of cLN is well aligned with that of L by the Davis–Kahan theorem (Yu et al., 2015). In particular, under (8) we have 
+
+∥ ˆΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+∥op ≲ ∥ cLN − L ∥op 
+
+∆s
+
+.
+
+• (A6) Target regularity. For some fixed constant R < ∞,the best-in-class predictor satisfies 
+
+∥g∥Hκ ≤ R. 
+
+Assumption (A1) controls the proxy error D2( bX, X ) with-out requiring an additive measurement-error model. As-sumption (A2) is standard in kernel learning: boundedness holds after rescaling, and H ¨older continuity is satisfied by many kernels on compact domains. Assumption (A3) is a spectral-decay condition widely used in kernel ridge re-gression and spectral approximation; larger q corresponds to faster eigen-decay and hence lower effective dimension. Assumption (A4) imposes bounded and H ¨older eigenfunc-tions, ensuring stable evaluation and perturbation control. Assumption (A5) is the usual eigengap regime for identify-ing the leading s-dimensional subspace: (8) is exactly the condition under which Davis–Kahan perturbation bounds apply (Yu et al., 2015). Throughout, we write rs for any deterministic lower bound on the eigengap, 0 < r s ≤ ∆s;one may take rs = ∆ s. Assumption (A6) fixes the RKHS radius of the best-in-class predictor and is used to control spectral truncation, subspace perturbation, and the trans-fer from proxy evaluation at bX to latent evaluation at X.Overall, these assumptions align with those in prior spectral semi-supervised learning and kernel learning theory (e.g., Guo & Zhou 2012; Ji et al. 2012; Koltchinskii & Yuan 2010; Szab ´o et al. 2016), with Assumption (A1) capturing the additional proxy-covariate setting. Concrete examples help contextualize some of these reg-ularity conditions. Assumption (A1) covers, for example, bounded proxy perturbations or additive proxy noise with uniformly controlled moments on a compact covariate space. Assumption (A3) is standard for kernels whose integral op-erators have polynomial spectral decay, such as Sobolev or Mat ´ern type kernels on compact domains. Assumption (A4) is natural for smooth bounded Mercer kernels on compact Euclidean domains, where leading eigenfunctions are often bounded and H ¨older continuous; for instance, in the peri-odic Fourier case on [0 , 1] , sine and cosine eigenfunctions are uniformly bounded with Lipschitz constants growing polynomially in frequency, so P 
+
+> j
+
+λj L2 
+
+> ϕj
+
+< ∞ holds under sufficiently fast spectral decay. Assumption (A5) covers finite rank or spiked models with separated leading compo-nents, and polynomial spectrum regimes in which the local gap rs is large enough relative to the operator perturbation. 
+
+Remark 3.1 (Choice of truncation level) . Assumption (A5) is stated for a fixed truncation level s and the corresponding eigengap ∆s. The same perturbation argument can be ex-tended to data adaptive choices of s, provided the selected index satisfies a corresponding separation condition. For ex-ample, one may choose s from a candidate set and use rs as a deterministic lower bound on the relevant local eigengap. For clarity, we state the main results for a fixed s and the standard gap ∆s.Next, we analyze performance relative to the best-in-class predictor in the chosen RKHS. This target is defined on the latent covariate X, whereas the estimator is constructed from the observed proxy covariates bX. The proxy perturba-tion is accounted for explicitly in the bound below. Define 
+
+g ∈ arg min 
+
+> h∈H κ
+
+E(Y − h(X)) 2 ,ϵ2 = min 
+
+> h∈H κ
+
+E(f (X) − h(X)) 2 .
+
+Since Y = f (X) + μ with E[μ | X] = 0 , the cross term vanishes and 
+
+E(g(X) − Y )2 = E(g(X) − f (X)) 2 + τ 20 = ϵ2 + τ 20 .
+
+Define the excess error between bg and g by 
+
+R2 
+
+> s,n,N
+
+= E(bg(X) − g(X)) 2 .
+
+The next proposition provides an upper bound on R2 
+
+> s,n,N
+
+,which serves as the main technical estimate from which the regression and prediction error bounds follow. All proofs are deferred to the appendix. 
+
+Proposition 3.2. Under Assumptions (A1)–(A6), 
+
+E(bg(X) − g(X)) 2 ≤ R2 
+
+> s,n,N
+
+,
+
+where, for any eigengap lower bound 0 < r s ≤ ∆s,
+
+R2 
+
+> s,n,N
+
+= OP
+
+
+
+s−q + 1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+
+
++ sn + ξξ + λ2
+
+> s
+
+
+
+.
+
+(9) 
+
+Here β′ = min {βκ, β ϕ}, and Cβ′,θ is a proxy perturbation constant, induced by Assumptions (A1)–(A4) and (A6), that accounts for both operator perturbation and proxy to latent evaluation transfer. 
+
+Equation (9) makes the roles of s (spectral truncation), N
+
+(unlabeled sample size for operator learning), and n (labeled 4Semi-supervised Learning with Measurement Error 
+
+sample size for coefficient learning) explicit. Combining Proposition 3.2 with elementary L2 arguments yields corre-sponding bounds for the regression and prediction risks. 
+
+Theorem 3.3 (Regression error) . Under Assumptions (A1)– (A6), 
+
+E(bg(X) − f (X)) 2 ≤ ϵ2 + 2 ϵR s,n,N + R2 
+
+> s,n,N
+
+, (10) 
+
+where Rs,n,N is defined in Proposition 3.2. 
+
+Theorem 3.4 (Prediction error) . Under the conditions of Theorem 3.3, 
+
+E
+
+h
+
+(bg( bX) − Y )2i
+
+≤ ϵ2 + τ 20 + 2 ϵR s,n,N + R2 
+
+> s,n,N
+
+, (11) 
+
+after enlarging the constant in R2 
+
+> s,n,N
+
+to absorb the proxy evaluation transfer term. 
+
+3.3. Optimal tuning and rates 
+
+We next discuss the rate implications of Proposition 3.2. Under λs ≍ s−q , once the ridge shrinkage term in (9) is negligible, the oracle spectral tradeoff between s−q and s/n 
+
+yields a fast rate whenever the operator learning and proxy perturbation term is negligible at the oracle truncation level, as formalized below. 
+
+Corollary 3.5. Suppose Assumptions (A1)–(A6) hold and 
+
+λs ≍ s−q . If, at s ≍ n1/(q+1) ,
+
+1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+
+
+= o
+
+
+
+s−q + sn
+
+
+
+(12) 
+
+and ξξ + λ2
+
+> s
+
+= o
+
+
+
+s−q + sn
+
+
+
+(13) 
+
+hold, then choosing s ≍ n1/(q+1) yields 
+
+R2 
+
+> s,n,N
+
+= OP
+
+
+
+n−q/ (q+1) 
+
+.
+
+Consequently, Theorems 3.3 and 3.4 achieve the same rate for the excess terms beyond ϵ2 and ϵ2 + τ 20 , respectively. 
+
+A sufficient condition for (13) is ξ = o{λ2
+
+> s
+
+(s−q + s/n )} at 
+
+s ≍ n1/(q+1) ; in particular, ξ = 0 is allowed when the un-regularized fit is stable. Corollary 3.5 is a conditional oracle rate statement: it requires the combined operator and proxy perturbation to be negligible at the oracle truncation level. If Cβ′,θ is fixed away from zero, condition (12) generally fails as s → ∞ , and Proposition 3.2 should instead be read as a finite sample bias, variance, and perturbation bound with a proxy induced floor. The condition is therefore most relevant when the proxy error decreases with the sampling design, as in distribution regression with growing bag size. To make the dependence on the eigengap explicit, suppose that the relevant local eigengap satisfies rs ≳ s−α for some 
+
+α ≥ 0. Since λs ≍ s−q , the operator-learning term satisfies 
+
+1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+
+
+≲ sq+2 α
+
+ 1
+
+N + Cβ′,θ 
+
+
+
+.
+
+At the choice s ≍ n1/(q+1) , condition (12) is implied by 
+
+1
+
+N + Cβ′,θ = o
+
+
+
+n−(2 q+2 α)/(q+1) 
+
+.
+
+Equivalently, it suffices that 
+
+N ≫ n(2 q+2 α)/(q+1) , Cβ′,θ = o
+
+
+
+n−(2 q+2 α)/(q+1) 
+
+.
+
+In the labeled-only regime, N = n, the operator-learning term cannot in general be ignored. To isolate the effect of estimating the eigenspace from only labeled covariates, suppose for the moment that the proxy perturbation term is negligible. Under rs ≳ s−α, the leading upper bound becomes 
+
+s−q + sq+2 α
+
+n + sn .
+
+The term s/n is lower order at the resulting optimizer, and balancing s−q with sq+2 α/n gives 
+
+s ≍ n1/(2 q+2 α), R2 
+
+> s,n,n
+
+= OP
+
+
+
+n−q/ (2 q+2 α)
+
+.
+
+Thus the labeled-only rate depends explicitly on the eigen-gap sequence and is not generally n−1/2. For example, under the regular-spacing heuristic rs ≍ ∆s ≍ s−(q+1) ,one has α = q + 1 , and the labeled-only rate implied by the present Davis–Kahan bound is 
+
+R2 
+
+> s,n,n
+
+= OP
+
+
+
+n−q/ (4 q+2) 
+
+.
+
+Therefore, under the eigengap scaling rs ≳ s−α, moving from the labeled-only regime N = n to a regime with sufficiently many and sufficiently accurate unlabeled proxy covariates improves the bound from the eigengap-dependent labeled-only rate n−q/ (2 q+2 α) to the oracle feature rate 
+
+n−q/ (q+1) . Equivalently, unlabeled proxy covariates can remove the statistical cost of learning the spectral represen-tation, but the quantitative gain depends on the eigengap sequence and requires the proxy perturbation to vanish. 
+
+3.4. Practical considerations 
+
+This subsection states two consequences of the preceding theory that make the method implementable in practice: data-driven selection of the tuning parameters (s, ξ ) and stable use of approximate eigendecompositions. 3.4.1. D ATA -DRIVEN TUNING OF s AND ξ
+
+The oracle choices of (s, ξ ) in Corollary 3.5 depend on un-known spectral, eigengap, and proxy perturbation quantities. 5Semi-supervised Learning with Measurement Error 
+
+We therefore choose (s, ξ ) by validation while still using all proxy covariates, labeled and unlabeled, to construct the eigenfeatures. Split the labeled indices {1, . . . , n } into disjoint training and validation sets Itr and Iva , with sizes ntr and nva . Using all proxy covariates { bXi}Ni=1 , compute bΦs(·) for s ∈ S .For each (s, ξ ) ∈ S × Ξ, fit bgs,ξ by (5) using only Itr , and choose 
+
+(bs, bξ) ∈ arg min 
+
+> (s,ξ )∈S× Ξ
+
+1
+
+nva 
+
+X
+
+> i∈I va
+
+n
+
+Yi − bgs,ξ ( bXi)
+
+o2
+
+, bgsel = bgbs, bξ .
+
+The following theorem shows that this selector satisfies a finite-grid oracle inequality. We state it under the same stability and proxy-transfer conditions used in the proof of Proposition 3.2, uniformly over the candidate grid. 
+
+Theorem 3.6. Assume Assumptions (A1)–(A6). Sup-pose that the finite-dimensional stability events used in Lemma A.8 hold uniformly over (s, ξ ) ∈ S × Ξ, and that the squared validation losses satisfy the usual finite-class Bernstein condition for least-squares validation. Then, for every δ ∈ (0 , 1) , with probability at least 1 − δ,
+
+E(bgsel (X) − g(X)) 2 ≲ inf  
+
+> (s,ξ )∈S× Ξ
+
+R2 
+
+> s,n tr ,N
+
++ log( |S|| Ξ|/δ )
+
+nva 
+
+,
+
+where R2 
+
+> s,n tr ,N
+
+denotes the bound in Proposition 3.2 with n
+
+replaced by ntr . Consequently, if ntr ≍ nva ≍ n, the grid contains a pair satisfying the conditions of Corollary 3.5, and |S|| Ξ| is polynomial in n, then bgsel attains the rate 
+
+n−q/ (q+1) up to logarithmic factors. 
+
+Theorem 3.6 justifies ordinary validation over a modest grid. The result is conditional on the grid containing near-oracle choices and on the same operator, proxy, and ridge negli-gibility conditions required for Corollary 3.5; in particular, validation cannot remove a fixed proxy perturbation floor. 3.4.2. A PPROXIMATE EIGENDECOMPOSITION 
+
+Computing the leading eigenpairs of the N × N kernel matrix can be a bottleneck when N is large. In practice, one often constructs approximate eigenfeatures using methods such as Nystr ¨om or randomized eigensolvers (e.g., Drineas & Mahoney, 2005; Mahoney, 2011). We next show that the guarantees are stable under sufficiently accurate subspace approximation. Let eΦs(·) ∈ Rs be an approximate feature map for the top-s
+
+proxy eigenspace, and let eg be the ridge estimator obtained by replacing bΦs with eΦs in (5) . Let bΠH 
+
+> s
+
+and eΠH 
+
+> s
+
+denote the Hκ-orthogonal projectors onto span { bϕ1, . . . , bϕs} and 
+
+span { eϕ1, . . . , eϕs}, respectively. We impose the following subspace accuracy condition on the approximate eigenspace. • (A7) Approximate eigenspace accuracy. There exists 
+
+εspec ≥ 0 such that ∥eΠH 
+
+> s
+
+− bΠH 
+
+> s
+
+∥op ≤ εspec .Assumption (A7) is implied by standard subspace-accuracy guarantees. For example, for Nystr ¨om approximations, if the induced kernel matrix approximation error is controlled in operator norm, Davis–Kahan type perturbation bounds imply a corresponding bound on ∥eΠH 
+
+> s
+
+− bΠH 
+
+> s
+
+∥op , with the empirical eigengap entering the denominator. Randomized Lanczos and subspace iteration methods provide analogous subspace-error bounds, with εspec decreasing as the number of iterations increases. 
+
+Theorem 3.7 (Approximate eigendecomposition) . Assume the conditions of Proposition 3.2, Assumption (A7), and the analogue of the stability event in Lemma A.8 for the approximate feature space. Then 
+
+E(eg(X) − g(X)) 2 ≤ R2 
+
+> s,n,N
+
++ Cε 2spec ,
+
+where C depends only on fixed boundedness constants. Consequently, under the conditions of Corollary 3.5, if 
+
+s ≍ n1/(q+1) and εspec = o{n−q/ (2 q+2) }, then eg attains the same rate n−q/ (q+1) .
+
+Theorem 3.7 shows that approximate eigenfeature construc-tion adds only a subspace-approximation term. Thus, the statistical rate is unchanged whenever ε2spec is smaller than the target statistical error. In sum, Theorem 3.6 shows that the rate in Corollary 3.5 is attainable without oracle knowledge of (s, ξ ) when the grid contains near-oracle values, while Theorem 3.7 shows that scalable eigensolvers preserve the same rate provided the subspace approximation error is sufficiently small. 
+
+## 4. Application to Distribution Regression 
+
+This section applies the general framework of Section 3 to distribution regression, where each covariate is a probability distribution observed only through finitely many samples. The latent covariate is a distribution P , and the observed covariate is a proxy bP constructed from a finite bag of draws from P . Thus distribution regression is a structured noisy-covariate problem. The analysis below is a direct specialization of Section 3, with the bag size m controlling the proxy perturbation level. 
+
+4.1. Setup 
+
+Let Z ⊂ Rd be a compact domain and let P be a set of probability measures on Z. We observe N distribution-valued covariates {Pi}Ni=1 , of which only the first n have labels. The labeled sample satisfies 
+
+Yi = f (Pi) + μi, i = 1 , . . . , n, (14) where f : P → R is an unknown regression functional and 
+
+{μi} are independent, mean-zero, sub-Gaussian noises with 
+
+τ 20 = E[μ2 
+
+> i
+
+]. Each distribution Pi is not directly observed. 6Semi-supervised Learning with Measurement Error 
+
+Instead, for each i ∈ { 1, . . . , N }, we observe a bag of samples 
+
+Zi1, . . . , Z im i ∼ Pi i.i.d. , (15) and construct a proxy bPi from the bag Zi =
+
+{Zi1, . . . , Z im i }. For simplicity, we take mi = m for all 
+
+i; heterogeneous bag sizes can be handled by replacing m
+
+with an effective bag size. The observed semi-supervised data are 
+
+Dobs  
+
+> P
+
+= {( bPi, Y i)}ni=1 ∪ { bPi}Ni=n+1 ,
+
+which has the same structure as Section 3 under the identifi-cation X ≡ P and bX ≡ bP .Let κ : P × P → R be a bounded positive definite kernel on distributions and let Hκ be its RKHS. Examples include kernels induced by distribution embeddings, such as mean embedding kernels (Smola et al., 2007), or kernels based on distances between distribution representations. Define the population operator 
+
+L (h)( ·) = E[κ(P, ·)h(P )] ,
+
+and the proxy empirical operator 
+
+cLN (h)( ·) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ( bPi, ·)h( bPi).
+
+Let {(bλj , bϕj )}j≥1 be the eigenpairs of cLN , ordered by nonincreasing eigenvalues and orthonormal in Hκ. For 
+
+s ≥ 1, define 
+
+bΦs(P ) = ( bϕ1(P ), . . . , bϕs(P )) ⊤.
+
+Given labeled bags {( bPi, Y i)}ni=1 , fit 
+
+bγ ∈ arg min 
+
+> γ∈Rs
+
+(
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+
+
+Yi − ⟨ γ, bΦs( bPi)⟩
+
+2
+
++ ξ∥γ∥22
+
+)
+
+,
+
+bg(·) = ⟨bγ, bΦs(·)⟩.
+
+(16) This is the same estimator as (5) , applied to distribution-valued covariates. 
+
+4.2. Generalization bounds and rates 
+
+For analysis, we use the same structure as in Section 3, interpreted on the covariate space P with metric D. The only new ingredient is a bag-induced proxy error bound for 
+
+bP relative to P . The following conditions parallel those in Section 3, but we restate them in the distribution-valued notation for completeness. • (B1) Sub-Gaussian noise and conditional exogeneity. The noise variables μi in (14) are independent, mean-zero, and sub-Gaussian. Moreover, 
+
+E[μi | Pi, bPi] = 0 .
+
+This holds, for example, when the bag sampling mecha-nism is conditionally independent of μi given Pi.• (B2) Bounded H ¨older kernel on distributions. The kernel satisfies |κ(P, P )| ≤ 1 and 
+
+∥κ(·, P ) − κ(·, Q )∥Hκ ≤ LκD(P, Q )βκ , P, Q ∈ P ,
+
+for constants Lκ > 0 and 0 < β κ ≤ 1.• (B3) Spectral decay and eigenfunction regularity. The eigenvalues {λj }j≥1 of L satisfy λj ≤ a2j−q for some 
+
+a > 0 and q > 2. The corresponding eigenfunctions are uniformly bounded and H ¨older continuous on P, as in Assumption (A4). • (B4) Bag-induced proxy error. There exists a determinis-tic function ρ(m) such that, for every k ≥ 1,
+
+E
+
+h
+
+D(P, bP )k | P
+
+i
+
+≤ ρ(m)k, (17) and ρ(m) → 0 as m → ∞ . For density based estimators under smoothness conditions, a typical rate is ρ(m) ≍
+
+m−β/ (2+ d) for some effective smoothness β > 0.• (B5) Sample size and eigengap condition. Let ∆s = λs −
+
+λs+1 . Assume ∆s > 0, and let rs be any deterministic lower bound satisfying 0 < r s ≤ ∆s. Assume that N and 
+
+m are large enough so that, with high probability, 
+
+∥ cLN − L ∥op ≤ ∆s/2.
+
+• (B6) Target regularity. For some fixed constant R < ∞,the best-in-class predictor satisfies 
+
+∥g∥Hκ ≤ R. 
+
+Assumptions (B1)–(B6) are the distribution valued counter-parts of the conditions in Section 3. The only additional ingredient is Assumption (B4), which controls the bag in-duced proxy error and determines the perturbation level in the distribution regression problem. Specifically, write 
+
+β′ = min {βκ, β ϕ}, am = ρ(m)β′
+
++ ρ(m)2β′
+
+.
+
+The quantity am is the bag induced proxy perturbation en-velope. Since ρ(m) → 0, it is of order ρ(m)β′
+
+for large m,and controls both the operator perturbation and the transfer from proxy evaluation at bP to latent evaluation at P .Assumption (B4) holds for regular parametric families 
+
+{Pη : η ∈ Θ} when an estimator bη is m−1/2-consistent and the map η 7 → Pη is locally Lipschitz under the met-ric D, which gives D(Pbη , P η ) = OP (m−1/2) and hence 
+
+ρ(m) ≍ m−1/2. It also covers smooth nonparametric density classes on compact domains, where standard den-sity estimators satisfy D(P, bP ) = OP {ρ(m)} with the 7Semi-supervised Learning with Measurement Error 
+
+usual smoothness dependent nonparametric rate. Assump-tion (B5) is the distribution valued counterpart of Assump-tion (A5); it holds in finite rank or spiked distributional feature models with separated leading components, and in polynomial spectrum regimes when N and m make the combined empirical and bag induced perturbation smaller than the local gap rs.Now, define 
+
+g ∈ arg min 
+
+> h∈H κ
+
+E(Y − h(P )) 2 ,ϵ2 = min 
+
+> h∈H κ
+
+E(f (P ) − h(P )) 2 ,
+
+and let 
+
+R2 
+
+> s,n,N,m
+
+= E(bg(P ) − g(P )) 2 .
+
+The next proposition specializes the main excess risk bound to distribution regression, with the generic proxy perturba-tion term replaced by the bag induced envelope am.
+
+Proposition 4.1. Assume Assumptions (A4) and (B1)–(B6). Then 
+
+E(bg(P ) − g(P )) 2 ≤ R2
+
+> s,n,N,m
+
+,
+
+where, for any eigengap lower bound 0 < r s ≤ ∆s,
+
+R2 
+
+> s,n,N,m
+
+= OP
+
+
+
+s−q + 1
+
+r2
+
+> s
+
+ 1
+
+N + am
+
+
+
++ sn + ξξ + λ2
+
+> s
+
+
+
+.
+
+(18) The following theorem converts Proposition 4.1 into regres-sion and prediction risk bounds for the latent distribution P
+
+and its observed proxy bP .
+
+Theorem 4.2. Assume Assumptions (A4) and (B1)–(B6). Then 
+
+E(bg(P ) − f (P )) 2 ≤ ϵ2 + 2 ϵR s,n,N,m + R2
+
+> s,n,N,m
+
+,
+
+(19) 
+
+E
+
+h
+
+(bg( bP ) − Y )2i
+
+≤ ϵ2 + τ 20 + 2 ϵR s,n,N,m + R2
+
+> s,n,N,m
+
+,
+
+(20) 
+
+after enlarging the constant in R2 
+
+> s,n,N,m
+
+to absorb the same proxy evaluation transfer term. 
+
+Corollary 4.3. Assume Assumptions (A4), (B1)–(B6), and 
+
+λs ≍ s−q . If, at s ≍ n1/(q+1) ,
+
+1
+
+r2
+
+> s
+
+ 1
+
+N + am
+
+
+
+= o
+
+
+
+s−q + sn
+
+
+
+and ξξ + λ2
+
+> s
+
+= o
+
+
+
+s−q + sn
+
+
+
+,
+
+then choosing s ≍ n1/(q+1) yields 
+
+R2 
+
+> s,n,N,m
+
+= OP
+
+
+
+n−q/ (q+1) 
+
+.
+
+Consequently, the excess terms in (19) and (20) achieve the same rate. 
+
+Corollary 4.3 makes explicit the three sample sizes gov-erning distribution regression: n labeled distributions de-termine the regression fit, N total distributions determine the spectral representation, and m samples per distribution determine the proxy perturbation am. The oracle feature rate is recovered only when N is large enough and m grows fast enough for the operator and proxy perturbation term to be negligible at the oracle truncation level. 
+
+## 5. Experiments 
+
+We evaluate the proposed estimator on two synthetic experi-ments and two real-world applications. The first synthetic experiment studies the noisy Euclidean covariate setting of Section 3, and the second studies the distribution regres-sion setting of Section 4. For each task, we report nor-malized root mean squared error (RMSE). On real-world datasets, we compare against feasible supervised learning baselines (SL1–SL3) and semi-supervised learning base-lines (SSL). Baseline definitions and tuning are provided in Appendices B.1 and B.2. 
+
+5.1. Synthetic noisy Euclidean covariates 
+
+We first evaluate the noisy covariate setting in Section 3. Latent covariates X ∈ R10 are generated from a smooth low-dimensional nonlinear structure, the response is Y =
+
+f (X) + ϵ, and the learner observes only noisy proxies 
+
+bX = X + τ W , where W ∼ N (0 , I ). We fix the num-ber of labeled samples, vary the total number of proxy covariates N , and consider mild and strong proxy noise. Table 2 compares SSDR using all proxies, a labeled-only spectral baseline that learns features only from labeled prox-ies, and an oracle baseline using the true latent X. Increas-ing N improves performance when proxy noise is mild; under stronger noise, gains are smaller and begin to saturate, consistent with the proxy perturbation floor in the theory. Details are provided in Appendix B.3.                               
+
+> τNSSDR Label-only Oracle X
+> .10 100 .091 (.012) .112 (.014) .053 (.007) .10 300 .067 (.009) .112 (.015) .054 (.007) .10 1000 .057 (.008) .113 (.014) .053 (.008) .40 100 .176 (.019) .198 (.022) .054 (.007) .40 300 .153 (.017) .197 (.021) .053 (.008) .40 1000 .142 (.016) .199 (.022) .054 (.007)
+> Table 2. Noisy Euclidean covariates: normalized RMSE, with standard deviations in parentheses.
+
+8Semi-supervised Learning with Measurement Error                                                                                                        
+
+> n/N ×100(%)
+> 5% 10% 15% 20% 25% 30% 35% 40% SL1 SDM 0.88 0.74 0.64 0.63 0.51 0.51 0.49 0.43 SL2 LASSO 10.90 0.69 0.65 0.68 0.66 0.64 0.63 0.62 SVR 1.28 1.24 1.05 0.98 0.87 0.85 0.83 0.82 RF 0.89 0.88 0.68 0.66 0.64 0.54 0.59 0.50 KRR 0.98 0.99 0.85 0.70 0.77 0.74 0.68 0.66 SL3 LASSO 22.88 1.69 2.62 2.78 2.70 2.39 2.23 2.10 CNN 2.52 1.84 1.44 1.36 1.45 1.41 1.34 1.04 RF 1.88 1.69 1.52 1.68 1.01 1.20 0.99 1.03 SSL LapRLS 1.01 0.79 0.70 0.63 0.56 0.54 0.51 0.48 E-CNN 0.98 0.97 0.92 0.78 0.76 0.68 0.66 0.62 SSDR 0.75 0.61 0.58 0.49 0.45 0.42 0.41 0.37
+> Table 1. Galaxy cluster mass prediction: normalized RMSE.
+> Figure 1. Normalized RMSE for predicting Beta skewness.
+
+5.2. Synthetic distribution regression: predicting Beta skewness 
+
+This simulation setup follows P ´oczos et al. (2013). Each covariate instance is a Beta distribution Beta( a, b ), the re-sponse is the skewness 
+
+f (a, b ) = 2( b − a)√a + b − 1(a + b − 2) √ab ,
+
+and the covariate is observed through a finite bag of sam-ples. Figure 1 reports normalized RMSE as a function of the labeled and total sample sizes. Error decreases as n
+
+increases and also decreases as N increases, consistent with the role of unlabeled covariates in the bound. Details are in Appendix B.4. 
+
+5.3. Galaxy cluster mass from line-of-sight velocity distributions 
+
+We use the galaxy clusters dataset of Ntampaka et al. (2015) to predict halo mass from the distribution of line-of-sight velocities vlos . Prior work often relies on low-dimensional summaries, whereas SSDR uses the full bag of vlos samples as a distributional covariate. We fix N = 1632 clusters and vary n by subsampling labeled clusters. Table 1 shows that SSDR achieves the lowest normalized RMSE across label budgets. Details are in Appendix B.5. 
+
+5.4. Default risk from distributions of stock returns 
+
+We predict default probability from distributions of daily stock returns. We select the top 500 stocks by market cap-italization in the Korea Stock Exchange and collect daily returns from 2010 to 2015. Labels are default probabilities obtained from FnGuide and Bloomberg. We vary the labeled fraction by randomly withholding labels while retaining all covariate bags. Table 3 shows that SSDR is competitive and typically best or tied for best, especially in the low-label regime. Details are in Appendix B.6.                                                        
+
+> FnGuide Bloomberg
+> n/N (%) 540 540 SL1 SDM .12 .05 .09 .07 SL2 LASSO 1.18 .09 .09 .07 SVR .15 .09 .10 .09 RF .11 .08 .08 .07 KRR .15 .10 .10 .08 SL3 LASSO 2.51 .39 .18 .16 CNN .52 .42 .10 .09 RF .378 .29 .12 .12 SSL LapRLS .07 .04 .08 .07 E-CNN .06 .06 .07 .07 SSDR .06 .05 .07 .06
+> Table 3. Default risk prediction: normalized RMSE.
+
+## 6. Discussion 
+
+This paper develops a unified theory for semi-supervised regression with noisy proxy covariates and shows that dis-tribution regression is a direct specialization. The two stage estimator learns spectral features from all proxy covariates and fits ridge regression on labeled data. The generalization bounds identify when unlabeled proxies recover the oracle feature rate, with adaptive tuning and eigensolver stability guarantees. The main limitation is that the fast rate requires a stable leading eigenspace and sufficiently accurate proxies. More unlabeled proxy covariates reduce representation learning error, but they do not remove a fixed proxy error floor. In distribution regression, this appears through the bag size dependent proxy term. For large N ×N kernels, Nystr ¨om or randomized eigensolvers are often required (Section 3.4.2). Future work includes adaptive diagnostics for spectral and proxy quality, weaker eigengap analyses, and sharper proxy error bounds for modern learned representations. 9Semi-supervised Learning with Measurement Error 
+
+## Impact Statement 
+
+This paper studies semi-supervised regression when covari-ates are observed through noisy proxies. The techniques are broadly applicable across domains, and any downstream so-cietal impact will depend on the specific application context and data; we do not identify risks that are uniquely induced by the methodology beyond those common to standard pre-dictive modeling. 
+
+## Acknowledgements 
+
+This work was supported in part by grants from the Na-tional Research Foundation of Korea funded by the Ko-rean government (MSIT) (Nos. RS-2022-NR068754, RS-2024-00335008, and RS-2025-24534596), by the Sam-sung Science and Technology Foundation under Project Number SSTF-BA2502-01, and by Korea University Grant K2612051. This work was also supported in part by the New Faculty Startup Fund from Seoul National University (No. 0670-20240073), and by Institute of Information & commu-nications Technology Planning & Evaluation (IITP) grant funded by the Korea government(MSIT) (No. RS-2021-II211343, Artificial Intelligence Graduate School Program (Seoul National University)). 
+
+## References 
+
+Belkin, M. and Niyogi, P. Semi-supervised learning on riemannian manifolds. Machine Learning , 56(1):209– 239, 2004. Belkin, M. and Niyogi, P. Towards a theoretical founda-tion for laplacian-based manifold methods. Journal of Computer and System Sciences , 74(8):1289–1308, 2008. Belkin, M., Niyogi, P., and Sindhwani, V. Manifold regular-ization: A geometric framework for learning from labeled and unlabeled examples. Journal of Machine Learning Research , 7:2399–2434, December 2006. Cabannes, V., Pillaud-Vivien, L., Bach, F. R., and Rudi, A. Overcoming the curse of dimensionality with laplacian regularization in semi-supervised learning. In Advances in Neural Information Processing Systems , volume 34, 2021. Carroll, R. J., Delaigle, A., and Hall, P. Nonparametric pre-diction in measurement error models. Journal of the American Statistical Association , 104(487):993–1003, 2009. Chava, S. and Purnanandam, A. Is default risk negatively related to stock returns? The Review of Financial Studies ,23(6):2523–2559, 2010. Drineas, P. and Mahoney, M. W. On the nystr ¨om method for approximating a gram matrix for improved kernel-based learning. Journal of Machine Learning Research ,6:2153–2175, 2005. Gadre, S. Y. et al. Datacomp: In search of the next gen-eration of multimodal datasets. In Advances in Neural Information Processing Systems , volume 36, 2023. Garlappi, L. and Yan, H. Financial distress and the cross-section of equity returns. The Journal of Finance , 66(3): 789–822, 2011. Garlappi, L., Shu, T., and Yan, H. Default risk, shareholder advantage, and stock returns. Review of Financial Studies ,21(6):2743–2778, 2008. Guo, X. and Zhou, D.-X. An empirical feature-based learn-ing algorithm producing sparse approximations. Applied and Computational Harmonic Analysis , 32(3):389–400, 2012. Ji, M., Yang, T., Lin, B., Jin, R., and Han, J. A simple algorithm for semi-supervised learning with improved generalization error bound. In Proceedings of the 29th International Conference on Machine Learning , ICML ’12, pp. 1223–1230. Omnipress, July 2012. Kachaiev, O. and Recanatesi, S. Learning to embed dis-tributions via maximum kernel entropy. In Advances in Neural Information Processing Systems , volume 37, pp. 44710–44734, 2024. Koltchinskii, V. and Yuan, M. Sparsity in multiple kernel learning. The Annals of Statistics , 38(6):3660–3695, 12 2010. Lafferty, J. and Wasserman, L. Statistical analysis of semi-supervised regression. In Advances in Neural Information Processing Systems 20 , pp. 801–808. Curran Associates, Inc., 2007. Li, Z., Su, W. J., and Sejdinovic, D. Benign overfitting and noisy features. Journal of the American Statistical Association , 118(544):2876–2888, 2023. Mahoney, M. W. Randomized algorithms for matrices and data. Foundations and Trends in Machine Learning , 3(2): 123–224, 2011. Niyogi, P. Manifold regularization and semi-supervised learning: Some theoretical analyses. Journal of Machine Learning Research , 14:1229–1250, 2013. Ntampaka, M., Trac, H., Sutherland, D. J., Battaglia, N., P ´oczos, B., and Schneider, J. A machine learning ap-proach for dynamical mass measurements of galaxy clus-ters. The Astrophysical Journal , 803(2):50, 2015. 10 Semi-supervised Learning with Measurement Error 
+
+Oliva, J., P ´oczos, B., and Schneider, J. Distribution to distribution regression. In Proceedings of the 30th Inter-national Conference on Machine Learning , volume 28 of Proceedings of Machine Learning Research , pp. 1049– 1057. PMLR, 2013. P ´oczos, B., Singh, A., Rinaldo, A., and Wasserman, L. Distribution-free distribution regression. In Proceedings of the Sixteenth International Conference on Artificial Intelligence and Statistics , volume 31 of Proceedings of Machine Learning Research , pp. 507–515. PMLR, 2013. Rigollet, P. Generalization error bounds in semi-supervised classification under the cluster assumption. Journal of Machine Learning Research , 8:1369–1392, 2007. Schennach, S. M. Recent advances in the measurement error literature. Annual Review of Economics , 8:341–377, 2016. Singh, A., Nowak, R. D., and Zhu, X. Unlabeled data: Now it helps, now it doesn’t. In Koller, D., Schuurmans, D., Bengio, Y., and Bottou, L. (eds.), Advances in Neural In-formation Processing Systems 21 , pp. 1513–1520. Curran Associates, Inc., 2008. Sinha, K. and Belkin, M. Semi-supervised learning us-ing sparse eigenfunction bases. In Advances in Neural Information Processing Systems 22 . 2009. Smale, S. and Zhou, D.-X. Geometry on probability spaces. 
+
+Constructive Approximation , 30(3):311–323, 2009. Smola, A., Gretton, A., Song, L., and Sch ¨olkopf, B. Ahilbert space embedding for distributions. In Hutter, M., Servedio, R. A., and Takimoto, E. (eds.), Algorithmic Learning Theory: 18th International Conference, ALT 2007, Sendai, Japan, October 1-4, 2007. Proceedings , pp. 13–31. Springer, 2007. Sutherland, D. J., Xiong, L., P ´oczos, B., and Schneider, J. Kernels on sample sets via nonparametric divergence estimates. arXiv preprint arXiv:1202.0302 , 2012. Szab ´o, Z., Sriperumbudur, B. K., P ´oczos, B., and Gretton, A. Learning theory for distribution regression. Journal of Machine Learning Research , 17(152):1–40, 2016. van Engelen, J. E. and Hoos, H. H. A survey on semi-supervised learning. Machine Learning , 109(2):373–440, 2020. Weston, J., Ratle, F., and Collobert, R. Deep learning via semi-supervised embedding. In Proceedings of the 25th International Conference on Machine Learning , ICML ’08, pp. 1168–1175. ACM, 2008. Yu, Y., Wang, T., and Samworth, R. J. A useful variant of the davis–kahan theorem for statisticians. Biometrika ,102(2):315–323, 2015. Zhu, X. and Goldberg, A. B. Introduction to Semi-Supervised Learning . Morgan and Claypool Publishers, 2009. Zhu, X., Ghahramani, Z., and Lafferty, J. D. Semi-supervised learning using gaussian fields and harmonic functions. In Proceedings of the 20th International Con-ference on Machine Learning , pp. 912–919, 2003. 11 Semi-supervised Learning with Measurement Error 
+
+## APPENDIX A. Proof 
+
+A.1. Proofs for Section 3 
+
+Throughout, c, C > 0 denote finite constants that may change from line to line and may depend on fixed problem parameters (e.g., a, L κ, M ϕ, θ, β κ, β ϕ), but never on (n, N, s, ξ ). We write A ≲ B for A ≤ CB for some constant C < ∞.A.1.1. N OTATION AND BASIC IDENTITIES 
+
+Let (X, Y ) ∼ P with 
+
+Y = f (X) + μ, E[μ | X, bX] = 0 ,
+
+where μ is sub-Gaussian as in Assumption (A1). The conditional mean-zero condition holds, for example, when the proxy channel generating bX is conditionally independent of μ given X. Let Hκ be the reproducing kernel Hilbert space associated with κ, and let L be the population operator in (3) . Let {(λj , ϕ j )}j≥1 be the eigenpairs of L in L2(PX ), ordered as 
+
+λ1 ≥ λ2 ≥ · · · , so that {ϕj }j≥1 is orthonormal in L2(PX ) and 
+
+L ϕj = λj ϕj .
+
+For h ∈ H κ, the standard kernel integral operator identity gives 
+
+∥h∥2  
+
+> L2(PX)
+
+= ⟨h, L h⟩Hκ . (21) Hence, since ∥L ∥op = λ1 ≤ a2 under Assumption (A3), 
+
+∥h∥2  
+
+> L2(PX)
+
+≤ λ1∥h∥2 
+
+> Hκ
+
+≤ a2∥h∥2 
+
+> Hκ
+
+. (22) Let 
+
+g ∈ arg min 
+
+> h∈H κ
+
+E(Y − h(X)) 2 , ϵ2 = min 
+
+> h∈H κ
+
+E(f (X) − h(X)) 2 .
+
+Since Y = f (X) + μ and E[μ | X] = 0 ,
+
+E(g(X) − Y )2 = E(g(X) − f (X)) 2 + τ 20 = ϵ2 + τ 20 .
+
+Proxy perturbation convention. Throughout the proof, β′ = min {βκ, β ϕ}, and Cβ′,θ denotes a deterministic proxy perturbation envelope satisfying 
+
+E
+
+h
+
+D2( bX, X )β′ i
+
++ E
+
+h
+
+D2( bX, X )2β′ i
+
++
+
+n
+
+E
+
+h
+
+D2( bX, X )2β′ io 1/2
+
++ 2 
+
+
+
+θ · 2 (1 −β′)  
+
+> β′+12
+
+β′
+
+≤ Cβ′,θ .
+
+Under Assumption (A1), such an envelope exists by Jensen’s inequality. We use the same notation after enlarging constants, so that Cβ′,θ controls both the operator perturbation caused by observing bX instead of X and the risk transfer from proxy evaluation to latent evaluation. A.1.2. A UXILIARY LEMMAS 
+
+Lemma A.1 (Bounded proxy spectral features) . Under Assumption (A2), for every s ≥ 1,
+
+∥bΦs( bX)∥2 ≤ 1
+
+almost surely. Proof. Because { bϕj }j≥1 is orthonormal in Hκ,
+
+∥bΦs( bX)∥22 =
+
+> s
+
+X
+
+> j=1
+
+bϕj ( bX)2 =
+
+> s
+
+X
+
+> j=1
+
+⟨ bϕj , κ ( bX, ·)⟩2 
+
+> Hκ
+
+≤ ∥ κ( bX, ·)∥2 
+
+> Hκ
+
+= κ( bX, bX) ≤ 1,
+
+where the inequality follows from Bessel’s inequality. 12 Semi-supervised Learning with Measurement Error 
+
+Lemma A.2 (Approximation by top-s eigenfunctions) . Assume Assumptions (A3) and (A6). Let Πs be the L2(PX )-orthogonal projection onto span {ϕ1, . . . , ϕ s} and set gs = Π sg. Then 
+
+∥g − gs∥2  
+
+> L2(PX)
+
+≤ λs+1 ∥g∥2 
+
+> Hκ
+
+≲ s−q .
+
+Proof. Using the usual spectral representation of Hκ with respect to the orthonormal basis {pλj ϕj }:
+
+g = X
+
+> j≥1
+
+bj
+
+pλj ϕj , with X
+
+> j≥1
+
+b2 
+
+> j
+
+= ∥g∥2 
+
+> Hκ
+
+.
+
+Then 
+
+gs = X
+
+> j≤s
+
+bj
+
+pλj ϕj
+
+and therefore 
+
+∥g − gs∥2  
+
+> L2(PX)
+
+= X
+
+> j>s
+
+b2 
+
+> j
+
+λj ≤ λs+1 
+
+X
+
+> j>s
+
+b2 
+
+> j
+
+≤ λs+1 ∥g∥2 
+
+> Hκ
+
+.
+
+The conclusion follows from Assumptions (A3) and (A6). 
+
+Lemma A.3. Under Assumption (A1), for all β such that 0 < β ≤ 1, with probability 1 − δ we have 
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) ≤ Cβ,θ 
+
+
+
+1 + log (2 /δ )
+
+√N
+
+
+
+.
+
+Proof. First, for ∀i and ∀l ≥ 1, note that the 2l-th moment of Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+is bounded as 
+
+E
+
+
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i 2l
+
+≤ E
+
+
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i 2l
+
+≤ 22l−1
+
+
+
+E
+
+h
+
+D2lβ  
+
+> 2
+
+( ˆXi, X i)
+
+i
+
++
+
+
+
+E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i 2l
+
+≤ 22lE
+
+h
+
+D2lβ  
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+,
+
+where the last inequality follows by Jensen’s inequality. Next, by Assumption (A1) it follows 
+
+E
+
+h
+
+Dk 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+= E
+
+n
+
+E
+
+h
+
+Dk 
+
+> 2
+
+( ˆXi, X i) | Xi
+
+io 
+
+≤
+
+ θ
+
+2
+
+k
+
+≤ Γ
+
+ k
+
+2 + 1 
+
+  θ
+
+2
+
+k
+
+for every k > 0 and some global constant θ, and thus 
+
+E
+
+
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i 2l
+
+≤ (lβ )! 
+
+
+
+2 l(1 −β) 
+
+> lβ
+
+θ
+
+2lβ 
+
+≤ (2 l)! 2ll!
+
+
+
+2 (1 −β) 
+
+> β
+
+θ
+
+2lβ 
+
+,
+
+where the last inequality follows simply by the fact that β ≤ 1. Hence, Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+is sub-Gaussian with parameter 12 Θ, where we let Θ ≡ 2
+
+
+
+θ · 2 (1 −β)  
+
+> β+12
+
+β
+
+.13 Semi-supervised Learning with Measurement Error 
+
+Now by Hoeffding’s inequality, we have 
+
+P 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+≥ t
+
+!
+
+≤ 2 exp 
+
+
+
+− N t 2
+
+Θ
+
+
+
+,
+
+and therefore with probability 1 − δ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+≤ Θ1/2 log (2 /δ )
+
+√N .
+
+Hence with probability 1 − δ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) = E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
++ 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆXi, X i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
+≤ E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆXi, X i)
+
+i
+
++ Θ1/2 log (2 /δ )
+
+√N
+
+≤ C1/2
+
+> β,θ
+
+
+
+1 + log (2 /δ )
+
+√N
+
+
+
+.
+
+Lemma A.4 (Proxy operator deviation) . Assume Assumptions (A1)–(A4). Let 
+
+LN (h) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ(Xi, ·)h(Xi), cLN (h) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+κ( bXi, ·)h( bXi).
+
+Then 
+
+∥ cLN − L ∥HS = OP
+
+
+
+N −1/2 + C1/2
+
+> β′,θ
+
+
+
+, ∥ cLN − L ∥2 
+
+> HS
+
+= OP
+
+ 1
+
+N + Cβ′,θ 
+
+
+
+.
+
+Proof. Decompose 
+
+cLN − L = ( LN − L ) + ( cLN − LN ).
+
+For the sampling term, define 
+
+Ti : h 7 → κ(Xi, ·)h(Xi).
+
+Then LN = N −1 PNi=1 Ti and E [Ti] = L . Then since p λj ϕj is the orthonormal basis in Hκ,
+
+∥Ti∥2 
+
+> HS
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+Ti
+
+pλj ϕj
+
+> 2
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+λj ϕ2 
+
+> j
+
+(Xi) ∥κXi ∥2
+
+> Hκ
+
+= ∥κXi ∥2
+
+> Hκ
+> ∞
+
+X
+
+> j=1
+
+λj ϕ2 
+
+> j
+
+(Xi).
+
+Then ∥κXi ∥2 
+
+> Hκ
+
+= |κ(Xi, X i)| ≤ 1 holds under (A2), P∞ 
+
+> j=1
+
+λj ≤ qa 2 
+
+> q−1
+
+≤ 2a2 holds under (A3), and ϕ2 
+
+> j
+
+(Xi) ≤ M 2 
+
+> ϕ
+
+holds under (A4), and hence ∥Ti∥HS ≤ √2aM ϕ is uniformly bounded. Note that E [Ti] = L , hence from the concentration in the Hilbert space of Hilbert–Schmidt operators ((Smale & Zhou, 2009), Proposition 1), with probability 1 − δ,
+
+L − ˆLN HS 
+
+≤ 4√2aM ϕ log(2 /δ )
+
+√N . (23) For the proxy perturbation term, define bTi : h 7 → κ( bXi, ·)h( bXi).
+
+14 Semi-supervised Learning with Measurement Error 
+
+Then 
+
+cLN − LN = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+( bTi − Ti).
+
+Then similarly as above, 
+
+bTi − Ti
+
+> 2
+> HS
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+( bTi − Ti)pλj ϕj
+
+> 2
+> Hκ
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+λj ϕj ( ˆXi)κ ˆXi − ϕj (Xi)κXi
+
+> 2
+> Hκ
+
+≤
+
+> ∞
+
+X
+
+> j=1
+
+λj
+
+
+
+ϕj (Xi)κXi − ϕj ( ˆXi)κXi Hκ
+
++ ϕj ( ˆXi)κXi − ϕj ( ˆXi)κ ˆXi Hκ
+
+2
+
+.
+
+Then ϕj (Xi) − ϕj ( ˆXi) ≤ LϕD2(Xi, ˆXi)βϕ under (A4) and κXi − κ ˆXi Hκ
+
+≤ LκD2(Xi, ˆXi)βκ under (A2), hence with ∥κXi ∥2 
+
+> Hκ
+
+≤ 1 under (A2), P∞ 
+
+> j=1
+
+λj ≤ 2a2 under (A3), and ϕ2 
+
+> j
+
+(Xi) ≤ M 2 
+
+> ϕ
+
+under (A4), 
+
+bTi − Ti HS 
+
+≤ √2a(Lϕ + LκMϕ)( D2(Xi, ˆXi)βϕ + D2(Xi, ˆXi)βκ ).
+
+And hence 
+
+cLN − LN HS 
+
+≤ √2a(Lϕ + LκMϕ) 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+(D2(Xi, ˆXi)βϕ + D2(Xi, ˆXi)βκ ).
+
+Then under (A1), applying Lemma A.3 gives that, with probability 1 − 2δ,
+
+cLN − LN HS 
+
+≤ 2√2a(Lϕ + LκMϕ)C1/2
+
+> β′,θ
+
+
+
+1 + log (2 /δ )
+
+√N
+
+
+
+, (24) i.e., cLN − LN HS 
+
+is bounded by a constant of order C1/2 
+
+> β′,θ
+
+.Combining the two displays and squaring gives that, with probability 1 − 3δ,
+
+L − ˜LN HS 
+
+≤ L − ˆLN HS 
+
++ cLN − LN HS 
+
+≤ 4√2aM ϕ log(2 /δ )
+
+√N + 2 √2a(Lϕ + LκMϕ)C1/2
+
+> β′,θ
+
+
+
+1 + log (2 /δ )
+
+√N
+
+
+
+,
+
+which proves the claim. Hereafter, let 
+
+∆s = λs − λs+1 .
+
+Throughout the appendix, rs denotes any deterministic lower bound on the eigengap: 
+
+0 < r s ≤ ∆s.
+
+In particular, one may take rs = ∆ s. The next lemma converts the operator deviation bound into a perturbation bound for the leading spectral subspace learned from the proxy covariates. 
+
+Lemma A.5 (Davis–Kahan for the top-s subspace) . Let ΠH 
+
+> s
+
+be the Hκ-orthogonal projector onto 
+
+span {pλ1ϕ1, . . . , pλsϕs},
+
+and let bΠH 
+
+> s
+
+be the Hκ-orthogonal projector onto 
+
+span { bϕ1, . . . , bϕs}.
+
+If ∥ cLN − L ∥op ≤ ∆s/2, then 
+
+∥bΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+∥op ≤ 2∥ cLN − L ∥op 
+
+∆s
+
+≤ 2∥ cLN − L ∥HS 
+
+rs
+
+.
+
+15 Semi-supervised Learning with Measurement Error 
+
+Proof. This is the standard Davis–Kahan sin-Θ bound for compact self-adjoint operators; see, for example, Yu et al. (2015, Theorem 2). The last inequality uses ∥ · ∥ op ≤ ∥ · ∥ HS and rs ≤ ∆s.
+
+Lemma A.6 (Subspace perturbation) . Assume Assumptions (A1)–(A6). Let 
+
+gH 
+
+> s
+
+= Π H 
+
+> s
+
+g, bgH 
+
+> s
+
+= bΠH 
+
+> s
+
+g. 
+
+Then 
+
+∥bgH 
+
+> s
+
+− gH 
+
+> s
+
+∥2  
+
+> L2(PX)
+
+= OP
+
+ 1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+ 
+
+.
+
+Proof. By (22), 
+
+∥bgH 
+
+> s
+
+− gH 
+
+> s
+
+∥2  
+
+> L2(PX)
+
+≤ a2∥bgH 
+
+> s
+
+− gH 
+
+> s
+
+∥2 
+
+> Hκ
+
+.
+
+Since 
+
+bgH 
+
+> s
+
+− gH 
+
+> s
+
+= ( bΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+)g, 
+
+we have ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+being upper bounded as 
+
+ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+= ( ˆΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+)( g) 2
+
+> Hκ
+
+≤ ˆΠH 
+
+> s
+
+− ΠH
+
+> s
+> 2
+> op
+
+∥g∥2 
+
+> Hκ
+
+.
+
+And then applying Lemma A.5 (with rs as a lower bound on ∆s) gives that 
+
+ˆΠH 
+
+> s
+
+− ΠH
+
+> s
+> 2
+> op
+
+≤
+
+4 cLN − L 2
+
+> HS
+
+r2
+
+> s
+
+.
+
+Then we apply Lemma A.4 to get 
+
+ˆΠH 
+
+> s
+
+− ΠH
+
+> s
+> 2
+> op
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + Cβ′,θ ) .
+
+And then with ∥g∥2 
+
+> Hκ
+
+≤ R2 from (A6), ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+is upper bounded as 
+
+ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + Cβ′,θ ) ,
+
+and ˆgH 
+
+> s
+
+− gH  
+
+> s
+> 2
+> L2(PX)
+
+is correspondingly bounded as 
+
+ˆgH 
+
+> s
+
+− gH  
+
+> s
+> 2
+> L2(PX)
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + Cβ′,θ ) .
+
+Lemma A.7 (Proxy evaluation transfer) . Assume Assumptions (A1) and (A2). Let 
+
+GB = {h ∈ H κ : ∥h∥Hκ ≤ B},
+
+where B < ∞. Then, uniformly over h ∈ G B ,
+
+E
+
+h
+
+(h( bX) − h(X)) 2i
+
+≲ B2Cβ′,θ .
+
+Moreover, 
+
+E
+
+h
+
+(Y − h( bX)) 2i
+
+− E(Y − h(X)) 2 ≲ (1 + B2)Cβ′,θ .
+
+16 Semi-supervised Learning with Measurement Error 
+
+Proof. For h ∈ G B , the reproducing property and Assumption (A2) imply 
+
+|h( bX) − h(X)| ≤ ∥ h∥Hκ ∥κ( bX, ·) − κ(X, ·)∥Hκ ≤ BL κD2( bX, X )βκ .
+
+The first claim follows from the definition of Cβ′,θ , after enlarging constants if necessary. For the second claim, write 
+
+(Y − h( bX)) 2 − (Y − h(X)) 2 = {h(X) − h( bX)}{ 2Y − h( bX) − h(X)}.
+
+Since κ(x, x ) ≤ 1, every h ∈ G B satisfies 
+
+|h(x)| ≤ ∥ h∥Hκ
+
+pκ(x, x ) ≤ B. 
+
+By Cauchy–Schwarz and the sub-Gaussian moment bound for Y ,
+
+E
+
+h
+
+(Y − h( bX)) 2 − (Y − h(X)) 2i
+
+≲
+
+n
+
+E
+
+h
+
+(h( bX) − h(X)) 2io 1/2
+
+(1 + B).
+
+By the proxy perturbation convention, the right-hand side is bounded by a constant multiple of (1 + B2)Cβ′,θ after enlarging the envelope Cβ′,θ .
+
+Lemma A.8 (Estimation in the learned feature space) . Condition on bX1: N and fix s. Let 
+
+bFs = span { bϕ1, . . . , bϕs}.
+
+Let bgs,ξ be the estimator in (5) . Suppose that the finite-dimensional stability event 
+
+Es,n =
+
+n
+
+∥bgs,ξ ∥2 
+
+> Hκ
+
+∨ ∥ bΠH 
+
+> s
+
+g∥2 
+
+> Hκ
+
+≤ B2
+
+> s
+
+o
+
+holds, where 
+
+B2 
+
+> s
+
+≲ 1
+
+r2
+
+> s
+
+.
+
+Then, on Es,n ,
+
+E
+
+h
+
+(bgs,ξ (X) − g(X)) 2 | bX1: N
+
+i
+
+≲ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E
+
+h
+
+(h(X) − g(X)) 2 | bX1: N
+
+i
+
++ sn + ξξ + λ2
+
+> s
+
++ 1
+
+r2
+
+> s
+
+Cβ′,θ .
+
+Proof. By Lemma A.1, ∥bΦs( bX)∥2 ≤ 1. Conditional on bX1: N , the second stage is therefore an ordinary s-dimensional ridge regression problem with bounded design. On the event Es,n , the standard finite-dimensional ridge oracle inequality gives 
+
+E
+
+h
+
+(bgs,ξ ( bX) − Y )2 | bX1: N
+
+i
+
+≤ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E
+
+h
+
+(h( bX) − Y )2 | bX1: N
+
+i
+
++ OP
+
+ sn + ξξ + λ2
+
+> s
+
+
+
+.
+
+The term s/n is the finite-dimensional coefficient estimation error, and the term ξ/ (ξ +λ2
+
+> s
+
+) is the ridge shrinkage contribution. By Lemma A.7, both sides may be transferred from bX to X at cost 
+
+(1 + B2 
+
+> s
+
+)Cβ′,θ ≲ 1
+
+r2
+
+> s
+
+Cβ′,θ .
+
+Finally, since g is the L2(PX )-projection of f onto Hκ, for every h ∈ H κ,
+
+E(Y − h(X)) 2 − E(Y − g(X)) 2 = E(h(X) − g(X)) 2 .
+
+Combining the preceding displays proves the result. 17 Semi-supervised Learning with Measurement Error 
+
+A.1.3. P ROOF OF PROPOSITION 3.2 
+
+Proof of Proposition 3.2. We work on the intersection of the eigengap event in Assumption (A5) and the finite-dimensional stability event Es,n in Lemma A.8. Since these events hold with probability tending to one under the stated conditions, the resulting bound is an OP statement. By Lemma A.8, 
+
+E(bg(X) − g(X)) 2 ≲ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E(h(X) − g(X)) 2 + sn + ξξ + λ2
+
+> s
+
++ 1
+
+r2
+
+> s
+
+Cβ′,θ .
+
+Take 
+
+h = bgH 
+
+> s
+
+= bΠH 
+
+> s
+
+g. 
+
+On Es,n , this function belongs to bFs and satisfies ∥bgH 
+
+> s
+
+∥Hκ ≤ Bs. Hence 
+
+inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E(h(X) − g(X)) 2 ≤ ∥ bgH 
+
+> s
+
+− g∥2 
+
+> L2(PX)
+
+.
+
+Using the triangle inequality, 
+
+∥bgH 
+
+> s
+
+− g∥2  
+
+> L2(PX)
+
+≲ ∥g − Πsg∥2  
+
+> L2(PX)
+
++ ∥ΠH 
+
+> s
+
+g − bΠH 
+
+> s
+
+g∥2 
+
+> L2(PX)
+
+.
+
+Lemma A.2 gives 
+
+∥g − Πsg∥2  
+
+> L2(PX)
+
+≲ s−q .
+
+Lemma A.6 gives 
+
+∥ΠH 
+
+> s
+
+g − bΠH 
+
+> s
+
+g∥2  
+
+> L2(PX)
+
+= OP
+
+ 1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+ 
+
+.
+
+Combining the preceding displays yields 
+
+E(bg(X) − g(X)) 2 = OP
+
+
+
+s−q + 1
+
+r2
+
+> s
+
+ 1
+
+N + Cβ′,θ 
+
+
+
++ sn + ξξ + λ2
+
+> s
+
+
+
+,
+
+which proves (9). A.1.4. P ROOF OF THEOREM 3.3 
+
+Proof of Theorem 3.3. By the triangle inequality in L2(PX ),
+
+∥bg − f ∥L2(PX ) ≤ ∥ bg − g∥L2(PX ) + ∥g − f ∥L2(PX ).
+
+Since ∥g − f ∥2  
+
+> L2(PX)
+
+= ϵ2 and Proposition 3.2 gives 
+
+∥bg − g∥2  
+
+> L2(PX)
+
+= E(bg(X) − g(X)) 2 ≤ R2 
+
+> s,n,N
+
+,
+
+we obtain 
+
+E(bg(X) − f (X)) 2 = ∥bg − f ∥2  
+
+> L2(PX)
+
+≤ (Rs,n,N + ϵ)2 .
+
+Expanding the right-hand side gives 
+
+E(bg(X) − f (X)) 2 ≤ ϵ2 + 2 ϵR s,n,N + R2 
+
+> s,n,N
+
+,
+
+which proves (10). 18 Semi-supervised Learning with Measurement Error 
+
+A.1.5. P ROOF OF THEOREM 3.4 
+
+Proof of Theorem 3.4. We work on the same high-probability stability event used in Proposition 3.2. On this event, Lemma A.7 applied to h = bg gives 
+
+E
+
+h
+
+(Y − bg( bX)) 2i
+
+− E(Y − bg(X)) 2 ≲ 1
+
+r2
+
+> s
+
+Cβ′,θ .
+
+This term is of the same order as the proxy perturbation contribution in R2 
+
+> s,n,N
+
+and is absorbed by enlarging its constant. Thus, 
+
+E
+
+h
+
+(Y − bg( bX)) 2i
+
+≤ E(Y − bg(X)) 2 + a term absorbed into R2 
+
+> s,n,N
+
+.
+
+Since Y = f (X) + μ and E[μ | X] = 0 ,
+
+E(Y − bg(X)) 2 = E(f (X) − bg(X)) 2 + τ 20 .
+
+Applying Theorem 3.3 yields 
+
+E
+
+h
+
+(Y − bg( bX)) 2i
+
+≤ ϵ2 + τ 20 + 2 ϵR s,n,N + R2 
+
+> s,n,N
+
+,
+
+after enlarging the constant in R2 
+
+> s,n,N
+
+. This proves (11). A.1.6. P ROOF OF COROLLARY 3.5 
+
+Proof of Corollary 3.5. Let 
+
+sn ≍ n1/(q+1) .
+
+By assumptions (12) and (13), 
+
+1
+
+r2
+
+> sn
+
+ 1
+
+N + Cβ′,θ 
+
+
+
+= o
+
+
+
+s−qn + sn
+
+n
+
+
+
+and ξξ + λ2
+
+> sn
+
+= o
+
+
+
+s−qn + sn
+
+n
+
+
+
+.
+
+Therefore Proposition 3.2 gives 
+
+R2 
+
+> sn,n,N
+
+= OP
+
+
+
+s−qn + sn
+
+n
+
+
+
+.
+
+Since 
+
+s−qn ≍ n−q/ (q+1) and sn
+
+n ≍ n−q/ (q+1) ,
+
+we obtain 
+
+R2 
+
+> sn,n,N
+
+= OP
+
+
+
+n−q/ (q+1) 
+
+.
+
+The claims for the regression and prediction risks follow from Theorems 3.3 and 3.4. A.1.7. P ROOF OF THEOREM 3.6 
+
+Proof of Theorem 3.6. Condition on the full proxy covariate sample bX1: N and on the training labels used to construct the candidate predictors. Then the finite set 
+
+G = {bgs,ξ : ( s, ξ ) ∈ S × Ξ}
+
+is fixed with respect to the validation labels. Let 
+
+R bX (h) = E
+
+h
+
+(Y − h( bX)) 2 | bX1: N , Itr 
+
+i
+
+and 
+
+bRva (h) = 1
+
+nva 
+
+X
+
+> i∈I va
+
+n
+
+Yi − h( bXi)
+
+o2
+
+.
+
+19 Semi-supervised Learning with Measurement Error 
+
+By the finite-class Bernstein inequality for squared loss under bounded predictions and sub-Gaussian noise, with probability at least 1 − δ,
+
+R bX (bgsel ) ≤ inf  
+
+> h∈G
+
+R bX (h) + C log( |S|| Ξ|/δ )
+
+nva 
+
+.
+
+Equivalently, 
+
+R bX (bgsel ) − R bX (g) ≤ inf 
+
+> (s,ξ )∈S× Ξ
+
+R bX (bgs,ξ ) − R bX (g) + C log( |S|| Ξ|/δ )
+
+nva 
+
+.
+
+By the proxy transfer lemma, uniformly over the stable candidate class, 
+
+R bX (h) − R bX (g) = E
+
+h
+
+(h(X) − g(X)) 2 | bX1: N , Itr 
+
+i
+
++ a term absorbed into R2 
+
+> s,n tr ,N
+
+.
+
+Therefore, 
+
+E(bgsel (X) − g(X)) 2 ≲ inf  
+
+> (s,ξ )∈S× Ξ
+
+E(bgs,ξ (X) − g(X)) 2 + log( |S|| Ξ|/δ )
+
+nva 
+
+,
+
+after absorbing the uniform proxy-transfer contribution into the corresponding R2 
+
+> s,n tr ,N
+
+terms. Applying Proposition 3.2 with the training size ntr gives 
+
+E(bgsel (X) − g(X)) 2 ≲ inf  
+
+> (s,ξ )∈S× Ξ
+
+R2 
+
+> s,n tr ,N
+
++ log( |S|| Ξ|/δ )
+
+nva 
+
+,
+
+which proves the oracle inequality. If ntr ≍ nva ≍ n, the grid contains a pair satisfying the conditions of Corollary 3.5, and |S|| Ξ| is polynomial in n, the validation remainder is logarithmic over n and is smaller than the oracle rate up to logarithmic factors. The final rate claim follows. A.1.8. P ROOF OF THEOREM 3.7 
+
+Proof of Theorem 3.7. Let 
+
+eFs = span { eϕ1, . . . , eϕs}.
+
+The proof follows the oracle-approximation argument used for Proposition 3.2, with eFs in place of bFs.By the approximate-feature analogue of Lemma A.8, 
+
+E(eg(X) − g(X)) 2 ≲ inf   
+
+> h∈eFs
+> ∥h∥Hκ≤Bs
+
+E(h(X) − g(X)) 2 + sn + ξξ + λ2
+
+> s
+
++ 1
+
+λsr2
+
+> s
+
+Cβ′,θ .
+
+Take 
+
+h = eΠH 
+
+> s
+
+bΠH 
+
+> s
+
+g. 
+
+Then h ∈ eFs, and by Assumption (A7), 
+
+∥h − bΠH 
+
+> s
+
+g∥Hκ = ∥(eΠH 
+
+> s
+
+− bΠH 
+
+> s
+
+)bΠH 
+
+> s
+
+g∥Hκ ≤ εspec ∥g∥Hκ .
+
+Using (22), Assumption (A6), and the triangle inequality, 
+
+∥h − g∥2  
+
+> L2(PX)
+
+≲ ∥bΠH 
+
+> s
+
+g − g∥2  
+
+> L2(PX)
+
++ ε2spec .
+
+The first term is exactly the approximation and learned-subspace perturbation term controlled in the proof of Proposition 3.2. Therefore, 
+
+E(eg(X) − g(X)) 2 ≤ R2 
+
+> s,n,N
+
++ Cε 2spec ,
+
+after enlarging constants. If the conditions of Corollary 3.5 hold, s ≍ n1/(q+1) , and εspec = o{n−q/ (2 q+2) }, then 
+
+ε2spec = o{n−q/ (q+1) }, so the rate is unchanged. 20 Semi-supervised Learning with Measurement Error 
+
+A.2. Proofs for Section 4 
+
+Throughout, c, C > 0 denote finite constants that may change from line to line and may depend only on fixed problem parameters, but never on (n, N, s, ξ, m ). We write A ≲ B for A ≤ CB . Let 
+
+β′ = min {βκ, β ϕ}, am = ρ(m)β′
+
++ ρ(m)2β′
+
+.
+
+By Assumption (B4), am is a proxy perturbation envelope in the sense that the first and second order proxy moments needed below are bounded by constants times am, after enlarging constants. A.2.1. A UXILIARY LEMMAS 
+
+Lemma A.9 (Bounded proxy spectral features) . Under Assumption (B2), for every s ≥ 1,
+
+∥bΦs( bP )∥2 ≤ 1
+
+almost surely. Proof. Because { bϕj }j≥1 is orthonormal in Hκ,
+
+∥bΦs( bP )∥22 =
+
+> s
+
+X
+
+> j=1
+
+bϕj ( bP )2 =
+
+> s
+
+X
+
+> j=1
+
+⟨ bϕj , κ ( bP , ·)⟩2 
+
+> Hκ
+
+≤ ∥ κ( bP , ·)∥2 
+
+> Hκ
+
+= κ( bP , bP ) ≤ 1.
+
+Lemma A.10 (Spectral approximation) . Assume Assumptions (B3) and (B6). Let Πs be the L2(PP )-orthogonal projection onto span {ϕ1, . . . , ϕ s} and set gs = Π sg. Then 
+
+∥g − gs∥2  
+
+> L2(PP)
+
+≤ λs+1 ∥g∥2 
+
+> Hκ
+
+≲ s−q .
+
+Proof. The proof is identical to Lemma A.2, replacing X by P .
+
+Lemma A.11. Under Assumption (B4), for all β ≥ 0, with probability 1 − δ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆPi, P i) ≤ ρ(m)β
+
+
+
+1 + log (2 /δ )
+
+√N
+
+
+
+.
+
+Proof. Given β, similarly in Lemma A.3, for all l ≥ 1 2 l-moment of Dβ 
+
+> 2
+
+( ˆPi, P i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆPi, P i)
+
+i
+
+can be bounded as 
+
+E
+
+
+
+Dβ 
+
+> 2
+
+( ˆPi, P i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆPi, P i)
+
+i 2l
+
+≤ 22lE
+
+h
+
+D2lβ  
+
+> 2
+
+( ˆPi, P i)
+
+i
+
+.
+
+Next, by Assumption (B4) it follows 
+
+E
+
+h
+
+Dk 
+
+> 2
+
+( ˆPi, P i)
+
+i
+
+= E
+
+n
+
+E
+
+h
+
+Dk 
+
+> 2
+
+( ˆPi, P i) | Pi
+
+io 
+
+≤ ρ(m)k,
+
+for every k > 0, and thus 
+
+E
+
+
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i) − E
+
+h
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i)
+
+i 2l
+
+≤ ρ(m)2lβ 
+
+≤ (2 l)! 2ll! ρ(m)2lβ .
+
+21 Semi-supervised Learning with Measurement Error 
+
+This implies that Dβ 
+
+> 2
+
+(ˆ pi, p i) − E
+
+h
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i)
+
+i
+
+is sub-Gaussian with its parameter  √2ρ(m)2β . Hence by applying Hoeffding’s, 
+
+P 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i) − E
+
+h
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i)
+
+i
+
+≥ t
+
+!
+
+≤ 2 exp − N t 2
+
+ √2ρ(m)2β
+
+!
+
+,
+
+and therefore with probability 1 − δ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i) − E
+
+h
+
+Dβ 
+
+> 2
+
+(ˆ pi, p i)
+
+i
+
+≤
+
+ √2ρ(m)β log (2 /δ )
+
+√N .
+
+Hence with probability 1 − δ,
+
+1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆPi, p i) = E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆPi, P i)
+
+i
+
++ 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Dβ 
+
+> 2
+
+( ˆPi, P i) − E
+
+h
+
+Dβ 
+
+> 2
+
+( ˆPi, P i)
+
+i
+
+≤ ρ(m)β
+
+
+
+1 + 2β/ 2 log (2 /δ )
+
+√N
+
+
+
+.
+
+Lemma A.12 (Proxy operator deviation) . Assume Assumptions (A4) and (B2)–(B4). Then 
+
+∥ cLN − L ∥HS = OP
+
+
+
+N −1/2 + a1/2
+
+> m
+
+
+
+, ∥ cLN − L ∥2 
+
+> HS
+
+= OP
+
+ 1
+
+N + am
+
+
+
+.
+
+Proof. We proceed similar to Lemma A.4. Decompose 
+
+cLN − L = ( LN − L ) + ( cLN − LN ).
+
+For the sampling term, define 
+
+Ti : h 7 → κ(Pi, ·)h(Pi).
+
+Then LN = 1
+
+> N
+
+P 
+
+> i
+
+Ti and E[Ti] = L . Then since p λj ϕj is the orthonormal basis in Hκ,
+
+∥Ti∥2 
+
+> HS
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+Ti
+
+pλj ϕj
+
+> 2
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+λj ϕ2 
+
+> j
+
+(Pi) ∥κPi ∥2
+
+> Hκ
+
+= ∥κPi ∥2
+
+> Hκ
+> ∞
+
+X
+
+> j=1
+
+λj ϕ2 
+
+> j
+
+(Pi).
+
+Then ∥κPi ∥2 
+
+> Hκ
+
+= |κ(Pi, P i)| ≤ 1 holds under (B2), P∞ 
+
+> j=1
+
+λj ≤ qa 2 
+
+> q−1
+
+≤ 2a2 holds under (B3), and ϕ2 
+
+> j
+
+(Pi) ≤ M 2 
+
+> ϕ
+
+holds under (B4), and hence ∥Ti∥HS ≤ √2aM ϕ is uniformly bounded. Note that E [Ti] = L , hence from the concentration in the Hilbert space of Hilbert–Schmidt operators ((Smale & Zhou, 2009), Proposition 1), with probability 1 − δ,
+
+L − ˆLN HS 
+
+≤ 4√2aM ϕ log(2 /δ )
+
+√N . (25) For the bag-induced proxy term, define 
+
+bTi : h 7 → κ( bPi, ·)h( bPi).
+
+Then 
+
+cLN − LN = 1
+
+N
+
+X
+
+> i
+
+( bTi − Ti).
+
+22 Semi-supervised Learning with Measurement Error 
+
+Then similarly as above, 
+
+bTi − Ti
+
+> 2
+> HS
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+( bTi − Ti)pλj ϕj
+
+> 2
+> Hκ
+
+=
+
+> ∞
+
+X
+
+> j=1
+
+λj ϕj ( ˆPi)κ ˆPi − ϕj (Pi)κPi
+
+> 2
+> Hκ
+
+≤
+
+> ∞
+
+X
+
+> j=1
+
+λj
+
+
+
+ϕj (Pi)κPi − ϕj ( ˆPi)κPi Hκ
+
++ ϕj ( ˆPi)κPi − ϕj ( ˆPi)κ ˆPi Hκ
+
+2
+
+.
+
+Then ϕj (Pi) − ϕj ( ˆPi) ≤ LϕD2(Pi, ˆPi)βϕ under (A4) and κPi − κ ˆPi Hκ
+
+≤ LκD2(Pi, ˆPi)βκ under (B2), hence with 
+
+∥κPi ∥2 
+
+> Hκ
+
+≤ 1 under (B2), P∞ 
+
+> j=1
+
+λj ≤ 2a2 under (B3), and ϕ2 
+
+> j
+
+(Pi) ≤ M 2 
+
+> ϕ
+
+under (A4), 
+
+bTi − Ti HS 
+
+≤ √2a(Lϕ + LκMϕ)( D2(Pi, ˆPi)βϕ + D2(Pi, ˆPi)βκ ).
+
+And hence 
+
+cLN − LN HS 
+
+≤ √2a(Lϕ + LκMϕ) 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+(D2(Pi, ˆPi)βϕ + D2(Pi, ˆPi)βκ ).
+
+Then under Assumption (B4), applying Lemma A.11 gives that, with probability 1 − 2δ,
+
+cLN − LN HS 
+
+≤ 2√2a(Lϕ + LκMϕ)ρ(m)β′
+
+
+
+1 + 2max {βϕ,β κ}/2 log (2 /δ )
+
+√N
+
+
+
+, (26) i.e., cLN − LN HS 
+
+is bounded by a constant times a1/2 
+
+> m
+
+, after enlarging constants. Combining the two terms and squaring gives that, with probability 1 − 3δ,
+
+L − ˜LN HS 
+
+≤ L − ˆLN HS 
+
++ cLN − LN HS 
+
+≤ 4√2aM ϕ log(2 /δ )
+
+√N + 2 √2a(Lϕ + LκMϕ)am
+
+
+
+1 + 2max {βϕ,β κ}/2 log (2 /δ )
+
+√N
+
+
+
+,
+
+which proves the claim. The next lemma is the same Davis–Kahan eigenspace perturbation bound as Lemma A.5, applied to the distribution-valued covariate setting. 
+
+Lemma A.13. Under Assumption (B5), 
+
+∥bΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+∥op ≤ 2∥ cLN − L ∥op 
+
+∆s
+
+≤ 2∥ cLN − L ∥HS 
+
+rs
+
+.
+
+Proof. This is Lemma A.5 applied with X ≡ P and bX ≡ bP . The last inequality uses ∥ · ∥ op ≤ ∥ · ∥ HS and rs ≤ ∆s.
+
+Lemma A.14 (Eigenspace contribution to excess risk) . Assume Assumptions (A4) and (B2)–(B6). Let gH 
+
+> s
+
+= Π H 
+
+> s
+
+g and 
+
+bgH 
+
+> s
+
+= bΠH 
+
+> s
+
+g. Then 
+
+∥gH 
+
+> s
+
+− bgH 
+
+> s
+
+∥2  
+
+> L2(PP)
+
+= OP
+
+ 1
+
+r2
+
+> s
+
+ 1
+
+N + am
+
+ 
+
+.
+
+Proof. Using ∥h∥2  
+
+> L2(PP)
+
+≤ λ1∥h∥2 
+
+> Hκ
+
+and λ1 ≤ a2 under Assumption (B3), 
+
+ˆgH 
+
+> s
+
+− gH  
+
+> s
+> 2
+> L2(PX)
+
+≤ a2 ˆgH 
+
+> s
+
+− gH
+
+> s
+> 2
+> Hκ
+
+.
+
+Since 
+
+ˆgH 
+
+> s
+
+− gH 
+
+> s
+
+= ( ˆΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+)g, 
+
+23 Semi-supervised Learning with Measurement Error 
+
+we have ˆgH 
+
+> s
+
+− gH
+
+> s
+> 2
+> Hκ
+
+being upper bounded as 
+
+ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+= ( ˆΠH 
+
+> s
+
+− ΠH 
+
+> s
+
+)( g) 2
+
+> Hκ
+
+≤ ˆΠH 
+
+> s
+
+− ΠH
+
+> s
+> 2
+> op
+
+∥g∥2
+
+> Hκ
+
+And then applying Lemma A.13 (with rs as a lower bound on ∆s) gives that 
+
+ˆgH 
+
+> s
+
+− gH
+
+> s
+> 2
+> Hκ
+
+≤
+
+4R2 cLN − L 2
+
+> HS
+
+r2
+
+> s
+
+.
+
+Then we apply Lemma A.12 to get 
+
+ˆgH 
+
+> s
+
+− gH
+
+> s
+> 2
+> Hκ
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + am) .
+
+And then with ∥g∥2 
+
+> Hκ
+
+≤ R2 from (B6), ˆgH 
+
+> s
+
+− gH
+
+> s
+> 2
+> Hκ
+
+is upper bounded as 
+
+ˆgH 
+
+> s
+
+− gH 
+
+> s
+> 2
+> Hκ
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + am) .
+
+and ˆgH 
+
+> s
+
+− gH  
+
+> s
+> 2
+> L2(PX)
+
+is correspondingly bounded as 
+
+ˆgH 
+
+> s
+
+− gH  
+
+> s
+> 2
+> L2(PX)
+
+= OP
+
+ r−2 
+
+> s
+
+(N −1 + am) .
+
+Lemma A.15 (Proxy evaluation transfer) . Assume Assumptions (B2) and (B4). Let 
+
+GB = {h ∈ H κ : ∥h∥Hκ ≤ B}.
+
+Then, uniformly over h ∈ G B ,
+
+E
+
+h
+
+(h( bP ) − h(P )) 2i
+
+≲ B2am,
+
+and 
+
+E
+
+h
+
+(Y − h( bP )) 2i
+
+− E(Y − h(P )) 2 ≲ (1 + B2)am.
+
+Proof. For h ∈ G B , the reproducing property and Assumption (B2) give 
+
+|h( bP ) − h(P )| ≤ ∥ h∥Hκ ∥κ( bP , ·) − κ(P, ·)∥Hκ ≤ BL κD(P, bP )βκ .
+
+The first claim follows from Assumption (B4) and the definition of am. The second follows from the identity 
+
+(Y − h( bP )) 2 − (Y − h(P )) 2 = {h(P ) − h( bP )}{ 2Y − h( bP ) − h(P )},
+
+Cauchy–Schwarz, boundedness of h, and the sub-Gaussian moment bound for Y , after enlarging constants in am.
+
+Lemma A.16 (Estimation in the learned feature space) . Condition on bP1: N and fix s. Let bFs = span { bϕ1, . . . , bϕs}, and let 
+
+bgs,ξ be the estimator in (16) . Suppose the finite-dimensional stability event 
+
+Es,n,m =
+
+n
+
+∥bgs,ξ ∥2 
+
+> Hκ
+
+∨ ∥ bΠH 
+
+> s
+
+g∥2 
+
+> Hκ
+
+≤ B2
+
+> s
+
+o
+
+holds, where B2 
+
+> s
+
+≲ (r2 
+
+> s
+
+)−1. Then, on Es,n,m ,
+
+E
+
+h
+
+(bgs,ξ (P ) − g(P )) 2 | bP1: N
+
+i
+
+≲ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E
+
+h
+
+(h(P ) − g(P )) 2 | bP1: N
+
+i
+
++ sn + ξξ + λ2
+
+> s
+
++ 1
+
+r2
+
+> s
+
+am.
+
+24 Semi-supervised Learning with Measurement Error 
+
+Proof. Conditional on bP1: N , the features are fixed and satisfy ∥bΦs( bP )∥2 ≤ 1 by Lemma A.9. Thus the second stage is an 
+
+s-dimensional ridge regression problem with bounded design. On Es,n,m , the same finite-dimensional oracle inequality used in Lemma A.8 gives 
+
+E
+
+h
+
+(Y − bgs,ξ ( bP )) 2 | bP1: N
+
+i
+
+≤ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E
+
+h
+
+(Y − h( bP )) 2 | bP1: N
+
+i
+
++ OP
+
+ sn + ξξ + λ2
+
+> s
+
+
+
+.
+
+By Lemma A.15, both sides can be transferred from bP to P at cost 
+
+(1 + B2 
+
+> s
+
+)am ≲ 1
+
+r2
+
+> s
+
+am.
+
+Finally, since g is the L2(PP )-projection of f onto Hκ, for every h ∈ H κ,
+
+E(Y − h(P )) 2 − E(Y − g(P )) 2 = E(h(P ) − g(P )) 2 .
+
+Combining the preceding displays proves the lemma. A.2.2. P ROOF OF PROPOSITION 4.1 
+
+Proof of Proposition 4.1. We work on the intersection of the eigengap event in Assumption (B5) and the finite-dimensional stability event Es,n,m in Lemma A.16; the resulting bound is an OP statement. By Lemma A.16, 
+
+E(bg(P ) − g(P )) 2 ≲ inf   
+
+> h∈bFs
+> ∥h∥Hκ≤Bs
+
+E(h(P ) − g(P )) 2 + sn + ξξ + λ2
+
+> s
+
++ 1
+
+r2
+
+> s
+
+am.
+
+Take h = bgH 
+
+> s
+
+= bΠH 
+
+> s
+
+g. On Es,n,m , this function belongs to the feasible class in the infimum. Then, using Lemmas A.10 and A.14, 
+
+∥bgH 
+
+> s
+
+− g∥2  
+
+> L2(PP)
+
+≲ s−q + 1
+
+r2
+
+> s
+
+ 1
+
+N + am
+
+
+
+.
+
+Combining the preceding displays proves (18). A.2.3. P ROOF OF THEOREM 4.2 
+
+Proof of Theorem 4.2. The regression bound follows from the triangle inequality in L2(PP ), exactly as in Theorem 3.3. For the prediction bound, work on the same stability event as Proposition 4.1. Lemma A.15 applied to h = bg gives 
+
+E
+
+h
+
+(Y − bg( bP )) 2i
+
+− E(Y − bg(P )) 2 ≲ 1
+
+r2
+
+> s
+
+am,
+
+which is absorbed into R2
+
+> s,n,N,m
+
+. Since Y = f (P ) + μ and E[μ | P ] = 0 ,
+
+E(Y − bg(P )) 2 = E(f (P ) − bg(P )) 2 + τ 20 .
+
+Applying the regression bound proves (20). A.2.4. P ROOF OF COROLLARY 4.3 
+
+Proof of Corollary 4.3. Let sn ≍ n1/(q+1) . By the two negligibility conditions in Corollary 4.3, the operator-proxy term and the ridge shrinkage term in (18) are both o(s−qn + sn/n ). Therefore Proposition 4.1 gives 
+
+R2 
+
+> sn,n,N,m
+
+= OP
+
+
+
+s−qn + sn
+
+n
+
+
+
+.
+
+Since s−qn ≍ n−q/ (q+1) and sn/n ≍ n−q/ (q+1) , the result follows. 25 Semi-supervised Learning with Measurement Error 
+
+## B. Experiment Details 
+
+In our notation, N is a total number of examples and n is the number of labeled examples (so we have N − n unlabeled examples in our data). For all simulations, we assume we have m samples for each distribution feature. In other words, our observed data would be represented as the following form. 
+
+Dobs = {(X1, y 1), · · · , (Xn, y n), Xn+1 , · · · , XN },
+
+where Xi = {Xi1, · · · ., X im } for i = 1 , · · · , N. 
+
+B.1. Summary of baseline group methods 
+
+We use four groups of baseline methods; three different settings for supervised learning and the other one for semi-supervised learning. The first group is supervised counterpart ( SL1 ) that is able to take distribution features without any unlabeled examples; we use Support Distribution Machines (SDM) regression (Sutherland et al., 2012). The second supervised group ( SL2 ) uses the first four moments and their second order interactions as features instead of taking distribution features directly; we employ LASSO 1, Random Forest (RF), Support Vector Machine regression (SVR), and Kernel Ridge Regression (KRR). For the third group of our supervised counterpart ( SL3 ), algorithms were implemented upon all the individual samples ( n × m) treating each of them as independent example; we use LASSO 2, Convolutional Neural Network (CNN) and RF. Finally, for our semi-supervised learning counterpart ( SSL ) without treating features as a distribution, we employ Laplacian Regularized Least Squares (LapRLS) (Belkin et al., 2006) and Embed CNN (Weston et al., 2008) (E-CNN) which are known to yield the most state-of-the-art performance of semi-supervised learning. For this group, we model the case of both moment based features (as in group 2) and N × m individual samples (as in group 3), then only present the one with better out-of-sample performance. Descriptions of these baseline group methods are also summarized in Table 4. We only include baseline methods that are known to work well in each setting.    
+
+> Table 4. Summary of baseline group methods Group Methods Distributional Features Unlabeled Examples
+
+Supervised Counterpart I SDM Yes No Supervised Counterpart II LASSO 1, RF, SVR, KRR No; Use first four moments and their interactions No Supervised Counterpart III LASSO 2, CNN, RF No; Use all the individual samples No Semi-supervised Counterpart LapRLS, Embed CNN No; Either moments or individual samples Yes SSDR Algorithm 1 Yes Yes 
+
+B.2. Parameter Selection Process 
+
+In this section we describe the parameter selection process for each method we use for the real-data simulation. Throughout the simulation we used zero regularization penalty ( ξ = 0 ) to avoid excessive computational cost with understanding that the regularization might be of help to reduce overfitting and thus to obtain more stable result. • SSDR (Algorithm 1): For density estimation, we use RBF kernel with bandwidth chosen from cross-validation. For our distribution kernel, we simply use Euclidean kernel ( κ(f, g ) = R f (x)g(x)dx ). To determine the value of s, one needs to specify value of a and q in (A3) first, which can be estimated from empirical eigenvalue distribution. In our experiment, we found that in most cases, it is sufficient to use the value of a ≈ 1 and q slightly larger than 2 to upper bound the λk for all k. Then we select s if marginal error improvement becomes less than 0.01 within range 10 1 ≤ s ≤ 10 3.26 Semi-supervised Learning with Measurement Error 
+
+• SDM : We borrow code from Sutherland https://github.com/dougalsutherland/sdm with default setting for parameters. • LASSO : We use R-package glmnet and built-in cross-validation procedure in the package for parameter selection. • SVR : We use sklearn.svm in Python and use grid search to determine value of C from 1 ≤ C ≤ 20 .• RF : We use R-package range and built-in cross-validation procedure in the package for parameter selection. • KRR : We use sklearn.kernel ridge in Python with Gaussian kernel and use grid search for parameter selection. • CNN : We use tensorflow library via Python to implement plain 2-layer CNN of {10, 10 } where only the first layer is convolutional with stride of 2. ADAM optimizer was used for training. • LapRLS : We slightly modified the original Matlab code from Belkin and Sindhwani 1. We use heat kernel weights Wij =
+
+e∥xi−xj ∥22/t as our weighted edge for some suitable choice of t. By simple grid search, we set γAl = 0 .005 , γI l 
+
+> (u+l)2
+
+= 0 .05 
+
+for the first simulation and γAl = γI l 
+
+> (u+l)2
+
+= 0 .005 for the second. • Embed CNN : We added a semi-supervised loss ( l2-norm regularizer) to the supervised loss on the entire network???s output based on the 2-layer CNN used as supervised counterpart with the same weighted edge matrix W .
+
+B.3. Synthetic Experiment: Noisy Euclidean Covariates 
+
+We also include a synthetic experiment for the noisy Euclidean covariate setting in Section 3. This experiment is designed to isolate the effect of unlabeled proxy covariates, separately from the distribution-regression structure studied in Appendix B.4. We generate a two-dimensional latent variable 
+
+Ui = ( Ui1, U i2) ∼ Unif([ −1, 1] 2),
+
+and embed it into a ten-dimensional smooth nonlinear covariate 
+
+Xi =  Ui1, U i2, sin( πU i1), cos( πU i2), U i1Ui2, U 2
+
+> i1
+
+, U 2
+
+> i2
+
+, sin {π(Ui1 + Ui2)}, cos {π(Ui1 − Ui2)}, U 3 
+
+> i1
+
+− U 3
+
+> i2
+
+⊤ ∈ R10 .
+
+The response is generated from the smooth regression function 
+
+Yi = f (Xi) + ϵi, f (Xi) = sin( πU i1) + U 2 
+
+> i2
+
++ 12 Ui1Ui2, ϵi ∼ N (0 , 0.12).
+
+The learner does not observe Xi. Instead, it observes the noisy proxy 
+
+bXi = Xi + τ W i, Wi ∼ N (0 , I 10 ),
+
+with τ ∈ { 0.10 , 0.40 }, representing mild and stronger proxy noise. We fix the number of labeled examples at n = 50 , vary the total number of proxy covariates N ∈ { 100 , 300 , 1000 }, and evaluate prediction on an independent test sample. We compare three methods: (i) SSDR, which learns spectral features from all N proxy covariates and fits the second-stage regression using only the labeled observations; (ii) a labeled-only spectral baseline, which uses the same spectral ridge pipeline but learns the features only from the n labeled proxy covariates; and (iii) an oracle latent baseline, which applies the same procedure using the unobserved latent covariates X. Performance is measured by normalized RMSE on the test set, and the reported standard deviations are computed across repeated Monte Carlo replications. The results are reported in Table 2. When proxy noise is mild, increasing N substantially improves SSDR and moves it closer to the oracle latent baseline. When proxy noise is stronger, the improvement from increasing N is smaller and begins to saturate, consistent with the proxy perturbation term in Proposition 3.2. 
+
+> 1http://manifold.cs.uchicago.edu/manifold\_regularization/software.html
+
+27 Semi-supervised Learning with Measurement Error                                                
+
+> Table 5. Prediction Error for different choices of nand Nfor the synthetic dataset of beta distribution
+> nN
+> 050 100 150 200 250 300 50 0.3010 0.2780 0.2766 0.2259 0.1560 0.1668 0.1501 60 0.2466 0.1897 0.1543 0.1357 0.0959 0.0860 0.0942 70 0.2051 0.1362 0.0552 0.0546 0.0390 0.0461 0.0444 80 0.1551 0.0962 0.0612 0.0359 0.0346 0.0290 0.0301 90 0.1432 0.0733 0.0526 0.0244 0.0251 0.0197 0.0153
+
+B.4. Synthetic Experiment: Skewness of Beta distribution 
+
+To check the validity of our algorithm, we use the Beta distribution in which the first parameter is chosen randomly from certain range of numbers whereas the second parameter is fixed. Specifically, we have βeta (a, 3) where a is chosen randomly from Uniform [3 , 20] . Then sample of size m = 30 is drawn from βeta (a, 3) for each a. This process is repeated 300 times. The first N sample sets constitute the training set and consequently the remaining sets constitute the testing set. In our case b remains fixed at 3 hence f is a simply function of a which is a distributional feature. In this example we use the kernel κ(f, g ) = R f (x)g(x)dx , and calculate the error by using the root mean squared error (RMSE) of the target function at the predicted values of the parameter for the test samples. The results are presented in Table 5. The results show that in general the prediction error decrease in N and n as expected and indeed the algorithm achieves very small prediction errors even for moderate values of (N, n, m ).
+
+B.5. Mass Measurements of Galaxy Clusters 
+
+In this real-data application, we estimate mass of galaxy clusters using distribution of galaxy velocity. All the cluster catalog are gleaned from a publicly available halo catalog of the Multidark Simulation 2. We randomly choose 80% of the data for training, 10% for validation whenever necessary for parameter selection, and use the rest of 10% for testing. Clusters are the most massive gravitationally-bound systems in the Universe. Since a cluster mass is not directly observable, once clusters are identified mass measurements are needed to map observable cluster properties to the underlying mass. (Ntampaka et al., 2015) studied the modern machine learning approach for cluster dynamical mass measurements. The power law says Halo mass M can be related to galaxy line-of-sight (LOS) velocity ( vlos ) dispersions. Unlike earlier studies that only use summary statistics of mass measurements, they take advantage of using the information encoded in the probability distribution of vlos based on the method from (Sutherland et al., 2012). It is known that measuring the galaxy velocity is much easier than estimating the galaxy mass, hence it is reasonable to assume we have more unlabeled data in hand. Our algorithm can be well applied to estimate the cluster mass from this distribution variable. Since the unit of galaxy mass is very huge, we calculate the prediction error as scaled root-mean-squared-error. We randomly select n out of N = 1632 as the number of labeled examples, and vary the ratio of n to N . Here, mi corresponds to the number of galaxies in the ith cluster which is fairly large. In Table 1, we note that the proposed algorithm ( SSDR ) generally outperforms other baseline methods. We recognize the prediction error is quite big in this simulation since we only use one distributional variable in our model. To compute eigenvalues efficiently, we use Lanczos Method. If the algorithm did not converge (which happened only once in this galaxy dataset), we additionally imposed sparsity structure on the kernel matrix and implemented relevant algorithms (e.g. a function found in scipy.sparse ). 
+
+B.6. Default Risk and Stock Returns 
+
+A firm defaults when it fails to service its debt obligations. Therefore, default risk induces lenders to require from borrowers a spread over the risk-free rate of interest. This spread is an increasing function of the probability of default of the individual firm. Thus, the relationship between default risk and stock returns has important implications for the risk-reward trade-off in financial markets. Various attempts have been made in financial literature to assess the effect of default risk on equity returns or vice versa. However, a relationship between stock returns and default risk is still controversial. For example, (Garlappi & Yan, 
+
+> 2https://www.cosmosim.org/
+
+28 Semi-supervised Learning with Measurement Error 
+
+2011; Garlappi et al., 2008) support the negative relationship between default risk and stock returns, whereas (Chava & Purnanandam, 2010) argue the opposite. Even though many of studies recognize the importance of realized stock return distributions on future default risk, most of them merely rely on running multiple cross-sectional regressions with simple cumulative return or average return for analysis. For the simulation we collect stocks’ daily returns up to month T with 90-day windows and aim to predict the default risk of time T + 1 (or T + 2 in case that the majority of data are not available), and this prediction is rolling over entire time interval (5 years). To compute company’s default risk, we collect data from FnGuide 3. Each vendor adopts slightly different model to estimate company’s 1-year default risk basically from CDS spread. In fact, there are significant missing values for default risk at each time point, which motivates us to use the proposed algorithm. We use same set of baseline methods as the galaxy cluster dataset. In fact, even though the screening standard is top 500 in company’s market value there are quite substantial portion of missing values each time point (roughly 18% of entire data on average). So composition of labeled samples can be slightly varying from time to time but we do not think this largely affect our analysis. Moreover, many papers in finance literature treat stock returns as i.i.d. , so the use of kernel density estimation to estimate ˆp is also justified in this analysis. Since in general the default risk is very small, we use scaled RMSE to measure the prediction error. Again, we confirm our method generally outperforms the other baseline methods.  
+
+> 3Dataguide by FnGuide: http://www.dataguide.co.kr/DG5web/eng/index.asp
+
+29

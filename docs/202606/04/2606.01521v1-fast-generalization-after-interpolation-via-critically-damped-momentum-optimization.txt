@@ -1,0 +1,1274 @@
+Title: Fast Generalization after Interpolation via Critically Damped Momentum Optimization
+
+URL Source: https://arxiv.org/pdf/2606.01521v1
+
+Published Time: Tue, 02 Jun 2026 02:23:14 GMT
+
+Number of Pages: 24
+
+Markdown Content:
+# Fast Generalization after Interpolation via Critically Damped Momentum Optimization 
+
+Luca Muscarnera 
+
+University of Cambridge 
+
+Silas Ruhrberg Estévez 
+
+University of Cambridge 
+
+Yuanzhang Xiao 
+
+University of Hawaii at Manoa 
+
+Mihaela Van der Schaar 
+
+University of Cambridge 
+
+Abstract 
+
+A central problem in machine learning is that models can achieve near-perfect training performance while generalizing substantially less well to unseen examples. This gap is especially acute in high-dimensional, low-sample regimes, where many interpolating solutions exist and optimization must implicitly select among minima with different generalization properties. Following recent theoretical advances on optimization dynamics near the interpolation threshold, we note that the two-regime structure of risk minimization, with loss minimization followed by complexity minimization, motivates a biphasic optimization schedule. We thus theoretically demonstrate that GROKtimizer , a biphasic strategy that combines rapid conver-gence to interpolation with Critically Damped Momentum (CDM)-based post-interpolation norm minimization, offers a natural solution for selecting low-norm interpolating solutions. Under a local quadratic model of the post-interpolation basin, GROKtimizer provides a quadratic speedup over classical gradient descent, with provable optimality among first-order optimizers. To showcase the applica-bility of our method, we evaluate GROKtimizer on several synthetic benchmarks common in the classical grokking literature and on various real-world datasets. Finally, we reconcile our findings with the flat-minima hypothesis, highlighting the importance of post-interpolation dynamics in the construction of high-quality, generalizing models. 
+
+1 Introduction 
+
+Training machine learning models that generalize reliably remains difficult, especially in high-dimensional regimes where data are sparse, noisy, or expensive to obtain [1]. Such regimes arise in genomics and single-cell biology, where each sample may contain thousands of molecular measure-ments but few labels [2]; in medicine, where clinically meaningful outcomes are often rare [3]; in finance, where signals are weak and non-stationary [4]; and in materials science or drug discovery, where experiments are costly [5], [6]. Across these settings, a model may fit the available data without learning a predictor that extrapolates robustly to unseen examples. This difficulty is closely tied to the geometry of modern loss landscapes [7]. When the number of effective degrees of freedom is large relative to the amount of data, there may be many parameter configurations that explain the training set equally well [8]. Interpolation therefore does not identify a unique model [9]. Instead, optimization must implicitly select among many solutions that achieve similar or identical training loss but differ substantially in their complexity and test performance [10]. The challenge is therefore not only to reach low training error, but to reach an interpolating solution that generalises. 
+
+> Preprint.
+> arXiv:2606.01521v1 [cs.LG] 1 Jun 2026
+
+Regularization methods were developed precisely to guide this selection process. Weight decay, norm penalties, early stopping, and related methods bias optimization away from arbitrary high-complexity interpolators and toward simpler solutions [11]. This reflects a classical Occam-style principle: among models that explain the observed data, prefer the one that is less likely to fit the data by coincidence [12] [13]. In the optimization dynamics studied in this work, this principle appears through the parameter norm: among interpolating solutions, lower-norm solutions provide a tractable notion of lower complexity [14]. Grokking provides a striking example of this separation between fitting and generalization [15], [16]. In grokking, a model first reaches near-perfect training performance, often appearing to have memo-rized the data, and only much later undergoes a delayed transition to strong test performance. This phenomenon suggests that training can proceed in two qualitatively different phases: an initial phase of empirical risk minimization, followed by a slower post-interpolation phase in which optimization continues to move through the space of interpolating solutions toward lower-complexity predictors. However, the practical value of this phenomenon is limited by its timescale. In classical grokking benchmarks, the number of epochs required for generalization can be orders of magnitude larger than the number required to fit the training set [15], [17]. As a result, grokking is often studied on synthetic or highly simplified tasks where extremely long training runs are feasible [18]. In this work, we address this gap by studying the post-interpolation phase as an optimization problem in its own right. We argue that, after interpolation, the relevant objective is no longer primarily to reduce training loss, but to select a low-complexity solution within or near the set of interpolating parameters. Under a local quadratic approximation of the regularized loss, this phase can be described as damped dynamics along the flat directions of the loss landscape. This perspective relates minimum-norm solution selection to the geometry of flat regions in the loss landscape and turns the choice of post-interpolation optimization dynamics into a damping problem [19]. 
+
+Contributions. 
+
+1. We characterize the post-interpolation regime as a local quadratic dynamical system, link-ing delayed generalization to damped oscillator behavior along flat directions of the loss landscape. 2. We show that critically damped momentum accelerates convergence toward low-norm interpolating solutions in this regime, yielding a principled momentum schedule for post-interpolation training. 3. We propose GROKtimizer , a biphasic optimization strategy that first drives models to interpolation and then switches to critically damped, weight-decayed momentum dynamics. 4. We validate our approach empirically on classical grokking benchmarks and real-world high-dimensional datasets. 
+
+2 Theoretical Considerations 
+
+Parameter norm as a proxy for complexity. The relationship between parameter geometry and generalization has been widely studied in modern machine learning [20], [21]. A particularly important case is overparameterized regression [22], where infinitely many solutions can interpolate the training data. In this setting, the minimum-norm interpolating solution plays a central role: although all interpolating solutions achieve identical training error, they can differ substantially in their behavior on unseen data. A surprisingly simple model of this idea can be explicitly obtained by studying overparameterized isotropic regression, where interpolation leaves a null-space of solutions with identical training error but different test behavior. 
+
+Lemma 1 (Generalization Asymptotics for Overparameterized isotropic regression) . Let X =
+
+{x1, ..., xn} ⊂ Rp be a dataset such that xi ∼ N (0, Ip) ∀i = 1 , ..., n , and define the data matrix X = Pni=1 eix⊤ 
+
+> i
+
+. Assume p > n and consider a noisy target vector y = Xw∗ + σε
+
+where ε ∼ N (0, In), σ ∈ R+ and w∗ ∈ Rp. Consider the minimum-norm interpolating solution 
+
+bw∗ and define the family of interpolating solutions as bw(z) = bw∗ + Π ker (X)z and assume z
+
+independently and uniformly distributed over rSp−1, for some r > 0. Then in the limit n, p → ∞ 
+
+2with n/p = γ ∈ (0 , 1) , the following asymptotic expression for the generalization error on an unseen sample x ∼ N (0, I) holds: 
+
+E(x⊤ bw(z) − x⊤w∗)2 ∼ (1 − γ)∥w∗∥2 + E∥ bw(z) − bw∗∥22 + σ2 γ
+
+1 − γ (1) 
+
+Proof. This asymptotic result is a corollary of Theorem 1 from [14]. A detailed derivation is provided in the Appendix. This result shows that, even among exact interpolators, displacement in the null space of the data matrix incurs an explicit test-error penalty. This behavior can also be observed empirically in neural networks, although with a different polyno-mial dependence on ∥ ˆw − ˆw∗∥2. In Figure 1, we vary the initialization scale to obtain interpolating solutions with different weight norms and evaluate their test cross-entropy on MNIST and CIFAR-10. In both cases, test loss follows an approximate power law L ∝ ∥ w∥α with α ∼ 3. Although the exponent differs from the isotropic Gaussian setting, likely due to differences in loss, architecture, and data geometry, the qualitative polynomial dependence on parameter norm persists. This supports the role of parameter norm as a practical proxy for model complexity. Lower-norm interpolating solutions can therefore be viewed as empirically favored by an Occam-style principle, motivating the need for efficient methods that search for minimum-norm models. 10 3 
+
+> Converged parameter norm ‖w‖2
+> 10 0
+> 10 1
+> 10 2
+> 10 3
+> Test cross-entropy
+> 0.3
+> 0.2
+> 0.9
+> 0.8
+> Norm-Generalization Scaling (MNIST + CIFAR-10)
+> MNIST
+> CIFAR-10
+> MNIST fit
+> CIFAR-10 fit
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Within-dataset degradation (0 best, 1 worst)
+
+Figure 1: Loss-Norm scaling laws. 
+
+Test accuracy (indicated by point brightness and inline labels) reveals shifts in the classification boundary across different norms. 
+
+Qualitative and quantitative differences in fitting and com-plexity minimization Recent literature [23], [24] identifies the onset of grokking as a dynamical transition between a regime of data memorization and norm (complexity) minimiza-tion . In particular, [24] shows the existence of two distinct phases. In the first part of the optimization, the dynamics is dominated by the unregularized gradient flow induced solely by the training data. In this regime, the data memorization, empirical risk is minimized and the optimizer appears to be 
+
+resilient to regularization. In this part of the empirical risk min-imization, the characteristic timescale strongly depends on data, model architecture and the number of parameters; for linear models, this can be proven to be controlled by an exponential decay parametrized by the smallest nonzero eigenvalue of the uncentered covariance matrix. For Neural Network such anal-ysis is more complex, but studies on lazy training dynamics show analogous results on the Neural Tangent Kernel Gram matrix [25], suggesting a possible connection between the two interpolation dynamics . It is, however, empirically (and theoretically) well-known that larger Neural Network based models are able to interpolate data faster than their smaller counterparts [26]. The second phase, which is reached only in models with enough capacity to memorize the data, shows a qualitative and quantitative different behavior. The dynamics are shaped mainly by the the effect of regularization; the presence of a complexity penalty in the loss function (such as the squared norm of parameters) steers the optimizer toward solutions of minimal complexity within the basin of attraction. From a quantitative description of such dynamics, the timescale of the second phase for L2 regularization is provably τ = λ−1. We face a fundamental discrepancy between these two regimes of the optimization. 
+
+Remark 1. The convergence rate to the interpolation threshold can be accelerated by over-parametrization, while the slow dynamics of norm minimization is driven by the regularization magnitude. 
+
+Characterizing the after-interpolation behavior of slow dynamics Given the different features of the dynamics after interpolation, we now study in detail its nature in the context of neural networks. 
+
+Assumption 1. Consider a machine learning model f characterized by a set of parameters w⋆,obtained by training the network until interpolation of the training set. Then the L2 regularized loss 
+
+30.4 0.8 1.2 1.6             
+
+> w1
+> 0.4
+> 0.0
+> 0.4
+> 0.8
+> w2
+> ‖w‖= 0 .2
+> ‖w‖= 0 .4
+> ‖w‖= 0 .6
+> ‖w‖= 0 .8
+> ‖w‖= 1 .0
+> Groktimizer trajectory
+> Groktimizer
+> Adam
+> AdamW SGD
+> Nesterov
+> RMSProp
+> Adagrad
+> `(w) = 0
+> Regularized Minimization
+> of `(w) = ( ‖w−1‖2−1) 2
+> `(w)↓
+> ‖w‖ ↓
+
+(a) Fixed-budget dynamics on a Modular Addition benchmark. GROKtimizer reaches interpolation with-out regularization, then applies CDM to minimize norm along the zero-loss manifold, converging faster than standard optimizers. −57 .4
+
+> −25 .9
+> 5.5
+> 37 .0
+> 68 .5
+> pc 1
+> −21 .2
+> −5.2
+> 10 .8
+> 26 .8
+> 42 .8
+> pc 2
+> Adam
+> Muon
+> Groktimizer
+
+(b) Reduced loss-landscape visualization for Modular Addition. Optimizer trajectories are projected onto a two-dimensional subspace; GROKtimizer uses the regularized landscape to move efficiently through the flat interpolation region toward lower-norm solutions. 
+
+Figure 2: GROKtimizer dynamics before and after interpolation. 
+
+function can be approximated as 
+
+Lreg (w) ≈ L unreg (w⋆) + 12 (w − w⋆)⊤H(w − w⋆) + 12 λ∥w∥22 (2) 
+
+with L(w⋆) being a constant, H being the Hessian matrix evaluated in w⋆, and L(w⋆) = 0 in case of Mean Squared Error Loss. 
+
+This assumption is motivated by the proximity to a local minimum; when the optimizer is captured in an attraction basin, the geometry of the surrounding loss landscape is entirely characterized by the Hessian matrix. Furthermore, under the fast-slow dynamics formalism, we can expect the distance 
+
+d⋆ = ∥w − w⋆∥ to grow slowly in time thus justifying the Taylor-like approximation. A clear advantage of this model is its perfect equivalence to the linear case; since in the attraction basin the function is approximately quadratic, we can adopt the same mathematical framework to analyze the dynamics of the optimizer. 
+
+Remark 2 (Manifold of Optima) . Classical Deep Learning literature [27], [28], highlights how in the loss landscape of neural networks optima are connected through a manifold in the parameter space. While our discussion focuses on a linear subspace (the null space of the Hessian matrix) we argue that our model can be reconciled when one considers such null space as the tangent space of such a manifold. Our assumption coincides, in fact, with the idea of small variations of the tangent space across the various solutions [8]. 
+
+Under this model, we can provide the central result of the paper. 
+
+Theorem 1 (Critically Damped Momentum Quadratically Accelerates Convergence) . Consider a machine learning model f trained to interpolation on any unregularized loss function L, described by a set of parameters w⋆, and assume Assumption 1 holds. Then, optimizing the regularized loss function Lreg = L + 12 λ∥ · ∥ 2 initialized on w⋆ and optimized through a momentum method tuned to critical damping with β = 1 − 2√λη reaches the minimum norm solution of the quadratic approximation quadratically faster than Gradient Descent, and in particular 
+
+E ∼ pEGD (3) 4Proof. Let us define the quantity 
+
+γu := 1
+
+√η (1 − β), (4) then by a Gradient Flow type of argument we can derive the continuous characterization of the optimizer dynamics in the √η → 0 limit 
+
+¨w + γu ˙w + ∇L (w) = 0 (5) Under the assumption of local convexity, we can express the dynamics projected on the coordinate system defined by the eigenbasis {(λi, vi)}Ni=1 induced by the Hessian matrix H as 
+
+v⊤ 
+
+> i
+
+¨w + γuv⊤ 
+
+> i
+
+˙w + v⊤ 
+
+> i
+
+∇L (w) = 0 ∀i (6) which, under explicit representation of the gradient ∇L and application of Assumption 1, admits the form 
+
+∂2
+
+> t
+
+v⊤ 
+
+> i
+
+w + γu∂t
+
+v⊤ 
+
+> i
+
+w + ( λi + λ)v⊤ 
+
+> i
+
+w − λiv⊤ 
+
+> i
+
+w∗ = 0 (7) and defining ˜xi = v⊤ 
+
+> i
+
+x we obtain the system of decoupled second order ordinary differential equations 
+
+∂2 
+
+> t
+
+˜wi + γu∂t ˜wi + ( λi + λ) ˜ wi − λi ˜w∗ 
+
+> i
+
+= 0 ∀i (8) which represents a system of independent harmonic oscillators. Components of the parameter vector associated to zero eigenvalues of the Hessian are critically damped when γu = 2 √λ and in this case their evolution is described as 
+
+˜wCD i (t) = ˜ wCD i (0) (1 + γut) e− γu  
+
+> 2t
+
+∀i : λi = 0 (9) which follows the scaling 
+
+˜wCD i (t) ∼ e−√λt ∀i : λi = 0 (10) against the ∼ e−2λt of classical gradient descent. Substituting γu into β we obtain the momentum rate 
+
+β = 1 − 2pλη (11) that enables the critical damping of the optimization. Since the characteristic time scale τ of an optimization method and number of epochs E is described by the approximation 
+
+E∆t ∼ τ (12) where ∆t is the discretization step of the continuous approximation of the optimizer, substituting 
+
+τCDM = λ−1/2 and τGD = λ−1, and substituting ∆tCDM = √η and ∆tGD = η we obtain 
+
+EGD ∼ λ−1η−1, ECDM ∼ λ−1/2η−1/2 =⇒ ECDM ∼ pEGD (13) A detailed proof and the proof of small O(λλ −1 
+
+> i
+
+) fluctuations for nondegenerate components are provided in the Appendix. Remarkably, in the context of first-order black-box optimization of smooth convex functions, Nesterov [29], [30] established that any algorithm accessing the objective and its gradients cannot, in general, achieve a convergence rate faster than O(1 /k 2) in terms of function value error after k iterations. Hence, within the class of first-order methods, our proposed quadratic improvement over standard gradient descent is asymptotically information-theoretically optimal. 
+
+Optimal Learning Rate for CDM. A fundamental question behind the introduction of our biphasic framework is whether an optimal timestep exists in the discretization of the critically damped dynamics. The following result formalizes this idea, providing a stable maximal learning rate that can be adopted under Assumption 1. 
+
+Theorem 2. Consider a basin of attraction characterized by a Hessian matrix H whose largest eigenvalue is λmax > 0. Then the maximum admissable learning rate is given by the relationship 
+
+ηmax =4
+
+√λmax + 2 λ − √λ
+
+2
+
+(λmax + λ)2 ∼ 4λ−1max (14) 5Proof. This result is a direct corollary of the stability threshold η ≤ 2(1 + β)λ−1max in heavy ball optimizers, and the identity is obtained solving a two-dimensional nonlinear system that encodes the mutual dependency of β and η in the CDM framework. A detailed proof is provided in the Appendix. We study this result numerically, and it is pre-sented in Figure 3. By initializing a rank deficient Wishart random matrix H, we define a L2 regular-ized random loss landscape based on the quadratic form w 7 → (w − w∗)⊤H(w − w∗), and initial-ize n different CDM optimizers in a point of the nullspace of H, each with a different learning rate 
+
+η. To enforce the minimum norm condition of the planted solution, we sample a vector fw∗ and de-fine w∗ := H+H fw∗ and denote it as the Pseudo-Inverse solution; we know in fact that this specific expression solves the Ridgeless-Regression prob-lem and thus provides the minimum norm optimum for this specific random energy landscape. Numer-ically, we observe that the number of iterations spent seamlessly inside the ball of radius √c cen-tered in the Pseudo-Inverse solution grows mono-tonically with η until the reach of ηmax , which induces a sharp phase transition between the con-vergence regime and the unstable regime. 0.00 0.25 0.50 0.75 1.00 1.25 1.50        
+
+> η/η max
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> max
+> t<T  (1 −t)/T  : ‖wτ − w ∗ ‖2 < c,  ∀τ > t
+> unstable region
+> T= 5 ,000 epochs
+> c= 10 1
+> c= 10 −1
+> c= 10 −3
+> c= 10 −5
+
+Figure 3: Optimal learning lies at the edge of criticality between convergence and instability. From the perspective of practical application, η of the CDM phase can be treated as a hyperparameter of our method. Alternatively, a practitioner may be interested in an efficient way to estimate λmax ,compatibly with the computational intractability of the Hessian matrix in neural networks, in order to approximate the optimal learning rate in an online fashion prior to the norm minimization phase. An efficient solution for this problem is to employ a Power-Iteration based estimate on top of the Perlmutter Trick, which allows to efficiently compute the action of the Hessian against a vector in a Matrix-Free fashion. The classical power method vk+1 ∝ Hvk, λ k = v⊤ 
+
+> k
+
+Hvk has however the disadvantage of negative bias; since the sequence of eigenvalues estimates are bounded from above by the largest eigenvalue, ˆηmax will be an overestimate of the critical learning rate and thus part of the unstable region. To remove this systematic bias and accelerate convergence we adopt Aitken correction of the power method, which also accelerates the convergence rate of the estimate, making it suitable for a few-step ( ∼ 10 , 20 in our experiments) estimation phase prior of CDM. Remarkably, the application of Aitken correction has a negligible computational cost, since the number of Hessian-vector actions is one per iteration as in classical Power Method and the correction requires only the additional storage of the previous three eigenvalues, which are scalars. Relaxing our working assumption, moreover, a corrective multiplicative coefficient α ∈ (0 , 1) may be applied to the estimate, to make the method robust to possible changes of curvature. 
+
+3 Related Work 
+
+Optimization dynamics and momentum methods. Momentum-based methods are among the most widely used tools for accelerating first-order optimization. Classical heavy-ball momentum [31] and Nesterov acceleration [29] show that optimizer dynamics can substantially change convergence rates, while later work emphasized the practical importance of momentum, initialization, and condi-tioning in deep neural network training [32]. Adaptive optimizers such as Adam [33], AdamW [34], and related variants have become standard in deep learning, although their behavior is governed by generic stability and adaptivity considerations rather than the geometry of a specific training regime. The specific regime of critical damping, the boundary between oscillatory and overdamped decay in a second-order dynamical system, is well-studied in control theory and classical mechanics as the con-dition that minimizes settling time without oscillation [35]. Our work connects this classical notion directly to post-interpolation optimization: under a local quadratic model of the loss basin, critically 6damped momentum yields the fastest non-oscillatory decay of the norm-minimizing dynamics along flat directions. 
+
+Implicit bias and post-interpolation solution selection. A large body of work studies how optimization selects among multiple interpolating solutions in overparameterized models. In linear models and related regimes, gradient-based methods are known to exhibit implicit biases toward particular interpolating predictors, such as minimum-norm or max-margin solutions [36], [37]. Similar ideas have been connected to implicit regularization and generalization in deep networks [38], and the statistical properties of minimum-norm interpolation have been characterized in high-dimensional asymptotics [14]. Recent analyses of grokking and post-interpolation training identify a more explicit two-phase structure: rapid empirical risk minimization followed by slower regularization-driven norm minimization on or near the interpolation manifold [23], [24]. Our work builds directly on this two-phase view, providing an optimizer explicitly designed for the second phase. 
+
+Grokking-inspired optimizer design. Grokking provides a useful model system for studying the separation between fitting and generalization. Since its original observation in small algorithmic tasks [15], grokking has been interpreted through several complementary mechanisms, including transitions from lazy to rich feature learning [16], [39], circuit efficiency and implicit bias [40], oscillatory weight-norm dynamics [41], and the emergence of structured representations such as Fourier features [42]. Taken together, these accounts provide valuable insight into the mechanisms underlying delayed generalization, but remain largely descriptive: they characterize when and why grokking occurs without offering a principled optimization strategy for shortening the delay. 
+
+Accelerating post-interpolation generalization. Several recent methods aim to accelerate delayed generalization. Grokfast amplifies slow gradient components [43], NeuralGrok learns gradient trans-formations through auxiliary networks [44], Muon applies approximate second-order spectral updates [45]. Other approaches modify the architecture or data distribution, for example through Kolmogorov– Arnold representations or data augmentation strategies [46], [47]. These methods demonstrate that delayed generalization can be accelerated, but typically rely on gradient filtering, learned transforma-tions, architectural choices, or task-specific data interventions. In contrast, GROKtimizer is derived from a local quadratic model of the post-interpolation basin and yields a simple biphasic optimizer: rapidly reach interpolation, then switch to critically damped, weight-decayed momentum dynamics to accelerate movement toward low-norm interpolating solutions. 
+
+4 Experimental results 
+
+We now empirically investigate whether an optimizer inspired by the two-phase structure of grokking can accelerate post-interpolation generalization. Our experiments are designed to answer four questions: 1. Does GROKtimizer reduce delayed generalization on synthetic grokking benchmarks? 2. Do the same dynamics transfer to noisy real-world datasets? 3. In data-scarce regimes, does GROKtimizer improve sample efficiency? 4. Can the same biphasic principle be scaled to modern transformer architectures for language-model pretraining? 
+
+Evaluation protocol. Across all experiments, we deliberately operate in data-scarce regimes. Such regimes arise naturally in domains such as genomics, multi-omics, and clinical prediction, where the number of measured variables can be large relative to the number of labeled examples. For image and language tasks, data scarcity is less intrinsic, but we use controlled low-data settings to isolate the effect of optimizer dynamics rather than dataset scale. All optimizers are evaluated using the same model architecture, data split, batch size, training budget, and non-optimizer hyperparameters. We compare against Adam, AdamW, Muon, and SGD. The distinguishing feature of GROKtimizer is its biphasic schedule: in the first phase, weight decay is set to zero to prioritize rapid interpolation; after interpolation, the optimizer switches to a critically damped, weight-decayed momentum phase to minimize parameter norm within the interpolating region. 7Table 1: Synthetic benchmark results. Gaussian reports validation loss, where lower is better; all other columns report test accuracy in percent, where higher is better.                                                                                                    
+
+> Method Gaussian Val. Loss ↓
+> Binary Addition ↑
+> Modular Addition ↑
+> RF Teacher Linear ↑
+> Sparse Parity ↑
+> Two-Subspace Linear ↑
+> Adam 121 .7±12 .782 .9±0.970 .1±16 .878 .6±5.560 .5±2.279 .5±1.0
+> AdamW 151 .4±17 .036 .6±2.20.0±0.055 .5±2.569 .6±3.866 .3±1.7
+> Muon 94 .2±9.50.31 ±0.07 0.27 ±0.12 50 .7±1.852 .1±0.859 .2±1.3
+> SGD 94 .2±9.50.04 ±0.04 1.83 ±0.20 56 .1±1.950 .3±0.958 .3±1.3
+> GROKtimizer (4.3±0.7)×10 −589 .5±1.095 .1±1.484 .3±6.589 .1±3.279 .7±1.0
+
+Synthetic grokking benchmarks. We first evaluate GROKtimizer on synthetic benchmarks de-signed to expose a separation between fitting and generalization. These tasks are useful testbeds for our hypothesis because they admit rapid training-set interpolation while requiring additional optimization dynamics to recover a low-complexity solution that generalizes. Table 1 reports the main results over n = 10 random seeds. GROKtimizer achieves the best mean performance on all six benchmarks. On the Gaussian task, it reduces validation loss by several orders of magnitude relative to the strongest baseline, indicating that the post-interpolation phase effectively drives the model toward a lower-complexity interpolating solution. Table 2: Additional benchmark results. Results are computed over n = 5 random seeds. Leukemia and TCGA report test accuracy in percent, where higher is better; QM9 reports validation loss, where lower is better. SGD did not converge for QM9.                                                
+
+> Method Leukemia Acc. ↑
+> TCGA Acc. ↑
+> QM9 Val. Loss ↓
+> Adam 57 .2±5.989 .9±6.40.28 ±0.15
+> AdamW 56 .9±6.289 .8±6.40.35 ±0.21
+> Muon 56 .2±8.666 .4±27 .30.38 ±0.08
+> SGD 57 .2±6.589 .1±6.0–
+> GROKtimizer 80 .3±1.497 .5±1.80.16 ±0.11
+
+Transfer to real-world high-dimensional datasets. We next evaluate whether the same biphasic optimization principle transfers beyond synthetic grokking benchmarks. We consider two high-dimensional biomedical classification tasks, Leukemia and TCGA, using logistic re-gression models, and one molecular property prediction task, QM9, using a graph neural net-work. Table 2 reports results over n = 5 random seeds. GROKtimizer achieves the best mean performance on all three datasets. The strongest gains occur on the biomedical datasets, where the number of features is large relative to the number of samples. This is consistent with our hypothesis that explicit norm minimization is most useful when the training data underdetermines the solution and many interpolating predictors remain compatible with the observed labels. 10 15 20 25 30 35 40 45 50 
+
+> Training Images per Class
+> 0.65
+> 0.70
+> 0.75
+> 0.80
+> 0.85
+> 0.90
+> Test Accuracy (Final Epoch)
+> Optimizer
+> Groktimizer
+> AdamW
+> SGD
+> Adam
+> Muon
+
+Figure 4: MNIST sample efficiency under data scarcity. Test accuracy as the number of training examples per class increases from 10 to 50 . Results averaged across n = 10 seeds. 
+
+Sample efficiency in low-data regimes. We next test whether the post-interpolation norm-minimization phase improves sample efficiency. We construct low-data MNIST classification tasks by varying the number of training exam-ples per class from 10 to 50 , while keeping the architecture and training budget fixed across op-timizers. We use an overparameterized MLP with approximately 1.46 million parameters, cre-ating a regime in which the model can interpo-late the training data but the choice of interpo-lating solution strongly affects generalization. Figure 4 shows that GROKtimizer provides the largest advantage in the most data-scarce set-ting. As the number of samples per class in-creases, the gap between optimizers becomes smaller, consistent with the solution space be-coming more constrained by data. 
+
+Language-model pretraining. Finally, we study whether the biphasic optimization pattern persists when moving from small synthetic and tabular settings to transformer-based language-model pre-training. We train two data-constrained language models: a WikiText2 model with 14M parameters and a BabyLMStrictSmall model with 38M parameters. Figure 5 shows that the relationship between 8parameter norm and validation performance is less direct in language modeling than in the preceding benchmarks. In particular, Adam can reach lower parameter norms while still obtaining worse validation loss. This is consistent with the additional complications of transformer pretraining, where scale symmetries, adaptive updates, embedding layers, and noisy next-token objectives weaken a simple norm-generalization interpretation. Nevertheless, we still observe a biphasic optimization pattern: after the model reaches low training loss, switching to the norm-minimization phase changes the norm trajectory and produces a small further reduction in validation loss. The results also suggest that the SGD-based interpolation phase without weight decay is better suited to this setting, whereas applying weight decay too early can mask the data signal and hinder fitting. 
+
+5 Discussion 0 10 20 30 40 50 60                           
+
+> epoch
+> 10 0
+> 10 1
+> val loss (log)
+> WikiText2 Validation Loss
+> Adam
+> Groktimizer
+> 010 20 30 40 50 60 70 80
+> epoch
+> 10 0
+> 10 1
+> val loss (log)
+> BabyLMStrictSmall Validation Loss
+> 010 20 30 40 50 60
+> epoch
+> 0
+> 100
+> 200
+> 300
+> 400
+> 500
+> 600
+> weight L2 norm
+> WikiText2 Weight L2 Norm
+> Adam
+> Groktimizer
+> 010 20 30 40 50 60 70 80
+> epoch
+> 0
+> 200
+> 400
+> 600
+> 800
+> 1000
+> weight L2 norm
+> BabyLMStrictSmall Weight L2 Norm
+
+Figure 5: Language-model pretraining under data constraints. Validation-loss and parameter norm trajectories for Adam and GROKtimizer .This work studies model training in high-dimensional, low-sample regimes, where in-terpolation is often easy but generalization re-mains difficult. Motivated by the two-phase structure observed in grokking, we proposed 
+
+GROKtimizer , a biphasic optimization sched-ule that separates rapid empirical risk minimiza-tion from post-interpolation complexity mini-mization. The central idea is that these two phases impose different optimization require-ments: fitting the training data benefits from fast, unregularized movement toward interpo-lation, whereas generalization after interpola-tion requires efficient movement within the set of training-compatible solutions toward lower-complexity predictors. Our theoretical analysis formalizes this intuition under a local quadratic approximation of the post-interpolation loss landscape. In this regime, the regularized dynamics along flat Hessian directions reduce to a damped oscillator, and critically damped momentum accelerates convergence toward the low-norm solution relative to gradient descent. Empirically, this perspective results in gains observed across our synthetic grokking benchmarks and real-world data-constrained settings. Finally, our language-model pretraining experiments show that the biphasic optimization pattern can still be observed in transformer architectures, but also reveal that the relationship between parameter norm and validation loss becomes less direct. 
+
+Limitations. The scope of this study is focused on data-constrained learning. This regime is central in many scientific and biomedical applications, however, it is less representative of large-scale vision or language pretraining, where data availability is often the dominant driver of performance. A second limitation is that our method assumes the model has sufficient capacity to reach interpolation. The proposed schedule is meaningful only once there exists a post-interpolation regime in which the empirical loss no longer strongly distinguishes between candidate solutions. Third, our theoretical analysis relies on a local quadratic approximation of the regularized loss landscape after interpolation — albeit empirically relaxed to slow evolution of the eigenbasis. Finally, our approach treats parameter norm as an operational proxy for complexity. 
+
+Connection to flat minima hypothesis. The correlation between sharpness of minima and general-ization has a long history in Deep Learning [20], [48]. However, naive measures of sharpness can be affected by reparameterization and scale symmetries [49]. In our analysis, we have employed the null space of the Hessian matrix as the domain where the norm (and thus complexity) minimization happens; when the surface of interpolating solutions has higher latent dimension, the optimization domain becomes larger leading to an higher number of low complexity solutions. We thus argue that using the dimensionality of the null space of the Hessian as measure of flatness may be, in future works, a successful strategy. In fact, along with the norm minimization domain argument, the dimensionality of the kernel of the Hessian is invariant to reparametrization in critical points for most loss functions [50]. We believe that this is a promising direction, and a possible future investigation. 9References 
+
+[1] C. Zhang, S. Bengio, M. Hardt, B. Recht, and O. Vinyals, “Understanding deep learning requires rethinking generalization,” in International Conference on Learning Representations ,2017. [2] D. Feldner-Busztin et al., “Dealing with dimensionality: The application of machine learning to multi-omics data,” Bioinformatics , vol. 39, no. 2, J. Wren, Ed., Jan. 2023, ISSN : 1367-4811. [3] A. Rajkomar et al., “Scalable and accurate deep learning with electronic health records,” npj Digital Medicine , vol. 1, no. 1, May 2018, ISSN : 2398-6352. [4] A. Chinco, A. D. Clark-Joseph, and M. Ye, “Sparse signals in the cross-section of returns,” 
+
+The Journal of Finance , vol. 74, no. 1, pp. 449–492, Nov. 2018, ISSN : 1540-6261. [5] P. Xu, X. Ji, M. Li, and W. Lu, “Small data machine learning in materials science,” npj Computational Materials , vol. 9, no. 1, Mar. 2023, ISSN : 2057-3960. [6] B. Dou et al., “Machine learning methods for small data challenges in molecular science,” 
+
+Chemical Reviews , vol. 123, no. 13, pp. 8736–8780, 2023, ISSN : 1520-6890. [7] T. Garipov, P. Izmailov, D. Podoprikhin, D. Vetrov, and A. G. Wilson, “Loss surfaces, mode connectivity, and fast ensembling of dnns,” in Advances in Neural Information Processing Systems , S. Bengio, H. Wallach, H. Larochelle, K. Grauman, N. Cesa-Bianchi, and R. Garnett, Eds., vol. 31, Curran Associates, Inc., 2018. [8] F. Draxler, K. Veschgini, M. Salmhofer, and F. Hamprecht, “Essentially no barriers in neural network energy landscape,” in International conference on machine learning , PMLR, 2018, pp. 1309–1318. [9] M. Belkin, D. Hsu, S. Ma, and S. Mandal, “Reconciling modern machine-learning practice and the classical bias–variance trade-off,” Proceedings of the National Academy of Sciences ,vol. 116, no. 32, pp. 15 849–15 854, 2019, ISSN : 1091-6490. [10] D. Soudry, E. Hoffer, M. S. Nacson, S. Gunasekar, and N. Srebro, “The implicit bias of gradient descent on separable data,” Journal of Machine Learning Research , vol. 19, no. 70, pp. 1–57, 2018. [11] A. Krogh and J. Hertz, “A simple weight decay can improve generalization,” in Advances in Neural Information Processing Systems , J. Moody, S. Hanson, and R. Lippmann, Eds., vol. 4, Morgan-Kaufmann, 1991. [12] C. E. Rasmussen and C. K. I. Williams, Gaussian Processes for Machine Learning . The MIT Press, Nov. 2005, ISBN : 9780262256834. [13] V. Balasubramanian, “Statistical inference, occam’s razor, and statistical mechanics on the space of probability distributions,” Neural computation , vol. 9, no. 2, pp. 349–368, 1997. [14] T. Hastie, A. Montanari, S. Rosset, and R. J. Tibshirani, “Surprises in high-dimensional ridgeless least squares interpolation,” Annals of statistics , vol. 50, no. 2, p. 949, 2022. [15] A. Power, Y. Burda, H. Edwards, I. Babuschkin, and V. Misra, Grokking: Generalization beyond overfitting on small algorithmic datasets , 2022. [16] T. Kumar et al., “Mechanisms of grokking: Loss landscape separation and negative learning momentum,” arXiv preprint , 2023. [17] Z. Liu, O. Kitouni, N. S. Nolte, E. Michaud, M. Tegmark, and M. Williams, “Towards understanding grokking: An effective theory of representation learning,” Advances in Neural Information Processing Systems , vol. 35, pp. 34 651–34 663, 2022. [18] A. Jeffares and M. van der Schaar, “Not all explanations for deep learning phenomena are equally valuable,” arXiv preprint arXiv:2506.23286 , 2025. [19] S. Hochreiter and J. Schmidhuber, “Flat minima,” Neural Computation , vol. 9, no. 1, pp. 1–42, Jan. 1997, ISSN : 1530-888X. [20] S. Hochreiter and J. Schmidhuber, “Flat minima,” Neural computation , vol. 9, no. 1, pp. 1–42, 1997. [21] A. Jacot, F. Gabriel, and C. Hongler, “Neural tangent kernel: Convergence and generalization in neural networks,” Advances in neural information processing systems , vol. 31, 2018. [22] P. L. Bartlett, P. M. Long, G. Lugosi, and A. Tsigler, “Benign overfitting in linear regression,” 
+
+Proceedings of the National Academy of Sciences , vol. 117, no. 48, pp. 30 063–30 070, 2020. [23] T. Musat, The geometry of grokking: Norm minimization on the zero-loss manifold , 2025. 10 [24] E. Boursier, S. Pesme, and R. - A. Dragomir, “A theoretical framework for grokking: Interpola-tion followed by riemannian norm minimisation,” in The Thirty-ninth Annual Conference on Neural Information Processing Systems , 2026. [25] J. Lee et al., “Wide neural networks of any depth evolve as linear models under gradient descent,” Advances in neural information processing systems , vol. 32, 2019. [26] Z. Allen-Zhu, Y. Li, and Z. Song, “A convergence theory for deep learning via over-parameterization,” in International conference on machine learning , PMLR, 2019, pp. 242– 252. [27] T. Garipov, P. Izmailov, D. Podoprikhin, D. P. Vetrov, and A. G. Wilson, “Loss surfaces, mode connectivity, and fast ensembling of dnns,” Advances in neural information processing systems ,vol. 31, 2018. [28] G. Benton, W. Maddox, S. Lotfi, and A. G. G. Wilson, “Loss surface simplexes for mode connecting volumes and fast ensembling,” in International Conference on Machine Learning ,PMLR, 2021, pp. 769–779. [29] Y. Nesterov, “A method for solving the convex programming problem with convergence rate 
+
+O(1 /k 2),” Proceedings of the USSR Academy of Sciences , vol. 269, pp. 543–547, 1983. [30] Y. Nesterov, Introductory lectures on convex optimization: A basic course . Springer Science & Business Media, 2013, vol. 87. [31] B. Polyak, “Some methods of speeding up the convergence of iteration methods,” USSR Computational Mathematics and Mathematical Physics , vol. 4, no. 5, pp. 1–17, Jan. 1964, 
+
+> ISSN
+
+: 0041-5553. [32] I. Sutskever, J. Martens, G. Dahl, and G. Hinton, “On the importance of initialization and momentum in deep learning,” in Proceedings of the 30th International Conference on Ma-chine Learning , S. Dasgupta and D. McAllester, Eds., ser. Proceedings of Machine Learning Research, vol. 28, Atlanta, Georgia, USA: PMLR, 17–19 Jun 2013, pp. 1139–1147. [33] D. P. Kingma and J. Ba, “Adam: A method for stochastic optimization,” in International Conference on Learning Representations (ICLR) , 2015. [34] I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in International Confer-ence on Learning Representations , 2017. [35] K. Ogata, Modern Control Engineering , 4th. USA: Prentice Hall PTR, 2001, ISBN :0130609072. [36] D. Soudry, E. Hoffer, and N. Srebro, “The implicit bias of gradient descent on separable data,” in International Conference on Learning Representations , 2018. [37] S. Gunasekar, J. D. Lee, D. Soudry, and N. Srebro, “Implicit bias of gradient descent on linear convolutional networks,” in Advances in Neural Information Processing Systems , S. Bengio, H. Wallach, H. Larochelle, K. Grauman, N. Cesa-Bianchi, and R. Garnett, Eds., vol. 31, Curran Associates, Inc., 2018. [38] B. Neyshabur, Implicit regularization in deep learning , 2017. [39] T. Kumar, B. Bordelon, S. J. Gershman, and C. Pehlevan, “Grokking as the transition from lazy to rich training dynamics,” in The Twelfth International Conference on Learning Repre-sentations , 2024. [40] V. Varma, R. Shah, Z. Kenton, J. Kramár, and R. Kumar, Explaining grokking through circuit efficiency , 2023. [41] V. Thilak, E. Littwin, S. Zhai, O. Saremi, R. Paiss, and J. Susskind, The slingshot mechanism: An empirical study of adaptive optimizers and the grokking phenomenon , 2022. [42] N. Nanda, L. Chan, T. Lieberum, J. Smith, and J. Steinhardt, “Progress measures for grokking via mechanistic interpretability,” in The Eleventh International Conference on Learning Representations , 2023. [43] J. Lee, B. G. Kang, K. Kim, and K. M. Lee, Grokfast: Accelerated grokking by amplifying slow gradients , 2024. [44] X. Zhou, S. Fan, M. Jaggi, and J. Fu, Neuralgrok: Accelerate grokking by neural gradient transformation , 2025. [45] A. Tveit, B. Remseth, and A. Skogvold, Muon optimizer accelerates grokking , 2025. [46] Y. Park, M. Kim, and Y. Kim, “Acceleration of grokking in learning arithmetic operations via kolmogorov–arnold representation,” Neurocomputing , vol. 640, p. 130 347, Aug. 2025, ISSN :0925-2312. 11 [47] R. Abramov, F. Steinbauer, and G. Kasneci, “Grokking in the wild: Data augmentation for real-world multi-hop reasoning with transformers,” in Forty-second International Conference on Machine Learning , 2025. [48] J. Kaddour, L. Liu, R. Silva, and M. J. Kusner, “When do flat minima optimizers work?” 
+
+Advances in Neural Information Processing Systems , vol. 35, pp. 16 577–16 595, 2022. [49] L. Dinh, R. Pascanu, S. Bengio, and Y. Bengio, “Sharp minima can generalize for deep nets,” in International Conference on Machine Learning , PMLR, 2017, pp. 1019–1028. [50] J. M. Lee, Riemannian manifolds: an introduction to curvature . Springer Science & Business Media, 2006. [51] J. Duchi, E. Hazan, and Y. Singer, “Adaptive subgradient methods for online learning and stochastic optimization,” Journal of Machine Learning Research , vol. 12, no. 61, pp. 2121– 2159, 2011. [52] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, “Dropout: A simple way to prevent neural networks from overfitting,” Journal of Machine Learning Research , vol. 15, no. 56, pp. 1929–1958, 2014. [53] R. Caruana, S. Lawrence, and C. Giles, “Overfitting in neural nets: Backpropagation, conjugate gradient, and early stopping,” in Advances in Neural Information Processing Systems , T. Leen, T. Dietterich, and V. Tresp, Eds., vol. 13, MIT Press, 2000. [54] Y. Yao, L. Rosasco, and A. Caponnetto, “On early stopping in gradient descent learning,” 
+
+Constructive Approximation , vol. 26, no. 2, pp. 289–315, Apr. 2007, ISSN : 1432-0940. [55] L. Dinh, R. Pascanu, S. Bengio, and Y. Bengio, “Sharp minima can generalize for deep nets,” in Proceedings of the 34th International Conference on Machine Learning - Volume 70 ,ser. ICML’17, Sydney, NSW, Australia: JMLR.org, 2017, pp. 1019–1028. [56] C. H. Martin and C. Hinrichs, “Setol: A semi-empirical theory of (deep) learning,” arXiv preprint arXiv:2507.17912 , 2025. [57] H. K. Prakash and C. H. Martin, “Grokking and generalization collapse: Insights from htsr theory,” arXiv preprint arXiv:2506.04434 , 2025. [58] T. R. Network, “Comprehensive molecular characterization of clear cell renal cell carcinoma,” 
+
+Nature , vol. 499, no. 7456, pp. 43–49, 2013. [59] T. R. Golub et al., “Molecular classification of cancer: Class discovery and class prediction by gene expression monitoring,” science , vol. 286, no. 5439, pp. 531–537, 1999. 12 SUPPLEMENTARY INFORMATION 
+
+A Extended Related Work 
+
+Optimizer families in deep learning. Deep-learning optimization is dominated by several families of first-order methods. Stochastic gradient descent (SGD) and minibatch SGD remain fundamental baselines because of their simplicity, scalability, and often strong generalization properties. Mo-mentum variants, including heavy-ball momentum and Nesterov acceleration, add velocity terms that smooth stochastic gradients and accelerate convergence in ill-conditioned landscapes [29], [31]. Adaptive methods such as AdaGrad, RMSProp, Adam, and AdamW rescale updates using coordinate-wise gradient statistics, improving robustness across heterogeneous parameter scales [33], [34], [51]. More recent optimizers such as Muon introduce approximate matrix- or spectral-normalized updates to improve conditioning in neural-network training [45]. These optimizers differ in how they precondition, smooth, or normalize gradients, but they are generally designed as full-training optimizers rather than phase-specific methods specialized for the post-interpolation regime. 
+
+Weight decay and norm-based regularization. Weight decay is one of the oldest and most widely used regularization mechanisms in neural-network training. It biases optimization toward smaller parameter norms and can improve generalization by suppressing unnecessary degrees of freedom [11]. In modern deep learning, the distinction between coupled L2 penalties and decoupled weight decay is important: in adaptive optimizers, adding an L2 penalty to the loss is not equivalent to directly decaying the parameters, motivating methods such as AdamW [34]. Norm-based regularization can be understood as imposing a preference over the set of functions or parameterizations compatible with the training data. In the present work, this role becomes especially explicit after interpolation, where the empirical loss no longer distinguishes between solutions and weight decay becomes the main driver of movement toward lower-norm parameters. 
+
+Non-weight-decay regularization strategies. Many regularization strategies do not directly penal-ize parameter norm. Dropout randomly removes units during training, discouraging co-adaptation and approximating an implicit ensemble of subnetworks [52]. Data augmentation expands the ef-fective training distribution by applying label-preserving transformations, thereby constraining the learned function rather than the parameter vector. Early stopping regularizes by terminating training before the optimizer fully exploits high-variance directions [53], [54]. Other methods, including label smoothing, mixup, stochastic depth, and noise injection, regularize through the targets, inputs, architecture, or training dynamics. These approaches can improve generalization without explicitly selecting a minimum-norm interpolator. They are therefore complementary to our focus on the post-interpolation behavior induced by weight decay. 
+
+Norm-based solution selection. Norm-based solution selection is analytically clearest in overpa-rameterized linear regression, where all interpolating solutions can be written as a minimum-norm interpolator plus an arbitrary null-space component. In this setting, moving away from the minimum-norm solution can increase test error even though training error remains zero [14]. In neural networks, the same idea is more subtle because parameter norms are affected by architecture, scale symme-tries, normalization layers, and reparameterizations. Nevertheless, norm remains an operationally meaningful quantity when the optimizer explicitly acts on it through weight decay. Our analysis therefore treats norm not as a universal invariant measure of function complexity, but as the concrete complexity proxy optimized during the second phase of training. 
+
+Flat minima and sharpness. The flat-minima hypothesis proposes that broad basins of low loss generalize better because their predictions are less sensitive to small parameter perturbations [19]. This idea has influenced work on sharpness, batch size, and generalization, but it also has important limitations: parameter-space sharpness can change under reparameterizations without changing the represented function [55]. Later approaches therefore distinguish between naive sharpness measures 13 and more invariant or normalized notions of flatness. In our setting, flatness is used in a restricted local sense. Flat directions of the Hessian identify where training loss changes weakly after interpolation; weight decay then determines which direction the optimizer moves within this locally flat region. 
+
+Mode connectivity and interpolation manifolds. Empirical studies of neural-network loss land-scapes show that independently trained solutions can often be connected by low-loss paths or higher-dimensional regions of low loss [7], [8], [28]. These results suggest that overparameterized networks do not converge to isolated minima, but to extended sets of functionally similar solutions. This supports a manifold view of interpolation: after reaching zero or near-zero training loss, the model may still move substantially in parameter space while preserving training performance. Our local Hessian-nullspace approximation can be interpreted as a tangent-space approximation to such an interpolation manifold. 
+
+B Extended experimental results 
+
+B.1 Training run example 
+
+We provide in Figure 6 an example training trajectory on the QM9 dataset. GROKtimizer reaches a substantially lower test loss than the baseline optimizers, with the largest improvement arising during the second phase of the schedule, when the optimizer explicitly enters the norm-minimization regime. This behavior is consistent with our central hypothesis: once interpolation has been achieved, continued optimization can still improve the learned solution by moving toward a lower-complexity interpolating predictor. Notably, even when trained for substantially more epochs, the baseline optimizers do not appear to enter the same post-interpolation regime and fail to match the final performance of GROKtimizer .
+
+Figure 6: Example training run on QM9. Training dynamics of GROKtimizer and baseline optimizers on the QM9 dataset. 
+
+B.2 Detailed dynamics on the synthetic Gaussian benchmark 
+
+We further analyze the GROKtimizer trajectory on the synthetic Gaussian benchmark, where the relationship between interpolation, parameter norm, and generalization can be inspected directly. Figure 7 shows that GROKtimizer follows a similar initial training-loss decay to the baseline optimizers, indicating that the first phase preserves efficient fitting dynamics. The difference emerges after interpolation: GROKtimizer enters a rapid norm-minimization regime, reducing the parameter norm substantially faster than the baselines. This reduction is accompanied by improved test loss, supporting the interpretation that the second phase guides the model toward a lower-complexity interpolating solution with better generalization. 
+
+B.3 Learning rate comparison 
+
+A possible concern is that the acceleration achieved by GROKtimizer is simply a consequence of being able to use a larger learning rate in the second phase. To test this, we compare GROKtimizer 
+
+against Adam using the same elevated post-interpolation learning rate. As shown in Figure 8, Adam 14 0 500 1000 1500 2000 2500 3000      
+
+> Epoch
+> 10 5
+> 10 3
+> 10 1
+> 10 1
+> 10 3
+> train_loss
+> Gaussian
+> Seed Mean +/- Std: train_loss
+> Adam
+> AdamW
+> Groktimizer Muon SGD
+
+(a) Train loss. 0 500 1000 1500 2000 2500 3000        
+
+> Epoch
+> 10 4
+> 10 3
+> 10 2
+> 10 1
+> 10 0
+> 10 1
+> 10 2
+> test_loss
+> Gaussian
+> Seed Mean +/- Std: test_loss
+> Adam
+> AdamW
+> Groktimizer Muon SGD
+
+(b) Test loss. 0 500 1000 1500 2000 2500 3000    
+
+> Epoch
+> 10 2
+> 2 × 10 2
+> weight_norm_squared
+> Gaussian
+> Seed Mean +/- Std: weight_norm_squared
+> Adam
+> AdamW
+> Groktimizer Muon SGD
+
+(c) Weight norm. 
+
+Figure 7: Detailed dynamics on the synthetic Gaussian benchmark. GROKtimizer initially follows a training-loss trajectory comparable to the baseline optimizers, but after interpolation it rapidly reduces parameter norm. This post-interpolation norm reduction is accompanied by lower test loss, consistent with the proposed complexity-minimization mechanism. becomes highly unstable under this setting and fails to achieve comparable performance. This indicates that the gains of GROKtimizer do not arise from a larger learning rate alone, but from the combination of entering the post-interpolation regime, exploiting the flatter loss landscape, and using an appropriate momentum term during the norm-minimization phase. We show this effect on both Binary Addition and Modular Addition. 0 250 500 750 1000 1250 1500 1750 2000       
+
+> Epoch
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> test accuracy
+> BinaryAddition
+> 02000 4000 6000 8000 10000
+> Epoch
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> test accuracy
+> ModularAddition
+> Groktimizer (standard) Adam [GroktimizerPhase2LrEditor]
+
+(a) Test accuracy. 0 250 500 750 1000 1250 1500 1750 2000         
+
+> Epoch
+> 10 1
+> 10 0
+> 10 1
+> 10 2
+> 10 3
+> 10 4
+> Test loss
+> BinaryAddition
+> 02000 4000 6000 8000 10000
+> Epoch
+> 10 0
+> 10 2
+> 10 4
+> 10 6
+> 10 8
+> 10 10
+> 10 12
+> Test loss
+> ModularAddition
+> Groktimizer (standard) Adam [GroktimizerPhase2LrEditor]
+
+(b) Test loss. 
+
+Figure 8: Learning-rate comparison after interpolation. Performance on Binary Addition and Modular Addition when using an increased post-interpolation learning rate. While GROKtimizer 
+
+remains stable and benefits from the second-phase schedule, Adam becomes unstable when trained with the same elevated learning rate. This shows that the observed speedup is not explained by learning rate alone, but by the phase-specific optimization dynamics of GROKtimizer .
+
+B.4 Examining model behavior during training 
+
+To better understand the dynamics induced by the second phase of GROKtimizer , we examine how the model representation evolves during post-interpolation optimization. We use the neural tangent kernel (NTK) as a representation proxy: for each checkpoint, we compute the NTK features associated with the first output logit on both train and test samples, and visualize the resulting representations after separating samples by class. Figure 9 shows that interpolation does not coincide with the end of meaningful representation learning. Immediately after the interpolation threshold, samples from different classes remain substantially mixed in the NTK representation space, especially among test points. This indicates that although the model has fit the training labels, the induced representation has not yet organized the input space in a way that supports robust generalization. As the second phase progresses, the class-conditional point clouds separate more clearly. The geome-try also becomes more structured: rather than remaining approximately isotropic, the representation develops multiple coherent clusters, suggesting that the optimizer continues to refine the internal organization of the data during complexity minimization. By the end of training, the two classes 15 10 5 0 5                           
+
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=1098
+> y != 1
+> y == 1
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=2087
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=3076
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=4065
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=5055
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=6044
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=7033
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=8022
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=9011
+> 10 505
+> PC1
+> 7.5
+> 5.0
+> 2.5
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> PC2
+> epoch=10000
+> NTK-kernel PCA across post-interpolation snapshots
+
+Figure 9: Representation evolution during post-interpolation optimization. We visualize NTK-based representations computed from the first output logit at different stages of the GROKtimizer 
+
+trajectory. Immediately after interpolation, train and test samples from different classes remain partially overlapping, indicating that fitting the training data has not yet produced a representation that separates the test distribution. During the norm-minimization phase, the two classes progressively separate, and the representation develops a richer multi-cluster geometry. By the end of optimization, the classes are clearly separated, suggesting that post-interpolation dynamics continue to reorganize the learned representation even after the training set has been fit. are well separated in the NTK representation, consistent with the observed improvement in test performance. These dynamics support the view that GROKtimizer does not merely reduce parameter norm after interpolation, but can also induce a qualitative reorganization of the learned representation in the post-interpolation regime. 16 B.5 WeightWatcher analysis 0.0 0.2 0.4 0.6 0.8 1.0 
+
+> Post-interpolation progress
+> 0.0
+> 2.5
+> 5.0
+> 7.5
+> 10.0
+> 12.5
+> 15.0
+> 17.5
+> 20.0
+> Power-law alpha
+> WeightWatcher alpha across norm-minimization phase
+> mean alpha
+> median alpha
+
+Figure 10: WeightWatcher analysis during post-interpolation optimization. Evolution of the fit-ted WeightWatcher exponent α on Modular Ad-dition. During the complexity-minimization phase of GROKtimizer , α moves toward 2, consistent with the emergence of a more strongly regularized spectral structure and with the SETOL [56] theory of generalization quality. We further examine the post-interpolation dy-namics using the WeightWatcher framework, which characterizes the spectral structure of neural-network weight matrices through heavy-tailed power-law fits. In particular, we track the evolution of the fitted exponent α during training on Modular Addition. Prior work has associated smaller values of α, and in partic-ular values approaching α ≈ 2, with stronger implicit regularization and improved generaliza-tion quality [57]. Figure 10 shows that the spectral structure of the model continues to change after interpolation. During the second phase of GROKtimizer , the fitted exponent α decreases toward 2, suggest-ing that norm minimization is accompanied by a qualitative change in the weight spectra. This provides an additional diagnostic of the post-interpolation regime: the model is not only mov-ing to lower parameter norm, but also toward a spectral profile previously associated with better generalization in grokking settings. We interpret this result as complementary evidence that the second phase of GROKtimizer induces a structured complexity-reduction process rather than merely continuing standard loss minimization. 
+
+B.6 MNIST sample efficiency 10 1 2 × 10 1 3 × 10 1 4 × 10 1  
+
+> Training Images per Class (log scale)
+> 2 × 10 1
+> 3 × 10 1
+> Test Error = 1 - Accuracy (log scale)
+> Optimizer
+> Groktimizer
+> AdamW
+> SGD
+> Adam
+> Muon
+
+Figure 11: MNIST sample-efficiency scaling. 
+
+Log–log plot of test error, defined as 1 −
+
+test accuracy , against the number of training ex-amples. We additionally analyze sample efficiency on MNIST using a log–log scaling plot of test error, defined as 1 − test accuracy , against the number of training examples. This view separates two effects: the slope captures how quickly error decreases as additional data are added, while the vertical offset captures the absolute efficiency of each optimizer at a fixed sample size. Figure 11 shows that all optimizers exhibit broadly similar slopes, indicating comparable scaling behavior as the number of training ex-amples increases. The main difference is there-fore not the rate at which performance improves with more data, but the offset of the scaling curve. GROKtimizer achieves a consistently lower test-error offset across the full range of training-set sizes, meaning that it reaches lower error for the same number of examples. This is consistent with the interpretation that the biphasic schedule improves the selected interpolating solution rather than changing the fundamental data-scaling exponent. 
+
+C Extended Theoretical consideration 
+
+C.1 Detailed proof of Lemma 1 
+
+We now provide the proof of Lemma 1, which offers a simplified model of the importance of norm minimization for interpolating solutions of regression problems. 
+
+Full statement of Lemma 1 
+
+17 Let X ∈ Rn×p be a Gaussian random matrix (with p > n ), whose rows are sampled from an isotropic normal distribution xi ∼ N (0, I) ∀i . Let w∗ ∈ Rp be an unknown teacher vector and let 
+
+y = Xw∗ + σε be a target vector, with σ > 0 and ε ∼ N (0, I). Define ˆw∗ = X⊤(XX ⊤)−1y as the minimum norm interpolating solution and define the family of interpolating solutions 
+
+WX,y =  ˆw∗ + ( I − X⊤(XX ⊤)−1X)z z∈Rp (15) for z ∈ Rp. Define thus bw as a random vector in W, characterized by a perturbation z ∼ U (Sr (0)) 
+
+where r > 0 represents the fixed norm of the random variable z in parameter space. Under the limit 
+
+n, p → ∞ with n/p = γ ∈ (0 , 1) the expected generalization error has the following asymptotic behavior 
+
+Ez,x,X,ε(x⊤ bw − x⊤w∗)2 ∼ (1 − γ)∥w∗∥2 + (1 − γ)r2 + σ2 γ
+
+1 − γ (16) and since E[∥ bw∗ − bw∥2] = (1 − γ)r2 the expected generalization error follows an asymptotic quadratic scaling with the distance from the minimum norm solution. 
+
+Proof 
+
+Ez Ex,ε,X(x⊤ bw − x⊤w∗)2
+
+= Ez Eε,X
+
+( bw − w∗)⊤Ex(xx ⊤)( bw − w∗)
+
+= Ez Eε,X∥ bw − w∗∥22
+
+Since the minimum norm solution is defined by w = lim λ→0(X⊤X + λI)−1X⊤y =
+
+X⊤(XX ⊤)−1y we can rewrite ˆw explicitly 
+
+= Ez Eε,X∥X⊤(XX ⊤)−1y + ( I − X⊤(XX ⊤)−1X)z − w∗∥22
+
+= Ez Eε,X∥X⊤(XX ⊤)−1(Xw∗ + σε) + ( I − X⊤(XX ⊤)−1X)z − w∗∥22
+
+Applying SVD decomposition X = UΣV ⊤ we rewrite 
+
+= Ez Eε,X∥VV ⊤w∗ + σVΣ −1U⊤ε + ( I − VV ⊤)z − w∗∥22
+
+= Ez Eε,X∥(VV ⊤ − I)( w∗ − z) + σVΣ −1U⊤ε∥22
+
+= Ez EX∥(VV ⊤ − I)( w∗ − z)∥22 + σ2Eε,X∥VΣ −1U⊤ε∥22 since E[ε] = 0
+
+= Ez EX
+
+X
+
+> i:λi=0
+
+(v⊤ 
+
+> i
+
+(w∗ − z)) 2 + σ2EXTr 
+
+h
+
+UΣ −2U⊤ Eε[εε ⊤]
+
+| {z }
+
+> I
+
+i
+
+Since the row space of a Gaussian random matrix is rotationally invariant, the nullspace projector acts isotropically in expectation, enabling us in using the uniform approximation of eigenvectors. Furthermore, noting that 
+
+Tr UΣ −2U⊤ = np
+
+1
+
+n Tr 
+
+" 1
+
+p XX ⊤
+
+−1#
+
+→ np Es∼MP (γ)[s−1] = np
+
+11 − γ = γ
+
+1 − γ
+
+we can apply the definition of first negative moment of the Marchenko Pastur distribution and obtain 
+
+= p − np Ez ∥w∗ − z∥2 + σ2 γ
+
+1 − γ
+
+= (1 − γ)Ez ∥w∗ − z∥2 + σ2 γ
+
+1 − γ
+
+Finally, taking the expectation with respect z we obtain 
+
+= (1 − γ)∥w∗∥2 + (1 − γ)r2 + σ2 γ
+
+1 − γ
+
+and noting that 
+
+E∥ bw − bw∗∥2 = E ∥(I − X⊤(XX ⊤)−1X)z∥2 = r2
+
+p (p − pγ ) = r2(1 − γ) (17) we obtain the final formula 
+
+= Ez,x,X,ε(x⊤ bw − x⊤w∗)2 = (1 − γ)∥w∗∥2 + Ez,x,X,ε∥ bw − bw∗∥2 + σ2 γ
+
+1 − γ
+
+18 C.2 Detailed proof of Theorem 2 
+
+It is known that for a momentum based optimizer with momentum rate β on a loss function of Hessian such that its largest eigenvalue equals L, the learning rate has to belong to the positive interval 
+
+η ∈
+
+
+
+0, 2(1 + β)
+
+L
+
+
+
+Under the approximation of local convexity of the regularized loss landscape 
+
+f (w) = 12 (w − w⋆)⊤H(w − w⋆) + 12 λ∥w∥2
+
+the Hessian of the function is 
+
+H = H + λI (18) and thus 
+
+L = λmax + λ (19) we thus obtain 
+
+ηmax = 2(1 + β)
+
+λmax + λ (20) given the condition of critical damping which is 
+
+β = 1 − 2pηλ (21) we obtain the nonlinear system (
+
+ηmax = 2(1+ β)
+
+> λmax +λ
+
+β = 1 − 2√ηmax λ (22) which is solved, under the constraint ηmax > 0, for 
+
+ηmax =4
+
+√λmax + 2 λ − √λ
+
+2
+
+(λmax + λ)2 ∼ 4λ−1max (23) which represents the maximally admissable learning rate to guarantee convergence. 
+
+C.3 The Critically Damped Regime 
+
+We provide, now, the complete proof of the quadratic speed up of the Critically Damped Momentum optimizer. We start by constructing the continuous limit of the momentum optimizer. Consider a Heavy Ball iteration of the form mk+1 = βmk − η∇L (wk)
+
+wk+1 = wk + mk+1 
+
+. (24) Observe that 
+
+mk+1 = wk+1 − wk (25) therefore, we can rewrite the iteration as 
+
+wk+1 − wk = β (wk − wk−1) − η∇L (wk) (26) adding wk−1 − wk to both terms we obtain 
+
+wk+1 − 2wk + wk−1 = ( β − 1) ( wk − wk−1) − η∇L (wk) (27) assume now that 1 − β := γ := γu√η (28) we can rewrite 
+
+wk+1 − 2wk + wk−1 = −√ηγ u (wk − wk−1) − η∇L (wk) (29) 19 dividing both terms by η (which acts a time scale parameter) we obtain 
+
+wk+1 − 2wk + wk−1
+
+(√η)2 = −γu wk − wk−1
+
+√η − ∇L (wk) (30) which in the small √η limit becomes 
+
+¨w + γu ˙w + ∇L (w) = 0 (31) which provides a continuous dynamics of the momentum optimizer. The differential equation, written in this form, is a challenging object to study due to the gradient of the loss. We then proceed to provide a change of coordinate system that is mathematically tractable. Consider the eigenbasis 
+
+{(λi, vi)}Ni=1 of H such that 
+
+H = X
+
+> i
+
+λiviv⊤ 
+
+> i
+
+(32) we can rewrite the dynamics equation as 
+
+v⊤ 
+
+> i
+
+¨w + γuv⊤ 
+
+> i
+
+˙w + v⊤ 
+
+> i
+
+∇L (w) = 0 ∀i (33) explicitating the structure of the gradient we obtain 
+
+v⊤ 
+
+> i
+
+¨w + γuv⊤ 
+
+> i
+
+˙w + v⊤ 
+
+> i
+
+(H(w − w∗) + λw) = 0 
+
+v⊤ 
+
+> i
+
+¨w + γuv⊤ 
+
+> i
+
+˙w + λiv⊤ 
+
+> i
+
+(w − w∗) + λv⊤ 
+
+> i
+
+w = 0 
+
+v⊤ 
+
+> i
+
+¨w + γuv⊤ 
+
+> i
+
+˙w + ( λi + λ)v⊤ 
+
+> i
+
+w − λiv⊤ 
+
+> i
+
+w∗ = 0 
+
+∂2
+
+> t
+
+v⊤ 
+
+> i
+
+w + γu∂t
+
+v⊤ 
+
+> i
+
+w + ( λi + λ)v⊤ 
+
+> i
+
+w − λiv⊤ 
+
+> i
+
+w∗ = 0 
+
+(34) where w∗ is an arbitrary point such that 
+
+H(w⋆ − w∗) = 0 (35) For clarity, let us denote as 
+
+˜wi = v⊤ 
+
+> i
+
+w, ˜w∗ 
+
+> i
+
+= v⊤ 
+
+> i
+
+w∗ (36) which leads to the system of decoupled ODEs 
+
+∂2 
+
+> t
+
+˜wi + γu∂t ˜wi + ( λi + λ) ˜ wi − λi ˜w∗ 
+
+> i
+
+= 0 ∀i (37) Since we start from interpolation regime, we focus only components associated to the null space of the hessian, that is 
+
+∂2 
+
+> t
+
+˜wi + γu∂t ˜wi + λ ˜wi = 0 ∀i : λi = 0 (38) and we search the optimal γu to maximize the convergence speed. Recognizing the harmonic oscillator equation, the fastest (non oscillating solution) is the critically damped solution defined as 
+
+˜wCD i (t) = ˜ wCD i (0) (1 + γut) e− γu  
+
+> 2t
+
+(39) which is obtained for 
+
+γu = 2 √λ (40) where we remember, λ is the weight decay factor. This gives the decay rate 
+
+˜wCD i (t) ∼ e−√λt (41) against the ∼ e−2λt of classic gradient descent. Replacing in β we obtain 
+
+1 − β = γu√η
+
+1 − β = 2 pλη β = 1 − 2pλη 
+
+which is the optimal β parameter. Let us study the impact on other coordinates. Consider again the again for each eigendirection i, fixing this time γu = 2 √λ∂2 
+
+> t
+
+˜wi + 2 √λ∂ t ˜wi + ( λi + λ) ˜ wi − λi ˜w∗ 
+
+> i
+
+= 0 ∀i̸ = 0 (42) 20 and assume ˜wi(0) = ˜ w∗ 
+
+> i
+
+and ∂t ˜wi(0) = 0 .To solve the given second-order linear ordinary differential equation (ODE) for ˜wi(t), we aknowledge ˜w∗ 
+
+> i
+
+, λ, and λi as constants. We assume that λi ≫ λ, meaning that "informative" directions cause stronger curvature than the regularization. The equation, in canonical form, is: 
+
+∂2 
+
+> t
+
+˜wi + 2 √λ∂ t ˜wi + ( λi + λ) ˜ wi = λi ˜w∗ 
+
+> i
+
+(43) We first find the steady-state or particular solution, ˜wi,p , by setting all time derivatives to zero: 
+
+(λi + λ) ˜ wi,p = λi ˜w∗
+
+> i
+
+˜wi,p = λi
+
+λi + λ ˜w∗
+
+> i
+
+Next, we solve the homogeneous equation: 
+
+∂2 
+
+> t
+
+˜wi + 2 √λ∂ t ˜wi + ( λi + λ) ˜ wi = 0 (44) The characteristic equation for this ODE is: 
+
+r2 + 2 √λr + ( λi + λ) = 0 (45) Using the quadratic formula to find the roots r:
+
+r = −2√λ ± p4λ − 4( λi + λ)2= −2√λ ± √4λ − 4λi − 4λ
+
+2= −2√λ ± √−4λi
+
+2= −√λ ± ipλi
+
+Since the roots are complex (assuming λ > 0 and λi > 0), the solution to the homogeneous equation takes the form of an exponentially decaying sine and cosine wave: 
+
+˜wi,h (t) = e−√λt 
+
+A cos( pλit) + B sin( pλit)
+
+
+
+(46) The general solution is the sum of the homogeneous and particular solutions: 
+
+˜wi(t) = e−√λt 
+
+A cos( pλit) + B sin( pλit)
+
+
+
++ λi
+
+λi + λ ˜w∗ 
+
+> i
+
+(47) We are given two initial conditions to solve for constants A and B.Substitute t = 0 into the general solution: 
+
+˜w∗ 
+
+> i
+
+= e0(A · 1 + B · 0) + λi
+
+λi + λ ˜w∗
+
+> i
+
+A = ˜ w∗ 
+
+> i
+
+− λi
+
+λi + λ ˜w∗
+
+> i
+
+A = λλi + λ ˜w∗
+
+> i
+
+21 First, take the derivative of the general solution ˜wi(t) with respect to t:
+
+∂t ˜wi(t) = −√λe −√λt  A cos( pλit) + B sin( pλit)
+
++ e−√λt   − Apλi sin( pλit) + Bpλi cos( pλit)
+
+Substitute t = 0 and set it equal to 0:
+
+0 = −√λ(A) + ( Bpλi)
+
+Bpλi = A√λB = A
+
+r λλi
+
+Now, plug in our result for A:
+
+B =
+
+ λλi + λ ˜w∗
+
+> i
+
+ r λλi
+
+= λ√λ
+
+√λi(λi + λ) ˜w∗ 
+
+> i
+
+(48) Substitute the constants A and B back into the general solution: 
+
+˜wi(t) = ˜ w∗
+
+> i
+
+"
+
+λi
+
+λi + λ + e−√λt λλi + λ cos( pλit) + λ√λ
+
+√λi(λi + λ) sin( pλit)
+
+!# 
+
+(49) In the Regime λi ≫ λ we have 
+
+λλi + λ ∼ λλi
+
+(50) and 
+
+λ√λ
+
+√λi(λi + λ) ∼
+
+ λλi
+
+3/2
+
+(51) and since λi ≫ λ we get  λλi
+
+3/2
+
+≪ λλi
+
+. (52) We notice that the dynamics is characterized by small O(λλ i−1) fluctuations — fast oscillating since their frequency is O(λ1/2 
+
+> i
+
+) — that decay at the same rate as the null space components, but do not affect the true directions due to their small magnitude. Therefore, the convergence rate of the momentum algorithm in this setting is 
+
+Lreg (t) ∼ e−√λt (53) which gives us the time scale 
+
+τCDM ∼ 1
+
+√λ = √τGD (54) which employing the equivalence τ ∼ E∆t (where ∆t is the discretization step in the continuous limit) leads to the relationship 
+
+ECDM ∼ pEGD (55) proving our thesis. 
+
+D Experimental details 
+
+D.1 Computational costs 
+
+All experiments were conducted on a workstation with dual AMD EPYC 7713 CPUs (2 × 64 cores; 128 physical cores total) and an NVIDIA RTX 6000 Ada Generation GPU (49,140 MiB VRAM, 49 GB). Wall-clock times for the synthetic benchmarks and the real-world tabular datasets are provided in Table 3. 22 Table 3: Wall clock time (s) across datasets. Results are reported as mean ± uncertainty across runs. Values are rounded to a precision appropriate for the reported uncertainty. Best values for each dataset are shown in bold.                                                                                                                                             
+
+> Dataset Adam AdamW GROKtimizer Muon SGD
+> Binary Addition 456 .5±29 .6461 .1±28 .2453 .7±32 .1455 .9±30 .0460 .3±28 .5
+> Gaussian 143 .9±15 .5143 .6±15 .6210 .8±23 .5143 .0±15 .7142 .7±15 .6
+> Leukemia 0.473 ±0.009 0.472 ±0.010 0.405 ±0.004 0.816 ±0.024 0.377 ±0.007
+> Modular Addition 1969 ±131 1963 ±139 1954 ±144 1956 ±139 1972 ±137
+> QM9 3557 ±197 3558 ±201 3536 ±215 3539 ±212 3539 ±208
+> RF Teacher Linear 5.63 ±0.24 5.56 ±0.18 5.28 ±0.28 5.69 ±0.26 4.74 ±0.18
+> Sparse Parity 291 .8±25 .5308 .0±24 .1297 .7±24 .7321 .7±25 .6305 .5±24 .5
+> TCGA 1.94 ±0.12 1.90 ±0.10 1.82 ±0.10 2.45 ±0.09 1.76 ±0.08
+> Two-Subspace Linear 4.449 ±0.008 4.470 ±0.016 3.950 ±0.008 4.398 ±0.007 3.658 ±0.015
+
+D.2 Dataset details Modular addition. A synthetic algorithmic classification task where inputs are integer pairs (a, b )
+
+and the label is (a+b) mod 31 . In this repo, inputs are one-hot encoded (concatenated pair encoding), ordered pairs are included, and the default split is 50/50 train/test over the pair pool. Model: 3-layer MLP with hidden sizes [1024 , 1024 , 1024] . Hyperparameters: lr = 10 −3, wd = 10 −5, epochs 
+
+= 10 ,000 .
+
+Sparse parity. A synthetic binary classification task built from random binary vectors of dimension 20; the target is parity over a selected support (here parity over 20 bits). Features are represented as 
+
+{− 1, +1 } values in the generator. Default sizes are 10,000 train and 1,000 test examples. Model: 3-layer MLP with hidden sizes [2048 , 2048 , 2048] , binary output. Hyperparameters: lr = 10 −3,wd = 10 −3, epochs = 1 ,000 .
+
+Binary addition. A synthetic supervised task where two 10-bit integers are concatenated as input and the 11-bit binary sum is predicted as output. The generator creates random examples with 1,500 training and 2,000 test samples. Model: 3-layer MLP with hidden sizes [2048 , 2048 , 2048] , output size 11. Hyperparameters: lr = 10 −4, wd = 10 −3, epochs = 2 ,000 .
+
+TCGA. A real gene-expression binary classification from KIRC [58]. Labels are derived from sample identifiers; split is stratified with a very small train fraction (test size 0.95). Model: linear binary classifier. Hyperparameters: lr = 10 −3, wd = 10 −3, epochs = 1 ,000 .
+
+Leukemia. A real biomedical binary classification dataset [59] fetched from OpenML ( leukemia ,v1). Data are stratified into train/test (test size 0.8), and standardized using StandardScaler . Model: linear binary classifier. Hyperparameters: lr = 10 −3, wd = 10 −3, epochs = 1 ,000 .
+
+QM9. A molecular property regression task using PyTorch Geometric’s QM9 loader. In this config, a subset of size 100 is used, split 50/50, and target index 1 is predicted (with optional target standardization). Model: GNN-style architecture (edge features + MLP head; hidden sizes 32/16 and FC hidden 2048). Hyperparameters: lr = 10 −3, wd = 10 −2, epochs = 5 ,000 .
+
+MNIST. Digit classification on MNIST with controllable low-sample training subsets, with full test set retained. Inputs are normalized and flattened vectors. Model: 3-layer MLP with hidden sizes 
+
+[1024 , 512 , 256] , 10-way output. Hyperparameters: lr = 5 × 10 −3, wd = 10 −3, epochs = 5 ,000 .
+
+TwoSubspaceLinear. Synthetic binary classification where labels depend only on a low-dimensional signal subspace, while extra junk dimensions are appended. Default config uses 384 train / 1024 test, 16 signal dims, 224 junk dims. Model: linear classifier (logistic regression style). Hyperparameters: lr = 10 −3, wd = 10 −3, epochs = 10 ,000 .
+
+RandomFeaturesTeacherLinear. Synthetic teacher-student binary task: a random-feature teacher generates logits, then labels are thresholded and optionally noised. Default config uses 512 train / 1024 test and 512 input features. Model: linear classifier. Hyperparameters: lr = 10 −3, wd = 10 −3,epochs = 10 ,000 .
+
+Gaussian. Synthetic linear regression where train labels are generated by a random linear map and test labels follow the interpolating solution. Default sizes are 100 train / 1000 test with 200 23 features. Model: dot-product linear model (no bias). Hyperparameters: lr = 10 −2, wd = 10 −3,epochs = 3 ,000 .
+
+WikiText-2. Character-level language modeling from WikiText-2 raw text splits. Model: GPT-style causal LM with nlayer = 8 , nembd = 384 , nhead = 6 , block size 256, batch size 192. Hyperparameters: lr = 3 × 10 −3, wd = 10 −3, num_steps = 8 ,000 .
+
+BabyLM Strict Small. Character-level language modeling over concatenated BabyLM strict-small sources, split by train_fraction=0.9 . Model: GPT-style causal LM with nlayer = 12 ,
+
+nembd = 512 , nhead = 8 , block size 256, batch size 128. Hyperparameters: lr = 2 × 10 −3,wd = 10 −3, num_steps = 12 ,000 .24
