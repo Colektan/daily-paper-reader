@@ -22,24 +22,24 @@ CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
 
 MODES = {
     "standard": {
-        "quick_base": 10,
+        "quick_base": 5,
         "quick_strategy": "uniform",
         "deep_unlimited": False,
-        "deep_base": 5,
+        "deep_base": 2,
         "deep_strategy": "round_robin",
     },
     "extend": {
-        "quick_base": 15,
+        "quick_base": 10,
         "quick_strategy": "uniform",
         "deep_unlimited": False,
-        "deep_base": 10,
+        "deep_base": 5,
         "deep_strategy": "round_robin",
     },
     "spark": {
-        "quick_base": 10,
+        "quick_base": 5,
         "quick_strategy": "low_bias",
         "deep_unlimited": False,
-        "deep_base": 5,
+        "deep_base": 2,
         "deep_strategy": "round_robin",
     },
     # 回溯窗口（days）专用：>=8 分全量输出，全部进入速览区
