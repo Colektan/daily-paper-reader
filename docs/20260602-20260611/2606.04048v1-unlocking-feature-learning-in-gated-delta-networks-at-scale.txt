@@ -1,0 +1,2743 @@
+Title: Unlocking Feature Learning in Gated Delta Networks at Scale
+
+URL Source: https://arxiv.org/pdf/2606.04048v1
+
+Published Time: Thu, 04 Jun 2026 00:02:02 GMT
+
+Number of Pages: 32
+
+Markdown Content:
+# Unlocking Feature Learning in Gated Delta Networks at Scale 
+
+Yifeng Liu 1 Quanquan Gu 21University of California, Los Angeles 
+
+{liuyifeng,qgu}@cs.ucla.edu 
+
+June 4, 2026 
+
+Abstract 
+
+Training and scaling Large Language Models demand enormous computational resources, motivating both efficient sub-quadratic architectures and principled hyperparameter tuning methods. While the Maximal Update Parametrization ( μP) has enabled zero-shot hyperparameter transfer for standard Transformers, its extension to linear models, particularly those with structured state transitions and complicated architectures, remains largely unexplored. By rigorously propagating coordinate-size estimates through the forward pass, gating mechanisms, and recurrent state dynamics, we derive the scaling rules for Gated Delta Network. Experiments on language-model pre-training confirm that our configurations enable stable learning-rate transfer across model widths under both AdamW and SGD, whereas standard parametrization fails to transfer, validating the correctness and practical utility of our analysis. 
+
+## 1 Introduction 
+
+The rapid development of Large Language Models (LLMs) has demonstrated remarkable capabilities across a wide range of downstream tasks (Brown et al., 2020; Touvron et al., 2023; Radford et al., 2019; Vaswani, 2017). However, scaling these models to larger sizes introduces two challenges. First, empirical scaling laws show that optimal performance requires increased model size, while the computational budget required for training grows steeply with model scale (Kaplan et al., 2020; Hoffmann et al., 2022). Second, the efficiency of standard Transformer architecture is limited by the quadratic complexity of softmax self-attention with respect to sequence length, making it increasingly costly for long-context inference and training (Katharopoulos et al., 2020). Linear models have been proposed to address these issues. The original linear attention (Katharopou-los et al., 2020) rewrites softmax attention as a linear kernel, enabling recurrent-form inference at constant per-step cost. Structured state space models (SSMs) such as S4 (Gu et al., 2022), Mamba (Gu and Dao, 2024) and Mamba-2 (Dao and Gu, 2024) utilize recurrent state spaces to represent long-range dependencies within linear structures. A particularly promising family of linear recurrent models is based on the delta rule (Widrow and Hoff, 1960), which updates a fast-weight matrix by subtracting the prediction error of the current key-value pair. Further-more, the DeltaNet (Yang et al., 2024c) introduced a hardware-efficient parallel training algorithm for delta-rule Transformers, enabling scaling to large language models. Afterwards, Gated Delta Network (Yang et al., 2025) augmented DeltaNet with the data-dependent gating mechanism of 1
+
+> arXiv:2606.04048v1 [cs.LG] 2 Jun 2026
+
+Mamba-2, which achieves strong language modeling performance while maintaining linear-time inference. Simultaneously, training deep networks requires careful selection of hyperparameters such as learning rates, which are expensive to tune through grid search (Snoek et al., 2012, 2015), and whose optimal values often change greatly with model scale. Meta-learning approaches have been explored to transfer hyperparameters across tasks and datasets (Yogatama and Mann, 2014; Perrone et al., 2018; Horváth et al., 2021; Akiba et al., 2019). A more principled solution is offered by the Maximal Update Parametrization ( μP) (Yang and Hu, 2021), which identifies the valid parametrization of a neural network that supports feature learning in the infinite-width limit, as formalized through the Tensor Programs framework (Yang et al., 2022; Yang and Littwin, 2023; Yang et al., 2024a). 
+
+μP theories demonstrated that hyperparameters tuned on small proxy models transfer zero-shot to large target models, with extensions to adaptive optimizers (Yang and Littwin, 2023; Ishikawa and Karakida, 2024; Everett et al., 2024) and a spectral reformulation (Yang et al., 2023). Subsequent work has successfully applied μP to other fields (Blake et al., 2025; Dey et al., 2024; Hajjar et al., 2024), and even industrial models (Meta AI, 2025; Team et al., 2025). Despite the development of efficient linear architectures, how to properly parametrize them for feature learning at scale has received very limited attention. The core challenge is that their recurrent state is updated through the sequence dimension, which does not fit the standard feedforward or attention-based derivations of μP. The only prior work on this is Vankadara et al. (2024), which shows that vanilla μP and spectral scaling conditions both fail to support feature learning in diagonal SSMs like Mamba, and proposes a corrected scaling rule for them. However, the Gated Delta Network differs from diagonal SSMs fundamentally, since its recurrent state is a full matrix updated with additional data-dependent scalar gating through two separate weight matrices. These differences make the SSM-specific analysis of Vankadara et al. (2024) inapplicable, leaving the μPparametrization of Gated Delta Networks an open problem. In this paper, we formally derive the complete μP formulation for Gated Delta Networks. Our main contributions are: 
+
+• We theoretically derive coordinate-size estimates through the full forward pass. We also derive principled initialization variances, forward multipliers, and learning-rate scalings for all weight classes. We discover that the gating weight matrices require a non-standard Θ(1 /√d) learning-rate scaling, and the scalar gating parameters require a Θ( √d) scaling, both of which deviate from standard μP setting. 
+
+• We pretrain Gated Delta Network language models across multiple widths and show that our μPformulation enables zero-shot learning-rate transfer under both AdamW and SGD optimizers, while standard parametrization fails to transfer, confirming both the theoretical derivation and its practical efficiency. 
+
+## 2 Related Work 
+
+Efficient Sequence Models The standard Transformer (Vaswani, 2017) and its variants (Radford et al., 2019; Brown et al., 2020; Touvron et al., 2023) have become the dominant architecture for large-scale language modeling, but their quadratic attention complexity limits its application in much larger language models. Linear attention (Katharopoulos et al., 2020) replaces the softmax with a kernel function that permits rewriting attention as a linear RNN, enabling O(1) per-step inference. Structured state space models (SSMs) improve by integrating recurrent state spaces. 2S4 (Gu et al., 2022) introduces HiPPO-based (Gu et al., 2020) structured matrices for long-range sequence modeling, Mamba (Gu and Dao, 2024) adds input-selective state transitions for improved performance, and Mamba-2 (Dao and Gu, 2024) unifies SSMs with structured matrix attention via state-space duality. Other notable architectures include RetNet (Sun et al., 2023), RWKV (Peng et al., 2023), Gated Linear Attention (Yang et al., 2024b), HGRN (Qin et al., 2023) and its expansion HGRN2 (Qin et al., 2024). Recently, numerous models consider applying delta rule (Widrow and Hoff, 1960), which subtracts the prediction error rather than accumulating outer products. This was formalized in the fast-weight programmer framework (Schlag et al., 2021), with recurrent extensions in Irie et al. (2021). DeltaNet (Yang et al., 2024c) further introduced a hardware-efficient parallel training algorithm, and Gated Delta Networks (Yang et al., 2025) combined the delta-rule state update with the data-dependent gating of Mamba-2 with improved performances. Our work focuses precisely on this architecture and derives its μP formulation. 
+
+Hyperparameter Transfer A lot of researchers have explored approaches to accelerate the search progress of hyperparameters of training deep learning models (Snoek et al., 2012, 2015; Jamieson and Talwalkar, 2016; Akiba et al., 2019). Some have also explored the methods to transfer learning between different tasks or datasets (Horváth et al., 2021; Perrone et al., 2018; Yogatama and Mann, 2014). Moreover, based on standard parametrization (SP, such as Xavier initialization (Glorot and Bengio, 2010) and Kaiming initialization (He et al., 2015)), Yang and Hu (2021) proposed Maximal Update Parametrization ( μP) based on abc-parameterization framework, which unifies previous parametrization methods such as SP, Neural Tangent Kernel (NTK) (Jacot et al., 2018) and Mean Field parametrization (Chizat and Bach, 2018; Mei et al., 2018; Sirignano and Spiliopoulos, 2020; Rotskoff and Vanden-Eijnden, 2022). It enables feature learning that can be generalized to infinite-width conditions. And based on μP, Yang et al. (2022) proposed μTransfer that can implement zero-shot transfer of hyperparameters to large models from a much smaller proxy model, and generalized it to different architectures and optimizers (Yang and Littwin, 2023), such as SGD, Adagrad (Duchi et al., 2011) and Adam (Kingma and Ba, 2015). Following that, they also reformulated μP from the perspective of spectral norm (Yang et al., 2023). Recently, many researchers tried to further generalize μP in other fields or successfully scale LLMs with μP (Blake et al., 2025; Meta AI, 2025; Haas et al., 2024; Dey et al., 2024; Hajjar et al., 2024; Team et al., 2025). However, the question of how to properly parametrize these models for feature learning at scale has received very little attention. The core challenge is that original μP designs cannot be directly applied to these architectures with recurrent state transitions and structured matrix operations. To our knowledge, the only work that formally addresses μP-style parametrization for this class of models is Vankadara et al. (2024), which studies the scaling behavior of structured SSMs like Mamba. Their analysis reveals that both vanilla μP and spectral scaling conditions fail to support feature learning in SSMs, and they derive the scaling rule for SSMs that recovers feature learning. The parametrization of Gated Delta Net, however, differs from the diagonal SSMs greatly, since its state is updated via outer-product delta rules rather than scalar recurrences with matrix-valued hidden states. This work is, to our knowledge, the first to derive and validate a μP-consistent parametrization for Gated Delta Network. 33 Preliminaries 
+
+3.1 Gated Delta Net 
+
+Proposed by Yang et al. (2025), Gated Delta Net is a variant of linear transformer (Katharopoulos et al., 2020), based on the Mamba 2 architecture (Dao and Gu, 2024). For the query, key and value vectors qt, kt and vt similar to the original Transformer, the update rule of the latent state is shown as: 
+
+St = St−1(αt(I − βtktk⊤ 
+
+> t
+
+)) + βtvtk⊤ 
+
+> t
+
+, (3.1) where αt ∈ (0 , 1) is the data-dependent gating scale and βt ∈ (0 , 1) is the “writing strength” of the current input at time t, as proposed in Widrow and Hoff (1960); Schlag et al. (2021). And the output is just direct readout of the latent state on the query: 
+
+ot = Stqt. (3.2) Different from the Transformer, Gated Delta Net added a short convolution after query, key and value projections, followed by a SiLU activation layer. There are also L2 Normalization layer for queries and keys. And there is also an RMSNorm layer before the output projection to stabilize the training. As discussed in the original paper, these norm are crucial to the performance of Gated Delta Net. 
+
+3.2 μP theory 
+
+In deep learning, models are frequently scaled by increasing their hidden dimension or width 
+
+d. Under the Standard Parameterization (SP), including He (He et al., 2015) or Xavier (Glorot and Bengio, 2010) initialization, hidden weights are typically initialized with entries drawn from 
+
+N (0 , σ 2/d ) and optimized using a uniform learning rate η across all layers. However, as d goes to infinity, SP encounters fundamental limitations. If the learning rate remains constant, the network’s activations and gradients diverge. To prevent this instability, η must be scaled down by O(1 /d ),which forces the network into the Neural Tangent Kernel (NTK) or “lazy training” regime Yang and Hu (2021), where the intermediate representations (features) seldom evolve from their initialized state, meaning the network fails to perform real feature learning. To resolve the trade-off between stability and feature learning in the infinite-width limit, Yang and Hu (2021) proposed the Maximal Update Parameterization (μP) using the Tensor Programs framework. μP provides rigorous configurations for scaling weight initializations and learning rates as a function of the width d (sometimes a width-dependent multiplier on the weight is required; refer to Tables 2 and 1 for AdamW and SGD configurations) to ensure feature learning. In this setting, feature updates at every layer remain bounded and non-vanishing (i.e., ∆h = Θ(1) ) as the model expands to infinity width. To further illustrate this, the definition of coordinate size should be first introduced: 
+
+Definition 3.1. A vector v ∈ Rd has Θ( da)-sized coordinates if ∥v∥2/d = Θ( d2a), i.e., each entry of 
+
+v has variance Θ( d2a) as d → ∞ . When d is large, the coordinates of the vectors being studied are regarded as roughly i.i.d. Gaussian. 4Based on the definition above, μP theory proposes three desiderata. Firstly, every (pre)activation vector should have Θ(1) -sized coordinates; and the output of a network should be O(1) ; moreover, all parameters should be updated as much as possible without leading to divergence. And based on these desiderata and the assumption of feature learning, there are some derivatives. For example, the gradient to a hidden state is with Θ(1 /d ) coordinate size when optimized with SGD optimizer. 
+
+## 4 The μP Forward Analysis of Gated Delta Net 
+
+In this section, we will review the architecture of Gated Delta Net, and then derive the scaling law of this architecture. We derive the Maximal Update Parametrization ( μP) conditions for Gated Delta Net by propagating coordinate-size estimates through the forward pass and the gating mechanisms, then conclude with the implications for the AdamW optimizer. 
+
+Notation and standing assumptions. Following Yang et al. (2022), we say a vector z ∈ Rd has Θ(1) 
+
+coordinate size if ∥z∥2 = Θ( √d), i.e. each coordinate is of order Θ(1) in magnitude. Equivalently, the per-coordinate variance of z is Θ(1) . For a matrix A ∈ Rd×d, we say it has Θ( c) coordinate size if each entry is of order Θ( c) in magnitude. We assume throughout that the hidden state xt ∈ Rd satisfies the μP feature-learning condition, namely 
+
+∥xt∥2 = Θ( √d), ∥∆xt∥2 = Θ( √d),
+
+so that xt has Θ(1) coordinate size and its update is of the same order. To isolate the effect of the parametrization we temporarily ignore the SiLU activations (see Remark 4.1 below). 
+
+4.1 Coordinate sizes of the projected features 
+
+Let ˜qt = ShortConv (Wq xt), ˜kt = ShortConv (Wk xt), and vt = ShortConv (Wv xt), where 
+
+Wq, Wk, Wv ∈ Rd×d are the query, key, and value projection matrices, respectively. Under the μP initialization of hidden weights (Yang et al., 2022), the products Wq xt, Wk xt, Wv xt each have Θ(1) coordinate size; the short convolution preserves this order, so ˜qt, ˜kt and vt each have 
+
+Θ(1) coordinate size. The L2-normalized query and key are 
+
+qt = ˜qt
+
+∥˜qt∥2
+
+, kt = ˜kt
+
+∥˜kt∥2
+
+.
+
+Since ∥˜qt∥2 = Θ( √d), each coordinate of qt and kt is of order Θ(1) /Θ( √d) = Θ(1 /√d), i.e., qt and 
+
+kt both have Θ(1 /√d) coordinate size. 
+
+4.2 Coordinate size of the latent state 
+
+The rank-one write update in (3.1) is Ut = βt vtk⊤ 
+
+> t
+
+. Since βt ∈ (0 , 1) as a bounded scalar and combining the Θ(1) coordinate size of vt with the Θ(1 /√d) coordinate size of kt, each entry of Ut
+
+satisfies 
+
+(Ut)ij = βt (vt)i (kt)j = Θ(1) · Θ 
+
+> (
+
+1
+
+√d
+
+> )
+
+= Θ  
+
+> (
+
+1
+
+√d
+
+> )
+
+.
+
+5For the cumulative latent state St, we apply the argument of Vankadara et al. (2024) 1: unless the write update Ut perfectly cancels the residual term in (3.1) at every step t, the steady-state variance of St matches that of Ut. More precisely, the spectral contraction factor of the map S 7 → S αt(I − βtktk⊤ 
+
+> t
+
+) is at most αt(1 − βt∥kt∥22) ≤ αt, which is strictly less than 1 when 
+
+αt, β t ∈ (0 , 1) are both bounded away from 0 and 1. We assume this condition holds throughout the analysis. Under this assumption the geometric sum of write updates converges and St has Θ(1 /√d)
+
+coordinate size. 
+
+4.3 Coordinate size of the readout 
+
+The output is ot = St qt, so the j-th coordinate is 
+
+(ot)j =
+
+> d
+
+∑
+
+> i=1
+
+(St)ji (qt)i.
+
+Treating the entries of St and qt as approximately independent and zero-mean, each with variance 
+
+Θ(1 /d ), the variance of the sum is Var [(ot)j
+
+] =
+
+> d
+
+∑
+
+> i=1
+
+Var [(St)ji 
+
+] · Var [(qt)i
+
+] = d · Θ
+
+( 1
+
+d
+
+)
+
+· Θ
+
+( 1
+
+d
+
+)
+
+= Θ 
+
+( 1
+
+d
+
+)
+
+,
+
+so ot has Θ(1 /√d) coordinate size. Although the subsequent RMSNorm forces its output to Θ(1) 
+
+coordinate size, this implicit rescaling would disrupt the gradient scaling required by μP. We therefore recommend inserting a √d-multiplier before RMSNorm so that the input to RMSNorm is already Θ(1) :
+
+ot 7 → √dot, ∥√dot∥2 = Θ( √d).
+
+An equivalent alternative is to replace the L2-Normalization on qt with an RMSNorm layer, which absorbs the same √d-factor. With either modification, the standard μP formulation applies to all projection weights other than those governing αt and βt.
+
+4.4 First-order analysis of the gating scalars 
+
+The gating parameters are defined as 
+
+βt = σ(Wβ xt) ∈ (0 , 1) , Wβ ∈ R1×d,
+
+and 
+
+αt = egt ∈ (0 , 1) , gt = −ealog ln(1 + e Wαxt+b),
+
+with Wα ∈ R1×d a trainable weight row and alog , b ∈ R scalar parameters shared within each head. Because both αt and βt are nonlinear transformations of a Gaussian-distributed pre-activation, they are not themselves Gaussian, and traditional μP theory does not directly apply. For αt, since it is bounded by (0 , 1) , it is naturally Θ(1) . Define zα,t = Wαxt + b, when 
+
+zα,t + alog ≪ 0, |∂α t/∂z α,t | = αtezα,t +alog /(1 + ezα,t ) is also Θ(1) . Under the original initialization of Yang et al. (2025), namely alog ∼ Uniform (0 , 16) and b = b0 + ln (1 − e−b0 ) with b0 = 10 2ϵb−3,
+
+ϵb ∼ Uniform (0 , 1) , the gradient |∂α t/∂z α,t | = αt · ezα,t +alog /(1 + ezα,t ) = ezα,t +alog /(1 + ezα,t )ealog +1 
+
+is bounded by 1.
+
+> 1The detailed derivations can be found in Appendix A.1.
+
+6Proof. Denote k = ealog > 0, p = ezα,t > 0, and f (k, p ) = log ( kp  
+
+> (1+ p)k+1
+
+) = log (kp ) − (k + 1) log (1 + p).Then we have ∂f ∂p = 1 
+
+> p
+
+− 1+ k 
+
+> 1+ p
+
+= 1−pk p(1+ p) . Therefore, ∀k > 0, f (k, p ) ≤ f (k, 1/k ) = log ( 1(1+1 /k )k+1 ) < 0,and |∂α t/∂z α,t | = ef (k,p ) < 1.For βt, since zβ,t := Wβ xt is Θ(1) , βt ∈ (0 , 1) does not saturate and βt = σ(zβ,t ), therefore,  
+
+> ∂β t
+> ∂z β,t
+
+= βt(1 − βt) = Θ(1) .Combining the two analyses, Θ(1) coordinate-size behavior of both αt and βt is maintained under μP initialization. Consequently, Wα and Wβ may be treated as hidden weights with initial variance 1/d , while the scalar parameters alog and b are assigned constant (i.e., width-independent) initial variance. 
+
+Remark 4.1 (Effect of SiLU activations) . The analysis above assumes that the SiLU activations SiLU (x) = x/ (1 + e−x) following the short convolutions are suppressed. In practice, these activations introduce non-Gaussian statistics in ˜qt, ˜kt, and vt. Therefore, the derivations above are only an approximation to the ideal μP conditions. The approximation quality degrades if the pre-activations are far from zero, but remains adequate for the initialization in μP. 
+
+## 5 The μP Analysis of Gated Delta Net under SGD 
+
+In this section, we will derive the backward process of the μP configuration and the learning rates for each module accordingly. In this section, we focus on the scenario of Gated Delta Net under SGD and postpone the analysis for AdamW to Appendix B, where AdamW optimizer benefits from a key simplification: it normalizes the gradient by its coordinate-wise second moment, so the effective update magnitude is Θ( η) per coordinate regardless of the raw gradient scale. Consequently, all weight classes share the same Θ(1) update magnitude, and the learning-rate schedule needs only to account for the number of terms in the activation sum (i.e. the fan-in nℓ−1). Under plain SGD this normalization is absent. The update rule is 
+
+W ℓ ← W ℓ − ηℓ∇W ℓ L,
+
+so the magnitude of the change ∆zℓ = (∆ W ℓ)hℓ−1 is proportional to both the learning rate and the raw gradient magnitude. Different weights in Gated Delta Net receive different gradient magnitudes, so they require different learning-rate scalings to satisfy the μP feature-learning condition ∥∆hℓ∥2 = Θ( √d).
+
+5.1 Notation and assumptions 
+
+We retain all conventions and assumptions from Section 4: the hidden state xt satisfies ∥xt∥2 =Θ( √d), all forward-pass estimates carry over unchanged, and SiLU activations are suppressed (see Remark 4.1). And we write ηℓ for the per-layer SGD learning rate. 
+
+Assumption 5.1 (Short effective memory and domination of direct gradient) . The loss gradient with respect to the latent state satisfies 
+
+∂L
+
+∂St
+
+= gtq⊤ 
+
+> t
+
++
+
+> T
+
+∑ 
+
+> τ=t+1
+
+( τ∏
+
+> s=t+1
+
+αs
+
+)
+
+gτ q⊤
+
+> τ
+
+( τ∏
+
+> s=t+1
+
+(I − βsksk⊤
+
+> s
+
+))︸ ︷︷ ︸
+
+> BPTT tail
+
+,
+
+7where the first term is the direct contribution from the readout at step t and the second term accumulates gradients from all future readouts through the recurrent state chain. Each BPTT (Backpropagation-through-time) term is individually of the same d-order as the direct term: its 
+
+(a, b )-entry has magnitude Θ(1 /d ), identical to (gt)a(qt)b. However, the BPTT sum contains up to 
+
+T − t terms. We assume throughout this section that the effective memory length Leff := ∑Tτ =t 
+
+> ∏τs=t+1
+
+αs =
+
+O(1) , i.e. the gating values αs decay the past state sufficiently fast so that ¯α := E[αt] satisfies 
+
+(1 − ¯α)−1 = O(1) . Under this assumption the BPTT tail is O(1) times the direct term in the Θ( ·)
+
+sense, and all gradient estimates below use only the direct term ∂L/∂ St = gtq⊤ 
+
+> t
+
+without loss of 
+
+d-scaling accuracy. When the model is used in a long-context scenario with slow forgetting ( αt → 1), Leff can grow as O(T ). In this case, the μP learning-rate prescriptions should be scaled down by 1/L eff 
+
+accordingly. And we postpone the detailed derivations of the BPTT term in Appendix A. 
+
+5.2 Backward error at the readout 
+
+The readout is ot = Stqt, followed by a √d-multiplier and RMSNorm. The loss-gradient at ot
+
+satisfies 
+
+gt := ∂L
+
+∂ot
+
+= √d · ∂L
+
+∂(√d ot) .
+
+If we assume that all the architectures outside Gated Delta Net follow μP rules, then it is assumed that ∂L  
+
+> ∂(√dot)
+
+has Θ(1 /d ) coordinate size and gt is with Θ(1 /√d) coordinate size. 
+
+5.3 Gradient of query, key and value projections 
+
+Gradient of the value projection Wv. Recall from (3.1) and (3.2) that St depends on vt through the rank-one write update βtvtk⊤ 
+
+> t
+
+. Under Assumption 5.1, the gradient of L with respect to (vt)i
+
+receives a contribution from the direct readout at time t:
+
+∂L
+
+∂(vt)i
+
+= βt
+
+> ∑
+> j
+
+∂L
+
+∂(St)ij 
+
+· (kt)j = βt
+
+> ∑
+> j
+
+(gt)i(qt)j · (kt)j = βt (gt)i ⟨qt, kt⟩, (5.1) where we used ∂L/∂ (St)ij = ( gt)i(qt)j from the readout (3.2) under the short-memory assumption (Assumption 5.1). Note also that vt does not propagate gradient back to earlier states St′ with 
+
+t′ < t ; those states depend on vt′ , not vt. However, St itself contributes to future states St′′ for 
+
+t′′ > t , which is precisely the BPTT tail handled by Assumption 5.1. Since qt and kt are L2-normalized to unit vectors in Rd, with independent entries each of order 
+
+Θ(1 /√d) at initialization, the inner product satisfies ∣∣⟨qt, kt⟩∣∣ = Θ ( 1√d
+
+> )
+
+. In (5.1) the three factors are: βt = Θ(1) , (gt)i = Θ(1 /√d) per coordinate, and ⟨qt, kt⟩ = Θ(1 /√d). Hence: 
+
+∂L
+
+∂(vt)i
+
+= Θ(1) · Θ 
+
+> (
+
+1
+
+√d
+
+> )
+
+· Θ 
+
+> (
+
+1
+
+√d
+
+> )
+
+= Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+.
+
+By treating ShortConv as the identity for scale estimates, the gradient of the value projection 
+
+Wv ∈ Rd×d is ∂L
+
+∂(Wv)ij 
+
+= ∂L
+
+∂(vt)i
+
+· (xt)j = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+· Θ(1) = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+.
+
+8The SGD update is ∆( Wv)ij = −ηvΘ(1 /d ). The resulting change in vt is 
+
+(∆ vt)i =
+
+> d
+
+∑
+
+> j=1
+
+∆( Wv)ij (xt)j = d · Θ
+
+( ηv
+
+d
+
+)
+
+= Θ( ηv).
+
+The feature-learning condition requires ∆vt with Θ(1) coordinate size, therefore, 
+
+ηv = Θ(1) .
+
+Gradient of the key projection Wk. The key kt = ˜kt/∥˜kt∥2 enters the latent-state update both through the write term ( βtvtk⊤ 
+
+> t
+
+) and the erase term ( αtSt−1(I − βtktk⊤ 
+
+> t
+
+)). The gradient of L with respect to the normalized kt from the write term alone is 
+
+( ∂L
+
+∂kt
+
+)
+
+> l
+
+∣∣∣∣∣write 
+
+= βt
+
+∑
+
+> i
+
+∂L
+
+∂(St)il 
+
+· (vt)i = βt (qt)l
+
+∑
+
+> i
+
+(gt)i(vt)i = βt (qt)l ⟨gt, vt⟩. (5.2) Here vt has Θ(1) coordinate size while gt has Θ(1 /√d) coordinate size, so |⟨ gt, vt⟩| = Θ(1) . Since 
+
+qt and kt have Θ(1 /√d) coordinate size, and gt has Θ(1 /√d) coordinate size, according to (5.2) ,we have ( ∂L
+
+∂kt
+
+)
+
+> l
+
+∣∣∣∣∣write 
+
+= Θ(1) · Θ
+
+( 1
+
+√d
+
+)
+
+· Θ(1) = Θ 
+
+( 1
+
+√d
+
+)
+
+.
+
+We now compute the erase-term contribution. The erase term is Et = αtSt−1(I − βtktk⊤ 
+
+> t
+
+). Differen-tiating (St)al = ( Et)al + βt(vt)a(kt)l with respect to (kt)l gives two sub-terms: 
+
+• The column of St−1 contracted with gradient: 
+
+( ∂L
+
+∂kt
+
+)
+
+> l
+
+∣∣∣∣∣erase,1 
+
+= −αtβt
+
+∑
+
+> a
+
+∂L
+
+∂(St)al 
+
+∑
+
+> j
+
+(St−1)aj (kt)j = −αtβt(qt)l ⟨gt, St−1kt⟩.
+
+Since (St−1kt)i has variance d · Θ(1 /d ) · Θ(1 /d ) = Θ(1 /d ), i.e. Θ(1 /√d) per coordinate, the inner product ⟨gt, St−1kt⟩ has variance d · Θ(1 /d ) · Θ(1 /d ) = Θ(1 /d ), so it is Θ(1 /√d). Combined with 
+
+(qt)l = Θ(1 /√d), this sub-term is Θ(1 /d ).
+
+• The diagonal of St−1 contracted with gradient. The second sub-term arises from the product rule applied to (St−1kt)a = ∑
+
+> m
+
+(St−1)am (kt)m;differentiating the factor (kt)l inside the sum gives 
+
+( ∂L
+
+∂kt
+
+)
+
+> l
+
+∣∣∣∣∣erase,2 
+
+= −αtβt
+
+∑
+
+> a,c
+
+∂L
+
+∂(St)ac 
+
+· (St−1)al · (kt)c = −αtβt⟨qt, kt⟩ (S⊤
+
+> t−1
+
+gt)l.
+
+Since (S⊤
+
+> t−1
+
+gt)l = ∑
+
+> a
+
+(St−1)al (gt)a has Θ(1 /√d) coordinate size, and ⟨qt, kt⟩ = Θ(1 /√d), this sub-term is Θ(1 /d ) per coordinate. Both erase sub-terms are at most Θ(1 /d ), smaller than the write term Θ(1 /√d). The dominant contribution therefore comes from the write term, therefore, 
+
+∥∥∥ ∂L
+
+> ∂kt
+
+∥∥∥2 = Θ(1) , i.e., with Θ
+
+( 1√d
+
+)
+
+coordinate size. Moreover, kt affects St and, through the recurrent BPTT chain, all future states 9St′′ for t′′ > t . Each such future contribution has the same d-order as the direct term above, and Assumption 5.1 ensures their sum is O(Leff ) times the direct term, which is an O(1) factor under the short-memory assumption. We now focus on the L2-normalization kt = ˜kt/∥˜kt∥2. The Jacobian of L2-normalization is Jk = ( I − ktk⊤ 
+
+> t
+
+)/∥˜kt∥2, which projects onto the hyperplane orthogonal to kt and scales by 
+
+1/∥˜kt∥2 = Θ(1 /√d). Since ∂L/∂ kt and kt are approximately independent at initialization, the projection loses negligible magnitude: 
+
+> ∥∥∥∥∥
+
+∂L
+
+∂ ˜kt
+
+> ∥∥∥∥∥2
+
+= Θ  
+
+> (
+
+1
+
+√d
+
+> )
+
+· Θ(1) = Θ  
+
+> (
+
+1
+
+√d
+
+> )
+
+,
+
+so each coordinate of ∂L/∂ ˜kt is Θ(1 /d ). The gradient of Wk is therefore 
+
+∂L
+
+∂(Wk)ij 
+
+= ∂L
+
+∂(˜kt)i
+
+· (xt)j = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+· Θ(1) = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+,
+
+and an identical feature-learning analysis as for Wv gives 
+
+ηk = Θ(1) .
+
+Gradient of the query projection Wq. The gradient of L with respect to the normalized qt is 
+
+∂L
+
+∂(qt)j
+
+= ( S⊤ 
+
+> t
+
+gt)j = ∑
+
+> i
+
+(St)ij (gt)i.
+
+With (St)ij = Θ(1 /√d) and (gt)i = Θ(1 /√d), each entry of St is approximately independent and zero-mean with variance Θ(1 /d ). Thus, the product (St)ij (gt)i has variance Θ(1 /d 2). Summing over 
+
+d terms gives Var [( S⊤ 
+
+> t
+
+gt)j ] = d · Θ(1 /d ) · Θ(1 /d ) = Θ(1 /d ), i.e. ∂L/∂ qt = Θ(1 /√d) per coordinate. The L2-normalization Jacobian for qt has the same spectral norm Θ(1 /√d) as for kt, therefore: 
+
+∂L
+
+∂(˜qt)i
+
+= Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+, ∂L
+
+∂(Wq)ij 
+
+= Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+.
+
+The feature-learning condition yields 
+
+ηq = Θ(1) ,
+
+confirming that all three d × d projection matrices share the same SGD learning rate scaling Θ(1) .
+
+5.4 Gradient of the Gating 
+
+We now show that the gating weights require a different learning rate scaling from the projection matrices, which is a distinctive feature of the SGD formulation absent in the AdamW case. 10 Gating weight Wα. Note that αt affects not only St but also all future states St′ for t′ > t 
+
+through the recurrence chain (3.1) . However, under Assumption 5.1 those future contributions are 
+
+O(Leff ) = O(1) times the direct contribution and do not change the d-scaling of the gradient. By the chain rule via the latent state St:
+
+∂L
+
+∂α t
+
+= Tr 
+
+(( ∂L
+
+∂St
+
+)⊤ ∂St
+
+∂α t
+
+)
+
+Since ∂L 
+
+> ∂St
+
+= gtq⊤ 
+
+> t
+
+and ∂St 
+
+> ∂α t
+
+= St−1(I − βtktk⊤ 
+
+> t
+
+), we have 
+
+∂L
+
+∂α t
+
+= Tr 
+
+(
+
+qtg⊤ 
+
+> t
+
+St−1(I − βtktk⊤ 
+
+> t
+
+)
+
+)
+
+= g⊤ 
+
+> t
+
+St−1qt
+
+︸ ︷︷ ︸
+
+> Term 1
+
+− βt(g⊤ 
+
+> t
+
+St−1kt)⟨kt, qt⟩
+
+︸ ︷︷ ︸
+
+> Term 2
+
+.
+
+For Term 1, (St−1qt)i = ∑ 
+
+> j
+
+(St−1)ij (qt)j . Since both are zero-mean independent variables of order 
+
+Θ(1 /√d), we have St−1qt = Θ(1 /√d) per coordinate. Moreover, since gt is Θ(1 /√d) per coordinate, finally we arrive that Term 1 is Θ(1 /√d). For Term 2, similarly we have g⊤ 
+
+> t
+
+St−1kt = Θ(1 /√d).Multiplying by ⟨kt, qt⟩ = Θ(1 /√d) yields Θ(1 /d ). Therefore, 
+
+∂L
+
+∂α t
+
+= Θ 
+
+( 1
+
+√d
+
+)
+
+.
+
+Since ∂α t/∂z α,t = Θ(1) , finally we have 
+
+∂L
+
+∂z α,t 
+
+= ∂L
+
+∂α t
+
+· ∂α t
+
+∂z α,t 
+
+= Θ 
+
+( 1
+
+√d
+
+)
+
+· Θ(1) = Θ 
+
+( 1
+
+√d
+
+)
+
+(5.3) Then the gradient per entry of Wα is 
+
+∂L
+
+∂(Wα)j
+
+= ∂L
+
+∂z α,t 
+
+· (xt)j = Θ 
+
+( 1
+
+√d
+
+)
+
+· Θ(1) = Θ 
+
+( 1
+
+√d
+
+)
+
+.
+
+To enable feature learning, the scalar pre-activation zα must move by Θ(1) after one gradient step. The change in zα is 
+
+∆zα = ∆ Wαxt = −ηαd∑
+
+> j=1
+
+∂L
+
+∂(Wα)j
+
+(xt)j = −ηα
+
+∂L
+
+∂z α,t d∑
+
+> j=1
+
+(xt)2 
+
+> j
+
+.
+
+Because ∑ 
+
+> j
+
+(xt)2 
+
+> j
+
+= ∥xt∥22 = Θ( d), we have 
+
+∆zα = ηα · Θ
+
+( 1
+
+√d
+
+)
+
+· Θ( d) = ηαΘ( √d).
+
+For ∆zα = Θ(1) , the learning rate must be set to 
+
+ηα = Θ 
+
+( 1
+
+√d
+
+)
+
+= Θ 
+
+( 1
+
+√nℓ−1
+
+)
+
+.
+
+11 Gating weight Wβ . Similarly, βt affects all future states through the recurrence, but under Assumption 5.1 we need only the direct contribution to St. The gradient of βt combines contributions from both the write term and the erase term of (3.1): 
+
+∂L
+
+∂β t
+
+= ∑
+
+> a,b
+
+∂L
+
+∂(St)ab 
+
+· ∂(St)ab 
+
+∂β t
+
+= ⟨gt, vt⟩⟨ qt, kt⟩
+
+︸ ︷︷ ︸
+
+> Write Term
+
+− αt⟨gt, St−1kt⟩⟨ qt, kt⟩
+
+︸ ︷︷ ︸
+
+> Erase Term
+
+.
+
+Since ⟨gt, vt⟩⟨ qt, kt⟩ = Θ(1) · Θ(1 /√d) = Θ(1 /√d), the write contribution is ∂(St)ab /∂β t
+
+∣∣write =(vt)a(kt)b. And since ⟨gt, St−1kt⟩⟨ qt, kt⟩ = Θ(1 /√d) · Θ(1 /√d) = Θ(1 /d ), the erase term is 
+
+∂(St)ab /∂β t
+
+∣∣erase = −αt
+
+∑
+
+> c
+
+(St−1)ac (kt)c(kt)b = −αt(St−1kt)a(kt)b. The write term therefore domi-nates and 
+
+∂L
+
+∂β t
+
+= Θ 
+
+( 1
+
+√d
+
+)
+
+.
+
+For zβ,t := Wβ xt, since ∂β t 
+
+> ∂z β,t
+
+= Θ(1) , then the gradient of the pre-activation is 
+
+∂L
+
+∂z β,t 
+
+= ∂β t
+
+∂z β,t 
+
+· ∂L
+
+∂β t
+
+= Θ(1) · Θ
+
+( 1
+
+√d
+
+)
+
+= Θ 
+
+( 1
+
+√d
+
+)
+
+.
+
+Finally, the gradient per entry of Wβ is 
+
+∂L
+
+∂(Wβ )j
+
+= ∂L
+
+∂z β,t 
+
+· (xt)j = Θ 
+
+( 1
+
+√d
+
+)
+
+· Θ(1) = Θ 
+
+( 1
+
+√d
+
+)
+
+,
+
+and the same feature-learning analysis as Wα gives 
+
+ηβ = Θ 
+
+( 1
+
+√d
+
+)
+
+= Θ 
+
+( 1
+
+√nℓ−1
+
+)
+
+.
+
+Scalar parameters. Both alog and b enter through the gating pre-activations as additive scalars. Using the exact chain rule on αt = egt ,
+
+∂α t
+
+∂a log 
+
+= ∂e gt
+
+∂a log 
+
+= egt ∂g t
+
+∂a log 
+
+= αtgt = Θ(1) ,
+
+so ∂L/∂a log = ( ∂L/∂α t)·Θ(1) . From the argument in (5.3) , ∂L/∂α t = Θ(1 /√d). Hence ∂L/∂a log =Θ(1 /√d), and an SGD step changes alog by ηscal · Θ(1 /√d). Since alog enters αt multiplicatively, a 
+
+Θ(1) change in αt via alog requires ηscal = Θ( √d).
+
+5.5 Summary 
+
+According to the μP assumptions, the learning rate for other parameters can be set in the same way as Table 8 in Yang et al. (2022). In summary, the complete μP formulation for Gated Delta Net with SGD is summarized in Table 1. 12 Table 1 μP formulation of Gated Delta Net under SGD. Weights have shape Rnℓ×nℓ−1 ; for input weights and biases, nℓ−1 = Θ(1) . All initialization variances and forward multipliers are identical to the AdamW table (Table 2), and only the learning-rate row differs. The gray factors are the differences between original scaling law in Yang et al. (2022) and our proposed formulation. Input weights & all other biases Output weights Hidden weights (except Wα, Wβ ) Wα, Wβ alog and b
+
+Initial variance 1 
+
+> nℓ−1
+
+1 1 
+
+> nℓ−1
+> 1
+> nℓ−1
+
+1
+
+Multiplier 1 1 
+
+> nℓ−1
+
+1 1 1
+
+SGD LR nℓ nℓ−1 1 1√nℓ−1 (1) √nℓ−1 (1) 
+
+## 6 Experiments 
+
+6.1 Experiment details 
+
+We implement LLM pre-training experiments to validate our μP derivation. All models use 8 layers and 6 attention heads. We test five model widths d ∈ { 256 , 512 , 1024 , 1536 } for AdamW (Loshchilov, 2017) and d ∈ { 256 , 512 , 768 , 1024 } for SGD optimizer, which correspond to parameter counts ranging from approximately 21M to 342M (non-embedding). 
+
+Architectural parameters. We refer to (Yang et al., 2025) and its official repository for the implementation of GDN and re-implement it on nanoGPT training framework (Karpathy, 2022). In detail, we set the head dimension of queries and keys to d/ 8 and that of values to d/ 4. And we set the kernel size of short convolutions in queries and keys to 4. Additionally, the intermediate size of MLP is set to 4d, and we tied the input and output embeddings. 
+
+Initialization and optimizer. For the base model with d0 = 256 , the embedding layer and all input projections are initialized with standard deviation 0.02, which also applies to larger models for SP. In contrast, we initialize large models under original μP and our proposed μP according to Tables 2 and 1. The scalar gating parameters alog and b follow the scheme of Yang et al. (2025): 
+
+alog ∼ Uniform (0 , 16) and b is set as described in Section 4. We apply a gradient clipping to 1.0 and set Dropout ratio (Srivastava et al., 2014) to 0.0. The minimum learning rate is fixed to 5e-5 throughout. All runs use a cosine learning-rate schedule with 2,000 warmup steps. For AdamW experiments, we use a weight decay of 0.1 and set (β1, β 2) = (0 .9, 0.95) . And for SGD experiments, we use SGD with Nesterov momentum (Nesterov, 1983) with a momentum of 0.98, since we notice there is great instability when using original SGD optimizer. For both optimizers, we use the same learning rates for all the modules in models with d0 = 256 and all models under SP, and applies different learning rates according to the scaling laws in Tables 2 and 1 in μP experiments. We train models with each width at 5-7 different learning rates log-spaced with increased density near optimal learning rates. The learning rate search grid ranges between 1e-3 and 2e-2 for AdamW and between 1e-1 and 1 for SGD experiments. And we fix the training seed to 42. 13 Data and compute. We train on the FineWeb-Edu 100B dataset (Lozhkov et al., 2024) for 20k steps with a global batch size of 480 sequences and a sequence length of 1024 (approximately 9.83B tokens in total). Moreover, we use 1 NVIDIA H100 80GB HBM3 GPU for all the experiments. 
+
+6.2 Experiment results 
+
+The final validation losses for models with different widths and peak learning rates under the μPand SP configurations are shown in Figures 1 and 2 for AdamW and SGD, respectively. To remove the trivial width-dependence of the absolute loss, we report shifted validation loss, defined as the difference from the optimal loss value among all the experiments on the models with the same width but different learning rates. For AdamW, the optimal learning rate is consistently the same across all 4 model widths under 
+
+μP, demonstrating zero-shot learning-rate transfer. While under SP, the optimal learning rate shifts substantially with width, confirming that SP fails to support feature learning at scale. SGD experiments show the same qualitative pattern. Under SP, the optimal learning rate does not transfer across widths and under original μP configuration, it varies a lot. And in our μP configuration, the optimal learning rate transfers perfectly. These results validate that our theory works well in practice. 1.0 0.3 0.4 0.5 0.6 0.7 0.8 0.9 2.0  
+
+> Learning Rate (×10 2)
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> Shifted validation Loss
+> Width 256 (shifted by 3.4525)
+> Width 512 (shifted by 3.1107)
+> Width 1024 (shifted by 2.8613)
+> Width 1536 (shifted by 2.7554)
+
+(a) Standard Parametrization (SP) 1.0 0.3 0.4 0.5 0.6 0.7 0.8 0.9 2.0   
+
+> Learning Rate (×10 2)
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> Shifted validation Loss
+> Width 256 (shifted by 3.4525)
+> Width 512 (shifted by 3.1142)
+> Width 1024 (shifted by 2.8593)
+> Width 1536 (shifted by 2.7449)
+
+(b) μP configuration 
+
+Figure 1 Shifted validation loss for Gated Delta Network trained with AdamW under varying peak learning rates and model widths. 
+
+## 7 Conclusion 
+
+We have derived the μP-style parametrization for Gated Delta Networks. Our analysis reveals that under SGD, scalings of the gating weight matrices and the scalar gating parameters are different from the standard μP law. LLM pre-training experiments confirm that our μP formulation achieves zero-shot learning-rate transfer under both AdamW and SGD, while standard parametrization fails to transfer, empirically validating the correctness of our theoretical derivation. And we hope our derivations would enlighten further research in the scaling laws of other linear or hybrid architectures. 14 1.0 10.0 0.9 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0  
+
+> Learning Rate (×10 1)
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> Shifted validation Loss
+> Width 256 (shifted by 3.3990)
+> Width 512 (shifted by 3.1699)
+> Width 768 (shifted by 3.1094)
+> Width 1024 (shifted by 3.0821)
+
+(a) Standard Parametrization (SP) 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0   
+
+> Learning Rate (×10 1)
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> Shifted validation Loss
+> Width 256 (shifted by 3.3590)
+> Width 512 (shifted by 3.0667)
+> Width 768 (shifted by 3.0076)
+> Width 1024 (shifted by 3.0407)
+
+(b) Original μP configuration 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0   
+
+> Learning Rate (×10 1)
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> Shifted validation Loss
+> Width 256 (shifted by 3.4490)
+> Width 512 (shifted by 3.1606)
+> Width 768 (shifted by 3.0830)
+> Width 1024 (shifted by 3.0345)
+
+(c) Our μP configuration 
+
+Figure 2 Shifted validation loss (loss minus the best-achieved loss at width d = 1024 ) for Gated Delta Network trained with SGD under varying peak learning rates and model widths. 
+
+## Code Availability 
+
+The code for this paper can be accessed in https://github.com/lauyikfung/gated_delta_net_ mup .
+
+## Acknowledgement 
+
+Thank Fetch Compute program for their support of compute resources. Thank Songlin Yang for discussion. Thank Amazon Trainium scholarship project for their funding support. And the code specific for Trainium chips can be accessed in https://github.com/lauyikfung/Amazon_ Trainium_Optimizer/tree/main/gdn_mup_code .
+
+## References 
+
+Takuya Akiba, Shotaro Sano, Toshihiko Yanase, Takeru Ohta, and Masanori Koyama. Optuna: A next-generation hyperparameter optimization framework. In Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining , pages 2623–2631, 2019. Charlie Blake, Constantin Eichenberg, Josef Dean, Lukas Balles, Luke Yuri Prince, Björn Deiseroth, Andres Felipe Cruz-Salinas, Carlo Luschi, Samuel Weinbach, and Douglas Orr. u-μP: The Unit-Scaled Maximal Update Parametrization. In The Thirteenth International Conference on Learning Representations , 2025. Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel Ziegler, Jeffrey Wu, Clemens Winter, Chris Hesse, Mark Chen, Eric Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, Ilya Sutskever, and Dario Amodei. Language models are few-shot learners. In Advances in Neural Information Processing Systems , volume 33, pages 1877–1901, 2020. Lenaic Chizat and Francis Bach. On the global convergence of gradient descent for over-parameterized models using optimal transport. Advances in neural information processing systems , 31, 2018. 15 Tri Dao and Albert Gu. Transformers are ssms: Generalized models and efficient algorithms through structured state space duality. In International Conference on Machine Learning , pages 10041–10071. PMLR, 2024. Nolan Dey, Shane Bergsma, and Joel Hestness. Sparse maximal update parameterization: A holistic approach to sparse training dynamics. Advances in Neural Information Processing Systems , 37: 33836–33862, 2024. John Duchi, Elad Hazan, and Yoram Singer. Adaptive subgradient methods for online learning and stochastic optimization. Journal of machine learning research , 12(7), 2011. Katie E Everett, Lechao Xiao, Mitchell Wortsman, Alexander A Alemi, Roman Novak, Peter J Liu, Izzeddin Gur, Jascha Sohl-Dickstein, Leslie Pack Kaelbling, Jaehoon Lee, et al. Scaling exponents across parameterizations and optimizers. In International Conference on Machine Learning , pages 12666–12700. PMLR, 2024. Xavier Glorot and Yoshua Bengio. Understanding the difficulty of training deep feedforward neural networks. In Proceedings of the thirteenth international conference on artificial intelligence and statistics , pages 249–256. JMLR Workshop and Conference Proceedings, 2010. Albert Gu and Tri Dao. Mamba: Linear-time sequence modeling with selective state spaces. In 
+
+First conference on language modeling , 2024. Albert Gu, Tri Dao, Stefano Ermon, Atri Rudra, and Christopher Ré. Hippo: Recurrent memory with optimal polynomial projections. Advances in neural information processing systems , 33: 1474–1487, 2020. Albert Gu, Karan Goel, and Christopher Re. Efficiently modeling long sequences with structured state spaces. In International Conference on Learning Representations , 2022. Moritz Haas, Jin Xu, Volkan Cevher, and Leena Chennuru Vankadara. Effective sharpness aware minimization requires layerwise perturbation scaling. In High-dimensional Learning Dynamics 2024: The Emergence of Structure and Reasoning , 2024. Karl Hajjar, Lénaïc Chizat, and Christophe Giraud. Training integrable parameterizations of deep neural networks in the infinite-width limit. Journal of Machine Learning Research , 25(196):1–130, 2024. Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Delving deep into rectifiers: Surpassing human-level performance on imagenet classification. In Proceedings of the IEEE international conference on computer vision , pages 1026–1034, 2015. Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, Elena Buchatskaya, Trevor Cai, Eliza Rutherford, Diego de Las Casas, Lisa Anne Hendricks, Johannes Welbl, Aidan Clark, Tom Hennigan, Eric Noland, Katie Millican, George van den Driessche, Bogdan Damoc, Aurelia Guy, Simon Osindero, Karen Simonyan, Erich Elsen, Jack W Rae, Oriol Vinyals, and Laurent Sifre. Training compute-optimal large language models. In Advances in Neural Information Processing Systems , volume 35, 2022. 16 Samuel Horváth, Aaron Klein, Peter Richtárik, and Cédric Archambeau. Hyperparameter transfer learning with adaptive complexity. In International conference on artificial intelligence and statistics , pages 1378–1386. PMLR, 2021. Kazuki Irie, Imanol Schlag, Róbert Csordás, and Jürgen Schmidhuber. Going beyond linear transformers with recurrent fast weight programmers. In Advances in Neural Information Processing Systems , volume 34, pages 7703–7717, 2021. Satoki Ishikawa and Ryo Karakida. On the parameterization of second-order optimization effective towards the infinite width. In The Twelfth International Conference on Learning Representations ,2024. Arthur Jacot, Franck Gabriel, and Clément Hongler. Neural tangent kernel: Convergence and generalization in neural networks. Advances in neural information processing systems , 31, 2018. Kevin Jamieson and Ameet Talwalkar. Non-stochastic best arm identification and hyperparameter optimization. In Artificial intelligence and statistics , pages 240–248. PMLR, 2016. Jared Kaplan, Sam McCandlish, Tom Henighan, Tom B Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei. Scaling laws for neural language models. 
+
+arXiv preprint arXiv:2001.08361 , 2020. Andrej Karpathy. NanoGPT. https://github.com/karpathy/nanoGPT , 2022. Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pappas, and François Fleuret. Transformers are rnns: Fast autoregressive transformers with linear attention. In International conference on machine learning , pages 5156–5165. PMLR, 2020. Diederik P. Kingma and Jimmy Ba. Adam: A method for stochastic optimization. In Yoshua Bengio and Yann LeCun, editors, 3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings , 2015. I Loshchilov. Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101 , 2017. Anton Lozhkov, Loubna Ben Allal, Leandro von Werra, and Thomas Wolf. Fineweb-edu: the finest collection of educational content, 2024. URL https://huggingface.co/datasets/ HuggingFaceFW/fineweb-edu .Song Mei, Andrea Montanari, and Phan-Minh Nguyen. A mean field view of the landscape of two-layer neural networks. Proceedings of the National Academy of Sciences , 115(33):E7665–E7671, 2018. Meta AI. Llama 4: Advancing multimodal intelligence. https://ai.meta.com/ blog/llama-4-multimodal-intelligence/ , apr 2025. URL https://ai.meta.com/blog/ llama-4-multimodal-intelligence/ . Accessed: 2025-04-10. Yurii Nesterov. A method for solving the convex programming problem with convergence rate o (1/k2). In Dokl akad nauk Sssr , volume 269, page 543, 1983. 17 Bo Peng, Eric Alcaide, Quentin Anthony, Alon Albalak, Samuel Arcadinho, Stella Biderman, Huanqi Cao, Xin Cheng, Michael Chung, Leon Derczynski, et al. Rwkv: Reinventing rnns for the transformer era. In Findings of the association for computational linguistics: EMNLP 2023 ,pages 14048–14077, 2023. Valerio Perrone, Rodolphe Jenatton, Matthias W Seeger, and Cédric Archambeau. Scalable hyperparameter transfer learning. Advances in neural information processing systems , 31, 2018. Zhen Qin, Songlin Yang, and Yiran Zhong. Hierarchically gated recurrent neural network for sequence modeling. In Advances in Neural Information Processing Systems , volume 36, 2023. Zhen Qin, Songlin Yang, Weixuan Sun, Xuyang Shen, Dong Li, Weigao Sun, and Yiran Zhong. Hgrn2: Gated linear rnns with state expansion. In First Conference on Language Modeling , 2024. Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et al. Language models are unsupervised multitask learners. OpenAI blog , 1(8):9, 2019. Grant Rotskoff and Eric Vanden-Eijnden. Trainability and accuracy of artificial neural networks: An interacting particle system approach. Communications on Pure and Applied Mathematics , 75 (9):1889–1935, 2022. Imanol Schlag, Kazuki Irie, and Jürgen Schmidhuber. Linear transformers are secretly fast weight programmers. In International conference on machine learning , pages 9355–9366. PMLR, 2021. Justin Sirignano and Konstantinos Spiliopoulos. Mean field analysis of neural networks: A law of large numbers. SIAM Journal on Applied Mathematics , 80(2):725–752, 2020. Jasper Snoek, Hugo Larochelle, and Ryan P Adams. Practical bayesian optimization of machine learning algorithms. Advances in neural information processing systems , 25, 2012. Jasper Snoek, Oren Rippel, Kevin Swersky, Ryan Kiros, Nadathur Satish, Narayanan Sundaram, Mostofa Patwary, Mr Prabhat, and Ryan Adams. Scalable bayesian optimization using deep neural networks. In International conference on machine learning , pages 2171–2180. PMLR, 2015. Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. Dropout: a simple way to prevent neural networks from overfitting. The journal of machine learning research , 15(1):1929–1958, 2014. Yutao Sun, Li Dong, Shaohan Huang, Shuming Ma, Yuqing Xia, Jilong Xue, Jian Wang, and Furu Wei. Retentive network: A successor to Transformer for large language models. arXiv preprint arXiv:2307.08621 , 2023. Meituan LongCat Team, Bei Li, Bingye Lei, Bo Wang, Bolin Rong, Chao Wang, Chao Zhang, Chen Gao, Chen Zhang, Cheng Sun, et al. Longcat-flash technical report. arXiv preprint arXiv:2509.01322 , 2025. Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, Aurelien Rodriguez, Armand Joulin, Edouard Grave, and Guillaume Lample. LLaMA: Open and efficient foundation language models. arXiv preprint arXiv:2302.13971 , 2023. 18 Leena Chennuru Vankadara, Jin Xu, Moritz Haas, and Volkan Cevher. On feature learning in structured state space models. In The Thirty-eighth Annual Conference on Neural Information Processing Systems , 2024. A Vaswani. Attention is all you need. Advances in Neural Information Processing Systems , 2017. B Widrow and ME Hoff. Adaptive switching circuits, wescon conv. Rec., pt , 4, 1960. Greg Yang and Edward J. Hu. Tensor programs IV: Feature learning in infinite-width neural networks. In Marina Meila and Tong Zhang, editors, Proceedings of the 38th International Conference on Machine Learning , volume 139 of Proceedings of Machine Learning Research , pages 11727–11737. PMLR, 18–24 Jul 2021. Greg Yang and Etai Littwin. Tensor programs ivb: Adaptive optimization in the infinite-width limit. arXiv preprint arXiv:2308.01814 , 2023. Greg Yang, Edward J Hu, Igor Babuschkin, Szymon Sidor, Xiaodong Liu, David Farhi, Nick Ryder, Jakub Pachocki, Weizhu Chen, and Jianfeng Gao. Tensor programs v: Tuning large neural networks via zero-shot hyperparameter transfer. arXiv preprint arXiv:2203.03466 , 2022. Greg Yang, James B Simon, and Jeremy Bernstein. A spectral condition for feature learning. arXiv preprint arXiv:2310.17813 , 2023. Greg Yang, Dingli Yu, Chen Zhu, and Soufiane Hayou. Tensor programs VI: feature learning in infinite depth neural networks. In The Twelfth International Conference on Learning Representations, ICLR 2024, Vienna, Austria, May 7-11, 2024 , 2024a. Songlin Yang, Bailin Wang, Yikang Shen, Rameswar Panda, and Yoon Kim. Gated linear attention transformers with hardware-efficient training. In International Conference on Machine Learning .PMLR, 2024b. Songlin Yang, Bailin Wang, Yu Zhang, Yikang Shen, and Yoon Kim. Parallelizing linear transformers with the delta rule over sequence length. In Advances in Neural Information Processing Systems ,volume 37, 2024c. Songlin Yang, Jan Kautz, and Ali Hatamizadeh. Gated delta networks: Improving mamba2 with delta rule. In The Thirteenth International Conference on Learning Representations , 2025. Dani Yogatama and Gideon Mann. Efficient transfer learning method for automatic hyperparameter tuning. In Artificial intelligence and statistics , pages 1077–1085. PMLR, 2014. 19 Appendix 
+
+A Additional derivations in the backward process for SGD 21 
+
+A.1 Derivation of the cumulative latent space . . . . . . . . . . . . . . . . . . . . . . . . 21 
+
+B Compatibility with AdamW 22 
+
+B.1 Adam(W) in the Scale-Invariant Regime . . . . . . . . . . . . . . . . . . . . . . . . . 23 B.2 Derivation for Main Projection Weights ( Wq, Wk, Wv, Wo) . . . . . . . . . . . . . . 23 B.3 Derivation for Gating Weights ( Wα, Wβ ) . . . . . . . . . . . . . . . . . . . . . . . . 24 B.4 Derivation for Scalar Parameters ( alog and b) . . . . . . . . . . . . . . . . . . . . . . 24 
+
+C Dynamics analysis of μP for SGD 25 
+
+C.1 Verification of Forward Pass Coordinate Sizes . . . . . . . . . . . . . . . . . . . . . . 26 C.2 Verification of Backward Pass Gradient Scaling . . . . . . . . . . . . . . . . . . . . . 26 C.3 Stability of the Gating Dynamics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27 C.4 Detecting the dynamics of state spaces . . . . . . . . . . . . . . . . . . . . . . . . . . 29 
+
+D Dynamic analysis of AdamW 29 
+
+D.1 Verification of Forward Pass Coordinate Sizes . . . . . . . . . . . . . . . . . . . . . . 30 D.2 Inspect of Backward Pass Gradient Scaling . . . . . . . . . . . . . . . . . . . . . . . 30 D.3 Stability of the Gating Dynamics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30 D.4 Detecting the dynamics of state spaces . . . . . . . . . . . . . . . . . . . . . . . . . . 31 20 A Additional derivations in the backward process for SGD 
+
+In this section, we provide the detailed analysis of BPTT term in this section. 
+
+A.1 Derivation of the cumulative latent space 
+
+In Section 4.2, we uses the argument of Vankadara et al. (2024) to direct achieve that St has 
+
+Θ(1 /√d) coordinate size. Here we show the detailed derivations of this conclusion. The state update rule is: 
+
+St = αtSt−1 − αtβtSt−1ktk⊤ 
+
+> t
+
++ Ut,
+
+where the write matrix is Ut = βtvtk⊤ 
+
+> t
+
+. From the μP initialization, we know that (vt)i = Θ(1) ,
+
+(kt)j = Θ(1 /√d) and αt, β t ∈ (0 , 1) are bounded scalars, which can be treated as Θ(1) independent variables. And both (vt)i and (kt)j are with zero mean values. Therefore, 
+
+E[( Ut)2 
+
+> ij
+
+] = E[β2 
+
+> t
+
+(vt)2 
+
+> i
+
+(kt)2 
+
+> j
+
+] = Θ(1) · Θ(1) · Θ
+
+( 1
+
+d
+
+)
+
+= Θ 
+
+( 1
+
+d
+
+)
+
+.
+
+Therefore, Ut has a coordinate size of Θ(1 /√d).Let Vt = E[( St)2 
+
+> ij
+
+] be the element-wise variance of the state matrix. As a standard mean-field assumption at initialization, we assume St−1 is statistically independent of the current inputs vt
+
+and kt. Then, 
+
+(St)ij = αt(St−1)ij − αtβt
+
+∑
+
+> l
+
+(St−1)il (kt)l(kt)j + ( Ut)ij .
+
+Since Ut depends on vt, which has zero mean and is independent of St−1 and kt, the cross-terms between Ut and the other terms vanish when we take the expected square. Therefore, 
+
+Vt = E
+
+(
+
+αt(St−1)ij − αtβt
+
+∑
+
+> l
+
+(St−1)il (kt)l(kt)j
+
+)2 + E[( Ut)2 
+
+> ij
+
+].
+
+For the squared expectation term, we have 
+
+E[α2 
+
+> t
+
+(St−1)2 
+
+> ij
+
+] = E[α2 
+
+> t
+
+]Vt−1,
+
+and 
+
+−2E
+
+[
+
+α2 
+
+> t
+
+βt(St−1)ij 
+
+∑
+
+> l
+
+(St−1)il (kt)l(kt)j
+
+]
+
+= −2E[α2 
+
+> t
+
+βt]E[( St−1)2 
+
+> ij
+
+] 1
+
+d = −2E[α2 
+
+> t
+
+βt]Vt−1
+
+1
+
+d ,
+
+where the second equality holds since kt has independent zero-mean entries, and then the expectation over kt is zero unless l = j. And for the remaining term, we have 
+
+E
+
+α2 
+
+> t
+
+β2
+
+> t
+
+(∑
+
+> l
+
+(St−1)il (kt)l
+
+)2
+
+(kt)2
+
+> j
+
+ = E
+
+α2 
+
+> t
+
+β2
+
+> t
+
+( ∑ 
+
+> l,m
+
+(St−1)il (St−1)im (kt)l(kt)m
+
+)(kt)2
+
+> j
+
+
+
+= E[α2 
+
+> t
+
+β2 
+
+> t
+
+(∑
+
+> l
+
+(St−1)2
+
+> il
+
+(kt)2 
+
+> l
+
+)( kt)2 
+
+> j
+
+]= E[α2 
+
+> t
+
+β2 
+
+> t
+
+]
+
+(
+
+d · Vt−1 · 1
+
+d2
+
+)
+
+= E[α2 
+
+> t
+
+β2 
+
+> t
+
+]Vt−1
+
+1
+
+d ,
+
+21 where the second equality holds by the independence within the entries in kt. Finally we have 
+
+Vt = E[α2 
+
+> t
+
+]Vt−1 − 2E[α2 
+
+> t
+
+βt] − E[α2 
+
+> t
+
+β2 
+
+> t
+
+]
+
+d Vt−1 + Θ 
+
+( 1
+
+d
+
+)
+
+= Vt−1 · E
+
+[
+
+α2
+
+> t
+
+(
+
+1 − 2βt − β2
+
+> t
+
+d
+
+)] ︸ ︷︷ ︸
+
+> γ
+
++Θ 
+
+( 1
+
+d
+
+)
+
+.
+
+Assume E[α2 
+
+> t
+
+] = c2 < 1. Because d is relatively large, the (2 βt − β2 
+
+> t
+
+)/d term is small. Therefore, the contraction factor γ is strictly dictated by αt, and we have γ ≈ E[α2 
+
+> t
+
+] < 1. Then the variance Vt is a simple converging geometric progression: 
+
+Vt = γV t−1 + Θ 
+
+( 1
+
+d
+
+)
+
+.
+
+As t → ∞ , it converges to the infinite sum: 
+
+V∞ = Θ(1 /d )1 − γ ,
+
+which is Θ(1 /d ) since γ is Θ(1) and strictly less than 1. Therefore, the element-wise variance of the latent state St is Θ(1 /d ), and the coordinate size is Θ(1 /√d).
+
+## B Compatibility with AdamW 
+
+Table 2 μP formulation of Gated Delta Net under AdamW optimization. Weights have shape Rnℓ×nℓ−1 ;for input weights and biases, nℓ−1 = Θ(1) . Under AdamW, Adam’s coordinate-wise gradient normalization equalizes the effective update magnitude across all weight classes, so the gating weight matrices Wα and Wβ
+
+are subsumed into the “Hidden weights” column and require no special treatment. Input weights & all biases Output weights Hidden weights alog and b
+
+Initial variance 1 
+
+> nℓ−1
+
+1 1 
+
+> nℓ−1
+
+1
+
+Multiplier 1 1 
+
+> nℓ−1
+
+1 1
+
+Learning rate 1 1 1 
+
+> nℓ−1
+
+1
+
+Under the AdamW (Loshchilov, 2017) optimizer, the parameter update at step t is proportional to the coordinate-wise exponential moving average of the gradient, so the effective coordinate-wise update magnitude is Θ(1) regardless of the gradient scale. Hence the μP learning-rate scaling is similar to that for standard architectures without modification. The complete μP formulation for Gated Delta Net trained with AdamW is summarized in Table 2. To rigorously validate the intuition, we will derive the scaling law of GDN when optimized by Adam(W) in the following. 22 B.1 Adam(W) in the Scale-Invariant Regime 
+
+Consider the pre-activation of the gating mechanism, zα,t = Wαxt + b. From our first-order analysis, the gradient of the loss with respect to this pre-activation is δα,t := ∂L 
+
+> ∂z α,t
+
+= Θ(1 /√d).For any parameter θ with gradient g = ∂L/∂θ , the Adam(W) update rule normalizes the gradient by its root-mean-square v. Since the gradients in our model are order Θ(1 /√d), which strictly dominates the standard Adam(W) ϵ parameter (e.g., 10 −8) for practically sized d, Adam(W) operates in a scale-invariant regime. The update effectively reduces to a coordinate-wise sign descent: 
+
+∆θj = −ηθ
+
+gj
+
+√vj + ϵ ≈ − ηθsign (gj ), (B.1) where ηθ is the learning rate assigned to parameter θ.
+
+B.2 Derivation for Main Projection Weights ( Wq, Wk, Wv, Wo)
+
+Let W ∈ Rd×d denote any of the main linear projection matrices, yielding a pre-activation z =
+
+Wx t ∈ Rd. Let δi = ∂L 
+
+> ∂z i
+
+be the gradient arriving at the i-th coordinate of the output. The gradient with respect to the weight coordinate Wij is: 
+
+gij = ∂L
+
+∂W ij 
+
+= δi(xt)j .
+
+Applying the Adam update rule (B.1), the parameter change is: 
+
+∆Wij ≈ − ηW sign (δi(xt)j 
+
+> )
+
+= −ηW sign (δi)sign ((xt)j
+
+> )
+
+.
+
+We now compute the exact shift ∆zi in the i-th coordinate of the feature caused by this update: 
+
+∆zi =
+
+> d∑
+> j=1
+
+∆Wij (xt)j
+
+=
+
+> d∑
+> j=1
+> (
+
+−ηW sign (δi)sign ((xt)j 
+
+> ))
+
+(xt)j
+
+= −ηW sign (δi)
+
+> d∑
+> j=1
+> ∣∣
+
+(xt)j
+
+> ∣∣
+
+. (B.2) Under the μP initialization, each coordinate of the hidden state xt possesses a magnitude of Θ(1) .Consequently, the sum of absolute values in (B.2) (i.e., the ℓ1 norm of xt) strictly scales as Θ( d).Thus, the magnitude of the feature shift is: 
+
+|∆zi| = ηW · Θ( d).
+
+To enforce the feature-learning requirement |∆zi| = Θ(1) , the learning rate for the main projection matrices must be scaled as: 
+
+ηW = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+.
+
+23 B.3 Derivation for Gating Weights ( Wα, Wβ )
+
+For the gating weight matrix Wα ∈ R1×d (the derivation for Wβ is identical), the gradient with respect to its j-th coordinate is: 
+
+gα,j = ∂L
+
+∂(Wα)j
+
+= δα,t (xt)j .
+
+Substituting this into the Adam update rule (B.1), we obtain the exact parameter update: 
+
+∆( Wα)j = −ηαsign (δα,t (xt)j 
+
+> )
+
+= −ηαsign (δα,t )sign ((xt)j
+
+> )
+
+.
+
+To satisfy the fundamental μP feature-learning condition, a single optimization step must induce a 
+
+Θ(1) shift in the pre-activation zα,t . We compute this exact shift ∆zα,t caused by ∆Wα:
+
+∆zα,t =
+
+> d∑
+> j=1
+
+∆( Wα)j (xt)j
+
+=
+
+> d∑
+> j=1
+> (
+
+−ηαsign (δα,t )sign ((xt)j 
+
+> ))
+
+(xt)j
+
+= −ηαsign (δα,t )
+
+> d∑
+> j=1
+> ∣∣
+
+(xt)j
+
+> ∣∣
+
+. (B.3) Under the μP assumptions, each coordinate of the hidden state xt possesses a magnitude of Θ(1) .Consequently, the sum of absolute values in (B.3) (i.e., the ℓ1 norm of xt) strictly scales as Θ( d).Thus, the magnitude of the feature shift is: 
+
+|∆zα,t | = ηα · Θ( d).
+
+To enforce the feature-learning requirement |∆zα,t | = Θ(1) , the learning rate must be precisely scaled as: 
+
+ηα = Θ  
+
+> (
+
+1
+
+d
+
+> )
+
+.
+
+This demonstrates a core property of AdamW under μP: regardless of the output dimension of the projection, the learning rate scaling is strictly dictated by the fan-in dimension ( d). Therefore, both matrix types can be summarized as one category with a 1/n ℓ−1 learning rate multiplier, perfectly aligning with Table 2. 
+
+B.4 Derivation for Scalar Parameters ( alog and b)
+
+We now analyze the scalar bias b (and equivalently, the additive scalar alog ). The gradient with respect to b is trivially the pre-activation gradient: 
+
+gb = ∂L
+
+∂b = δα,t = Θ  
+
+> (
+
+1
+
+√d
+
+> )
+
+.
+
+Applying the scale-invariant Adam update, the parameter change is: 
+
+∆b ≈ − ηbsign (δα,t ).
+
+24 Because b acts as a direct additive scalar to the pre-activation ( znew = Wαxt + bnew ), the resulting shift in the feature is exactly the parameter update itself: 
+
+|∆zα,t, (from bias) | = |∆b| = ηb · Θ(1) .
+
+To achieve the requisite Θ(1) feature drift, the learning rate for the scalar must be independent of the width: 
+
+ηb = Θ(1) .0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0
+> 1
+> 2
+> 3
+> 4
+> RMS( q)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0
+> 1
+> 2
+> 3
+> 4
+> RMS( q)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0
+> 1
+> 2
+> 3
+> 4
+> RMS( q)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 3 The curves for RMS (˜q)/√dhead for SP, original μP configuration and our μP configuration. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> RMS( k)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0
+> 2
+> 4
+> 6
+> 8
+> RMS( k)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.00
+> 0.25
+> 0.50
+> 0.75
+> 1.00
+> 1.25
+> 1.50
+> 1.75
+> RMS( k)/  dhead
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 4 The curves for RMS (˜k)/√dhead for SP, original μP configuration and our μP configuration. 
+
+## C Dynamics analysis of μP for SGD 
+
+In Sections 4 and 5, we derived the μP formulation for the Gated Delta Network optimized by SGD by propagating coordinate-size estimates through the forward and backward passes. To corroborate these theoretical derivations, we embed diagnostic probes into our training framework. We track the internal activations, gradients, and parameter updates of models across different widths (d ∈ { 256 , 512 , 768 , 1024 }) during the pre-training phase with the same optimal learning rate of 0.4. 25 C.1 Verification of Forward Pass Coordinate Sizes 
+
+In Section 4, we established that the query and key vectors before L2-normalization layer, ˜qt and ˜kt,possess Θ(1 /√d) coordinate sizes. Figures 3 and 4 plot the empirical quantities ˜q/√dhead × √d and 
+
+˜k/√dhead × √d measured across the sampled layers, where we omitted d = 768 due to instability across all the configurations. As demonstrated, the scaled quantities is approximately constant across varying widths under our μP configuration, which does not hold for SP and original μP. This directly substantiates our derivations and validates that the recurrent state St operates under stable variance conditions. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / h) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / h) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / h) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 5 The curves for RMS (∂L/∂ h) × d for SP, original μP configuration and our μP configuration, where 
+
+h is the hidden state before each layer. 
+
+C.2 Verification of Backward Pass Gradient Scaling 
+
+We also inspect the gradient scaling in the dynamics in backward pass. In Figure 5, we deduced that under our formulation and original μP configuration, the gradient for the hidden states ∂L/∂ h
+
+strictly follows a Θ(1 /d ) coordinate size, whereas standard parametrization forces it to Θ(1 /√d),leading to scaling instability. Moreover, in Figures 6 and 7, we observed that both ∂L/∂ ˜q and ∂L/∂ ˜k also follows a Θ(1 /d )
+
+coordinate size in our configuration, while original μP deviates from it, making the training less stable and transfer not perfect. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / q) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / q) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / q) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 6 The curves for RMS (∂L/∂ ˜q) × d for SP, original μP configuration and our μP configuration. 
+
+26 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / k) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / k) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> RMS(  / k) ×  d
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 7 The curves for RMS (∂L/∂ ˜k) × d for SP, original μP configuration and our μP configuration. 256 512 768 1024 
+
+Width 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> Value
+
+Avg. t
+
+t > 0.5 ratio 
+
+Figure 8 The average of βt and the ratio for strong-writing βt (βt > 0.5) for GDN models trained with SGD in our μP configuration with different widths. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 1
+> 2
+> 3
+> 4
+> 5
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 9 The curves for RMS (zα,t ) for SP, original μP configuration and our μP configuration. 
+
+C.3 Stability of the Gating Dynamics 
+
+Our theoretical approximations in Section 4 assume that the data-dependent gating scalars ( αt and 
+
+βt) do not saturate into trivial states (e.g., vanishing completely or remaining strictly 1.0). 27 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 1.2
+> 1.4
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> 3.0
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) Original μP configuration 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) Our μP configuration 
+
+Figure 10 The curves for average standard deviation of RMS (zβ,t ) for SP, original μP configuration and our 
+
+μP configuration. 
+
+By logging the runtime statistics of the write strength β = σ(Wβ xt) in Figure 8, we observe that its expected value remains centered around 0.5 across all model widths, with a significant proportion of tokens actively triggering strong writes. Additionally, in Figures 9 and 10 ( d = 768 
+
+is omitted for zβ,t for instability across all the configurations), the standard deviation of the pre-activations zα,t = Wαxt + b and zβ,t = Wβ xt remains Θ(1) . These observations validate our first-order approximations and ensure that the recurrent memory updates effectively capture long-range dependencies without collapsing as the model scales. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.08
+> 0.06
+> 0.04
+> 0.02
+> 0.00
+> 0.02
+> 0.04
+> Avg.  cos q , k in L4 at t=0
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(a) cos ⟨qt, kt⟩ at t = 0 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.03
+> 0.02
+> 0.01
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> Avg.  cos q , k in L4 at t=256
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(b) cos ⟨qt, kt⟩ at t = 256 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.04
+> 0.03
+> 0.02
+> 0.01
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> Avg.  cos q , k in L4 at t=512
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(c) cos ⟨qt, kt⟩ at t = 512 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.02
+> 0.01
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> Avg.  cos q , k in L4 at t=768
+> Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(d) cos ⟨qt, kt⟩ at t = 768 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.02
+> 0.01
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> Avg.  cos q , k in L4 at t=1023  Width 256
+> Width 512
+> Width 768
+> Width 1024
+
+(e) cos ⟨qt, kt⟩ at t = 1023 
+
+Figure 11 The curves for cos ⟨qt, kt⟩ in our μP configuration for SGD at different t values at 4-th layer. 
+
+28 C.4 Detecting the dynamics of state spaces 
+
+Finally, we depict the dynamics of state spaces of GDN when t increases. We plotted the cos ⟨qt, kt⟩
+
+given a certain input in our μP configuration at different t values at 4-th layer in Figure 11. It can be seen that all the values are around 0, showing that independent assumption of qt and kt
+
+still holds for GDN. And during the training process, the value also converges, showing that in our configuration, the model can indeed converge to a stable state. 
+
+## D Dynamic analysis of AdamW 
+
+In previous section, we show the plots of various dynamic probes of the model trained with SGD. Here we provide additional analysis of the dynamics of Gated Delta Net trained with AdamW optimizer across different widths among d ∈ { 256 , 512 , 1024 , 1536 } with the same optimal learning rate of 8 × 10 −3.0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> 3.0
+> 3.5
+> RMS( q)/  dhead
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.00
+> 0.25
+> 0.50
+> 0.75
+> 1.00
+> 1.25
+> 1.50
+> 1.75
+> RMS( q)/  dhead
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(b) Original μP configuration 
+
+Figure 12 The curves for RMS (˜q)/√dhead for SP and μP configuration with AdamW optimizer. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> RMS( k)/  dhead
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> RMS( k)/  dhead
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(b) μP configuration 
+
+Figure 13 The curves for RMS (˜k)/√dhead for SP and μP configuration with AdamW optimizer. 
+
+29 D.1 Verification of Forward Pass Coordinate Sizes 
+
+In Section 4, we demonstrated that ˜qt and ˜kt have Θ(1 /√d) coordinate sizes. We display the empirical quantities ˜q/√dhead × √d and ˜k/√dhead × √d measured across the sampled layers in Figures 12 and 13. We can observe that the scaled quantities is approximately constant across varying widths under our μP configuration, which does not hold for SP. This directly substantiates our derivations and validates that the recurrent state St operates under stable variance conditions. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+> K steps
+> 0.0000
+> 0.0005
+> 0.0010
+> 0.0015
+> 0.0020
+> 0.0025
+> 0.0030
+> RMS(  / h) ×  d
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0  
+
+> K steps
+> 0.0000
+> 0.0005
+> 0.0010
+> 0.0015
+> 0.0020
+> 0.0025
+> 0.0030
+> RMS(  / h) ×  d
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(b) μP configuration 
+
+Figure 14 The curves for RMS (∂L/∂ h) × d for SP and μP configuration with AdamW optimizer, where h is the hidden state before each layer. 
+
+D.2 Inspect of Backward Pass Gradient Scaling 
+
+We also inspect the gradient scaling in the dynamics in backward pass. Although the normalization within Adam(W) with μP configuration ensures the Θ(1) update of hidden state, here we instead inspect the stability of the gradient across different layers. In Figure 14, we notice that under μPconfiguration, the gradient for the hidden states ∂L/∂ h is much more stabler than that with SP configuration. 
+
+D.3 Stability of the Gating Dynamics 
+
+In Section 4, we assume that the data-dependent gating scalars ( αt and βt) do not saturate into trivial states. In Figure 15, we observe that the expected value of βt remains around 0.5 across all model widths, with also a significant proportion of tokens actively triggering strong writes. Additionally, in Figures 16 and 17, the standard deviation of the pre-activations zα,t = Wαxt + b
+
+and zβ,t = Wβ xt remains Θ(1) . These observations validate our first-order approximations and ensure that the recurrent memory updates effectively capture long-range dependencies without collapsing as the model scales for AdamW scenarios. 30 256 512 1024 1536 
+
+Width   
+
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Value
+> Avg. t
+> t> 0.5 ratio
+
+Figure 15 The average of βt and the ratio for strong-writing βt (βt > 0.5) for GDN models trained with AdamW in μP configuration with different widths. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps  
+
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> RMS( z , t)
+> Width 256
+> Width 512
+> Width 1024
+> Width 1536
+
+(b) μP configuration 
+
+Figure 16 The curves for RMS (zα,t ) for SP and μP configuration with AdamW optimizer. 
+
+D.4 Detecting the dynamics of state spaces 
+
+Finally, we depict the dynamics of state spaces of GDN when t increases. We plotted the cos ⟨qt, kt⟩
+
+given a certain input in our μP configuration at different t values at 4-th layer in Figure 18. It can be seen that, similar to SGD, all the values are around 0, showing that independent assumption of 
+
+qt and kt still holds for GDN optimized with AdamW. And during the training process, the value also converges, showing that in our configuration, the model can indeed converge to a stable state. 31 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.0 
+
+0.5 
+
+1.0 
+
+1.5 
+
+2.0 
+
+2.5 
+
+3.0 
+
+> RMS( z , t)
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 (a) Standard Parametrization (SP) 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.0 
+
+0.5 
+
+1.0 
+
+1.5 
+
+2.0 
+
+2.5 
+
+3.0 
+
+> RMS( z , t)
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 (b) μP configuration 
+
+Figure 17 The curves for average standard deviation of RMS (zβ,t ) for SP, original μP configuration and our 
+
+μP configuration with AdamW optimizer. 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.10 
+
+0.05 
+
+0.00 
+
+0.05 
+
+0.10 
+
+> Avg.  cos q , k in L4 at t=0
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 
+
+(a) cos ⟨qt, kt⟩ at t = 0 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.15 
+
+0.10 
+
+0.05 
+
+0.00 
+
+0.05 
+
+> Avg.  cos q , k in L4 at t=256
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 (b) cos ⟨qt, kt⟩ at t = 256 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.15 
+
+0.10 
+
+0.05 
+
+0.00 
+
+0.05 
+
+0.10 
+
+> Avg.  cos q , k in L4 at t=512
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 (c) cos ⟨qt, kt⟩ at t = 512 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.15 
+
+0.10 
+
+0.05 
+
+0.00 
+
+0.05 
+
+0.10 
+
+> Avg.  cos q , k in L4 at t=768
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 
+
+(d) cos ⟨qt, kt⟩ at t = 768 0.0 2.5 5.0 7.5 10.0 12.5 15.0 17.5 20.0 
+
+K steps 
+
+0.15 
+
+0.10 
+
+0.05 
+
+0.00 
+
+0.05 
+
+0.10 
+
+> Avg.  cos q , k in L4 at t=1023
+
+Width 256 
+
+Width 512 
+
+Width 1024 
+
+Width 1536 (e) cos ⟨qt, kt⟩ at t = 1023 
+
+Figure 18 The curves for cos ⟨qt, kt⟩ in μP configuration for AdamW at different t values at 4-th layer. 
+
+32

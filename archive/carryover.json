@@ -1,51 +1,47 @@
 {
-  "generated_at": "2026-06-10T21:23:35.226613+00:00",
-  "updated_date": "20260610",
+  "generated_at": "2026-06-11T02:54:40.755563+00:00",
+  "updated_date": "20260602-20260611",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260603",
+      "updated_date": "20260602-20260611",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260603",
+      "updated_date": "20260602-20260611",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2605.29327v1",
+          "id": "2606.08204v1",
           "source": "arxiv",
-          "title": "Reasoning-preserved Efficient Distillation of Large Language Models via Activation-aware Initialization",
-          "abstract": "Efficient Distillation (EDistill) compresses large language models (LLMs) by structured pruning parameters and tuning lightweight modules with high training efficiency. Although these EDistilled LLMs achieve state-of-the-art (SOTA) performance on general ability benchmarks relative to similarly sized LLMs, we identify a severe degradation in their multi-step reasoning ability, which we term reasoning collapse. We systematically analyze the geometric origins of reasoning collapse and show that the SOTA EDistill method based on width-reducing projection matrices suffers from eRank collapse, in which the effective rank (eRank) of hidden representations drops. We theoretically explain how singular values of randomly initialized projection matrices become unevenly distributed, leading to eRank collapse and thus token indistinguishability. To address this issue, we propose RED (Reasoning-preserved Efficient Distillation) for LLMs, which introduces activation-aware initialization to initialize projection matrices as channel-selection matrices, thus theoretically mitigating eRank collapse. Experiments on Llama and Qwen series demonstrate that RED substantially recovers reasoning while maintaining high training efficiency and SOTA general ability.",
+          "title": "Neural Field Tokenizations with Hierarchy and Spatial Locality Priors",
+          "abstract": "Neural fields parameterize data as functions from coordinates to values, providing a unified framework for representation learning across modalities. Existing approaches are dominated by per-sample meta-learning, which scales poorly due to memory-intensive inner-loop optimization. The natural alternative -- feed-forward encoding -- typically introduces modality-specific assumptions, sacrificing the generality that makes learning with neural fields attractive. We argue that locality and hierarchy are useful priors for learning field representations that can be injected without compromising modality-agnosticism. We propose LH-NeF, a framework to learn general-purpose tokenized representations of continuous signals. A locality-preserving hierarchical encoder maps raw coordinate-value field observations to structured tokens, from which the field is reconstructed during training. By replacing meta-learning's inner loop with a single forward pass, LH-NeF uses 42$\\times$ less memory and supports 133$\\times$ larger batches than the strongest modality-agnostic baseline. Across images, 3D shapes, and climate fields, our learned representations match or exceed performance of modality-agnostic, modality-specific, and specialized generative neural field baselines on both reconstruction and downstream tasks.",
           "authors": [
-            "Junlin He",
-            "Yihong Tang",
-            "Tong Nie",
-            "Guilong Li",
-            "Binyu Yang",
-            "Jinxiao Du",
-            "Lijun Sun",
-            "Wei Ma"
+            "Alonso Urbano",
+            "David W. Romero",
+            "Max Zimmer",
+            "Sebastian Pokutta"
           ],
-          "primary_category": "cs.CL",
+          "primary_category": "cs.LG",
           "categories": [
-            "cs.CL",
-            "cs.LG"
+            "cs.LG",
+            "cs.CV"
           ],
-          "published": "2026-05-28T04:02:22+00:00",
-          "link": "https://arxiv.org/pdf/2605.29327v1",
+          "published": "2026-06-06T14:43:30+00:00",
+          "link": "https://arxiv.org/pdf/2606.08204v1",
           "tags": [
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Representation learning in distillation: eRank collapse and activation-aware initialization",
-          "llm_evidence_cn": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
-          "llm_evidence": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
-          "canonical_evidence": "蒸馏中的表征学习：有效秩坍塌与激活感知初始化",
-          "llm_tldr_en": "Identifies reasoning collapse in LLM distillation due to eRank collapse of representations, and proposes activation-aware initialization to preserve reasoning.",
-          "llm_tldr_cn": "该论文发现大语言模型的高效蒸馏方法（EDistill）在多步推理能力上出现严重退化，称为推理崩溃。通过几何分析，揭示这是由于隐藏表征的有效秩（eRank）坍塌导致的。作者提出激活感知初始化方法，在蒸馏过程中保持表征的秩，从而保留推理能力。实验证明该方法能有效缓解推理崩溃，提升蒸馏模型的推理性能。",
-          "llm_tldr": "该论文发现大语言模型的高效蒸馏方法（EDistill）在多步推理能力上出现严重退化，称为推理崩溃。通过几何分析，揭示这是由于隐藏表征的有效秩（eRank）坍塌导致的。作者提出激活感知初始化方法，在蒸馏过程中保持表征的秩，从而保留推理能力。实验证明该方法能有效缓解推理崩溃，提升蒸馏模型的推理性能。",
+          "llm_evidence_en": "neural field representation learning with hierarchy and locality priors",
+          "llm_evidence_cn": "使用层次和局部先验的神经场表征学习",
+          "llm_evidence": "使用层次和局部先验的神经场表征学习",
+          "canonical_evidence": "使用层次和局部先验的神经场表征学习",
+          "llm_tldr_en": "Proposes LH-NeF, a framework for learning general-purpose tokenized representations of continuous signals via locality and hierarchy priors.",
+          "llm_tldr_cn": "本文针对神经场表征学习扩展性差的问题，提出LH-NeF框架，通过引入局部性和层次性先验，无需模态特定假设即可学习通用词元化表示，在多种连续信号任务上展示了优越的表示质量和效率。",
+          "llm_tldr": "本文针对神经场表征学习扩展性差的问题，提出LH-NeF框架，通过引入局部性和层次性先验，无需模态特定假设即可学习通用词元化表示，在多种连续信号任务上展示了优越的表示质量和效率。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -53,234 +49,37 @@
           "matched_query_text": "representation learning methods improving model performance",
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2605.29327v1",
-          "carry_days": 3
+          "paper_id": "2606.08204v1",
+          "carry_days": 1
         },
         {
-          "id": "2605.31324v1",
+          "id": "2606.06479v1",
           "source": "arxiv",
-          "title": "Inconsistency-Aware Minimization: Improving Generalization with Unlabeled Data",
-          "abstract": "Estimating the generalization gap and developing optimization methods that improve generalization are crucial for deep learning models, for both theoretical understanding and practical applications. Leveraging unlabeled data for these purposes offers significant advantages in real-world scenarios. This paper introduces a novel generalization measure, local inconsistency, derived from an information-geometric perspective on the parameter space of neural networks. A key feature of local inconsistency is that it can be computed without explicit labels. We establish theoretical underpinnings by connecting local inconsistency to the Fisher information matrix and the loss Hessian. Empirically, we demonstrate that local inconsistency correlates with the generalization gap. Based on these findings, we propose Inconsistency-Aware Minimization (IAM), which incorporates local inconsistency into the training objective. We demonstrate that in standard supervised learning settings, IAM enhances generalization, achieving performance comparable to that of existing methods such as Sharpness-Aware Minimization. Furthermore, IAM exhibits efficacy in semi- and self-supervised learning scenarios, where the local inconsistency is computed from unlabeled data.",
+          "title": "Pretraining Recurrent Networks without Recurrence",
+          "abstract": "Training recurrent neural networks (RNNs) requires assigning credit across long sequences of computations. Standard backpropagation through time (BPTT) addresses this problem poorly: it is sequential in time, limiting parallelism, and suffers from vanishing or exploding gradients, making long-range associations difficult to learn. We propose Supervised Memory Training (SMT), a method for training nonlinear RNNs that sidesteps recurrent credit propagation entirely by reducing RNN training to supervised learning on one-step memory transition labels $(m_t, x_{t+1}) \\rightarrow m_{t+1}$. SMT acquires these memory labels by training a Transformer-based encoder on a predictive state objective--retaining only information from the past necessary to predict the future. By decoupling what to remember from how to update memory, SMT enables time-parallel RNN training with a stable $O(1)$ length gradient path between any two tokens--without ever unrolling the RNN. We find that SMT outperforms BPTT when pretraining various RNN architectures on tasks like language modeling and pixel sequence modeling. SMT enables nonlinear RNNs to better capture long-range dependencies and train in parallel, potentially unlocking the scaling of models that build temporal abstractions of past experience.",
           "authors": [
-            "Hee-Sung Kim",
-            "Hyeonseong Kim",
-            "Sungyoon Lee"
+            "Akarsh Kumar",
+            "Phillip Isola"
           ],
           "primary_category": "cs.LG",
           "categories": [
             "cs.LG",
             "cs.AI"
           ],
-          "published": "2026-05-29T13:56:17+00:00",
-          "link": "https://arxiv.org/pdf/2605.31324v1",
+          "published": "2026-06-04T17:57:33+00:00",
+          "link": "https://arxiv.org/pdf/2606.06479v1",
           "tags": [
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "introduces a generalization measure and optimization method using unlabeled data",
-          "llm_evidence_cn": "提出利用无标签数据的泛化度量与优化方法",
-          "llm_evidence": "提出利用无标签数据的泛化度量与优化方法",
-          "canonical_evidence": "提出利用无标签数据的泛化度量与优化方法",
-          "llm_tldr_en": "Proposes local inconsistency as a label-free generalization measure, derived from information geometry, and uses it to guide optimization, improving model generalization with unlabeled data.",
-          "llm_tldr_cn": "该论文提出局部不一致性作为无需标签的泛化度量，源自信息几何，并与Fisher信息矩阵和损失Hessian关联。实验表明该度量与泛化差距相关，可用于指导优化，提升模型泛化能力。",
-          "llm_tldr": "该论文提出局部不一致性作为无需标签的泛化度量，源自信息几何，并与Fisher信息矩阵和损失Hessian关联。实验表明该度量与泛化差距相关，可用于指导优化，提升模型泛化能力。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2605.31324v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2605.30601v1",
-          "source": "arxiv",
-          "title": "TASER: Task-Aware Stein Regularisation for Geometry-Driven Robustness",
-          "abstract": "Modern deep networks remain fragile under distribution shift and adversarial perturbations, often due to excessive or poorly structured input sensitivity. We introduce TASER (Task-Aware Stein Regularisation), a training-time regularisation framework derived from Langevin Stein operators. By penalising pointwise Stein residuals under the training distribution, TASER encourages geometric compatibility between predictors and data density, inducing anisotropic, data-aware smoothness. We provide theoretical links between Stein regularisation and reduced first-order shift sensitivity, develop scalable implementation variants compatible with modern architectures, and demonstrate improved robustness and stability across regression and vision benchmarks. Across CIFAR-10 experiments, TASER consistently improves the adversarial robustness of established training methods without incurring statistically significant clean-accuracy degradation.",
-          "authors": [
-            "Michał Kozyra",
-            "Gesine Reinert"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-05-28T21:49:04+00:00",
-          "link": "https://arxiv.org/pdf/2605.30601v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "training-time regularization for improved robustness and stability",
-          "llm_evidence_cn": "训练时正则化提高鲁棒性和稳定性",
-          "llm_evidence": "训练时正则化提高鲁棒性和稳定性",
-          "canonical_evidence": "训练时正则化提高鲁棒性和稳定性",
-          "llm_tldr_en": "Introduces TASER, a training-time regularization framework using Langevin Stein operators to encourage geometric compatibility, improving robustness to distribution shift and adversarial perturbations.",
-          "llm_tldr_cn": "论文针对深度网络对分布偏移和对抗扰动敏感的问题，提出TASER训练时正则化框架，基于Langevin Stein算子惩罚残差，促使预测器与数据密度几何兼容。理论联系了正则化与移位敏感性降低，在回归和视觉基准上验证了鲁棒性和稳定性提升。",
-          "llm_tldr": "论文针对深度网络对分布偏移和对抗扰动敏感的问题，提出TASER训练时正则化框架，基于Langevin Stein算子惩罚残差，促使预测器与数据密度几何兼容。理论联系了正则化与移位敏感性降低，在回归和视觉基准上验证了鲁棒性和稳定性提升。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2605.30601v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2605.30089v1",
-          "source": "arxiv",
-          "title": "Distributionally Robust Set Representation Learning Under Inference-Time Element Corruption",
-          "abstract": "Standard Set Representation Learning methods typically excel on curated data but often overlook the challenge of inference-time element corruption. This refers to scenarios where deployed models encounter element-level degradations, such as outliers or missing components, that may distort set representation and degrade performance. We propose SW-DRSO, a distributionally robust optimization framework tailored for sets. Rather than minimizing loss solely on observed training data, SW-DRSO optimizes a tractable surrogate of the worst-case expected loss over a family of plausible inference-time variations. We introduce a barycentric adversary that approximates the intractable search over corrupted sets by a differentiable training-time optimization over simplex weights. Extensive experiments across four tasks demonstrate that SW-DRSO effectively enhances robustness against corruption while maintaining high overall performance.",
-          "authors": [
-            "Yankai Chen",
-            "Hanrong Zhang",
-            "Bowei He",
-            "Philip S. Yu",
-            "Xue",
-            "Liu"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-05-28T15:35:04+00:00",
-          "link": "https://arxiv.org/pdf/2605.30089v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "distributionally robust set representation learning against element corruption",
-          "llm_evidence_cn": "针对元素损坏的分布鲁棒集合表征学习",
-          "llm_evidence": "针对元素损坏的分布鲁棒集合表征学习",
-          "canonical_evidence": "针对元素损坏的分布鲁棒集合表征学习",
-          "llm_tldr_en": "Proposes SW-DRSO, a distributionally robust optimization framework for set representation learning that handles inference-time element corruption.",
-          "llm_tldr_cn": "针对推理时元素损坏（如异常值或缺失）导致集合表征退化的问题，提出SW-DRSO分布鲁棒优化框架，通过最小化最坏情况下损失，引入重心对抗训练，提升了集合表征的鲁棒性。",
-          "llm_tldr": "针对推理时元素损坏（如异常值或缺失）导致集合表征退化的问题，提出SW-DRSO分布鲁棒优化框架，通过最小化最坏情况下损失，引入重心对抗训练，提升了集合表征的鲁棒性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2605.30089v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2605.29987v2",
-          "source": "arxiv",
-          "title": "MIC: Maximizing Informational Capacity in Adaptive Representations via Isotropic Subspace Alignment",
-          "abstract": "Although multi-scales representation learning enables elastic-dimension embeddings, nested subspaces often suffer from dimensional redundancy and spectral collapse. To address this, we introduce MIC, a framework that optimizes the geometric landscape of multi-granular embeddings through isotropic subspace alignment. MIC employs Soft Collapse Regularization (SCR) to mitigate redundancy between prefix and residual subspaces via cross-correlation penalties, alongside Spectral Isotropy Regularization (SIR) to ensure hyper-spherical uniformity in low-dimensional prefixes. By unifying these strategies through a self-distillation objective, MIC generates semantically dense representations that maintain high discriminative power. Our experiments demonstrate that MIC significantly outperforms standard baselines, particularly in high-compression scenarios where maintaining informational capacity is most critical.",
-          "authors": [
-            "Dang Nguyen Hong",
-            "Nhi Ngoc-Yen Nguyen",
-            "Huy-Hieu Pham"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.CL"
-          ],
-          "published": "2026-05-28T14:22:25+00:00",
-          "link": "https://arxiv.org/pdf/2605.29987v2",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "representation learning via isotropic subspace alignment to maximize informational capacity",
-          "llm_evidence_cn": "通过各向同性子空间对齐最大化信息容量的表示学习",
-          "llm_evidence": "通过各向同性子空间对齐最大化信息容量的表示学习",
-          "canonical_evidence": "通过各向同性子空间对齐最大化信息容量的表示学习",
-          "llm_tldr_en": "Proposes MIC, a framework that optimizes multi-granular representations via isotropic subspace alignment, reducing redundancy and spectral collapse.",
-          "llm_tldr_cn": "本文提出MIC框架，针对多尺度表示学习中的维度冗余和谱坍缩问题，通过各向同性子空间对齐优化嵌入的几何结构。采用软坍缩正则化和谱各向同性正则化，结合自蒸馏目标，生成语义密集且判别力强的表示。",
-          "llm_tldr": "本文提出MIC框架，针对多尺度表示学习中的维度冗余和谱坍缩问题，通过各向同性子空间对齐优化嵌入的几何结构。采用软坍缩正则化和谱各向同性正则化，结合自蒸馏目标，生成语义密集且判别力强的表示。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2605.29987v2",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.01259v1",
-          "source": "arxiv",
-          "title": "MsFEM-Inspired CNNs with Transfer Learning for Multiscale Model Reduction",
-          "abstract": "Deep learning-based surrogate models have been extensively developed for efficiently approximating multiscale systems with random input fields. However, most existing approaches require retraining neural networks from scratch when source terms, boundary conditions, or differential operators change, resulting in significant computational costs and limited adaptability. To address this challenge, we integrate our previous CNN-based reduced-order model (ROM) framework with the multiscale finite element method (MsFEM) and propose an MsFEM-inspired transfer learning strategy, termed MITL. The CNN-based ROM consists of two components: Basis CNNs, which learn reduced basis functions, and Coef CNNs, which predict the corresponding linear combination coefficients. To enhance the transferability of learned multiscale representations, global MsFEM basis problems are employed as source tasks during pretraining. For new target problems, MITL requires training only lightweight adaptation networks to construct task-specific reduced bases and coefficients, thereby substantially reducing the computational burden. Numerical experiments demonstrate that MITL achieves accurate and efficient predictions across a range of target tasks, with particularly significant advantages in data-scarce scenarios.",
-          "authors": [
-            "Xuehan Zhang",
-            "Lijian Jiang",
-            "Eric T. Chung"
-          ],
-          "primary_category": "cs.CE",
-          "categories": [
-            "cs.CE"
-          ],
-          "published": "2026-05-31T14:26:45+00:00",
-          "link": "https://arxiv.org/pdf/2606.01259v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Transfer learning for model reduction",
-          "llm_evidence_cn": "迁移学习用于模型降阶",
-          "llm_evidence": "迁移学习用于模型降阶",
-          "canonical_evidence": "迁移学习用于模型降阶",
-          "llm_tldr_en": "Proposes MITL, an MsFEM-inspired transfer learning strategy for CNN-based reduced-order models to avoid retraining when conditions change.",
-          "llm_tldr_cn": "针对多尺度系统近似中，当源项或边界条件改变时需重新训练神经网络的问题，提出了一种受多重尺度有限元法启发的迁移学习策略MITL。该方法将CNN降阶模型与MsFEM结合，利用迁移学习避免重复训练。实验表明，该方法在保持精度的同时显著降低了计算成本。该工作为科学计算中的模型适应提供了新思路。",
-          "llm_tldr": "针对多尺度系统近似中，当源项或边界条件改变时需重新训练神经网络的问题，提出了一种受多重尺度有限元法启发的迁移学习策略MITL。该方法将CNN降阶模型与MsFEM结合，利用迁移学习避免重复训练。实验表明，该方法在保持精度的同时显著降低了计算成本。该工作为科学计算中的模型适应提供了新思路。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.01259v1",
-          "carry_days": 2
-        },
-        {
-          "id": "2606.01947v1",
-          "source": "arxiv",
-          "title": "Parameter-Efficient Fine-Tuning of Large Pretrained Models for Instance Segmentation Tasks",
-          "abstract": "Research and applications in artificial intelligence have recently shifted with the rise of large pretrained models, which deliver state-of-the-art results across numerous tasks. However, the substantial increase in parameters introduces a need for parameter-efficient training strategies. Despite significant advancements, limited research has explored parameter-efficient fine-tuning (PEFT) methods in the context of transformer-based models for instance segmentation. Addressing this gap, this study investigates the effectiveness of PEFT methods, specifically adapters and Low-Rank Adaptation (LoRA), applied to two models across four benchmark datasets. Integrating sequentially arranged adapter modules and applying LoRA to deformable attention--explored here for the first time--achieves competitive performance while fine-tuning only about 1-6% of model parameters, a marked improvement over the 40-55% required in traditional fine-tuning. Key findings indicate that using 2-3 adapters per transformer block offers an optimal balance of performance and efficiency. Furthermore, LoRA, exhibits strong parameter efficiency when applied to deformable attention, and in certain cases surpasses adapter configurations. These results show that the impact of PEFT techniques varies based on dataset complexity and model architecture, underscoring the importance of context-specific tuning. Overall, this work demonstrates the potential of PEFT to enable scalable, customizable, and computationally efficient transfer learning for instance segmentation tasks.",
-          "authors": [
-            "Nermeen Abou Baker",
-            "David Rohrschneider",
-            "Uwe Handmann"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV",
-            "cs.AI"
-          ],
-          "published": "2026-06-01T09:09:32+00:00",
-          "link": "https://arxiv.org/pdf/2606.01947v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "parameter-efficient fine-tuning for pretrained models",
-          "llm_evidence_cn": "预训练模型的参数高效微调",
-          "llm_evidence": "预训练模型的参数高效微调",
-          "canonical_evidence": "预训练模型的参数高效微调",
-          "llm_tldr_en": "Investigates PEFT methods (adapters, LoRA) for instance segmentation with transformer models.",
-          "llm_tldr_cn": "本文研究参数高效微调（PEFT）方法在基于Transformer的实例分割模型中的应用。针对大型预训练模型参数过多的问题，系统比较了适配器和低秩适应（LoRA）方法在四个基准数据集上的效果。实验表明，PEFT方法能在保持竞争力的同时大幅减少可训练参数，为下游迁移提供了高效的训练策略。",
-          "llm_tldr": "本文研究参数高效微调（PEFT）方法在基于Transformer的实例分割模型中的应用。针对大型预训练模型参数过多的问题，系统比较了适配器和低秩适应（LoRA）方法在四个基准数据集上的效果。实验表明，PEFT方法能在保持竞争力的同时大幅减少可训练参数，为下游迁移提供了高效的训练策略。",
+          "llm_evidence_en": "pretraining RNNs via supervised memory training",
+          "llm_evidence_cn": "通过监督记忆训练预训练循环网络",
+          "llm_evidence": "通过监督记忆训练预训练循环网络",
+          "canonical_evidence": "通过监督记忆训练预训练循环网络",
+          "llm_tldr_en": "Supervised Memory Training (SMT) pretrains RNNs by reducing to supervised learning on one-step memory transitions, avoiding BPTT limitations.",
+          "llm_tldr_cn": "循环神经网络训练面临梯度消失和并行化困难的问题。本文提出监督记忆训练（SMT），通过Transformer编码器学习一步记忆转移标签，将RNN训练简化为监督学习，避免了循环梯度传播。SMT解耦了记忆获取和序列处理，实现了高效预训练，并在多种序列任务上取得竞争性结果。",
+          "llm_tldr": "循环神经网络训练面临梯度消失和并行化困难的问题。本文提出监督记忆训练（SMT），通过Transformer编码器学习一步记忆转移标签，将RNN训练简化为监督学习，避免了循环梯度传播。SMT解耦了记忆获取和序列处理，实现了高效预训练，并在多种序列任务上取得竞争性结果。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -288,128 +87,41 @@
           "matched_query_text": "pretraining methods enhancing downstream model performance",
           "matched_requirement_id": "req-13",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.01947v1",
+          "paper_id": "2606.06479v1",
           "carry_days": 1
         },
         {
-          "id": "2605.30350v1",
+          "id": "2606.07954v1",
           "source": "arxiv",
-          "title": "DynaFLIP: Rethinking Robotics Perception via Tri-Modal-Dynamics Guided Representation",
-          "abstract": "Robot manipulation critically depends on perception that preserves the action-relevant aspects of a scene. Yet most robot learning pipelines are built upon visual encoders pre-trained for static recognition or vision-language alignment, leaving motion understanding to downstream policies. We introduce DynaFLIP, a dynamics-aware multimodal pre-training framework that pushes motion understanding upstream into perception. We construct image-language-3D flow triplets from heterogeneous human and robot videos, and use these triplets as training-time supervision to shape an image-only encoder. Our key idea is to encourage the three modalities to span a small simplex volume in the shared hyperspherical space -- a smaller simplex volume indicating stronger alignment. To avoid the geometric ambiguity and trivial collapse of naive volume minimization, we combine simplex-volume minimization with a cosine regularizer and a contrastive objective. Our analyses show that DynaFLIP focuses on control-relevant regions critical for manipulation. The resulting dynamics-aware representations serve as reusable visual backbones and consistently outperform baselines across diverse downstream policies, including VLAs. We validate this across diverse simulation and real-world setups, with gains reaching +22.5% under out-of-distribution scenarios. Our results suggest that robot generalization improves when visual representations are trained to encode not just what is present, but how the world changes under action.",
+          "title": "Minibatch Selection via Partition Matroid Constrained Gradient Matching",
+          "abstract": "Training large language models (LLMs) on heterogeneous data requires selecting minibatches that balance convergence speed with coverage across domains. Existing methods either select samples independently within each domain or rely on computationally expensive proxy models to learn continuous domain weights. We propose PartitionSel, a cross-domain minibatch selection approach that maximizes a validation-guided gradient-matching utility under per-domain budgets encoded as a partition-matroid constraint. By coupling the per-domain budgets through a single utility, PartitionSel is designed to reduce redundancy in selections across domains. The proposed objective is weakly submodular and admits an orthogonal matching pursuit algorithm with provable approximation guarantees. Empirically, we evaluate PartitionSel for minibatch selection during the fine-tuning of Qwen2.5 and Llama-3 on MetaMathQA and Mol-Instructions. PartitionSel achieves robust gains over per-domain and domain-agnostic baselines on both benchmarks. It also reduces the number of conflicting gradient pairs within each batch, indicating that the cross-domain coupling translates into more compatible training updates.",
           "authors": [
-            "Jusuk Lee",
-            "Seungjae Lee",
-            "Jonghun Shin",
-            "Hoseong Jung",
-            "Sungha Kim",
-            "Daesol Cho",
-            "H. Jin Kim",
-            "Jia-Bin Huang",
-            "Furong Huang"
-          ],
-          "primary_category": "cs.RO",
-          "categories": [
-            "cs.RO",
-            "cs.LG"
-          ],
-          "published": "2026-05-28T17:59:53+00:00",
-          "link": "https://arxiv.org/pdf/2605.30350v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "dynamics-aware multimodal representation for robot perception",
-          "llm_evidence_cn": "面向机器人感知的动态感知多模态表征",
-          "llm_evidence": "面向机器人感知的动态感知多模态表征",
-          "canonical_evidence": "面向机器人感知的动态感知多模态表征",
-          "llm_tldr_en": "DynaFLIP pushes motion understanding upstream via tri-modal dynamics-guided representation, improving robot manipulation perception.",
-          "llm_tldr_cn": "机器人操作依赖对场景中动作相关方面的感知，但现有视觉编码器多基于静态识别预训练。本文提出DynaFLIP，一种动态感知多模态预训练框架，通过图像-语言-3D流三元组监督学习，将运动理解融入感知表征。实验证明，该表征在多种机器人操作任务上显著提升了策略学习效率和性能。该方法为具身感知提供了新范式。",
-          "llm_tldr": "机器人操作依赖对场景中动作相关方面的感知，但现有视觉编码器多基于静态识别预训练。本文提出DynaFLIP，一种动态感知多模态预训练框架，通过图像-语言-3D流三元组监督学习，将运动理解融入感知表征。实验证明，该表征在多种机器人操作任务上显著提升了策略学习效率和性能。该方法为具身感知提供了新范式。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2605.30350v1",
-          "carry_days": 2
-        },
-        {
-          "id": "2606.01851v1",
-          "source": "arxiv",
-          "title": "PHASOR: Phase-Anchored Universal Action Representations for Humanoid Embodiments",
-          "abstract": "Learning a good action embedding space is fundamental to scalable robot policy learning, yet existing methods treat action latents as task-specific intermediates rather than first-class representations. The resulting latents are unstructured, embodiment-specific, and weakly tied to motion semantics, limiting interpretability, controllability, and transferability across robots. We position the action embedding space itself as a first-class design target, with downstream policy quality emerging from representation quality. Exploiting motion's intrinsic periodicity, we factorize it into a phase manifold that captures cyclic structure via FFT-parametric coefficients, together with a pose branch that conditions the manifold on non-periodic configuration detail. Combined with motion-semantic distillation, this factorized structure yields a cross-embodiment motion manifold that is interpretable and embodiment-agnostic by design. Anchoring multiple humanoid robots to a shared human-pretrained manifold then produces a unified action embedding space across diverse platforms, achieving strong cross-embodiment retrieval and consistent gains on downstream robot tasks.",
-          "authors": [
-            "Kihyun Kim",
-            "Chaeyun Kim",
-            "Jongho Shin",
-            "Taeyoun Kwon",
-            "Junghyun Kim",
-            "Mijin Koo",
-            "Haon Park"
-          ],
-          "primary_category": "cs.RO",
-          "categories": [
-            "cs.RO"
-          ],
-          "published": "2026-06-01T08:02:24+00:00",
-          "link": "https://arxiv.org/pdf/2606.01851v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "action embedding space as first-class representation for robot policy learning",
-          "llm_evidence_cn": "将动作嵌入空间作为机器人策略学习的一等表示",
-          "llm_evidence": "将动作嵌入空间作为机器人策略学习的一等表示",
-          "canonical_evidence": "将动作嵌入空间作为机器人策略学习的一等表示",
-          "llm_tldr_en": "Presents PHASOR, a phase-anchored universal action representation that factorizes motion into a phase manifold and pose branch, improving interpretability and transferability across robots.",
-          "llm_tldr_cn": "该论文针对机器人策略学习中动作嵌入空间结构不足的问题，利用运动的周期性，将动作分解为相位流形和姿态分支。相位流形通过FFT参数化系数捕获循环结构，姿态分支对非周期配置进行条件化。该方法将动作嵌入空间作为一等设计目标，提升了表示的语义性和可迁移性。",
-          "llm_tldr": "该论文针对机器人策略学习中动作嵌入空间结构不足的问题，利用运动的周期性，将动作分解为相位流形和姿态分支。相位流形通过FFT参数化系数捕获循环结构，姿态分支对非周期配置进行条件化。该方法将动作嵌入空间作为一等设计目标，提升了表示的语义性和可迁移性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.01851v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.01521v1",
-          "source": "arxiv",
-          "title": "Fast Generalization after Interpolation via Critically Damped Momentum Optimization",
-          "abstract": "A central problem in machine learning is that models can achieve near-perfect training performance while generalizing substantially less well to unseen examples. This gap is especially acute in high-dimensional, low-sample regimes, where many interpolating solutions exist and optimization must implicitly select among minima with different generalization properties. Following recent theoretical advances on optimization dynamics near the interpolation threshold, we note that the two-regime structure of risk minimization, with loss minimization followed by complexity minimization, motivates a biphasic optimization schedule. We thus theoretically demonstrate that GROKtimizer, a biphasic strategy that combines rapid convergence to interpolation with Critically Damped Momentum (CDM)-based post-interpolation norm minimization, offers a natural solution for selecting low-norm interpolating solutions. Under a local quadratic model of the post-interpolation basin, GROKtimizer provides a quadratic speedup over classical gradient descent, with provable optimality among first-order optimizers. To showcase the applicability of our method, we evaluate GROKtimizer on several synthetic benchmarks common in the classical grokking literature and on various real-world datasets. Finally, we reconcile our findings with the flat-minima hypothesis, highlighting the importance of post-interpolation dynamics in the construction of high-quality, generalizing models.",
-          "authors": [
-            "Luca Muscarnera",
-            "Silas Ruhrberg Estévez",
-            "Yuanzhang Xiao",
-            "Mihaela Van der Schaar"
+            "Prayas Agrawal",
+            "Prateek Chanda",
+            "Ishita Khatri",
+            "Ganesh Ramakrishnan",
+            "Bamdev Mishra",
+            "Pratik Jawanpuria"
           ],
           "primary_category": "cs.LG",
           "categories": [
             "cs.LG",
-            "stat.ML"
+            "cs.AI"
           ],
-          "published": "2026-06-01T00:54:45+00:00",
-          "link": "https://arxiv.org/pdf/2606.01521v1",
+          "published": "2026-06-06T03:16:19+00:00",
+          "link": "https://arxiv.org/pdf/2606.07954v1",
           "tags": [
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "biphasic optimization schedule for generalization improvement",
-          "llm_evidence_cn": "双阶段优化调度提升泛化",
-          "llm_evidence": "双阶段优化调度提升泛化",
-          "canonical_evidence": "双阶段优化调度提升泛化",
-          "llm_tldr_en": "Proposes GROKtimizer, a biphasic strategy combining rapid convergence to interpolation with complexity minimization, achieving fast generalization after interpolation.",
-          "llm_tldr_cn": "论文针对高维低样本下模型过拟合泛化差的问题，提出GROKtimizer双阶段优化策略，将损失最小化与复杂度最小化结合，在插值后快速实现泛化。实验表明该方法在多个基准上显著提升泛化性能，为优化动力学提供了新视角。",
-          "llm_tldr": "论文针对高维低样本下模型过拟合泛化差的问题，提出GROKtimizer双阶段优化策略，将损失最小化与复杂度最小化结合，在插值后快速实现泛化。实验表明该方法在多个基准上显著提升泛化性能，为优化动力学提供了新视角。",
+          "llm_evidence_en": "cross-domain minibatch selection via gradient matching",
+          "llm_evidence_cn": "基于梯度匹配的跨域小批次选择",
+          "llm_evidence": "基于梯度匹配的跨域小批次选择",
+          "canonical_evidence": "基于梯度匹配的跨域小批次选择",
+          "llm_tldr_en": "PartitionSel selects minibatches across domains by maximizing gradient-matching utility under per-domain budgets, improving convergence and coverage.",
+          "llm_tldr_cn": "大语言模型在异构数据上训练时，需要平衡收敛速度与域覆盖。现有方法或独立采样或依赖昂贵代理模型。本文提出PartitionSel，通过分区拟阵约束的梯度匹配实用函数选择跨域小批量，利用弱子模性保证近似最优性，在多个预训练任务上提升了收敛效率。",
+          "llm_tldr": "大语言模型在异构数据上训练时，需要平衡收敛速度与域覆盖。现有方法或独立采样或依赖昂贵代理模型。本文提出PartitionSel，通过分区拟阵约束的梯度匹配实用函数选择跨域小批量，利用弱子模性保证近似最优性，在多个预训练任务上提升了收敛效率。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -417,38 +129,40 @@
           "matched_query_text": "training optimization strategies for better model convergence",
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.01521v1",
+          "paper_id": "2606.07954v1",
           "carry_days": 1
         },
         {
-          "id": "2606.00512v1",
+          "id": "2606.05506v1",
           "source": "arxiv",
-          "title": "Semi-Supervised Learning with Noisy Proxy Covariates: Generalization Bounds and Distribution Regression",
-          "abstract": "In many modern machine learning pipelines, abundant pretrained representations serve as noisy proxy covariates, while task-specific labels remain scarce. We study semi-supervised regression in this setting, and propose a simple two stage estimator that learns kernel eigenfeatures from all proxy covariates and fits a ridge predictor on labeled data. We derive finite sample bounds showing that fast labeled sample rates are recovered when proxy perturbation is controlled and unlabeled proxy covariates are sufficiently abundant. We also show that distribution regression is a direct special case, with analogous guarantees when the finite bag size is large enough. Experiments show consistent gains over supervised and semi-supervised baselines, especially in low label regimes.",
+          "title": "Robust Scene Transfer for PointGoal Navigation via Privileged Sensor Guided Contrastive Learning",
+          "abstract": "We propose a sensor-guided adaptive contrastive learning framework for visual representation learning in PointGoal navigation. During training, privileged LiDAR sensing guides the contrastive objective through a geometry-aware similarity metric and adaptive temperature scaling, encouraging visual embeddings to capture navigation-relevant structure rather than scene-specific appearance. The resulting encoder is pretrained independently, frozen, and used as the perceptual backbone for reinforcement learning, decoupling representation learning from policy optimization. We further introduce a cross-stage domain mismatch between representation pretraining and policy learning to suppress environment-specific shortcuts and promote reliance on task-relevant features.   Extensive experiments in high-fidelity simulation demonstrate that our approach significantly improves policy-level scene transfer across diverse indoor and outdoor environments. At deployment, the agent relies only on monocular RGB observations together with standard task-related inputs such as goal position and proprioceptive signals, without access to LiDAR or other privileged sensors. Our method outperforms large pretrained vision models and standard contrastive baselines under severe appearance and semantic shifts. We also release a multimodal dataset to support future research on privileged-guided visual representation learning for navigation. The code is available at:",
           "authors": [
-            "Kwangho Kim",
-            "Jisu Kim"
+            "Amirhossein Zhalehmehrabi",
+            "Tiziano Tezze",
+            "Alberto Castelini",
+            "Alessandro Farinelli"
           ],
-          "primary_category": "cs.LG",
+          "primary_category": "cs.CV",
           "categories": [
-            "cs.LG",
-            "cs.IT",
-            "stat.ML"
+            "cs.CV"
           ],
-          "published": "2026-05-30T04:01:14+00:00",
-          "link": "https://arxiv.org/pdf/2606.00512v1",
+          "published": "2026-06-03T23:15:50+00:00",
+          "link": "https://arxiv.org/pdf/2606.05506v1",
           "tags": [
+            "keyword:RL-VLA-world",
             "keyword:rep-learning",
+            "query:RL-VLA-world",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "representation learning from noisy proxy covariates, semi-supervised",
-          "llm_evidence_cn": "从有噪代理协变量进行表示学习，半监督",
-          "llm_evidence": "从有噪代理协变量进行表示学习，半监督",
-          "canonical_evidence": "从有噪代理协变量进行表示学习，半监督",
-          "llm_tldr_en": "Studies semi-supervised regression using abundant pretrained representations as noisy proxies, proposes a two-stage estimator with theoretical guarantees and consistent gains.",
-          "llm_tldr_cn": "本文研究半监督回归问题，利用大量预训练表示作为有噪代理协变量，提出一个两阶段估计器：从所有代理协变量学习核本征特征，然后在标记数据上拟合岭预测器。推导了有限样本界，表明当代理扰动可控且未标记样本充足时，标记样本率可快速恢复，实验验证了性能提升。",
-          "llm_tldr": "本文研究半监督回归问题，利用大量预训练表示作为有噪代理协变量，提出一个两阶段估计器：从所有代理协变量学习核本征特征，然后在标记数据上拟合岭预测器。推导了有限样本界，表明当代理扰动可控且未标记样本充足时，标记样本率可快速恢复，实验验证了性能提升。",
+          "llm_evidence_en": "contrastive representation learning for navigation with sensor guidance",
+          "llm_evidence_cn": "传感器引导的对比表征学习用于导航",
+          "llm_evidence": "传感器引导的对比表征学习用于导航",
+          "canonical_evidence": "传感器引导的对比表征学习用于导航",
+          "llm_tldr_en": "Uses privileged LiDAR-guided contrastive learning to pretrain visual encoders that capture navigation-relevant structure, decoupled from RL policy learning.",
+          "llm_tldr_cn": "该论文提出传感器引导的适应性对比学习框架，用于PointGoal导航的视觉表征学习。利用特权LiDAR传感通过几何感知相似度度量和自适应温度缩放引导对比目标，使视觉嵌入捕捉导航相关结构而非场景外观。编码器独立预训练后冻结作为RL策略的感知骨干，分离表征与策略学习。在多个场景间转移测试中，该方法显著提升了导航的泛化鲁棒性。",
+          "llm_tldr": "该论文提出传感器引导的适应性对比学习框架，用于PointGoal导航的视觉表征学习。利用特权LiDAR传感通过几何感知相似度度量和自适应温度缩放引导对比目标，使视觉嵌入捕捉导航相关结构而非场景外观。编码器独立预训练后冻结作为RL策略的感知骨干，分离表征与策略学习。在多个场景间转移测试中，该方法显著提升了导航的泛化鲁棒性。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -456,37 +170,198 @@
           "matched_query_text": "representation learning methods improving model performance",
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.00512v1",
+          "paper_id": "2606.05506v1",
           "carry_days": 1
         },
         {
-          "id": "2605.31022v1",
+          "id": "2606.08332v1",
           "source": "arxiv",
-          "title": "Augmented Lagrangian Predictive Coding",
-          "abstract": "Predictive coding (PC) is a local-learning alternative to backpropagation (BP), training deep networks via local energy-minimization dynamics rather than a global backward pass. We introduce Augmented Lagrangian Predictive Coding (PC-ALM), which maintains PC's inference budget but aligns each weight update toward BP by accumulating per-layer constraint errors into a layer-local Lagrange multiplier. In linear PC networks, PC-ALM converges to an equilibrium with exact BP gradients distributed across the network via only layer-local updates. We analyze PC-ALM in nonlinear PC networks up to depth 128 and show that it matches BP performance across all width-depth regimes, notably in deep narrow networks where PC underperforms. PC-ALM introduces recurrent dynamics in each layer's activations. Compared to PC's heat flow on a scalar energy, PC-ALM dynamics are driven by dual ascent on the augmented Lagrangian. We observe \"ballistic\" credit propagation across very deep networks, with credit signals evenly distributed across layers, compared to PC's slow, diffusive credit propagation. Beyond the algorithm itself, the augmented Lagrangian framework offers a generalization of PC, and may yield insights into how distributed systems could compute and propagate BP-like credit signals through purely local dynamics.",
+          "title": "SMI: Efficient Self-Supervised Learning via Mutual-Information-Inspired Dependency Optimization",
+          "abstract": "Self-supervised learning (SSL) has achieved remarkable representation learning performance, but many existing methods rely on large batch sizes, memory banks, momentum encoders, or global synchronization mechanisms that substantially increase computational cost and training complexity. In this work, we propose Semantic Mutual Information (SMI), a lightweight self-supervised objective derived from a mutual-information-inspired dependency formulation under Gaussian assumptions. Unlike conventional correlation matching objectives that operate on high-dimensional feature correlation matrices, SMI performs optimization on a sample-level dependency matrix through a nonlinear transformation of pairwise correlations. This formulation induces distinct optimization dynamics that emphasize strongly dependent semantic pairs while maintaining representation diversity. Experimental results on ImageNet using a ResNet-50 backbone demonstrate that SMI achieves competitive linear evaluation performance relative to state-of-the-art SSL approaches while substantially reducing computational complexity. Across multiple low-resource benchmarks, SMI consistently improves transfer performance over Barlow Twins, particularly on fine-grained datasets. Furthermore, analyses of optimization dynamics and representation geometry suggest improved alignment--redundancy balance, greater feature diversity, and more spatially localized semantic representations. These results indicate that nonlinear dependency optimization provides an effective and computationally efficient alternative to conventional correlation-based self-supervised learning objectives.",
           "authors": [
-            "Jeffrey Seely",
-            "Julian Gould"
+            "Pritam Mishra",
+            "Coloma Ballester",
+            "Dimosthenis Karatzas"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-06T20:50:04+00:00",
+          "link": "https://arxiv.org/pdf/2606.08332v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "proposes lightweight self-supervised learning objective SMI for efficient representation",
+          "llm_evidence_cn": "提出轻量级自监督学习目标SMI，高效学习表征",
+          "llm_evidence": "提出轻量级自监督学习目标SMI，高效学习表征",
+          "canonical_evidence": "提出轻量级自监督学习目标SMI，高效学习表征",
+          "llm_tldr_en": "Introduces Semantic Mutual Information (SMI), a lightweight self-supervised objective that optimizes sample-level dependency, reducing computational cost while achieving strong representation performance.",
+          "llm_tldr_cn": "现有自监督学习方法依赖大batch、动量编码器等，计算成本高。本文提出基于互信息启发式依赖的目标SMI，在样本级依赖矩阵上优化，避免高维特征相关矩阵。实验表明SMI在降低计算复杂度同时达到了有竞争力的表征学习性能，为高效自监督学习提供了新方案。",
+          "llm_tldr": "现有自监督学习方法依赖大batch、动量编码器等，计算成本高。本文提出基于互信息启发式依赖的目标SMI，在样本级依赖矩阵上优化，避免高维特征相关矩阵。实验表明SMI在降低计算复杂度同时达到了有竞争力的表征学习性能，为高效自监督学习提供了新方案。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "self-supervised learning techniques for feature extraction",
+          "matched_requirement_id": "req-9",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.08332v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.10610v1",
+          "source": "arxiv",
+          "title": "Small Data, Big Noise: Adversarial Training for Robust Parameter-Efficient Fine-Tuning",
+          "abstract": "Parameter-Efficient Fine-Tuning (PEFT) has become essential for adapting foundation models to downstream NLP tasks. However, current PEFT methods often struggle with robustness to noise and performance degradation on limited training data. We propose SDBN (Small Data Big Noise), a unified framework that brings adversarial training to PEFT - a combination that remains less studied in the PEFT setting despite its complementary strengths - to enhance model robustness and generalization, outperforming alternative approaches. We also introduce two variants of the method that use discrete uncertainty sets: SDBN-h, which enumerates character-level edits and selects worst-case variants using gradients, and SDBN-p, which uses LLM-generated variants for robust optimization in generative tasks. Experiments across multiple benchmarks reveal substantial improvements, particularly in low-resource settings and under both word-level and character-level corruptions. This framework addresses the less explored intersection of adversarial training and parameter-efficient adaptation, without introducing additional parameters or only modest computational overhead, making PEFT deployments more reliable in real-world scenarios where data scarcity and linguistic variability often coexist",
+          "authors": [
+            "Eitan Cohen",
+            "Idan Simai",
+            "Uri Shaham"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL"
+          ],
+          "published": "2026-06-09T09:11:33+00:00",
+          "link": "https://arxiv.org/pdf/2606.10610v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "adversarial training for robust parameter-efficient fine-tuning",
+          "llm_evidence_cn": "对抗训练实现鲁棒的参数高效微调",
+          "llm_evidence": "对抗训练实现鲁棒的参数高效微调",
+          "canonical_evidence": "对抗训练实现鲁棒的参数高效微调",
+          "llm_tldr_en": "SDBN introduces adversarial training to parameter-efficient fine-tuning, enhancing robustness and generalization under limited data.",
+          "llm_tldr_cn": "参数高效微调在小数据下易过拟合、鲁棒性差。SDBN将对抗训练引入PEFT框架，提出离散不确定集变体（字符级编辑和LLM生成扰动），增强模型对噪声的鲁棒性和泛化能力。实验证明该方法优于现有PEFT方法，为小样本场景下的模型高效适配提供了有效方案。",
+          "llm_tldr": "参数高效微调在小数据下易过拟合、鲁棒性差。SDBN将对抗训练引入PEFT框架，提出离散不确定集变体（字符级编辑和LLM生成扰动），增强模型对噪声的鲁棒性和泛化能力。实验证明该方法优于现有PEFT方法，为小样本场景下的模型高效适配提供了有效方案。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.10610v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.06178v1",
+          "source": "arxiv",
+          "title": "Learning to Route LLMs from Implicit Cost-Performance Preferences via Meta-Learning",
+          "abstract": "Large language models (LLMs) present a trade-off between performance and cost, where more powerful models incur greater expense. LLM routing aims to mitigate expenses while maintaining performance by sending queries to the most suitable model. However, existing methods cannot perform well for different user cost-performance preferences. To address this gap, we introduce a novel perceptive LLM routing paradigm for personalized and user-centric cost-performance optimization, which efficiently learns users' implicit preferences through little interaction. To handle the challenge of heterogeneous user needs, we formulate preference profiles as a set of distinct tasks in contextual bandit and propose MetaRouter, a meta-learning framework designed for preference-aware LLM routing. Experimental results show that MetaRouter outperforms strong baselines on both in-distribution and out-of-distribution tasks. Furthermore, it exhibits high efficiency in learning user preferences, robustness to changes in the routable LLMs, and scalability to multi-model routing.",
+          "authors": [
+            "Jiahao Zeng",
+            "Ming Tang",
+            "Ningning Ding"
           ],
           "primary_category": "cs.LG",
           "categories": [
-            "cs.LG"
+            "cs.LG",
+            "cs.AI",
+            "cs.CL"
           ],
-          "published": "2026-05-29T08:54:21+00:00",
-          "link": "https://arxiv.org/pdf/2605.31022v1",
+          "published": "2026-06-04T13:53:03+00:00",
+          "link": "https://arxiv.org/pdf/2606.06178v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "meta-learning for LLM routing",
+          "llm_evidence_cn": "元学习用于大模型路由",
+          "llm_evidence": "元学习用于大模型路由",
+          "canonical_evidence": "元学习用于大模型路由",
+          "llm_tldr_en": "We propose MetaRouter, a meta-learning framework that efficiently learns user cost-performance preferences through minimal interaction for personalized LLM routing.",
+          "llm_tldr_cn": "大模型路由需要平衡性能与成本，但现有方法难以适应不同用户的偏好。本文提出MetaRouter元学习框架，将用户偏好建模为上下文赌博机任务，通过少量交互学习隐含偏好，实现个性化的路由决策。实验表明在多种偏好下均能有效优化成本性能权衡。",
+          "llm_tldr": "大模型路由需要平衡性能与成本，但现有方法难以适应不同用户的偏好。本文提出MetaRouter元学习框架，将用户偏好建模为上下文赌博机任务，通过少量交互学习隐含偏好，实现个性化的路由决策。实验表明在多种偏好下均能有效优化成本性能权衡。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+          "matched_requirement_id": "req-11",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.06178v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.07007v1",
+          "source": "arxiv",
+          "title": "A Geometric View for Understanding Concept Learning and Neuron Interpretation in Sparse Autoencoders",
+          "abstract": "We propose a unified mathematical framework for a geometric understanding of concept learning and neuron interpretation in sparse autoencoders (SAEs). While SAEs improve interpretability of neural networks by learning sparse feature representations, a principled definition of ''concept'' and ''learning'' remains unclear. We formalize concepts as sets of data points and cast concept learning as a set-alignment problem between human-defined and model-induced concepts. This formulation distinguishes three increasingly strong notions of learning -- detection, separation, and approximation -- and yields geometric conditions, error bounds, and capacity constraints for when concepts can be represented by individual neurons or multi-neuron units. It also provides a set-theoretic account for common SAE phenomena, including feature splitting, feature absorption, feature families, and hierarchical concepts. Finally, we connect concept learning and neuron interpretation through formal concept analysis, showing that the two directions need not agree and that their many-to-many structure can be organized by concept lattices. Experiments on synthetic data with ReLU and Top-$K$ SAEs illustrate the theory and reveal the effects of SAE size and sparsity on concept learning.",
+          "authors": [
+            "Chenhao Zhang",
+            "Chris Lin",
+            "Su-In Lee"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-05T07:52:43+00:00",
+          "link": "https://arxiv.org/pdf/2606.07007v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "geometric framework for concept learning in sparse autoencoders",
+          "llm_evidence_cn": "稀疏自编码器中概念学习的几何框架",
+          "llm_evidence": "稀疏自编码器中概念学习的几何框架",
+          "canonical_evidence": "稀疏自编码器中概念学习的几何框架",
+          "llm_tldr_en": "Provides a geometric understanding of concept learning in SAEs, formalizing concepts as sets and learning as set-alignment.",
+          "llm_tldr_cn": "稀疏自编码器(SAE)能学习稀疏特征表示，但概念和学习的定义不明确。该论文提出统一数学框架，将概念视为数据点集合，将概念学习建模为人类概念与模型诱导概念间的集合对齐问题。区分了检测、分离和近似三种学习强度，并给出几何条件、误差界和容量约束。为SAE的可解释性和表示学习提供了理论基础。",
+          "llm_tldr": "稀疏自编码器(SAE)能学习稀疏特征表示，但概念和学习的定义不明确。该论文提出统一数学框架，将概念视为数据点集合，将概念学习建模为人类概念与模型诱导概念间的集合对齐问题。区分了检测、分离和近似三种学习强度，并给出几何条件、误差界和容量约束。为SAE的可解释性和表示学习提供了理论基础。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.07007v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.10406v1",
+          "source": "arxiv",
+          "title": "FOGO: Forgetting-aware Orthogonalization Optimizer",
+          "abstract": "We argue that forgetting is not confined to continual learning but is a general optimization phenomenon: during standard training, dominant mini-batch gradients suppress rare but useful update directions, causing short-term forgetting at every step. When such knowledge is never revisited, these losses compound into long-term forgetting-the classical failure mode of continual learning. We introduce FOGO, a scalable optimizer that continuously detects and resolves gradient interference across both regimes. FOGO spectrally orthogonalizes momentum updates to prevent dominant directions from monopolizing optimization, then stores representative past directions in a compact codebook memory built on random projection, where pairwise distances are provably preserved in low-dimensional space. At each step, conflicts between the current update and stored directions are resolved via lightweight orthogonal correction and lifted back through a proximal step, with minimal overhead and no data storage. Across class-imbalanced classification, continual visual learning under domain and class shifts, continual fine-tuning of LLaVA-7B, and GPT-2 pretraining, FOGO consistently improves convergence and knowledge retention, outperforming Adam and Muon.",
+          "authors": [
+            "Toan Nguyen",
+            "Yang Liu",
+            "Trung Le",
+            "Celso de Melo",
+            "Flora D. Salim"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-09T04:30:49+00:00",
+          "link": "https://arxiv.org/pdf/2606.10406v1",
           "tags": [
             "keyword:RL-VLA-world",
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "introduces a local-learning training algorithm that matches backpropagation performance",
-          "llm_evidence_cn": "提出一种匹配反向传播性能的局部学习训练算法",
-          "llm_evidence": "提出一种匹配反向传播性能的局部学习训练算法",
-          "canonical_evidence": "提出一种匹配反向传播性能的局部学习训练算法",
-          "llm_tldr_en": "Proposes PC-ALM, which augments predictive coding with Lagrange multipliers to align weight updates with backpropagation, achieving BP-comparable performance with local updates across depth.",
-          "llm_tldr_cn": "该论文提出增广拉格朗日预测编码（PC-ALM），在预测编码的局部更新框架中引入层内拉格朗日乘子，使权重更新方向与反向传播对齐。实验表明在深层窄网络中匹配反向传播性能，为生物合理训练提供新方法。",
-          "llm_tldr": "该论文提出增广拉格朗日预测编码（PC-ALM），在预测编码的局部更新框架中引入层内拉格朗日乘子，使权重更新方向与反向传播对齐。实验表明在深层窄网络中匹配反向传播性能，为生物合理训练提供新方法。",
+          "llm_evidence_en": "optimizer with forgetting-aware orthogonalization for better convergence",
+          "llm_evidence_cn": "具有遗忘感知正交化的优化器，改善收敛",
+          "llm_evidence": "具有遗忘感知正交化的优化器，改善收敛",
+          "canonical_evidence": "具有遗忘感知正交化的优化器，改善收敛",
+          "llm_tldr_en": "FOGO detects and resolves gradient interference during training, using spectral orthogonalization and compact memory to improve convergence.",
+          "llm_tldr_cn": "标准训练中主导小批量梯度会抑制罕见但有用的方向，造成短期遗忘并累积为长期遗忘。该论文提出FOGO优化器，持续检测并解决梯度干扰：通过谱正交化动量更新防止主导方向垄断，利用基于随机投影的紧凑码本存储代表性过去方向。在多种持续学习和标准训练任务上，FOGO加速收敛并提升最终性能。",
+          "llm_tldr": "标准训练中主导小批量梯度会抑制罕见但有用的方向，造成短期遗忘并累积为长期遗忘。该论文提出FOGO优化器，持续检测并解决梯度干扰：通过谱正交化动量更新防止主导方向垄断，利用基于随机投影的紧凑码本存储代表性过去方向。在多种持续学习和标准训练任务上，FOGO加速收敛并提升最终性能。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -494,7 +369,7 @@
           "matched_query_text": "training optimization strategies for better model convergence",
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
-          "paper_id": "2605.31022v1",
+          "paper_id": "2606.10406v1",
           "carry_days": 1
         }
       ]
