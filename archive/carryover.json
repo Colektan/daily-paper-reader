@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-11T02:54:40.755563+00:00",
-  "updated_date": "20260602-20260611",
+  "generated_at": "2026-06-11T22:14:03.325852+00:00",
+  "updated_date": "20260611",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260602-20260611",
+      "updated_date": "20260611",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260602-20260611",
+      "updated_date": "20260611",
       "carryover_days": 9,
       "items": [
         {
@@ -35,13 +35,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "neural field representation learning with hierarchy and locality priors",
-          "llm_evidence_cn": "使用层次和局部先验的神经场表征学习",
-          "llm_evidence": "使用层次和局部先验的神经场表征学习",
-          "canonical_evidence": "使用层次和局部先验的神经场表征学习",
-          "llm_tldr_en": "Proposes LH-NeF, a framework for learning general-purpose tokenized representations of continuous signals via locality and hierarchy priors.",
-          "llm_tldr_cn": "本文针对神经场表征学习扩展性差的问题，提出LH-NeF框架，通过引入局部性和层次性先验，无需模态特定假设即可学习通用词元化表示，在多种连续信号任务上展示了优越的表示质量和效率。",
-          "llm_tldr": "本文针对神经场表征学习扩展性差的问题，提出LH-NeF框架，通过引入局部性和层次性先验，无需模态特定假设即可学习通用词元化表示，在多种连续信号任务上展示了优越的表示质量和效率。",
+          "llm_evidence_en": "neural field tokenization with hierarchy and locality",
+          "llm_evidence_cn": "具有层次和局部先验的神经场标记化",
+          "llm_evidence": "具有层次和局部先验的神经场标记化",
+          "canonical_evidence": "具有层次和局部先验的神经场标记化",
+          "llm_tldr_en": "LH-NeF proposes a framework for general-purpose tokenized neural field representations using locality and hierarchy priors, enabling feed-forward encoding without modality-specific assumptions.",
+          "llm_tldr_cn": "本文提出LH-NeF，一个学习通用神经场标记化表示的框架。利用局部性和层次性先验，无需特定模态假设即可通过前馈编码获得表示，避免了元学习的内存开销。该框架在多种连续信号（如图像、3D形状）上展示了强大的表示能力和泛化性。",
+          "llm_tldr": "本文提出LH-NeF，一个学习通用神经场标记化表示的框架。利用局部性和层次性先验，无需特定模态假设即可通过前馈编码获得表示，避免了元学习的内存开销。该框架在多种连续信号（如图像、3D形状）上展示了强大的表示能力和泛化性。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -50,44 +50,6 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.08204v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.06479v1",
-          "source": "arxiv",
-          "title": "Pretraining Recurrent Networks without Recurrence",
-          "abstract": "Training recurrent neural networks (RNNs) requires assigning credit across long sequences of computations. Standard backpropagation through time (BPTT) addresses this problem poorly: it is sequential in time, limiting parallelism, and suffers from vanishing or exploding gradients, making long-range associations difficult to learn. We propose Supervised Memory Training (SMT), a method for training nonlinear RNNs that sidesteps recurrent credit propagation entirely by reducing RNN training to supervised learning on one-step memory transition labels $(m_t, x_{t+1}) \\rightarrow m_{t+1}$. SMT acquires these memory labels by training a Transformer-based encoder on a predictive state objective--retaining only information from the past necessary to predict the future. By decoupling what to remember from how to update memory, SMT enables time-parallel RNN training with a stable $O(1)$ length gradient path between any two tokens--without ever unrolling the RNN. We find that SMT outperforms BPTT when pretraining various RNN architectures on tasks like language modeling and pixel sequence modeling. SMT enables nonlinear RNNs to better capture long-range dependencies and train in parallel, potentially unlocking the scaling of models that build temporal abstractions of past experience.",
-          "authors": [
-            "Akarsh Kumar",
-            "Phillip Isola"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-04T17:57:33+00:00",
-          "link": "https://arxiv.org/pdf/2606.06479v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "pretraining RNNs via supervised memory training",
-          "llm_evidence_cn": "通过监督记忆训练预训练循环网络",
-          "llm_evidence": "通过监督记忆训练预训练循环网络",
-          "canonical_evidence": "通过监督记忆训练预训练循环网络",
-          "llm_tldr_en": "Supervised Memory Training (SMT) pretrains RNNs by reducing to supervised learning on one-step memory transitions, avoiding BPTT limitations.",
-          "llm_tldr_cn": "循环神经网络训练面临梯度消失和并行化困难的问题。本文提出监督记忆训练（SMT），通过Transformer编码器学习一步记忆转移标签，将RNN训练简化为监督学习，避免了循环梯度传播。SMT解耦了记忆获取和序列处理，实现了高效预训练，并在多种序列任务上取得竞争性结果。",
-          "llm_tldr": "循环神经网络训练面临梯度消失和并行化困难的问题。本文提出监督记忆训练（SMT），通过Transformer编码器学习一步记忆转移标签，将RNN训练简化为监督学习，避免了循环梯度传播。SMT解耦了记忆获取和序列处理，实现了高效预训练，并在多种序列任务上取得竞争性结果。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "pretraining methods enhancing downstream model performance",
-          "matched_requirement_id": "req-13",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.06479v1",
           "carry_days": 1
         },
         {
@@ -115,13 +77,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "cross-domain minibatch selection via gradient matching",
-          "llm_evidence_cn": "基于梯度匹配的跨域小批次选择",
-          "llm_evidence": "基于梯度匹配的跨域小批次选择",
-          "canonical_evidence": "基于梯度匹配的跨域小批次选择",
-          "llm_tldr_en": "PartitionSel selects minibatches across domains by maximizing gradient-matching utility under per-domain budgets, improving convergence and coverage.",
-          "llm_tldr_cn": "大语言模型在异构数据上训练时，需要平衡收敛速度与域覆盖。现有方法或独立采样或依赖昂贵代理模型。本文提出PartitionSel，通过分区拟阵约束的梯度匹配实用函数选择跨域小批量，利用弱子模性保证近似最优性，在多个预训练任务上提升了收敛效率。",
-          "llm_tldr": "大语言模型在异构数据上训练时，需要平衡收敛速度与域覆盖。现有方法或独立采样或依赖昂贵代理模型。本文提出PartitionSel，通过分区拟阵约束的梯度匹配实用函数选择跨域小批量，利用弱子模性保证近似最优性，在多个预训练任务上提升了收敛效率。",
+          "llm_evidence_en": "Proposes PartitionSel, a minibatch selection method using matroid-constrained gradient matching to improve training convergence.",
+          "llm_evidence_cn": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
+          "llm_evidence": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
+          "canonical_evidence": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
+          "llm_tldr_en": "Introduces PartitionSel for cross-domain minibatch selection that maximizes gradient-matching utility under partition-matroid budgets, improving convergence speed.",
+          "llm_tldr_cn": "大规模语言模型训练中异构数据的小批量选择需平衡收敛速度和域覆盖。本文提出PartitionSel，在分区拟阵约束下最大化验证引导的梯度匹配效用，减少冗余。理论保证弱子模性，实验显示加速收敛。",
+          "llm_tldr": "大规模语言模型训练中异构数据的小批量选择需平衡收敛速度和域覆盖。本文提出PartitionSel，在分区拟阵约束下最大化验证引导的梯度匹配效用，减少冗余。理论保证弱子模性，实验显示加速收敛。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -130,85 +92,6 @@
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
           "paper_id": "2606.07954v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.05506v1",
-          "source": "arxiv",
-          "title": "Robust Scene Transfer for PointGoal Navigation via Privileged Sensor Guided Contrastive Learning",
-          "abstract": "We propose a sensor-guided adaptive contrastive learning framework for visual representation learning in PointGoal navigation. During training, privileged LiDAR sensing guides the contrastive objective through a geometry-aware similarity metric and adaptive temperature scaling, encouraging visual embeddings to capture navigation-relevant structure rather than scene-specific appearance. The resulting encoder is pretrained independently, frozen, and used as the perceptual backbone for reinforcement learning, decoupling representation learning from policy optimization. We further introduce a cross-stage domain mismatch between representation pretraining and policy learning to suppress environment-specific shortcuts and promote reliance on task-relevant features.   Extensive experiments in high-fidelity simulation demonstrate that our approach significantly improves policy-level scene transfer across diverse indoor and outdoor environments. At deployment, the agent relies only on monocular RGB observations together with standard task-related inputs such as goal position and proprioceptive signals, without access to LiDAR or other privileged sensors. Our method outperforms large pretrained vision models and standard contrastive baselines under severe appearance and semantic shifts. We also release a multimodal dataset to support future research on privileged-guided visual representation learning for navigation. The code is available at:",
-          "authors": [
-            "Amirhossein Zhalehmehrabi",
-            "Tiziano Tezze",
-            "Alberto Castelini",
-            "Alessandro Farinelli"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-03T23:15:50+00:00",
-          "link": "https://arxiv.org/pdf/2606.05506v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "contrastive representation learning for navigation with sensor guidance",
-          "llm_evidence_cn": "传感器引导的对比表征学习用于导航",
-          "llm_evidence": "传感器引导的对比表征学习用于导航",
-          "canonical_evidence": "传感器引导的对比表征学习用于导航",
-          "llm_tldr_en": "Uses privileged LiDAR-guided contrastive learning to pretrain visual encoders that capture navigation-relevant structure, decoupled from RL policy learning.",
-          "llm_tldr_cn": "该论文提出传感器引导的适应性对比学习框架，用于PointGoal导航的视觉表征学习。利用特权LiDAR传感通过几何感知相似度度量和自适应温度缩放引导对比目标，使视觉嵌入捕捉导航相关结构而非场景外观。编码器独立预训练后冻结作为RL策略的感知骨干，分离表征与策略学习。在多个场景间转移测试中，该方法显著提升了导航的泛化鲁棒性。",
-          "llm_tldr": "该论文提出传感器引导的适应性对比学习框架，用于PointGoal导航的视觉表征学习。利用特权LiDAR传感通过几何感知相似度度量和自适应温度缩放引导对比目标，使视觉嵌入捕捉导航相关结构而非场景外观。编码器独立预训练后冻结作为RL策略的感知骨干，分离表征与策略学习。在多个场景间转移测试中，该方法显著提升了导航的泛化鲁棒性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.05506v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.08332v1",
-          "source": "arxiv",
-          "title": "SMI: Efficient Self-Supervised Learning via Mutual-Information-Inspired Dependency Optimization",
-          "abstract": "Self-supervised learning (SSL) has achieved remarkable representation learning performance, but many existing methods rely on large batch sizes, memory banks, momentum encoders, or global synchronization mechanisms that substantially increase computational cost and training complexity. In this work, we propose Semantic Mutual Information (SMI), a lightweight self-supervised objective derived from a mutual-information-inspired dependency formulation under Gaussian assumptions. Unlike conventional correlation matching objectives that operate on high-dimensional feature correlation matrices, SMI performs optimization on a sample-level dependency matrix through a nonlinear transformation of pairwise correlations. This formulation induces distinct optimization dynamics that emphasize strongly dependent semantic pairs while maintaining representation diversity. Experimental results on ImageNet using a ResNet-50 backbone demonstrate that SMI achieves competitive linear evaluation performance relative to state-of-the-art SSL approaches while substantially reducing computational complexity. Across multiple low-resource benchmarks, SMI consistently improves transfer performance over Barlow Twins, particularly on fine-grained datasets. Furthermore, analyses of optimization dynamics and representation geometry suggest improved alignment--redundancy balance, greater feature diversity, and more spatially localized semantic representations. These results indicate that nonlinear dependency optimization provides an effective and computationally efficient alternative to conventional correlation-based self-supervised learning objectives.",
-          "authors": [
-            "Pritam Mishra",
-            "Coloma Ballester",
-            "Dimosthenis Karatzas"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-06T20:50:04+00:00",
-          "link": "https://arxiv.org/pdf/2606.08332v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "proposes lightweight self-supervised learning objective SMI for efficient representation",
-          "llm_evidence_cn": "提出轻量级自监督学习目标SMI，高效学习表征",
-          "llm_evidence": "提出轻量级自监督学习目标SMI，高效学习表征",
-          "canonical_evidence": "提出轻量级自监督学习目标SMI，高效学习表征",
-          "llm_tldr_en": "Introduces Semantic Mutual Information (SMI), a lightweight self-supervised objective that optimizes sample-level dependency, reducing computational cost while achieving strong representation performance.",
-          "llm_tldr_cn": "现有自监督学习方法依赖大batch、动量编码器等，计算成本高。本文提出基于互信息启发式依赖的目标SMI，在样本级依赖矩阵上优化，避免高维特征相关矩阵。实验表明SMI在降低计算复杂度同时达到了有竞争力的表征学习性能，为高效自监督学习提供了新方案。",
-          "llm_tldr": "现有自监督学习方法依赖大batch、动量编码器等，计算成本高。本文提出基于互信息启发式依赖的目标SMI，在样本级依赖矩阵上优化，避免高维特征相关矩阵。实验表明SMI在降低计算复杂度同时达到了有竞争力的表征学习性能，为高效自监督学习提供了新方案。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "self-supervised learning techniques for feature extraction",
-          "matched_requirement_id": "req-9",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.08332v1",
           "carry_days": 1
         },
         {
@@ -232,136 +115,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "adversarial training for robust parameter-efficient fine-tuning",
-          "llm_evidence_cn": "对抗训练实现鲁棒的参数高效微调",
-          "llm_evidence": "对抗训练实现鲁棒的参数高效微调",
-          "canonical_evidence": "对抗训练实现鲁棒的参数高效微调",
-          "llm_tldr_en": "SDBN introduces adversarial training to parameter-efficient fine-tuning, enhancing robustness and generalization under limited data.",
-          "llm_tldr_cn": "参数高效微调在小数据下易过拟合、鲁棒性差。SDBN将对抗训练引入PEFT框架，提出离散不确定集变体（字符级编辑和LLM生成扰动），增强模型对噪声的鲁棒性和泛化能力。实验证明该方法优于现有PEFT方法，为小样本场景下的模型高效适配提供了有效方案。",
-          "llm_tldr": "参数高效微调在小数据下易过拟合、鲁棒性差。SDBN将对抗训练引入PEFT框架，提出离散不确定集变体（字符级编辑和LLM生成扰动），增强模型对噪声的鲁棒性和泛化能力。实验证明该方法优于现有PEFT方法，为小样本场景下的模型高效适配提供了有效方案。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.10610v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.06178v1",
-          "source": "arxiv",
-          "title": "Learning to Route LLMs from Implicit Cost-Performance Preferences via Meta-Learning",
-          "abstract": "Large language models (LLMs) present a trade-off between performance and cost, where more powerful models incur greater expense. LLM routing aims to mitigate expenses while maintaining performance by sending queries to the most suitable model. However, existing methods cannot perform well for different user cost-performance preferences. To address this gap, we introduce a novel perceptive LLM routing paradigm for personalized and user-centric cost-performance optimization, which efficiently learns users' implicit preferences through little interaction. To handle the challenge of heterogeneous user needs, we formulate preference profiles as a set of distinct tasks in contextual bandit and propose MetaRouter, a meta-learning framework designed for preference-aware LLM routing. Experimental results show that MetaRouter outperforms strong baselines on both in-distribution and out-of-distribution tasks. Furthermore, it exhibits high efficiency in learning user preferences, robustness to changes in the routable LLMs, and scalability to multi-model routing.",
-          "authors": [
-            "Jiahao Zeng",
-            "Ming Tang",
-            "Ningning Ding"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI",
-            "cs.CL"
-          ],
-          "published": "2026-06-04T13:53:03+00:00",
-          "link": "https://arxiv.org/pdf/2606.06178v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "meta-learning for LLM routing",
-          "llm_evidence_cn": "元学习用于大模型路由",
-          "llm_evidence": "元学习用于大模型路由",
-          "canonical_evidence": "元学习用于大模型路由",
-          "llm_tldr_en": "We propose MetaRouter, a meta-learning framework that efficiently learns user cost-performance preferences through minimal interaction for personalized LLM routing.",
-          "llm_tldr_cn": "大模型路由需要平衡性能与成本，但现有方法难以适应不同用户的偏好。本文提出MetaRouter元学习框架，将用户偏好建模为上下文赌博机任务，通过少量交互学习隐含偏好，实现个性化的路由决策。实验表明在多种偏好下均能有效优化成本性能权衡。",
-          "llm_tldr": "大模型路由需要平衡性能与成本，但现有方法难以适应不同用户的偏好。本文提出MetaRouter元学习框架，将用户偏好建模为上下文赌博机任务，通过少量交互学习隐含偏好，实现个性化的路由决策。实验表明在多种偏好下均能有效优化成本性能权衡。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
-          "matched_requirement_id": "req-11",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.06178v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.07007v1",
-          "source": "arxiv",
-          "title": "A Geometric View for Understanding Concept Learning and Neuron Interpretation in Sparse Autoencoders",
-          "abstract": "We propose a unified mathematical framework for a geometric understanding of concept learning and neuron interpretation in sparse autoencoders (SAEs). While SAEs improve interpretability of neural networks by learning sparse feature representations, a principled definition of ''concept'' and ''learning'' remains unclear. We formalize concepts as sets of data points and cast concept learning as a set-alignment problem between human-defined and model-induced concepts. This formulation distinguishes three increasingly strong notions of learning -- detection, separation, and approximation -- and yields geometric conditions, error bounds, and capacity constraints for when concepts can be represented by individual neurons or multi-neuron units. It also provides a set-theoretic account for common SAE phenomena, including feature splitting, feature absorption, feature families, and hierarchical concepts. Finally, we connect concept learning and neuron interpretation through formal concept analysis, showing that the two directions need not agree and that their many-to-many structure can be organized by concept lattices. Experiments on synthetic data with ReLU and Top-$K$ SAEs illustrate the theory and reveal the effects of SAE size and sparsity on concept learning.",
-          "authors": [
-            "Chenhao Zhang",
-            "Chris Lin",
-            "Su-In Lee"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-05T07:52:43+00:00",
-          "link": "https://arxiv.org/pdf/2606.07007v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "geometric framework for concept learning in sparse autoencoders",
-          "llm_evidence_cn": "稀疏自编码器中概念学习的几何框架",
-          "llm_evidence": "稀疏自编码器中概念学习的几何框架",
-          "canonical_evidence": "稀疏自编码器中概念学习的几何框架",
-          "llm_tldr_en": "Provides a geometric understanding of concept learning in SAEs, formalizing concepts as sets and learning as set-alignment.",
-          "llm_tldr_cn": "稀疏自编码器(SAE)能学习稀疏特征表示，但概念和学习的定义不明确。该论文提出统一数学框架，将概念视为数据点集合，将概念学习建模为人类概念与模型诱导概念间的集合对齐问题。区分了检测、分离和近似三种学习强度，并给出几何条件、误差界和容量约束。为SAE的可解释性和表示学习提供了理论基础。",
-          "llm_tldr": "稀疏自编码器(SAE)能学习稀疏特征表示，但概念和学习的定义不明确。该论文提出统一数学框架，将概念视为数据点集合，将概念学习建模为人类概念与模型诱导概念间的集合对齐问题。区分了检测、分离和近似三种学习强度，并给出几何条件、误差界和容量约束。为SAE的可解释性和表示学习提供了理论基础。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.07007v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.10406v1",
-          "source": "arxiv",
-          "title": "FOGO: Forgetting-aware Orthogonalization Optimizer",
-          "abstract": "We argue that forgetting is not confined to continual learning but is a general optimization phenomenon: during standard training, dominant mini-batch gradients suppress rare but useful update directions, causing short-term forgetting at every step. When such knowledge is never revisited, these losses compound into long-term forgetting-the classical failure mode of continual learning. We introduce FOGO, a scalable optimizer that continuously detects and resolves gradient interference across both regimes. FOGO spectrally orthogonalizes momentum updates to prevent dominant directions from monopolizing optimization, then stores representative past directions in a compact codebook memory built on random projection, where pairwise distances are provably preserved in low-dimensional space. At each step, conflicts between the current update and stored directions are resolved via lightweight orthogonal correction and lifted back through a proximal step, with minimal overhead and no data storage. Across class-imbalanced classification, continual visual learning under domain and class shifts, continual fine-tuning of LLaVA-7B, and GPT-2 pretraining, FOGO consistently improves convergence and knowledge retention, outperforming Adam and Muon.",
-          "authors": [
-            "Toan Nguyen",
-            "Yang Liu",
-            "Trung Le",
-            "Celso de Melo",
-            "Flora D. Salim"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-09T04:30:49+00:00",
-          "link": "https://arxiv.org/pdf/2606.10406v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "optimizer with forgetting-aware orthogonalization for better convergence",
-          "llm_evidence_cn": "具有遗忘感知正交化的优化器，改善收敛",
-          "llm_evidence": "具有遗忘感知正交化的优化器，改善收敛",
-          "canonical_evidence": "具有遗忘感知正交化的优化器，改善收敛",
-          "llm_tldr_en": "FOGO detects and resolves gradient interference during training, using spectral orthogonalization and compact memory to improve convergence.",
-          "llm_tldr_cn": "标准训练中主导小批量梯度会抑制罕见但有用的方向，造成短期遗忘并累积为长期遗忘。该论文提出FOGO优化器，持续检测并解决梯度干扰：通过谱正交化动量更新防止主导方向垄断，利用基于随机投影的紧凑码本存储代表性过去方向。在多种持续学习和标准训练任务上，FOGO加速收敛并提升最终性能。",
-          "llm_tldr": "标准训练中主导小批量梯度会抑制罕见但有用的方向，造成短期遗忘并累积为长期遗忘。该论文提出FOGO优化器，持续检测并解决梯度干扰：通过谱正交化动量更新防止主导方向垄断，利用基于随机投影的紧凑码本存储代表性过去方向。在多种持续学习和标准训练任务上，FOGO加速收敛并提升最终性能。",
+          "llm_evidence_en": "Proposes adversarial training for PEFT to improve robustness and generalization, a training optimization",
+          "llm_evidence_cn": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
+          "llm_evidence": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
+          "canonical_evidence": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
+          "llm_tldr_en": "Introduces SDBN, a framework combining adversarial training with PEFT to enhance model robustness and generalization on limited data, outperforming alternative approaches.",
+          "llm_tldr_cn": "针对小数据下参数高效微调鲁棒性差的问题，提出将对抗训练集成到PEFT中。通过梯度选择最坏情况变体或利用LLM生成扰动，在少量样本上微调，显著提升模型鲁棒性和泛化能力。",
+          "llm_tldr": "针对小数据下参数高效微调鲁棒性差的问题，提出将对抗训练集成到PEFT中。通过梯度选择最坏情况变体或利用LLM生成扰动，在少量样本上微调，显著提升模型鲁棒性和泛化能力。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -369,7 +129,126 @@
           "matched_query_text": "training optimization strategies for better model convergence",
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.10406v1",
+          "paper_id": "2606.10610v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.08691v1",
+          "source": "arxiv",
+          "title": "Hierarchical Projection for Adaptive Knowledge Transfer",
+          "abstract": "Modern data-driven applications increasingly involve learning from multiple heterogeneous sources, where a target dataset is limited but related information is available across domains. Naively combining these sources can degrade performance when relevance varies or spurious signals are present, posing a fundamental challenge for trustworthy cross-domain learning. We propose Projection Transfer Learning (ProjectionTL), a unified framework that integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer. The key idea is to decouple transfer at two levels: first, we construct a source-guided hierarchical prior that aggregates information across sources using data-driven weights, capturing global alignment between each source and the target; second, we refine this borrowing through a posterior-projection step that operates at the feature level, selectively retaining coordinates that exhibit local agreement with the target signal. This two-stage design enables the method to simultaneously perform source selection and feature selection, thereby mitigating negative transfer while preserving interpretability. ProjectionTL provides a principled approach to integrating heterogeneous data across domains, bridging statistical modeling and modern machine learning paradigms for robust and interpretable transfer. Through simulations and real-world biomedical applications, we demonstrate improved accuracy, stability, and interpretability compared to existing methods. Our framework offers a scalable and generalizable strategy for trustworthy cross-domain learning in high-dimensional settings.",
+          "authors": [
+            "Samhita Pal",
+            "Tian Gu"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "stat.ME"
+          ],
+          "published": "2026-06-07T15:44:34+00:00",
+          "link": "https://arxiv.org/pdf/2606.08691v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Projection Transfer Learning for adaptive knowledge transfer",
+          "llm_evidence_cn": "投影迁移学习用于自适应知识迁移",
+          "llm_evidence": "投影迁移学习用于自适应知识迁移",
+          "canonical_evidence": "投影迁移学习用于自适应知识迁移",
+          "llm_tldr_en": "ProjectionTL integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer from multiple heterogeneous sources, improving target model training efficiency.",
+          "llm_tldr_cn": "针对多源异质数据迁移学习中相关度变化和虚假信号导致性能下降的问题，本文提出投影迁移学习框架。该方法通过层次贝叶斯建模构建源引导的先验，利用自适应投影选择性地迁移知识，仅保留关键跨域对齐信息。在多个跨域学习任务上的实验表明，ProjectionTL显著提升了目标模型在有限数据下的训练效率和泛化性能。该框架为可信赖的跨域学习提供了有效工具。",
+          "llm_tldr": "针对多源异质数据迁移学习中相关度变化和虚假信号导致性能下降的问题，本文提出投影迁移学习框架。该方法通过层次贝叶斯建模构建源引导的先验，利用自适应投影选择性地迁移知识，仅保留关键跨域对齐信息。在多个跨域学习任务上的实验表明，ProjectionTL显著提升了目标模型在有限数据下的训练效率和泛化性能。该框架为可信赖的跨域学习提供了有效工具。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.08691v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.10196v1",
+          "source": "arxiv",
+          "title": "Fisher-Guided Progressive Parameter Selection for Adaptive Fine-Tuning",
+          "abstract": "Parameter-efficient fine-tuning (PEFT) aims to adapt pretrained models with a small trainable parameter subset, however, most existing methods choose this subset from fixed architectural heuristics rather than using dynamic, task-aware criteria. We introduce \\textbf{FisherAdapTune}, a Fisher-guided Adaptive Fine-Tuning framework that progressively selects parameter groups by tracking the temporal drift of their Fisher geometry. Starting from a PAC-Bayesian view of fine-tuning, we decompose the generalization error bound into Fisher-weighted update costs and show that parameter groups whose curvature contribution has stabilized can be frozen to reduce the error bound without interrupting the remaining adaptation dynamics. FisherAdapTune formulates this criterion with a scale-invariant Jensen-Shannon distance between consecutive Fisher distributions, yielding an adaptive active parameter set. We evaluate our approach on a downstream segmentation task, and results show FisherAdapTune improves the in-distribution performance and zero-shot transfer in multiple settings, validating that Fisher structural drift is a useful signal for efficient, task-aware adaptation. We release our \\href{https://github.com/AtlasAnalyticsLab/FisherAdapTune}{code} publicly to enable further application of our proposed approach.",
+          "authors": [
+            "Ghodsiyeh Rostami",
+            "Po-Han Chen",
+            "Mahdi S. Hosseini"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.AI"
+          ],
+          "published": "2026-06-08T21:35:11+00:00",
+          "link": "https://arxiv.org/pdf/2606.10196v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Fisher-guided adaptive fine-tuning framework for parameter-efficient transfer learning",
+          "llm_evidence_cn": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
+          "llm_evidence": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
+          "canonical_evidence": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
+          "llm_tldr_en": "FisherAdapTune proposes a Fisher-guided adaptive fine-tuning framework that progressively selects parameter groups by tracking Fisher geometry drift, freezing stabilized groups to reduce generalization error bound without interrupting adaptation dynamics.",
+          "llm_tldr_cn": "提出FisherAdapTune框架，通过追踪参数组Fisher几何的时间漂移，动态选择并冻结已稳定的参数群，实现自适应参数高效微调。从PAC-Bayesian角度推导了泛化误差界，证明冻结稳定群可降低误差界而不影响剩余适应过程。实验表明该方法在多个下游任务上优于固定启发式PEFT方法。",
+          "llm_tldr": "提出FisherAdapTune框架，通过追踪参数组Fisher几何的时间漂移，动态选择并冻结已稳定的参数群，实现自适应参数高效微调。从PAC-Bayesian角度推导了泛化误差界，证明冻结稳定群可降低误差界而不影响剩余适应过程。实验表明该方法在多个下游任务上优于固定启发式PEFT方法。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.10196v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.11275v1",
+          "source": "arxiv",
+          "title": "RoVE: Rotary Value Embeddings Attention for Relative Position-dependent Value Pathways",
+          "abstract": "Rotary Position Embeddings (RoPE) make attention scores position-relative but leave the value pathway position-blind: the message sent by a value token is the same regardless of its distance from the query. We propose RoVE, a parameter-free modification that makes values position-sensitive by rotating them simultaneously with keys, and show that it turns RoPE attention into attentive convolution. This new perspective unifies several independent formulations of the same operation across computer vision, robotics, and modern LLM architectures. Trained 124M and 354M GPT-2 models show consistent empirical gains over RoPE on few-shot in-context learning, out-of-distribution perplexity, and long-context retrieval, with the clearest improvements on tasks that require long-range aggregation.",
+          "authors": [
+            "Alejandro García-Castellanos",
+            "Maurice Weiler",
+            "Erik J Bekkers"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-09T09:56:50+00:00",
+          "link": "https://arxiv.org/pdf/2606.11275v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Novel attention modification making value vectors position-sensitive, improving few-shot in-context learning and long-context retrieval",
+          "llm_evidence_cn": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
+          "llm_evidence": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
+          "canonical_evidence": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
+          "llm_tldr_en": "RoVE modifies rotary position embeddings to make value pathways position-sensitive, turning RoPE attention into attentive convolution, achieving consistent gains in few-shot in-context learning, OOD perplexity, and long-context retrieval with GPT-2 models.",
+          "llm_tldr_cn": "提出RoVE，通过对旋转位置编码进行简单修改，使值路径同时具有位置敏感性，将RoPE注意力转化为注意力卷积。在124M和354M GPT-2模型上的实验显示，RoVE在少样本上下文学习、分布外困惑度和长上下文检索上一致优于RoPE。该发现统一了计算机视觉、机器人和大型语言模型中的多种注意力变体，具有架构创新意义。",
+          "llm_tldr": "提出RoVE，通过对旋转位置编码进行简单修改，使值路径同时具有位置敏感性，将RoPE注意力转化为注意力卷积。在124M和354M GPT-2模型上的实验显示，RoVE在少样本上下文学习、分布外困惑度和长上下文检索上一致优于RoPE。该发现统一了计算机视觉、机器人和大型语言模型中的多种注意力变体，具有架构创新意义。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
+          "matched_requirement_id": "req-15",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.11275v1",
           "carry_days": 1
         }
       ]

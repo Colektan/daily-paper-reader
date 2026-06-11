@@ -6,169 +6,101 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-02 ~ 2026-06-11
-- 运行时间：2026-06-11 03:33:00 UTC
+- 最新运行日期：2026-06-11
+- 运行时间：2026-06-11 22:31:09 UTC
 - 运行状态：成功
-- 本次总论文数：49
-- 精读区：42
+- 本次总论文数：27
+- 精读区：20
 - 速读区：7
 
 ### 今日简报（AI）
-每日精读42篇论文，重点锁定两篇10分佳作：重新思考具身链式思维实现泛化机器人操作，以及势导流匹配改进视觉-语言-动作策略。
-最值得关注的方向是具身智能中的思维链与VLA策略结合的泛化性提升，以及流匹配方法在策略优化中的潜力。
-建议读者优先精读这两篇10分论文，将其技术思路与自身机器人或具身智能研究对照，探索在真实场景中复现或改进的可能性。
-- 详情：[/20260602-20260611/README](/20260602-20260611/README)
+今日共推荐27篇论文，其中精读20篇，速读7篇，两篇满分论文《$ω$-EVA》和《VICX》是核心亮点。最值得关注的方向是机器人操控与交互世界模型，分别通过潜在世界模型与视频生成实现泛化。建议优先精读这两篇满分论文，并留意机器人领域从感知到推理演化的趋势。
+- 详情：[/202606/11/README](/202606/11/README)
 
 ### 精读区论文标签
-1. [Revisiting Embodied Chain-of-Thought for Generalizable Robot Manipulation](/20260602-20260611/2606.03784v2-revisiting-embodied-chain-of-thought-for-generalizable-robot-manipulation)  
+1. [$ω$-EVA: Envision, Verify, and Act with Latent Interactive World Models](/202606/11/2606.09457v1--eva-envision-verify-and-act-with-latent-interactive-world-models)  
    标签：评分：10.0/10、query:rl-vla-world
-   evidence：面向机器人操作的VLA模型与具身思维链
-2. [Potential-Guided Flow Matching for Vision-Language-Action Policy Improvement](/20260602-20260611/2606.04968v1-potential-guided-flow-matching-for-vision-language-action-policy-improvement)  
+   evidence：用于具身动作的潜在交互世界模型
+2. [VICX: Generalizable Robot Manipulation via Video Generation and In-Context Operator Network](/202606/11/2606.12028v1-vicx-generalizable-robot-manipulation-via-video-generation-and-in-context-operator-network)  
    标签：评分：10.0/10、query:rl-vla-world
-   evidence：基于流匹配的VLA策略改进，无需外部批评网络
-3. [PiL-World: A Chunk-Wise World Model for VLA Policy-in-the-Loop Evaluation](/20260602-20260611/2606.05773v1-pil-world-a-chunk-wise-world-model-for-vla-policy-in-the-loop-evaluation)  
+   evidence：使用视频生成和上下文学习的机器人操作
+3. [APT: Action Expert Pretraining Improves Instruction Generalization of Vision-Language-Action Policies](/202606/11/2606.12366v1-apt-action-expert-pretraining-improves-instruction-generalization-of-vision-language-action-policies)  
    标签：评分：10.0/10、query:rl-vla-world
-   evidence：用于VLA策略在环评估的分块世界模型
-4. [AffordanceVLA: A Vision-Language-Action Model Empowering Action Generation through Affordance-Aware Understanding](/20260602-20260611/2606.06155v1-affordancevla-a-vision-language-action-model-empowering-action-generation-through-affordance-aware-understanding)  
+   evidence：视觉-语言-动作模型预训练提升操作指令泛化
+4. [World Pilot: Steering Vision-Language-Action Models with World-Action Priors](/202606/11/2606.12403v1-world-pilot-steering-vision-language-action-models-with-world-action-priors)  
    标签：评分：10.0/10、query:rl-vla-world
-   evidence：具备可操作性理解的视觉-语言-动作模型
-5. [MPCoT: Reward-Guided Multi-Path Latent Reasoning for Test-Time Scalable Vision-Language-Action](/20260602-20260611/2606.06245v1-mpcot-reward-guided-multi-path-latent-reasoning-for-test-time-scalable-vision-language-action)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：视觉-语言-动作模型的奖励引导多路径潜在推理
-6. [STRIPS-WM: Learning Grounded Propositional STRIPS-style World Models from Images](/20260602-20260611/2606.06832v1-strips-wm-learning-grounded-propositional-strips-style-world-models-from-images)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：从图像学习世界模型用于机器人规划
-7. [Variational Proximal Policy Optimization](/20260602-20260611/2606.08032v1-variational-proximal-policy-optimization)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：基于变分推理的新型强化学习算法
-8. [TORL-VLA: Tactile Guided Online Reinforcement Learning for Contact-Rich Manipulation](/20260602-20260611/2606.09337v1-torl-vla-tactile-guided-online-reinforcement-learning-for-contact-rich-manipulation)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：触觉引导的在线强化学习VLA模型用于接触丰富操作
-9. [AHA-WAM:Asynchronous Horizon-Adaptive World-Action Modeling with Observation-Guided Context Routing](/20260602-20260611/2606.09811v1-aha-wamasynchronous-horizon-adaptive-world-action-modeling-with-observation-guided-context-routing)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：异步世界行动模型用于机器人操作
-10. [VeriSpace: Spatially Grounded Action Verification for Vision-Language-Action Models](/20260602-20260611/2606.10568v1-verispace-spatially-grounded-action-verification-for-vision-language-action-models)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：面向视觉-语言-动作模型的测试时动作验证
-11. [GeoAlign: Beyond Semantics with State-Guided Spatial Alignment in VLA Models](/20260602-20260611/2606.03240v1-geoalign-beyond-semantics-with-state-guided-spatial-alignment-in-vla-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLA模型中的状态引导空间对齐用于机器人操作
-12. [GPU-Parallel Multi-Task Reinforcement Learning with Demonstration Guided Policy Optimization](/20260602-20260611/2606.03335v1-gpu-parallel-multi-task-reinforcement-learning-with-demonstration-guided-policy-optimization)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：GPU并行多任务强化学习用于机器人操作，结合演示引导的策略优化
-13. [Post-Hoc Robustness for Model-Based Reinforcement Learning](/20260602-20260611/2606.03521v1-post-hoc-robustness-for-model-based-reinforcement-learning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：模型基强化学习的后验鲁棒性
-14. [PHASER: Phase-Aware and Semantic Experience Replay for Vision-Language-Action Models](/20260602-20260611/2606.03598v2-phaser-phase-aware-and-semantic-experience-replay-for-vision-language-action-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于机器人操作的视觉-语言-动作模型及相位感知经验回放
-15. [Preference-Calibrated Human-in-the-Loop Reinforcement Learning for Robotic Manipulation](/20260602-20260611/2606.03949v1-preference-calibrated-human-in-the-loop-reinforcement-learning-for-robotic-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：强化学习用于机器人操作，人类在环信用分配校正
-16. [CLAW: Learning Continuous Latent Action World Models via Adversarial Latent Regularization](/20260602-20260611/2606.04130v1-claw-learning-continuous-latent-action-world-models-via-adversarial-latent-regularization)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：从无动作视频中自监督学习世界模型和潜在动作表示
-17. [Representation Learning Enables Scalable Multitask Deep Reinforcement Learning](/20260602-20260611/2606.05555v1-representation-learning-enables-scalable-multitask-deep-reinforcement-learning)  
+   evidence：提出World Pilot，将世界动作先验与VLA模型结合用于操作
+5. [Differentiable Efficient Operator Search](/202606/11/2606.05232v1-differentiable-efficient-operator-search)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：表征学习驱动可扩展多任务强化学习
-18. [Discrete-WAM: Unified Discrete Vision-Action Token Editing for World-Policy Learning](/20260602-20260611/2606.05645v2-discrete-wam-unified-discrete-vision-action-token-editing-for-world-policy-learning)  
+   evidence：面向多模态模型token缩减算子的神经网络架构搜索
+6. [Let It Be Simple: One-Step Action Generation for Vision-Language-Action Models](/202606/11/2606.05737v1-let-it-be-simple-one-step-action-generation-for-vision-language-action-models)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于世界策略学习的世界模型
-19. [DRIFT: A Residual Flow Adapter for Decoding Continuous Outputs in Vision-Language Models](/20260602-20260611/2606.05758v1-drift-a-residual-flow-adapter-for-decoding-continuous-outputs-in-vision-language-models)  
+   evidence：直接研究VLA模型一步动作生成，是机器人学核心
+7. [Reinforcement learning in linear embedding space unlocks generalizable control across soft robot configurations](/202606/11/2606.08104v1-reinforcement-learning-in-linear-embedding-space-unlocks-generalizable-control-across-soft-robot-configurations)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：视觉语言模型适配连续输出用于机器人控制
-20. [World-Language-Action Model for Unified World Modeling, Language Reasoning, and Action Synthesis](/20260602-20260611/2606.05979v1-world-language-action-model-for-unified-world-modeling-language-reasoning-and-action-synthesis)  
+   evidence：强化学习用于软机器人控制
+8. [SIMPLE: Simulation-Based Policy Learning and Evaluation for Humanoid Loco-manipulation](/202606/11/2606.08278v1-simple-simulation-based-policy-learning-and-evaluation-for-humanoid-loco-manipulation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：统一的世界-语言-动作模型
-21. [Online KL-Regularized Reinforcement Learning with Function Approximation under Misspecification](/20260602-20260611/2606.06053v1-online-kl-regularized-reinforcement-learning-with-function-approximation-under-misspecification)  
+   evidence：人形机器人全身操作策略学习的仿真环境
+9. [Neuro-Symbolic Injection of LTLf Constraints in Autoregressive Reinforcement Learning Policies](/202606/11/2606.08312v1-neuro-symbolic-injection-of-ltlf-constraints-in-autoregressive-reinforcement-learning-policies)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：KL正则化强化学习在模型误设定下的保证
-22. [ActionMap: Robot Policy Learning via Voxel Action Heatmap](/20260602-20260611/2606.06904v1-actionmap-robot-policy-learning-via-voxel-action-heatmap)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLA动作解码器体素热图
-23. [LARA: Latent Action Representation Alignment for Vision-Language-Action Models](/20260602-20260611/2606.07100v1-lara-latent-action-representation-alignment-for-vision-language-action-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：视觉-语言-动作模型，潜在动作对齐
-24. [Coarse-to-Control: Action-Token Planning for Vision-Language-Action Models](/20260602-20260611/2606.07107v1-coarse-to-control-action-token-planning-for-vision-language-action-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：具有动作令牌规划的规划-执行VLA模型，用于长程任务
-25. [Robotic Policy Adaptation via Weight-Space Meta-Learning](/20260602-20260611/2606.07217v1-robotic-policy-adaptation-via-weight-space-meta-learning)  
+   evidence：神经符号框架将LTLf约束注入基于Transformer的离线强化学习策略。
+10. [SMI: Efficient Self-Supervised Learning via Mutual-Information-Inspired Dependency Optimization](/202606/11/2606.08332v1-smi-efficient-self-supervised-learning-via-mutual-information-inspired-dependency-optimization)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：基于权重空间的元学习实现VLA策略快速适应
-26. [RhinoVLA Technical Report](/20260602-20260611/2606.07383v1-rhinovla-technical-report)  
+   evidence：基于互信息的自监督学习方法用于表征学习
+11. [GEAR-VLA: Learning Geometry-Aware Action Representations for Generalizable Robotic Manipulation](/202606/11/2606.08530v2-gear-vla-learning-geometry-aware-action-representations-for-generalizable-robotic-manipulation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：边缘设备上的实时VLA
-27. [Q-VGM: Q-Guided Value-Gradient Matching for Flow-Matching VLA Policies](/20260602-20260611/2606.08015v1-q-vgm-q-guided-value-gradient-matching-for-flow-matching-vla-policies)  
+   evidence：VLA机器人操作，几何感知动作表示
+12. [Reinforcement Learning for Flow-Matching Policies with Density Transport](/202606/11/2606.08602v1-reinforcement-learning-for-flow-matching-policies-with-density-transport)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：使用Q函数梯度微分流匹配VLA策略的离策略RL方法
-28. [CLASP: Language-Driven Robot Skill Selection and Composition using Task-Parameterized Learning](/20260602-20260611/2606.08169v1-clasp-language-driven-robot-skill-selection-and-composition-using-task-parameterized-learning)  
+   evidence：用于流匹配策略的在线强化学习算法
+13. [HARBOR: A Harness Framework for Agentic Robot Reinforcement Learning](/202606/11/2606.08610v1-harbor-a-harness-framework-for-agentic-robot-reinforcement-learning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：视觉语言动作模型用于机器人技能组合
-29. [Light-WAM: Efficient World Action Models with State-Fusion Action Decoding](/20260602-20260611/2606.08242v1-light-wam-efficient-world-action-models-with-state-fusion-action-decoding)  
+   evidence：自动化机器人强化学习管线的框架
+14. [Benchmarking Vision-Language-Action Models on SO-101: Failure and Recovery Analysis](/202606/11/2606.08881v1-benchmarking-vision-language-action-models-on-so-101-failure-and-recovery-analysis)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于机器人操作的轻量级世界动作模型
-30. [MotionVLA: Injecting Geometric Motion into Vision-Language-Action Model](/20260602-20260611/2606.08288v1-motionvla-injecting-geometric-motion-into-vision-language-action-model)  
+   evidence：在低成本真实机器人平台SO-101上对VLA和模仿学习策略进行基准测试
+15. [Flow Control: Steering Vision-Language-Action Models with Simple Real-Time Inputs](/202606/11/2606.10180v1-flow-control-steering-vision-language-action-models-with-simple-real-time-inputs)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：向VLA模型注入几何运动信息用于机器人操作
-31. [Two Bridges, One Pathway: From VLMs to Generalizable VLAs with Embodied Trajectory-Coupled Data](/20260602-20260611/2606.08520v1-two-bridges-one-pathway-from-vlms-to-generalizable-vlas-with-embodied-trajectory-coupled-data)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：使用具身轨迹耦合数据桥接VLM到VLA
-32. [GEAR-VLA: Learning Geometry-Aware Action Representations for Generalizable Robotic Manipulation](/20260602-20260611/2606.08530v1-gear-vla-learning-geometry-aware-action-representations-for-generalizable-robotic-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于机器人操控的几何感知动作表示VLA模型
-33. [Unifying Object-Centric World Models and Diffusion Policy: A Hierarchical Framework for Multi-Stage Robotic Tasks](/20260602-20260611/2606.08775v1-unifying-object-centric-world-models-and-diffusion-policy-a-hierarchical-framework-for-multi-stage-robotic-tasks)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于多阶段机器人操作的世界模型
-34. [Scaling by Diversified Experience for Vision-Language-Action Models](/20260602-20260611/2606.09009v1-scaling-by-diversified-experience-for-vision-language-action-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：通过多样化经验和强化学习增强VLA模型鲁棒性
-35. [$ω$-EVA: Envision, Verify, and Act with Latent Interactive World Models](/20260602-20260611/2606.09457v1--eva-envision-verify-and-act-with-latent-interactive-world-models)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：具有设想-验证-执行循环的潜交互世界模型用于具身动作生成
-36. [Evaluating the Representation Space of Diffusion Models via Self-Supervised Principles](/20260602-20260611/2606.09718v1-evaluating-the-representation-space-of-diffusion-models-via-self-supervised-principles)  
+   evidence：用实时输入引导VLA模型
+16. [FOGO: Forgetting-aware Orthogonalization Optimizer](/202606/11/2606.10406v1-fogo-forgetting-aware-orthogonalization-optimizer)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：自监督学习用于评估扩散模型表示
-37. [MemoryVLA++: Temporal Modeling via Memory and Imagination in Vision-Language-Action Models](/20260602-20260611/2606.09827v1-memoryvla-temporal-modeling-via-memory-and-imagination-in-vision-language-action-models)  
+   evidence：防止遗忘并改善收敛的训练优化方法
+17. [IMPACT: Learning Internal-Model Predictive Control for Forceful Robotic Manipulation](/202606/11/2606.10818v1-impact-learning-internal-model-predictive-control-for-forceful-robotic-manipulation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：具有记忆和想象能力的VLA模型用于机器人操作
-38. [GHOST: Hierarchical Sub-Goal Policies for Generalizing Robot Manipulation](/20260602-20260611/2606.10025v1-ghost-hierarchical-sub-goal-policies-for-generalizing-robot-manipulation)  
+   evidence：提出学习内部模型预测控制用于力性机器人操作
+18. [When Does Language Matter? Multilingual Instructions Reveal Step-wise Language Sensitivity in Vision-Language-Action Models](/202606/11/2606.11906v1-when-does-language-matter-multilingual-instructions-reveal-step-wise-language-sensitivity-in-vision-language-action-models)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：机器人操作的分层学习
-39. [What Matters in Orchestrating Robot Policies: A Systematic Study of Hierarchical VLA Agents](/20260602-20260611/2606.10267v1-what-matters-in-orchestrating-robot-policies-a-systematic-study-of-hierarchical-vla-agents)  
+   evidence：VLA模型在多语言环境下的机器人操作评估
+19. [World Model Self-Distillation: Training World Models to Solve General Tasks](/202606/11/2606.12072v1-world-model-self-distillation-training-world-models-to-solve-general-tasks)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：分层VLA智能体用于机器人操作
-40. [SARM2: Multi-Task Stage Aware Reward Modeling for Self Improving Robotic Manipulation](/20260602-20260611/2606.10305v1-sarm2-multi-task-stage-aware-reward-modeling-for-self-improving-robotic-manipulation)  
+   evidence：结合强化学习和视觉语言模型的世界模型自蒸馏
+20. [Bridging the Morphology Gap: Adapting VLA Models to Dexterous Manipulation via Intent-Conditioned Fine-Tuning](/202606/11/2606.12109v1-bridging-the-morphology-gap-adapting-vla-models-to-dexterous-manipulation-via-intent-conditioned-fine-tuning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：多任务阶段感知奖励模型融合VLA和RL实现自改进操作
-41. [HiMem-WAM: Hierarchical Memory-Gated World Action Models for Robotic Manipulation](/20260602-20260611/2606.10363v1-himem-wam-hierarchical-memory-gated-world-action-models-for-robotic-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：层级记忆门控世界动作模型用于机器人操作
-42. [AllDayNav: Lifelong Navigation via Real-World Reinforcement Learning](/20260602-20260611/2606.10927v1-alldaynav-lifelong-navigation-via-real-world-reinforcement-learning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：真实世界强化学习用于终身导航
+   evidence：将VLA模型适应到灵巧操作
 
 ### 速读区论文标签
-1. [Small RL Controller, Large Language Model: RL-Guided Adaptive Sampling for Test-Time Scaling](/20260602-20260611/2606.03102v1-small-rl-controller-large-language-model-rl-guided-adaptive-sampling-for-test-time-scaling)  
-   标签：评分：8.0/10、query:rl-vla-world
-   evidence：强化学习控制器用于自适应采样
-2. [$A^2$: Smaller Self-Supervised ViTs Localize Better than Larger Ones](/20260602-20260611/2606.03148v1-a2-smaller-self-supervised-vits-localize-better-than-larger-ones)  
+1. [Robust Scene Transfer for PointGoal Navigation via Privileged Sensor Guided Contrastive Learning](/202606/11/2606.05506v1-robust-scene-transfer-for-pointgoal-navigation-via-privileged-sensor-guided-contrastive-learning)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：自监督ViT用于定位和特征提取
-3. [IdEst: Assessing Self-Supervised Learning Representations via Intrinsic Dimension](/20260602-20260611/2606.03338v1-idest-assessing-self-supervised-learning-representations-via-intrinsic-dimension)  
+   evidence：传感器引导的对比表征学习用于导航
+2. [Modeling Nonlinear Feature Interactions with Product-Unit Residual Networks](/202606/11/2606.06861v1-modeling-nonlinear-feature-interactions-with-product-unit-residual-networks)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：通过内在维度评估自监督学习表示
-4. [Unlocking Feature Learning in Gated Delta Networks at Scale](/20260602-20260611/2606.04048v1-unlocking-feature-learning-in-gated-delta-networks-at-scale)  
+   evidence：提出产品单元残差网络建模非线性交互，改进表征学习
+3. [Transfer learning for causal forest](/202606/11/2606.07693v1-transfer-learning-for-causal-forest)  
+   标签：评分：8.0/10、query:rep-learning
+   evidence：因果森林的迁移学习
+4. [Parameter-Efficient Fine-Tuning with Learnable Rank](/202606/11/2606.04325v1-parameter-efficient-fine-tuning-with-learnable-rank)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：使用最大更新参数化研究门控Delta网络中的特征学习和缩放规则
-5. [LLM Compression with Jointly Optimizing Architectural and Quantization choices](/20260602-20260611/2606.04063v1-llm-compression-with-jointly-optimizing-architectural-and-quantization-choices)  
+   evidence：可学习秩的参数高效微调
+5. [Beyond Retrieval: Learning Compact User Representations for Scalable LLM Personalization](/202606/11/2606.04547v1-beyond-retrieval-learning-compact-user-representations-for-scalable-llm-personalization)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：神经架构搜索结合量化用于LLM压缩
-6. [BBOmix: A Tabular Benchmark for Hyperparameter Optimization of Unsupervised Biological Representation Learning](/20260602-20260611/2606.05139v1-bbomix-a-tabular-benchmark-for-hyperparameter-optimization-of-unsupervised-biological-representation-learning)  
+   evidence：可学习的用户表示用于LLM个性化
+6. [Invariant Gradient Alignment for Robust Reasoning Distillation](/202606/11/2606.05025v1-invariant-gradient-alignment-for-robust-reasoning-distillation)  
    标签：评分：6.0/10、query:rep-learning
-   evidence：无监督生物表征学习的超参数优化基准
-7. [GOTabPFN: From Feature Ordering to Compact Tokenization for Tabular Foundation Models on High-Dimensional Data](/20260602-20260611/2606.05441v1-gotabpfn-from-feature-ordering-to-compact-tokenization-for-tabular-foundation-models-on-high-dimensional-data)  
+   evidence：通过逻辑同构示例的梯度对齐提升蒸馏鲁棒性
+7. [Domain-Adapted Small Language Models with Hybrid Post-Processing: Achieving Cost-Efficient, Low-Latency Multi-Label Structured Prediction via LoRA Fine-Tuning on Scarce Data](/202606/11/2606.05781v2-domain-adapted-small-language-models-with-hybrid-post-processing-achieving-cost-efficient-low-latency-multi-label-structured-prediction-via-lora-fine-tuning-on-scarce-data)  
    标签：评分：6.0/10、query:rep-learning
-   evidence：紧凑标记化与特征排序用于表格表征学习
+   evidence：使用LoRA微调进行小样本领域适配，属于预训练方法增强下游性能
 
 
 <div class="dpr-home-promo-card">
