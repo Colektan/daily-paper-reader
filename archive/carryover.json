@@ -1,137 +1,17 @@
 {
-  "generated_at": "2026-06-11T22:14:03.325852+00:00",
-  "updated_date": "20260611",
+  "generated_at": "2026-06-12T21:42:16.824868+00:00",
+  "updated_date": "20260612",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260611",
+      "updated_date": "20260612",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260611",
+      "updated_date": "20260612",
       "carryover_days": 9,
       "items": [
-        {
-          "id": "2606.08204v1",
-          "source": "arxiv",
-          "title": "Neural Field Tokenizations with Hierarchy and Spatial Locality Priors",
-          "abstract": "Neural fields parameterize data as functions from coordinates to values, providing a unified framework for representation learning across modalities. Existing approaches are dominated by per-sample meta-learning, which scales poorly due to memory-intensive inner-loop optimization. The natural alternative -- feed-forward encoding -- typically introduces modality-specific assumptions, sacrificing the generality that makes learning with neural fields attractive. We argue that locality and hierarchy are useful priors for learning field representations that can be injected without compromising modality-agnosticism. We propose LH-NeF, a framework to learn general-purpose tokenized representations of continuous signals. A locality-preserving hierarchical encoder maps raw coordinate-value field observations to structured tokens, from which the field is reconstructed during training. By replacing meta-learning's inner loop with a single forward pass, LH-NeF uses 42$\\times$ less memory and supports 133$\\times$ larger batches than the strongest modality-agnostic baseline. Across images, 3D shapes, and climate fields, our learned representations match or exceed performance of modality-agnostic, modality-specific, and specialized generative neural field baselines on both reconstruction and downstream tasks.",
-          "authors": [
-            "Alonso Urbano",
-            "David W. Romero",
-            "Max Zimmer",
-            "Sebastian Pokutta"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.CV"
-          ],
-          "published": "2026-06-06T14:43:30+00:00",
-          "link": "https://arxiv.org/pdf/2606.08204v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "neural field tokenization with hierarchy and locality",
-          "llm_evidence_cn": "具有层次和局部先验的神经场标记化",
-          "llm_evidence": "具有层次和局部先验的神经场标记化",
-          "canonical_evidence": "具有层次和局部先验的神经场标记化",
-          "llm_tldr_en": "LH-NeF proposes a framework for general-purpose tokenized neural field representations using locality and hierarchy priors, enabling feed-forward encoding without modality-specific assumptions.",
-          "llm_tldr_cn": "本文提出LH-NeF，一个学习通用神经场标记化表示的框架。利用局部性和层次性先验，无需特定模态假设即可通过前馈编码获得表示，避免了元学习的内存开销。该框架在多种连续信号（如图像、3D形状）上展示了强大的表示能力和泛化性。",
-          "llm_tldr": "本文提出LH-NeF，一个学习通用神经场标记化表示的框架。利用局部性和层次性先验，无需特定模态假设即可通过前馈编码获得表示，避免了元学习的内存开销。该框架在多种连续信号（如图像、3D形状）上展示了强大的表示能力和泛化性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.08204v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.07954v1",
-          "source": "arxiv",
-          "title": "Minibatch Selection via Partition Matroid Constrained Gradient Matching",
-          "abstract": "Training large language models (LLMs) on heterogeneous data requires selecting minibatches that balance convergence speed with coverage across domains. Existing methods either select samples independently within each domain or rely on computationally expensive proxy models to learn continuous domain weights. We propose PartitionSel, a cross-domain minibatch selection approach that maximizes a validation-guided gradient-matching utility under per-domain budgets encoded as a partition-matroid constraint. By coupling the per-domain budgets through a single utility, PartitionSel is designed to reduce redundancy in selections across domains. The proposed objective is weakly submodular and admits an orthogonal matching pursuit algorithm with provable approximation guarantees. Empirically, we evaluate PartitionSel for minibatch selection during the fine-tuning of Qwen2.5 and Llama-3 on MetaMathQA and Mol-Instructions. PartitionSel achieves robust gains over per-domain and domain-agnostic baselines on both benchmarks. It also reduces the number of conflicting gradient pairs within each batch, indicating that the cross-domain coupling translates into more compatible training updates.",
-          "authors": [
-            "Prayas Agrawal",
-            "Prateek Chanda",
-            "Ishita Khatri",
-            "Ganesh Ramakrishnan",
-            "Bamdev Mishra",
-            "Pratik Jawanpuria"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-06T03:16:19+00:00",
-          "link": "https://arxiv.org/pdf/2606.07954v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Proposes PartitionSel, a minibatch selection method using matroid-constrained gradient matching to improve training convergence.",
-          "llm_evidence_cn": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
-          "llm_evidence": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
-          "canonical_evidence": "提出PartitionSel，一种使用拟阵约束梯度匹配的小批量选择方法，以改善训练收敛。",
-          "llm_tldr_en": "Introduces PartitionSel for cross-domain minibatch selection that maximizes gradient-matching utility under partition-matroid budgets, improving convergence speed.",
-          "llm_tldr_cn": "大规模语言模型训练中异构数据的小批量选择需平衡收敛速度和域覆盖。本文提出PartitionSel，在分区拟阵约束下最大化验证引导的梯度匹配效用，减少冗余。理论保证弱子模性，实验显示加速收敛。",
-          "llm_tldr": "大规模语言模型训练中异构数据的小批量选择需平衡收敛速度和域覆盖。本文提出PartitionSel，在分区拟阵约束下最大化验证引导的梯度匹配效用，减少冗余。理论保证弱子模性，实验显示加速收敛。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.07954v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.10610v1",
-          "source": "arxiv",
-          "title": "Small Data, Big Noise: Adversarial Training for Robust Parameter-Efficient Fine-Tuning",
-          "abstract": "Parameter-Efficient Fine-Tuning (PEFT) has become essential for adapting foundation models to downstream NLP tasks. However, current PEFT methods often struggle with robustness to noise and performance degradation on limited training data. We propose SDBN (Small Data Big Noise), a unified framework that brings adversarial training to PEFT - a combination that remains less studied in the PEFT setting despite its complementary strengths - to enhance model robustness and generalization, outperforming alternative approaches. We also introduce two variants of the method that use discrete uncertainty sets: SDBN-h, which enumerates character-level edits and selects worst-case variants using gradients, and SDBN-p, which uses LLM-generated variants for robust optimization in generative tasks. Experiments across multiple benchmarks reveal substantial improvements, particularly in low-resource settings and under both word-level and character-level corruptions. This framework addresses the less explored intersection of adversarial training and parameter-efficient adaptation, without introducing additional parameters or only modest computational overhead, making PEFT deployments more reliable in real-world scenarios where data scarcity and linguistic variability often coexist",
-          "authors": [
-            "Eitan Cohen",
-            "Idan Simai",
-            "Uri Shaham"
-          ],
-          "primary_category": "cs.CL",
-          "categories": [
-            "cs.CL"
-          ],
-          "published": "2026-06-09T09:11:33+00:00",
-          "link": "https://arxiv.org/pdf/2606.10610v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Proposes adversarial training for PEFT to improve robustness and generalization, a training optimization",
-          "llm_evidence_cn": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
-          "llm_evidence": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
-          "canonical_evidence": "提出对抗训练增强参数高效微调的鲁棒性和泛化性，属于训练优化策略",
-          "llm_tldr_en": "Introduces SDBN, a framework combining adversarial training with PEFT to enhance model robustness and generalization on limited data, outperforming alternative approaches.",
-          "llm_tldr_cn": "针对小数据下参数高效微调鲁棒性差的问题，提出将对抗训练集成到PEFT中。通过梯度选择最坏情况变体或利用LLM生成扰动，在少量样本上微调，显著提升模型鲁棒性和泛化能力。",
-          "llm_tldr": "针对小数据下参数高效微调鲁棒性差的问题，提出将对抗训练集成到PEFT中。通过梯度选择最坏情况变体或利用LLM生成扰动，在少量样本上微调，显著提升模型鲁棒性和泛化能力。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.10610v1",
-          "carry_days": 1
-        },
         {
           "id": "2606.08691v1",
           "source": "arxiv",
@@ -154,13 +34,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Projection Transfer Learning for adaptive knowledge transfer",
-          "llm_evidence_cn": "投影迁移学习用于自适应知识迁移",
-          "llm_evidence": "投影迁移学习用于自适应知识迁移",
-          "canonical_evidence": "投影迁移学习用于自适应知识迁移",
-          "llm_tldr_en": "ProjectionTL integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer from multiple heterogeneous sources, improving target model training efficiency.",
-          "llm_tldr_cn": "针对多源异质数据迁移学习中相关度变化和虚假信号导致性能下降的问题，本文提出投影迁移学习框架。该方法通过层次贝叶斯建模构建源引导的先验，利用自适应投影选择性地迁移知识，仅保留关键跨域对齐信息。在多个跨域学习任务上的实验表明，ProjectionTL显著提升了目标模型在有限数据下的训练效率和泛化性能。该框架为可信赖的跨域学习提供了有效工具。",
-          "llm_tldr": "针对多源异质数据迁移学习中相关度变化和虚假信号导致性能下降的问题，本文提出投影迁移学习框架。该方法通过层次贝叶斯建模构建源引导的先验，利用自适应投影选择性地迁移知识，仅保留关键跨域对齐信息。在多个跨域学习任务上的实验表明，ProjectionTL显著提升了目标模型在有限数据下的训练效率和泛化性能。该框架为可信赖的跨域学习提供了有效工具。",
+          "llm_evidence_en": "hierarchical projection transfer learning for adaptive knowledge transfer",
+          "llm_evidence_cn": "层次投影迁移学习实现自适应知识迁移",
+          "llm_evidence": "层次投影迁移学习实现自适应知识迁移",
+          "canonical_evidence": "层次投影迁移学习实现自适应知识迁移",
+          "llm_tldr_en": "Proposes ProjectionTL, a transfer learning framework using hierarchical Bayesian modeling and adaptive projection to selectively transfer knowledge across heterogeneous sources, improving target task performance.",
+          "llm_tldr_cn": "针对异构源数据迁移中相关性变化和虚假信号导致性能下降的问题，提出ProjectionTL框架。该框架通过层次贝叶斯建模构建源引导先验，并自适应投影选择相关知识，实现跨域选择性迁移。在有限目标数据场景下，ProjectionTL显著优于直接组合所有源的方法。",
+          "llm_tldr": "针对异构源数据迁移中相关性变化和虚假信号导致性能下降的问题，提出ProjectionTL框架。该框架通过层次贝叶斯建模构建源引导先验，并自适应投影选择相关知识，实现跨域选择性迁移。在有限目标数据场景下，ProjectionTL显著优于直接组合所有源的方法。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -193,13 +73,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Fisher-guided adaptive fine-tuning framework for parameter-efficient transfer learning",
-          "llm_evidence_cn": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
-          "llm_evidence": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
-          "canonical_evidence": "Fisher引导的自适应微调框架，用于参数高效迁移学习",
-          "llm_tldr_en": "FisherAdapTune proposes a Fisher-guided adaptive fine-tuning framework that progressively selects parameter groups by tracking Fisher geometry drift, freezing stabilized groups to reduce generalization error bound without interrupting adaptation dynamics.",
-          "llm_tldr_cn": "提出FisherAdapTune框架，通过追踪参数组Fisher几何的时间漂移，动态选择并冻结已稳定的参数群，实现自适应参数高效微调。从PAC-Bayesian角度推导了泛化误差界，证明冻结稳定群可降低误差界而不影响剩余适应过程。实验表明该方法在多个下游任务上优于固定启发式PEFT方法。",
-          "llm_tldr": "提出FisherAdapTune框架，通过追踪参数组Fisher几何的时间漂移，动态选择并冻结已稳定的参数群，实现自适应参数高效微调。从PAC-Bayesian角度推导了泛化误差界，证明冻结稳定群可降低误差界而不影响剩余适应过程。实验表明该方法在多个下游任务上优于固定启发式PEFT方法。",
+          "llm_evidence_en": "Fisher-guided adaptive fine-tuning for transfer learning",
+          "llm_evidence_cn": "基于Fisher信息的自适应微调用于迁移学习",
+          "llm_evidence": "基于Fisher信息的自适应微调用于迁移学习",
+          "canonical_evidence": "基于Fisher信息的自适应微调用于迁移学习",
+          "llm_tldr_en": "FisherAdapTune progressively selects parameter groups for fine-tuning based on Fisher geometry drift, improving efficiency and generalization.",
+          "llm_tldr_cn": "参数高效微调通常使用固定子集，缺乏任务自适应性。本文基于PAC-Bayes理论，提出FisherAdapTune框架，通过追踪Fisher几何的时间漂移，逐步选择并冻结已稳定的参数组，在降低泛化误差的同时保持微调效率。",
+          "llm_tldr": "参数高效微调通常使用固定子集，缺乏任务自适应性。本文基于PAC-Bayes理论，提出FisherAdapTune框架，通过追踪Fisher几何的时间漂移，逐步选择并冻结已稳定的参数组，在降低泛化误差的同时保持微调效率。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -211,44 +91,43 @@
           "carry_days": 1
         },
         {
-          "id": "2606.11275v1",
+          "id": "2606.06888v1",
           "source": "arxiv",
-          "title": "RoVE: Rotary Value Embeddings Attention for Relative Position-dependent Value Pathways",
-          "abstract": "Rotary Position Embeddings (RoPE) make attention scores position-relative but leave the value pathway position-blind: the message sent by a value token is the same regardless of its distance from the query. We propose RoVE, a parameter-free modification that makes values position-sensitive by rotating them simultaneously with keys, and show that it turns RoPE attention into attentive convolution. This new perspective unifies several independent formulations of the same operation across computer vision, robotics, and modern LLM architectures. Trained 124M and 354M GPT-2 models show consistent empirical gains over RoPE on few-shot in-context learning, out-of-distribution perplexity, and long-context retrieval, with the clearest improvements on tasks that require long-range aggregation.",
+          "title": "Data-Constrained Language Model Pretraining: Improved Regularization and Scaling Laws",
+          "abstract": "Classical scaling laws for language model pretraining balance model size against training dataset size under a fixed compute budget, assuming abundant data and a single pass over the corpus. As training compute grows faster than the supply of natural language data, pretraining is likely to enter a data-constrained, compute-rich regime where models train for multiple epochs over a finite dataset. We study data-constrained pretraining along two axes, regularization and scaling. For regularization, we study masked-input regularization (MIR), an auxiliary next-token prediction loss on randomly masked inputs. MIR tests whether the random masking central to diffusion language models can benefit autoregressive pretraining without architectural changes or inference overhead. Across 72M to 1.4B parameter models, we find that MIR added on top of strong weight decay improves validation loss over autoregressive strong-weight-decay-only models, with downstream gains at 1.4B. For scaling, we propose SoftQ, a scaling law that couples model size and data size to capture their interaction under repeated data. Classical alternatives such as the Chinchilla law use an additive form that decouples these terms, making them misspecified in the data-constrained regime. We find that SoftQ fits data-constrained experiments substantially better than these alternatives, and estimates MIR's gains as equivalent to roughly 1.3 times as much unique training data. We release our code at https://github.com/yixinw-lab/dc_pretrain.",
           "authors": [
-            "Alejandro García-Castellanos",
-            "Maurice Weiler",
-            "Erik J Bekkers"
+            "Zhiwei Xu",
+            "Shihao Wu",
+            "Hanseul Cho",
+            "Wei Hu",
+            "Yixin Wang"
           ],
           "primary_category": "cs.LG",
           "categories": [
-            "cs.LG",
-            "cs.AI"
+            "cs.LG"
           ],
-          "published": "2026-06-09T09:56:50+00:00",
-          "link": "https://arxiv.org/pdf/2606.11275v1",
+          "published": "2026-06-05T04:10:09+00:00",
+          "link": "https://arxiv.org/pdf/2606.06888v1",
           "tags": [
-            "keyword:RL-VLA-world",
             "keyword:rep-learning",
-            "query:RL-VLA-world",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Novel attention modification making value vectors position-sensitive, improving few-shot in-context learning and long-context retrieval",
-          "llm_evidence_cn": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
-          "llm_evidence": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
-          "canonical_evidence": "使值向量具有位置敏感性的注意力改进，提升少样本上下文学习和长上下文检索",
-          "llm_tldr_en": "RoVE modifies rotary position embeddings to make value pathways position-sensitive, turning RoPE attention into attentive convolution, achieving consistent gains in few-shot in-context learning, OOD perplexity, and long-context retrieval with GPT-2 models.",
-          "llm_tldr_cn": "提出RoVE，通过对旋转位置编码进行简单修改，使值路径同时具有位置敏感性，将RoPE注意力转化为注意力卷积。在124M和354M GPT-2模型上的实验显示，RoVE在少样本上下文学习、分布外困惑度和长上下文检索上一致优于RoPE。该发现统一了计算机视觉、机器人和大型语言模型中的多种注意力变体，具有架构创新意义。",
-          "llm_tldr": "提出RoVE，通过对旋转位置编码进行简单修改，使值路径同时具有位置敏感性，将RoPE注意力转化为注意力卷积。在124M和354M GPT-2模型上的实验显示，RoVE在少样本上下文学习、分布外困惑度和长上下文检索上一致优于RoPE。该发现统一了计算机视觉、机器人和大型语言模型中的多种注意力变体，具有架构创新意义。",
+          "llm_evidence_en": "data-constrained pretraining regularization",
+          "llm_evidence_cn": "数据受限预训练正则化方法",
+          "llm_evidence": "数据受限预训练正则化方法",
+          "canonical_evidence": "数据受限预训练正则化方法",
+          "llm_tldr_en": "Studies masked-input regularization (MIR) for data-constrained language model pretraining, improving scaling laws and offering better regularization without architectural changes.",
+          "llm_tldr_cn": "该论文研究了数据受限场景下语言模型预训练的正则化与缩放规律。核心贡献是提出了掩码输入正则化（MIR），作为辅助损失函数，在不改变架构的情况下提升了预训练效率。实验表明MIR在数据受限时优于标准模型，并提供了新的缩放定律。这项工作为数据稀缺时的预训练提供了实用优化策略。",
+          "llm_tldr": "该论文研究了数据受限场景下语言模型预训练的正则化与缩放规律。核心贡献是提出了掩码输入正则化（MIR），作为辅助损失函数，在不改变架构的情况下提升了预训练效率。实验表明MIR在数据受限时优于标准模型，并提供了新的缩放定律。这项工作为数据稀缺时的预训练提供了实用优化策略。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
-          "matched_requirement_id": "req-15",
+          "matched_query_text": "pretraining methods enhancing downstream model performance",
+          "matched_requirement_id": "req-13",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.11275v1",
+          "paper_id": "2606.06888v1",
           "carry_days": 1
         }
       ]
