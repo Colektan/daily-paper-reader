@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-12T21:42:16.824868+00:00",
-  "updated_date": "20260612",
+  "generated_at": "2026-06-13T21:18:32.837164+00:00",
+  "updated_date": "20260613",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260612",
+      "updated_date": "20260613",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260612",
+      "updated_date": "20260613",
       "carryover_days": 9,
       "items": [
         {
@@ -34,13 +34,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "hierarchical projection transfer learning for adaptive knowledge transfer",
-          "llm_evidence_cn": "层次投影迁移学习实现自适应知识迁移",
-          "llm_evidence": "层次投影迁移学习实现自适应知识迁移",
-          "canonical_evidence": "层次投影迁移学习实现自适应知识迁移",
-          "llm_tldr_en": "Proposes ProjectionTL, a transfer learning framework using hierarchical Bayesian modeling and adaptive projection to selectively transfer knowledge across heterogeneous sources, improving target task performance.",
-          "llm_tldr_cn": "针对异构源数据迁移中相关性变化和虚假信号导致性能下降的问题，提出ProjectionTL框架。该框架通过层次贝叶斯建模构建源引导先验，并自适应投影选择相关知识，实现跨域选择性迁移。在有限目标数据场景下，ProjectionTL显著优于直接组合所有源的方法。",
-          "llm_tldr": "针对异构源数据迁移中相关性变化和虚假信号导致性能下降的问题，提出ProjectionTL框架。该框架通过层次贝叶斯建模构建源引导先验，并自适应投影选择相关知识，实现跨域选择性迁移。在有限目标数据场景下，ProjectionTL显著优于直接组合所有源的方法。",
+          "llm_evidence_en": "adaptive knowledge transfer via hierarchical projection",
+          "llm_evidence_cn": "自适应知识迁移的层次投影方法",
+          "llm_evidence": "自适应知识迁移的层次投影方法",
+          "canonical_evidence": "自适应知识迁移的层次投影方法",
+          "llm_tldr_en": "ProjectionTL integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer across domains.",
+          "llm_tldr_cn": "本文针对多源异构数据迁移中相关性不明、信号混淆的问题，提出ProjectionTL框架，通过层次贝叶斯模型自适应投影实现选择性知识迁移。方法首先构建源引导的层次先验，再通过投影导向的自适应后验进行源选择。实验表明该方法在目标数据有限时显著提升了迁移效果，为跨域学习提供了稳健解决方案。",
+          "llm_tldr": "本文针对多源异构数据迁移中相关性不明、信号混淆的问题，提出ProjectionTL框架，通过层次贝叶斯模型自适应投影实现选择性知识迁移。方法首先构建源引导的层次先验，再通过投影导向的自适应后验进行源选择。实验表明该方法在目标数据有限时显著提升了迁移效果，为跨域学习提供了稳健解决方案。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -73,13 +73,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Fisher-guided adaptive fine-tuning for transfer learning",
-          "llm_evidence_cn": "基于Fisher信息的自适应微调用于迁移学习",
-          "llm_evidence": "基于Fisher信息的自适应微调用于迁移学习",
-          "canonical_evidence": "基于Fisher信息的自适应微调用于迁移学习",
-          "llm_tldr_en": "FisherAdapTune progressively selects parameter groups for fine-tuning based on Fisher geometry drift, improving efficiency and generalization.",
-          "llm_tldr_cn": "参数高效微调通常使用固定子集，缺乏任务自适应性。本文基于PAC-Bayes理论，提出FisherAdapTune框架，通过追踪Fisher几何的时间漂移，逐步选择并冻结已稳定的参数组，在降低泛化误差的同时保持微调效率。",
-          "llm_tldr": "参数高效微调通常使用固定子集，缺乏任务自适应性。本文基于PAC-Bayes理论，提出FisherAdapTune框架，通过追踪Fisher几何的时间漂移，逐步选择并冻结已稳定的参数组，在降低泛化误差的同时保持微调效率。",
+          "llm_evidence_en": "parameter-efficient fine-tuning for transfer learning",
+          "llm_evidence_cn": "参数高效微调用于迁移学习",
+          "llm_evidence": "参数高效微调用于迁移学习",
+          "canonical_evidence": "参数高效微调用于迁移学习",
+          "llm_tldr_en": "FisherAdapTune progressively selects parameter groups for fine-tuning by tracking Fisher geometry, improving generalization with fewer trainable parameters.",
+          "llm_tldr_cn": "针对参数高效微调中固定选择参数子集的问题，本文提出FisherAdapTune，通过跟踪Fisher几何的时间漂移，逐步冻结稳定参数组，从而在极少可训练参数下提升泛化性能。理论分析证明该方法能降低泛化误差界。",
+          "llm_tldr": "针对参数高效微调中固定选择参数子集的问题，本文提出FisherAdapTune，通过跟踪Fisher几何的时间漂移，逐步冻结稳定参数组，从而在极少可训练参数下提升泛化性能。理论分析证明该方法能降低泛化误差界。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -91,43 +91,122 @@
           "carry_days": 1
         },
         {
-          "id": "2606.06888v1",
+          "id": "2606.12200v1",
           "source": "arxiv",
-          "title": "Data-Constrained Language Model Pretraining: Improved Regularization and Scaling Laws",
-          "abstract": "Classical scaling laws for language model pretraining balance model size against training dataset size under a fixed compute budget, assuming abundant data and a single pass over the corpus. As training compute grows faster than the supply of natural language data, pretraining is likely to enter a data-constrained, compute-rich regime where models train for multiple epochs over a finite dataset. We study data-constrained pretraining along two axes, regularization and scaling. For regularization, we study masked-input regularization (MIR), an auxiliary next-token prediction loss on randomly masked inputs. MIR tests whether the random masking central to diffusion language models can benefit autoregressive pretraining without architectural changes or inference overhead. Across 72M to 1.4B parameter models, we find that MIR added on top of strong weight decay improves validation loss over autoregressive strong-weight-decay-only models, with downstream gains at 1.4B. For scaling, we propose SoftQ, a scaling law that couples model size and data size to capture their interaction under repeated data. Classical alternatives such as the Chinchilla law use an additive form that decouples these terms, making them misspecified in the data-constrained regime. We find that SoftQ fits data-constrained experiments substantially better than these alternatives, and estimates MIR's gains as equivalent to roughly 1.3 times as much unique training data. We release our code at https://github.com/yixinw-lab/dc_pretrain.",
+          "title": "Implicit Neural Representations of Individual Behavior",
+          "abstract": "We study policy representation learning from unlabeled multi-policy behavioral data. Each episode is generated by a fixed policy, but policy labels are unavailable. This setting appears in robotics play, demonstrations, games, racing, and other datasets where heterogeneous behaviors are mixed without annotations. We introduce \\emph{Behavioral INR}, a self-supervised generative model that adapts implicit neural representations (INRs) from vision to behavior. Instead of mapping coordinates to RGB values, Behavioral INR represents a policy as a state-action function mapping states to subsequent actions. An episode-level latent modulates this function through FiLM layers, yielding a generative prior over policies and allowing policy identity to be inferred without supervision. Because INRs treat each datapoint as samples from an underlying function, the same model naturally accommodates variable episode lengths and different sampling granularities, as in vision INRs with different image resolutions. We also define policy-level out-of-distribution (OOD) shifts along state-distribution and action-distribution axes, which arise when policies overlap in states or actions but are not captured by standard behavioral OOD settings based only on new agents or environments. We evaluate on synthetic Gaussian random field data, MuJoCo demonstrations with controlled OOD splits, and real-world chess, Formula 1 racing, robotics, and Seek-Avoid datasets. Behavioral INR most consistently improves policy identifiability in the hardest continuous state-action settings, especially when longer episodes, more policies, and OOD splits reduce the usefulness of marginal shortcuts; amortized history encoders remain competitive when policy identity can be recovered from symbolic repetition or low-dimensional action statistics. We release code and checkpoints.",
           "authors": [
-            "Zhiwei Xu",
-            "Shihao Wu",
-            "Hanseul Cho",
-            "Wei Hu",
-            "Yixin Wang"
+            "Andrew Kang",
+            "Priya Narasimhan"
           ],
           "primary_category": "cs.LG",
           "categories": [
-            "cs.LG"
+            "cs.LG",
+            "cs.AI"
           ],
-          "published": "2026-06-05T04:10:09+00:00",
-          "link": "https://arxiv.org/pdf/2606.06888v1",
+          "published": "2026-06-10T15:19:41+00:00",
+          "link": "https://arxiv.org/pdf/2606.12200v1",
           "tags": [
+            "keyword:RL-VLA-world",
             "keyword:rep-learning",
+            "query:RL-VLA-world",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "data-constrained pretraining regularization",
-          "llm_evidence_cn": "数据受限预训练正则化方法",
-          "llm_evidence": "数据受限预训练正则化方法",
-          "canonical_evidence": "数据受限预训练正则化方法",
-          "llm_tldr_en": "Studies masked-input regularization (MIR) for data-constrained language model pretraining, improving scaling laws and offering better regularization without architectural changes.",
-          "llm_tldr_cn": "该论文研究了数据受限场景下语言模型预训练的正则化与缩放规律。核心贡献是提出了掩码输入正则化（MIR），作为辅助损失函数，在不改变架构的情况下提升了预训练效率。实验表明MIR在数据受限时优于标准模型，并提供了新的缩放定律。这项工作为数据稀缺时的预训练提供了实用优化策略。",
-          "llm_tldr": "该论文研究了数据受限场景下语言模型预训练的正则化与缩放规律。核心贡献是提出了掩码输入正则化（MIR），作为辅助损失函数，在不改变架构的情况下提升了预训练效率。实验表明MIR在数据受限时优于标准模型，并提供了新的缩放定律。这项工作为数据稀缺时的预训练提供了实用优化策略。",
+          "llm_evidence_en": "self-supervised generative model for policy representation learning",
+          "llm_evidence_cn": "自监督策略表示学习",
+          "llm_evidence": "自监督策略表示学习",
+          "canonical_evidence": "自监督策略表示学习",
+          "llm_tldr_en": "Behavioral INR uses implicit neural representations to learn policy representations from unlabeled multi-policy behavioral data in a self-supervised manner.",
+          "llm_tldr_cn": "该论文针对无标签多策略行为数据中策略表示学习问题，提出了Behavioral INR模型，将隐式神经表示从视觉扩展到行为，通过状态-动作函数和FiLM层实现策略生成与推断。实验表明该方法能有效从混合数据中学习策略先验，无需策略标签。这项工作为机器人行为理解与模仿学习提供了新的表示工具。",
+          "llm_tldr": "该论文针对无标签多策略行为数据中策略表示学习问题，提出了Behavioral INR模型，将隐式神经表示从视觉扩展到行为，通过状态-动作函数和FiLM层实现策略生成与推断。实验表明该方法能有效从混合数据中学习策略先验，无需策略标签。这项工作为机器人行为理解与模仿学习提供了新的表示工具。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "pretraining methods enhancing downstream model performance",
-          "matched_requirement_id": "req-13",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.06888v1",
+          "paper_id": "2606.12200v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.10383v1",
+          "source": "arxiv",
+          "title": "A stochastic gradient algorithm for non-separable optimization with convergence guarantee",
+          "abstract": "We study non-separable objectives in which the loss depend on dataset-level quantities. We introduce an SGD-style framework that employs two batch-gradient constructs: the ideal per-batch gradient `$G$' and a cached surrogate `$H$' for cases where full-data terms are expensive.   Notably, in the sample-wise separable case, our method reduces to standard mini-batch SGD. Our main contribution is a unified local convergence theory: under mild smoothness and Jacobian-boundedness assumptions,   we prove local linear convergence under local strong convexity and local $O(1/k)$ sublinear convergence under local convexity for both `$G$'-driven and `$H$'-driven updates.   Crucially, these guarantees hold for fixed step sizes within explicitly characterized ranges; we provide explicit bounds showing how cache staleness, surrogate approximation error, batch size, and step size influence the convergence constants and allowable step-size ranges.",
+          "authors": [
+            "Yingzhou Li",
+            "Ruofan Wu"
+          ],
+          "primary_category": "math.OC",
+          "categories": [
+            "math.OC",
+            "math.NA"
+          ],
+          "published": "2026-06-09T03:48:27+00:00",
+          "link": "https://arxiv.org/pdf/2606.10383v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "SGD-style algorithm for non-separable optimization with convergence guarantees",
+          "llm_evidence_cn": "用于非可分优化的随机梯度算法及收敛保证",
+          "llm_evidence": "用于非可分优化的随机梯度算法及收敛保证",
+          "canonical_evidence": "用于非可分优化的随机梯度算法及收敛保证",
+          "llm_tldr_en": "Introduces an SGD framework for non-separable objectives using two batch-gradient constructs, proving local linear and sublinear convergence under mild assumptions.",
+          "llm_tldr_cn": "论文针对非可分优化问题提出了一种SGD风格算法，通过理想梯度和缓存代理梯度两种构造，在温和假设下证明了局部线性收敛和次线性收敛。该方法在样本可分离时退化为标准小批量SGD，统一了可分离与非可分优化的收敛理论，对训练效率提升具有指导意义。",
+          "llm_tldr": "论文针对非可分优化问题提出了一种SGD风格算法，通过理想梯度和缓存代理梯度两种构造，在温和假设下证明了局部线性收敛和次线性收敛。该方法在样本可分离时退化为标准小批量SGD，统一了可分离与非可分优化的收敛理论，对训练效率提升具有指导意义。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.10383v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.11275v1",
+          "source": "arxiv",
+          "title": "RoVE: Rotary Value Embeddings Attention for Relative Position-dependent Value Pathways",
+          "abstract": "Rotary Position Embeddings (RoPE) make attention scores position-relative but leave the value pathway position-blind: the message sent by a value token is the same regardless of its distance from the query. We propose RoVE, a parameter-free modification that makes values position-sensitive by rotating them simultaneously with keys, and show that it turns RoPE attention into attentive convolution. This new perspective unifies several independent formulations of the same operation across computer vision, robotics, and modern LLM architectures. Trained 124M and 354M GPT-2 models show consistent empirical gains over RoPE on few-shot in-context learning, out-of-distribution perplexity, and long-context retrieval, with the clearest improvements on tasks that require long-range aggregation.",
+          "authors": [
+            "Alejandro García-Castellanos",
+            "Maurice Weiler",
+            "Erik J Bekkers"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-09T09:56:50+00:00",
+          "link": "https://arxiv.org/pdf/2606.11275v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "novel attention architecture improving model performance",
+          "llm_evidence_cn": "新型注意力架构提升模型性能",
+          "llm_evidence": "新型注意力架构提升模型性能",
+          "canonical_evidence": "新型注意力架构提升模型性能",
+          "llm_tldr_en": "RoVE modifies RoPE to rotate value embeddings jointly with keys, turning attention into attentive convolution, yielding consistent gains in few-shot learning and long-context retrieval.",
+          "llm_tldr_cn": "针对当前位置编码中值路径位置不敏感的问题，提出RoVE机制，通过将值向量与键向量同步旋转，使注意力变为位置感知的卷积形式，在GPT-2模型上展示了少样本学习、分布外困惑度和长上下文检索的一致提升。",
+          "llm_tldr": "针对当前位置编码中值路径位置不敏感的问题，提出RoVE机制，通过将值向量与键向量同步旋转，使注意力变为位置感知的卷积形式，在GPT-2模型上展示了少样本学习、分布外困惑度和长上下文检索的一致提升。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
+          "matched_requirement_id": "req-15",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.11275v1",
           "carry_days": 1
         }
       ]

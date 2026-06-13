@@ -6,79 +6,56 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-12
-- 运行时间：2026-06-12 21:52:48 UTC
+- 最新运行日期：2026-06-13
+- 运行时间：2026-06-13 21:27:30 UTC
 - 运行状态：成功
-- 本次总论文数：19
-- 精读区：12
+- 本次总论文数：12
+- 精读区：5
 - 速读区：7
 
 ### 今日简报（AI）
-今日精读19篇论文，聚焦机器人策略学习，其中《ActionMap》与《RhinoVLA》获得9.0高分，是核心亮点。  
-最值得关注的两大方向：基于体素动作热图的策略学习（ActionMap）以及VLA（视觉-语言-动作）模型技术报告（RhinoVLA），均代表前沿进展。  
-建议优先精读这两篇高分论文，并跟进速读中关于连续动作空间策略梯度与安全策略的改进思路。
-- 详情：[/202606/12/README](/202606/12/README)
+今日共收录12篇论文，精读5篇、速读7篇，其中《Neural Field Tokenizations with Hierarchy and Spatial Locality Priors》和《QnRL: Quantum-Native Reinforcement Learning》均获9.0高分。重点关注神经场层次化建模与量子原生强化学习的前沿进展。建议普通读者优先精读这两篇高分论文，了解AI在空间表征与强化学习融合量子计算的新方向。
+- 详情：[/202606/13/README](/202606/13/README)
 
 ### 精读区论文标签
-1. [ActionMap: Robot Policy Learning via Voxel Action Heatmap](/202606/12/2606.06904v2-actionmap-robot-policy-learning-via-voxel-action-heatmap)  
+1. [Neural Field Tokenizations with Hierarchy and Spatial Locality Priors](/202606/13/2606.08204v1-neural-field-tokenizations-with-hierarchy-and-spatial-locality-priors)  
+   标签：评分：9.0/10、query:rep-learning
+   evidence：利用局部性和层次性先验的神经场通用标记化表示学习
+2. [QnRL: Quantum-Native Reinforcement Learning](/202606/13/2606.08276v1-qnrl-quantum-native-reinforcement-learning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：通过体素热图改进VLA动作解码器
-2. [RhinoVLA Technical Report](/202606/12/2606.07383v1-rhinovla-technical-report)  
+   evidence：量子原生强化学习框架
+3. [Latent Diffusion Policy: Shaping Latent Spaces for Diffusion-Based Robotic Manipulation](/202606/13/2606.08657v1-latent-diffusion-policy-shaping-latent-spaces-for-diffusion-based-robotic-manipulation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：面向边缘部署的VLA机器人操作模型
-3. [PRISM: PRior-guided Imagination Sampling in world Models](/202606/12/2606.07974v1-prism-prior-guided-imagination-sampling-in-world-models)  
+   evidence：面向机器人操作的潜在扩散策略
+4. [When RL Fails after SFT: Rejuvenating Model Plasticity for Robust SFT-to-RL Handoff](/202606/13/2606.09932v1-when-rl-fails-after-sft-rejuvenating-model-plasticity-for-robust-sft-to-rl-handoff)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：基于先验指导的想象采样在世界模型中进行连续控制
-4. [EgoAERO: Learning Dexterous Manipulation from a Single Egocentric Video without Object Assets](/202606/12/2606.08057v1-egoaero-learning-dexterous-manipulation-from-a-single-egocentric-video-without-object-assets)  
+   evidence：强化学习在监督微调后的塑料性损失分析
+5. [Dynamic Execution Horizon Prediction for Chunk-based Robot Policies](/202606/13/2606.11408v1-dynamic-execution-horizon-prediction-for-chunk-based-robot-policies)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：从单个第一人称视频学习灵巧操作
-5. [ConSteer-RL: Steering Reasoning Capabilities in Large Language Models via Confidence-Aware Reinforcement Learning](/202606/12/2606.08088v1-consteer-rl-steering-reasoning-capabilities-in-large-language-models-via-confidence-aware-reinforcement-learning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：置信度感知奖励的强化学习
-6. [Continual Quadruped Robots Coordination via Semantic Skill Discovery](/202606/12/2606.08102v2-continual-quadruped-robots-coordination-via-semantic-skill-discovery)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：使用多智能体强化学习进行机器人协调
-7. [C$^3$ache: Accelerating World Action Models with Cross Inference Chunk Cache](/202606/12/2606.08962v1-c3ache-accelerating-world-action-models-with-cross-inference-chunk-cache)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：世界动作模型及跨推理块缓存加速
-8. [Task Robustness via Re-Labelling Vision-Action Robot Data](/202606/12/2606.10918v1-task-robustness-via-re-labelling-vision-action-robot-data)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：通过VLM重标注增强机器人操作数据
-9. [TacCoRL: Integrating Tactile Feedback into VLA via Simulation](/202606/12/2606.11743v1-taccorl-integrating-tactile-feedback-into-vla-via-simulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：通过模拟RL将触觉反馈集成到VLA中
-10. [World Model Self-Distillation: Training World Models to Solve General Tasks](/202606/12/2606.12072v1-world-model-self-distillation-training-world-models-to-solve-general-tasks)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：提出结合自蒸馏和强化学习训练世界模型以解决通用任务，利用VLM生成任务
-11. [DAM-VLA: Decoupled Asynchronous Multimodal Vision Language Action model](/202606/12/2606.12105v1-dam-vla-decoupled-asynchronous-multimodal-vision-language-action-model)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：解耦异步多模态VLA模型用于机器人
-12. [Learning What to Say to Your VLA: Mostly Harmless Vision Language Action Model Steering](/202606/12/2606.12299v1-learning-what-to-say-to-your-vla-mostly-harmless-vision-language-action-model-steering)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：对视觉语言动作模型进行语言引导用于机器人控制
+   evidence：针对分块机器人策略的动态执行视界预测
 
 ### 速读区论文标签
-1. [Retry Policy Gradients in Continuous Action Spaces](/202606/12/2606.05888v1-retry-policy-gradients-in-continuous-action-spaces)  
+1. [Layer-wise Derivative Controlled Networks Achieve Competitive Accuracy and Gradient Stability Across Data Regimes](/202606/13/2606.07908v1-layer-wise-derivative-controlled-networks-achieve-competitive-accuracy-and-gradient-stability-across-data-regimes)  
+   标签：评分：8.0/10、query:rep-learning
+   evidence：导数控制网络提升泛化能力和梯度稳定性
+2. [vla.cpp: A Unified Inference Runtime for Vision-Language-Action Models](/202606/13/2606.08094v1-vlacpp-a-unified-inference-runtime-for-vision-language-action-models)  
    标签：评分：8.0/10、query:rl-vla-world
-   evidence：连续动作空间中带有重试目标的策略梯度方法
-2. [Learning of Robot Safety Policies via Adversarial Synthetic Scenarios](/202606/12/2606.05952v1-learning-of-robot-safety-policies-via-adversarial-synthetic-scenarios)  
+   evidence：VLA模型在机器人硬件上的推理运行时
+3. [Towards End to End Motion Planning and Execution for Autonomous Underwater Vehicles Using Reinforcement Learning](/202606/13/2606.08513v1-towards-end-to-end-motion-planning-and-execution-for-autonomous-underwater-vehicles-using-reinforcement-learning)  
    标签：评分：8.0/10、query:rl-vla-world
-   evidence：使用对抗强化学习学习机器人安全策略
-3. [Sample-efficient Low-level Motion Planning for Robotic Manipulation Tasks via Zero-shot Transfer Learning](/202606/12/2606.06041v1-sample-efficient-low-level-motion-planning-for-robotic-manipulation-tasks-via-zero-shot-transfer-learning)  
-   标签：评分：8.0/10、query:rl-vla-world
-   evidence：通过迁移学习进行机器人操作
-4. [Knowledge Distillation for Visual Autoregressive Models](/202606/12/2606.06078v1-knowledge-distillation-for-visual-autoregressive-models)  
+   evidence：用于水下自主机器人运动控制的端到端深度强化学习
+4. [Data-Constrained Language Model Pretraining: Improved Regularization and Scaling Laws](/202606/13/2606.06888v1-data-constrained-language-model-pretraining-improved-regularization-and-scaling-laws)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：视觉自回归模型的知识蒸馏策略，优化训练
-5. [Amortizing Federated Adaptation: Hypernetwork Driven LoRA for Personalized Foundation Models](/202606/12/2606.06154v1-amortizing-federated-adaptation-hypernetwork-driven-lora-for-personalized-foundation-models)  
+   evidence：数据受限预训练与正则化方法
+5. [Beyond Linear and Overcomplete Regimes: A Mean-Field Analysis of Bottleneck Autoencoders](/202606/13/2606.07120v1-beyond-linear-and-overcomplete-regimes-a-mean-field-analysis-of-bottleneck-autoencoders)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：超网络驱动的LoRA用于基础模型联邦自适应
-6. [A Geometric View for Understanding Concept Learning and Neuron Interpretation in Sparse Autoencoders](/202606/12/2606.07007v1-a-geometric-view-for-understanding-concept-learning-and-neuron-interpretation-in-sparse-autoencoders)  
+   evidence：瓶颈自编码器在表示学习中的平均场分析
+6. [SCALE: Scalable Cross-Attention Learning with Extrapolation for Agentic Workflow Scheduling](/202606/13/2606.06820v1-scale-scalable-cross-attention-learning-with-extrapolation-for-agentic-workflow-scheduling)  
+   标签：评分：6.0/10、query:rl-vla-world
+   evidence：用于智能体工作流调度的深度强化学习与交叉注意力
+7. [SigmaScale: LLM Compression with SVD-based Low-Rank Decomposition and Learned Scaling Matrices](/202606/13/2606.07098v1-sigmascale-llm-compression-with-svd-based-low-rank-decomposition-and-learned-scaling-matrices)  
    标签：评分：6.0/10、query:rep-learning
-   evidence：为稀疏自编码器中的概念学习提供几何框架，与表征学习相关
-7. [STAR: Rethinking MoE Routing as Structure-Aware Subspace Learning](/202606/12/2606.08814v1-star-rethinking-moe-routing-as-structure-aware-subspace-learning)  
-   标签：评分：6.0/10、query:rep-learning
-   evidence：将MoE路由视为子空间学习，推动神经架构设计
+   evidence：基于SVD的学习缩放矩阵LLM压缩提升表示效率
 
 
 <div class="dpr-home-promo-card">
