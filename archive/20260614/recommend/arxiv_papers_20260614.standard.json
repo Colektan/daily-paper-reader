@@ -1,0 +1,722 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-14T20:49:26.700136+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 25,
+    "deep_cap": 4,
+    "deep_selected": 10,
+    "quick_candidates": 41,
+    "quick_skim_target": 7,
+    "quick_selected": 7
+  },
+  "deep_dive": [
+    {
+      "id": "2606.08765v1",
+      "source": "arxiv",
+      "title": "RGB-S: Image-Aligned Tactile Saliency for Robust Dexterous Manipulation",
+      "abstract": "Effective visuo-tactile integration is critical for robotic dexterous manipulation, especially when visual observations are unreliable or occluded. However, robustly aligning sparse, heterogeneous tactile measurements with dense visual representations remains a fundamental challenge. Most existing approaches require policies to learn cross-modal correspondences implicitly from limited demonstrations, without leveraging geometric priors. As a result, they are often data-inefficient and generalize poorly when visual observations are degraded. To address this limitation, we propose a framework that explicitly grounds physical contacts in the image domain. Using robot forward kinematics and camera calibration, we project tactile sensor locations directly onto the RGB image plane. We then render force-modulated Gaussian saliency maps to model spatial uncertainty arising from kinematic and calibration errors. By integrating these 2D spatial anchors through a zero-initialized conditioning architecture, our method injects physical contact priors into standard visual backbones while preserving pre-trained visual representations. We evaluate our method on six dexterous manipulation tasks in both simulation and the real world under severe visual occlusions. Real-world experiments show that explicit RGB-S grounding in the image domain improves real-world occluded manipulation success rates by $26.7$ percentage points over the strongest implicit visuo-tactile baseline, suggesting its improved spatial reasoning and robustness to occlusion. Project page: touch-as-saliency.github.io",
+      "authors": [
+        "Shengcheng Luo",
+        "Kefei Wu",
+        "Xiaoying Zhou",
+        "Wanlin Li",
+        "Ziyuan Jiao",
+        "Chenxi Xiao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-06-07T18:07:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.08765v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Image-aligned tactile saliency for robust dexterous manipulation",
+      "llm_evidence_cn": "图像对齐的触觉显著性方法用于鲁棒灵巧操作",
+      "llm_evidence": "图像对齐的触觉显著性方法用于鲁棒灵巧操作",
+      "canonical_evidence": "图像对齐的触觉显著性方法用于鲁棒灵巧操作",
+      "llm_tldr_en": "RGB-S explicitly grounds tactile sensor locations in the image domain using kinematics and camera calibration, creating image-aligned tactile saliency maps that improve dexterous manipulation robustness under visual degradation.",
+      "llm_tldr_cn": "针对视觉-触觉融合中稀疏触觉与密集视觉难以对齐的问题，本文提出RGB-S，利用机器人运动学和相机标定将触觉传感器位置直接投影到图像空间，生成图像对齐的触觉显著性图。该方法显式利用几何先验，在视觉退化条件下显著提升灵巧操作的鲁棒性和数据效率。",
+      "llm_tldr": "针对视觉-触觉融合中稀疏触觉与密集视觉难以对齐的问题，本文提出RGB-S，利用机器人运动学和相机标定将触觉传感器位置直接投影到图像空间，生成图像对齐的触觉显著性图。该方法显式利用几何先验，在视觉退化条件下显著提升灵巧操作的鲁棒性和数据效率。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.08779v2",
+      "source": "arxiv",
+      "title": "Reformulate LLM Reinforcement Learning for Efficient Training under Black-box Discrepancy",
+      "abstract": "Reinforcement Learning (RL) has emerged as a pivotal post-training paradigm, yet it frequently suffers from unpredictable sub-optimum performance or even training collapses. Recent findings attribute these failures to a hidden train-inference discrepancy (or mismatch), stemming from the disparate underlying engines and architecture. We find that the training policy can actively self-correct such a discrepancy when provided with an appropriate learning signal. Then, we further empirically identify a discrepancy tolerance region: within this region, aggressively narrowing the discrepancy can suppress policy exploration and reduce learning efficiency, whereas outside this region, reducing excessive discrepancy improves optimization consistency and raises the achievable local performance ceiling. According to such findings, we formulate this problem as a Discrepancy-Constrained Markov Decision Process (DCMDP), where reward maximization is coupled with a constraint that aligns training-Inference behavior, achieving stable dual-objective optimization. To adaptively balance performance improvement and discrepancy control, we introduce a Lagrangian relaxation mechanism that dynamically adjusts the relative weight of the two objectives according to the current degree of discrepancy violation. This enables stable dual-objective optimization: the policy is allowed to explore freely within the tolerance region, while being guided back when the discrepancy exceeds the safe boundary. Empirically, DCMDP significantly improves the performance of 8B dense model (Qwen-3-8b) and 30B Mixture-of-Expert model (Qwen-3-30bA3b), and enables a heterogeneous training paradigm, where LLMs can be optimized in high-fidelity training setup while being explicitly aligned for low-cost, resource-constrained inference deployment.",
+      "authors": [
+        "Jiashun Liu",
+        "Runze Liu",
+        "Xu Wan",
+        "Jing Liang",
+        "Hongyao Tang",
+        "Ling Pan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-07T18:49:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.08779v2",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "reformulating reinforcement learning for LLM training to address train-inference discrepancy",
+      "llm_evidence_cn": "重新定义强化学习用于大模型训练以解决训练-推理差异",
+      "llm_evidence": "重新定义强化学习用于大模型训练以解决训练-推理差异",
+      "canonical_evidence": "重新定义强化学习用于大模型训练以解决训练-推理差异",
+      "llm_tldr_en": "Identifies and addresses train-inference discrepancy in LLM reinforcement learning, proposing a self-correction mechanism and tolerance region for stable training.",
+      "llm_tldr_cn": "强化学习作为大语言模型后训练的关键范式，常因底层引擎与架构差异导致训练性能波动甚至崩溃。本文发现训练策略在适当信号下能主动自纠正这种差异，并进一步识别出差异容忍区域，从而在保证探索效率的同时优化模型，为LLM的RL训练提供了更加稳定高效的方案。",
+      "llm_tldr": "强化学习作为大语言模型后训练的关键范式，常因底层引擎与架构差异导致训练性能波动甚至崩溃。本文发现训练策略在适当信号下能主动自纠正这种差异，并进一步识别出差异容忍区域，从而在保证探索效率的同时优化模型，为LLM的RL训练提供了更加稳定高效的方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.09630v1",
+      "source": "arxiv",
+      "title": "ReCoVLA: VLM-Guided Reward Compilation for Failure Recovery in Vision-Language-Action Policies",
+      "abstract": "Vision-language-action (VLA) policies provide strong priors for language-conditioned manipulation, but remain brittle in off-nominal states requiring targeted recovery. We propose ReCoVLA -- a failure-conditioned residual recovery framework that keeps a pretrained VLA policy frozen, uses an external vision-language model (VLM) to infer the failure mode and recovery stage, and compiles a structured reward from task-relevant components. Rather than using the VLM to generate actions or rewards directly, ReCoVLA uses it as a semantic reward selector: it predicts a recovery descriptor and reward mask for in-simulation residual-policy training, followed by zero-shot sim-to-real deployment of the trained recovery policies. This decouples high-level failure understanding from low-level corrective control to support different VLAs. Experiments across short-horizon, long-horizon, and contact-rich manipulation tasks show that ReCoVLA outperforms the tested baselines on average. In simulation, our reward compiler improves average success from 36.7% for the fine-tuned $π_{0.5}$ baseline to 66.7%. In physical zero-shot sim-to-real experiments, ReCoVLA achieves the best average performance, with 61.7% success.",
+      "authors": [
+        "Haodi Hu",
+        "Chung-Ta Huang",
+        "Jing Liu",
+        "Ye Wang",
+        "Kei Suzuki",
+        "Matthew Brand",
+        "Toshiaki Koike-Akino"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-08T15:29:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.09630v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "VLM-guided reward compilation for failure recovery in VLA policies",
+      "llm_evidence_cn": "VLM指导的奖励编译用于VLA策略故障恢复",
+      "llm_evidence": "VLM指导的奖励编译用于VLA策略故障恢复",
+      "canonical_evidence": "VLM指导的奖励编译用于VLA策略故障恢复",
+      "llm_tldr_en": "ReCoVLA uses a frozen VLM as semantic reward selector to compile recovery rewards for residual training, enabling zero-shot sim-to-real recovery.",
+      "llm_tldr_cn": "针对VLA策略在非名义状态下的脆弱性，提出ReCoVLA框架，保持预训练VLA冻结，利用外部VLM推断故障模式并编译结构化奖励，用于仿真中的残差策略训练，然后零样本迁移到真实世界。实验表明该方法有效提升了VLA策略的恢复能力。",
+      "llm_tldr": "针对VLA策略在非名义状态下的脆弱性，提出ReCoVLA框架，保持预训练VLA冻结，利用外部VLM推断故障模式并编译结构化奖励，用于仿真中的残差策略训练，然后零样本迁移到真实世界。实验表明该方法有效提升了VLA策略的恢复能力。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10196v1",
+      "source": "arxiv",
+      "title": "Fisher-Guided Progressive Parameter Selection for Adaptive Fine-Tuning",
+      "abstract": "Parameter-efficient fine-tuning (PEFT) aims to adapt pretrained models with a small trainable parameter subset, however, most existing methods choose this subset from fixed architectural heuristics rather than using dynamic, task-aware criteria. We introduce \\textbf{FisherAdapTune}, a Fisher-guided Adaptive Fine-Tuning framework that progressively selects parameter groups by tracking the temporal drift of their Fisher geometry. Starting from a PAC-Bayesian view of fine-tuning, we decompose the generalization error bound into Fisher-weighted update costs and show that parameter groups whose curvature contribution has stabilized can be frozen to reduce the error bound without interrupting the remaining adaptation dynamics. FisherAdapTune formulates this criterion with a scale-invariant Jensen-Shannon distance between consecutive Fisher distributions, yielding an adaptive active parameter set. We evaluate our approach on a downstream segmentation task, and results show FisherAdapTune improves the in-distribution performance and zero-shot transfer in multiple settings, validating that Fisher structural drift is a useful signal for efficient, task-aware adaptation. We release our \\href{https://github.com/AtlasAnalyticsLab/FisherAdapTune}{code} publicly to enable further application of our proposed approach.",
+      "authors": [
+        "Ghodsiyeh Rostami",
+        "Po-Han Chen",
+        "Mahdi S. Hosseini"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-08T21:35:11+00:00",
+      "link": "https://arxiv.org/pdf/2606.10196v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "transfer learning via adaptive fine-tuning with Fisher guidance",
+      "llm_evidence_cn": "通过Fisher引导的自适应微调进行迁移学习",
+      "llm_evidence": "通过Fisher引导的自适应微调进行迁移学习",
+      "canonical_evidence": "通过Fisher引导的自适应微调进行迁移学习",
+      "llm_tldr_en": "FisherAdapTune dynamically selects parameter groups for fine-tuning by tracking Fisher information drift, improving generalization and efficiency.",
+      "llm_tldr_cn": "针对参数高效微调中固定参数选择的局限性，本文提出FisherAdapTune框架，通过追踪参数组Fisher信息的时间漂移，逐步冻结稳定组以减少泛化误差。实验表明，该方法在多个基准任务上优于现有PEFT方法，同时保持训练效率。该工作为动态任务感知的微调提供了新工具。",
+      "llm_tldr": "针对参数高效微调中固定参数选择的局限性，本文提出FisherAdapTune框架，通过追踪参数组Fisher信息的时间漂移，逐步冻结稳定组以减少泛化误差。实验表明，该方法在多个基准任务上优于现有PEFT方法，同时保持训练效率。该工作为动态任务感知的微调提供了新工具。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10228v1",
+      "source": "arxiv",
+      "title": "SHAPO: Sharpness-Aware Policy Optimization for Safe Exploration",
+      "abstract": "Safe exploration is a prerequisite for deploying reinforcement learning (RL) agents in safety-critical domains. In this paper, we approach safe exploration through the lens of epistemic uncertainty, where the actor's sensitivity to parameter perturbations serves as a practical proxy for regions of high uncertainty. We propose Sharpness-Aware Policy Optimization (SHAPO), a sharpness-aware policy update rule that evaluates gradients at perturbed parameters, making policy updates pessimistic with respect to the actor's epistemic uncertainty. Analytically we show that this adjustment implicitly reweighs policy gradients, amplifying the influence of rare unsafe actions while tempering contributions from already safe ones, thereby biasing learning toward conservative behavior in under-explored regions. Across several continuous-control tasks, our method consistently improves both safety and task performance over existing baselines, significantly expanding their Pareto frontiers.",
+      "authors": [
+        "Kaustubh Mani",
+        "Yann Pequignot",
+        "Vincent Mai",
+        "Liam Paull"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-06-08T22:40:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.10228v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Sharpness-aware policy optimization for safe RL exploration",
+      "llm_evidence_cn": "用于安全强化学习探索的锐度感知策略优化",
+      "llm_evidence": "用于安全强化学习探索的锐度感知策略优化",
+      "canonical_evidence": "用于安全强化学习探索的锐度感知策略优化",
+      "llm_tldr_en": "SHAPO introduces a sharpness-aware policy update rule that evaluates gradients at perturbed parameters to make policy updates pessimistic with respect to epistemic uncertainty, improving safe exploration in RL.",
+      "llm_tldr_cn": "SHAPO提出一种锐度感知策略更新规则，在扰动参数处评估梯度，使策略更新对认知不确定性悲观，从而改善强化学习中的安全探索。理论分析和实验验证其有效性。",
+      "llm_tldr": "SHAPO提出一种锐度感知策略更新规则，在扰动参数处评估梯度，使策略更新对认知不确定性悲观，从而改善强化学习中的安全探索。理论分析和实验验证其有效性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.10709v1",
+      "source": "arxiv",
+      "title": "Effective Reinforcement Learning for Agentic Search by Recycling Zero-Variance Queries During Training",
+      "abstract": "The use of GRPO-style algorithms has become the standard strategy for training LLM search agents under outcome-only rewards. With these algorithms, a query contributes to parameter updates only when its rollout group mixes successes and failures; all-correct (too-easy) and all-incorrect (too-hard) groups are zero-variance and waste rollout cost. Existing approaches treat zero-variance as a static property and either discard or pre-filter such groups. We hypothesize and empirically validate that queries flip between zero-variance and signal-bearing states as the policy evolves during training. Building on this intuition, we propose query recycling, which returns zero-variance groups to a mutable pool for future resampling, so that the effective training distribution co-evolves with the policy. With the proposed technique, a 1.7B parameter model trained on synthetic data can reach 66.0 average Pass@1 accross seven multi-hop QA benchmarks, matching or surpassing systems with up to 7B parameters trained on benchmark-derived supervision. Analysis of recycling patterns shows that recycled queries supply roughly three quarters of the effective batch by the end of training, with contributions split between recovery from policy improvement and policy drift.",
+      "authors": [
+        "João Coelho",
+        "João Magalhães",
+        "Bruno Martins",
+        "Chenyan Xiong"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.AI"
+      ],
+      "published": "2026-06-09T11:12:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.10709v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Reinforcement learning for agentic search with query recycling to handle zero-variance groups",
+      "llm_evidence_cn": "通过回收零方差查询来改进强化学习训练智能体搜索的方法",
+      "llm_evidence": "通过回收零方差查询来改进强化学习训练智能体搜索的方法",
+      "canonical_evidence": "通过回收零方差查询来改进强化学习训练智能体搜索的方法",
+      "llm_tldr_en": "Proposes query recycling for GRPO-style RL training of LLM search agents, reusing zero-variance groups that become signal-bearing as policy evolves.",
+      "llm_tldr_cn": "本文针对强化学习训练LLM搜索代理时零方差查询浪费的问题，提出查询回收机制。实验验证查询在训练中可在零方差和有信号状态间转换，通过回收再利用，显著提升了数据利用率，优化了训练效率。",
+      "llm_tldr": "本文针对强化学习训练LLM搜索代理时零方差查询浪费的问题，提出查询回收机制。实验验证查询在训练中可在零方差和有信号状态间转换，通过回收再利用，显著提升了数据利用率，优化了训练效率。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.12488v1",
+      "source": "arxiv",
+      "title": "A Stationary (and Therefore Compatible) Representation is All You Need",
+      "abstract": "Learning compatible representations aims to learn feature representations that can be used interchangeably over time whenever a model undergoes updates. In this paper, we demonstrate that stationary representations learned by d-Simplex fixed classifiers imply compatibility as in its formal definition. This result establishes a foundation for future works and can be directly exploited in practical learning scenarios. We address the challenge of learning compatibility using $d$-Simplex fixed classifiers when the model is sequentially fine-tuned. Learning according to a d-Simplex fixed classifier with the cross-entropy loss aligns feature distributions at the first-order statistics. Consequently, it may not fully capture higher-order dependencies in the representation between model updates. To address this issue, we demonstrate that training the model using a $d$-Simplex fixed classifier through a convex combination of the cross-entropy loss and a contrastive loss not only captures higher-order dependencies, but is also equivalent to learning with the cross-entropy under the compatibility constraints. We confirm our findings with extensive experiments also considering a new scenario where a pre-trained model is sequentially fine-tuned and occasionally replaced with an improved model. We show that stationary representations enable uninterrupted retrieval services (without reprocessing gallery images) while improving performance during model updates and replacements, achieving state-of-the-art. Code at https://github.com/miccunifi/iamcl2r.",
+      "authors": [
+        "Niccolò Biondi",
+        "Federico Pernici",
+        "Simone Ricci",
+        "Alberto Del Bimbo"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-10T09:30:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.12488v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Stationary representations via d-Simplex fixed classifiers enable compatible representation learning",
+      "llm_evidence_cn": "通过d-Simplex固定分类器学习平稳表示实现兼容表示学习",
+      "llm_evidence": "通过d-Simplex固定分类器学习平稳表示实现兼容表示学习",
+      "canonical_evidence": "通过d-Simplex固定分类器学习平稳表示实现兼容表示学习",
+      "llm_tldr_en": "Demonstrates that stationary representations learned by d-Simplex fixed classifiers imply compatibility, establishing a foundation for practical representation learning.",
+      "llm_tldr_cn": "该论文证明通过d-Simplex固定分类器学习的平稳表示自然满足兼容性定义，为表示学习提供了理论基础，并针对顺序微调场景讨论了实际应用，有助于提高模型泛化和训练效率。",
+      "llm_tldr": "该论文证明通过d-Simplex固定分类器学习的平稳表示自然满足兼容性定义，为表示学习提供了理论基础，并针对顺序微调场景讨论了实际应用，有助于提高模型泛化和训练效率。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.12497v1",
+      "source": "arxiv",
+      "title": "$μ$VLA: On Recurrent Memory for Partially Observable Manipulation in VLA Models",
+      "abstract": "Vision-language-action (VLA) models predict chunks of future actions from the current observation, an assumption that fails under partial observability, where decisions depend on information no longer visible. Existing memory-augmented VLAs simultaneously introduce recurrence, retrieval, compression modules, auxiliary objectives, hierarchical memory, or task-specific architectural changes, so the contribution of recurrence itself remains entangled with surrounding machinery. We present a controlled isolation study of recurrence in a strong pretrained VLA backbone. Our formulation augments the transformer with a small set of learnable memory tokens carried across timesteps and updated through self-attention, trained end to end with truncated backpropagation through time, with no auxiliary losses and no architectural changes. We instantiate this as $μ$VLA, a family of OpenVLA-OFT variants parameterized by memory width m, TBPTT length K, and the memory update rule (cross-step gradients or a detached EMA), so that recurrence is the only varying factor. On MIKASA-Robo, $μ$VLA improves average success rate on five training tasks from 0.42 to 0.84 at the strongest setting and reaches 0.23 on held-out tasks with the same memory structure versus 0.07 for the memoryless baseline. On tasks requiring different memory structure, performance remains near baseline. On LIBERO, the strongest recurrent variant achieves 96.2% average success, indicating no regression under full observability. We interpret these results as a calibration of the capability envelope of minimal in-backbone recurrence, identifying the regime in which it is sufficient and the regime where additional memory structure is required. Demos and videos can be found in https://avanturist322.github.io/mu-vla/.",
+      "authors": [
+        "Egor Cherepanov",
+        "Nikita Kachaev",
+        "Daniil Zelezetsky",
+        "Aydar Bulatov",
+        "Artem Pshenitsyn",
+        "Yuri Kuratov",
+        "Alexey Skrynnik",
+        "Aleksandr I. Panov",
+        "Alexey K. Kovalev"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-06-10T13:26:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.12497v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Recurrent memory augmentation for VLA models in partially observable robotic manipulation",
+      "llm_evidence_cn": "在部分可观察机器人操作中为VLA模型添加循环记忆",
+      "llm_evidence": "在部分可观察机器人操作中为VLA模型添加循环记忆",
+      "canonical_evidence": "在部分可观察机器人操作中为VLA模型添加循环记忆",
+      "llm_tldr_en": "Conducts a controlled study of adding learnable recurrent memory tokens to VLA models for partially observable manipulation, showing significant improvement without complex modifications.",
+      "llm_tldr_cn": "现有VLA模型假设当前观测足以预测动作，在部分可观察场景中失效。本文以受控方式在预训练VLA骨干中引入少量可学习记忆token，通过自注意力跨时间步更新。实验表明，简单的循环记忆即可显著提升部分可观察操作任务的表现，且无需额外模块或辅助损失。",
+      "llm_tldr": "现有VLA模型假设当前观测足以预测动作，在部分可观察场景中失效。本文以受控方式在预训练VLA骨干中引入少量可学习记忆token，通过自注意力跨时间步更新。实验表明，简单的循环记忆即可显著提升部分可观察操作任务的表现，且无需额外模块或辅助损失。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13674v1",
+      "source": "arxiv",
+      "title": "RepWAM: World Action Modeling with Representation Visual-Action Tokenizers",
+      "abstract": "This work presents RepWAM, a representation-centric world action model (WAM) built on representation visual-action tokenizers. Existing WAMs typically inherit reconstruction-oriented video tokenizers from pretrained video generation models. Although these tokenizers preserve visual fidelity, pixel reconstruction alone provides limited guidance for learning instruction-following dynamics that connect future prediction with robot control. To address this, we explore a semantic visual-action latent space for representation-centric world action modeling. Specifically, we train a representation visual-action tokenizer that maps visual inputs into aligned visual and latent action tokens. We then pretrain our WAM to jointly model future visual states and the latent actions that connect them under language instructions, followed by adaptation to real robot trajectories for closed-loop manipulation. Experiments on real-world manipulation tasks and simulation benchmarks show that RepWAM delivers strong performance across diverse manipulation settings, while ablations highlight the value of semantic visual-action tokenization over reconstruction-oriented alternatives. These results establish representation visual-action tokenization as a promising foundation for world action models and a step toward generalist robot policies. Code and weights will be available at https://github.com/wdrink/RepWAM.",
+      "authors": [
+        "Junke Wang",
+        "Qihang Zhang",
+        "Shuai Yang",
+        "Yiming Luo",
+        "Yujun Shen",
+        "Zuxuan Wu",
+        "Yu-Gang Jiang",
+        "Yinghao Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-11T17:59:43+00:00",
+      "link": "https://arxiv.org/pdf/2606.13674v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Representation-centric world action model with visual-action tokenizers for robot control",
+      "llm_evidence_cn": "面向机器人控制的表示中心世界动作模型与视觉-动作分词器",
+      "llm_evidence": "面向机器人控制的表示中心世界动作模型与视觉-动作分词器",
+      "canonical_evidence": "面向机器人控制的表示中心世界动作模型与视觉-动作分词器",
+      "llm_tldr_en": "RepWAM trains a representation visual-action tokenizer to map visual inputs to aligned visual and latent action tokens, then pretrains a world action model to jointly predict future visual states and actions.",
+      "llm_tldr_cn": "RepWAM构建表示中心的动作世界模型，通过训练表示视觉-动作分词器将视觉输入映射到对齐的视觉和潜在动作令牌，并预训练世界动作模型联合预测未来视觉状态和动作，为机器人控制提供更好的指令跟随动力学理解。",
+      "llm_tldr": "RepWAM构建表示中心的动作世界模型，通过训练表示视觉-动作分词器将视觉输入映射到对齐的视觉和潜在动作令牌，并预训练世界动作模型联合预测未来视觉状态和动作，为机器人控制提供更好的指令跟随动力学理解。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13675v1",
+      "source": "arxiv",
+      "title": "Improving Robotic Generalist Policies via Flow Reversal Steering",
+      "abstract": "Generalist policies can learn a wide range of skills from diverse robot datasets. In order to solve or improve on challenging news tasks, we need a way to infer and invoke the appropriate actions from the policy's rich behavioral prior, especially when directly commanding the policy fails. We focus on flow matching generalists and propose Flow Reversal Steering (FRS): a method that takes suboptimal but ``reasonable'' actions, finds their latent noises by passing them through the flow policy in reverse, and maps them to nearby generalist action modes. We evaluate FRS across many simulated and real-world manipulation settings. First, FRS can turn coarse semantic guidance from humans or vision-language models (VLMs) into corresponding good robot actions, improving zero-shot control. These gains can be distilled with behavioral cloning by training an auxiliary policy to output noises that the generalist maps to good actions -- showing up to 95% absolute task success rate boosts in under a minute of training. Finally, FRS enables policy improvement by bootstrapping reinforcement learning with semantic knowledge, improving on several tasks that standard RL fails to improve on.",
+      "authors": [
+        "Andy Tang",
+        "William Chen",
+        "Andrew Wagenmaker",
+        "Chelsea Finn",
+        "Sergey Levine"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-11T17:59:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.13675v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "VLA model steering for manipulation",
+      "llm_evidence_cn": "VLA模型引导机器人操作",
+      "llm_evidence": "VLA模型引导机器人操作",
+      "canonical_evidence": "VLA模型引导机器人操作",
+      "llm_tldr_en": "Presents Flow Reversal Steering (FRS) to improve robotic generalist policies by mapping suboptimal actions to generalist action modes using vision-language guidance.",
+      "llm_tldr_cn": "通用机器人策略可执行多种技能，但新任务下直接指令可能失败。本文提出流反转引导（FRS），利用流匹配策略的可逆性，将次优动作的潜在噪声映射至最优模式，并结合视觉语言模型提供语义指导。实验在模拟和真实操作场景中表明，FRS将粗略语义转化为精确机器人动作，显著提升任务成功率。",
+      "llm_tldr": "通用机器人策略可执行多种技能，但新任务下直接指令可能失败。本文提出流反转引导（FRS），利用流匹配策略的可逆性，将次优动作的潜在噪声映射至最优模式，并结合视觉语言模型提供语义指导。实验在模拟和真实操作场景中表明，FRS将粗略语义转化为精确机器人动作，显著提升任务成功率。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.07954v1",
+      "source": "arxiv",
+      "title": "Minibatch Selection via Partition Matroid Constrained Gradient Matching",
+      "abstract": "Training large language models (LLMs) on heterogeneous data requires selecting minibatches that balance convergence speed with coverage across domains. Existing methods either select samples independently within each domain or rely on computationally expensive proxy models to learn continuous domain weights. We propose PartitionSel, a cross-domain minibatch selection approach that maximizes a validation-guided gradient-matching utility under per-domain budgets encoded as a partition-matroid constraint. By coupling the per-domain budgets through a single utility, PartitionSel is designed to reduce redundancy in selections across domains. The proposed objective is weakly submodular and admits an orthogonal matching pursuit algorithm with provable approximation guarantees. Empirically, we evaluate PartitionSel for minibatch selection during the fine-tuning of Qwen2.5 and Llama-3 on MetaMathQA and Mol-Instructions. PartitionSel achieves robust gains over per-domain and domain-agnostic baselines on both benchmarks. It also reduces the number of conflicting gradient pairs within each batch, indicating that the cross-domain coupling translates into more compatible training updates.",
+      "authors": [
+        "Prayas Agrawal",
+        "Prateek Chanda",
+        "Ishita Khatri",
+        "Ganesh Ramakrishnan",
+        "Bamdev Mishra",
+        "Pratik Jawanpuria"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-06T03:16:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.07954v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "minibatch selection via partition matroid constrained gradient matching",
+      "llm_evidence_cn": "通过分区拟阵约束梯度匹配的小批量选择",
+      "llm_evidence": "通过分区拟阵约束梯度匹配的小批量选择",
+      "canonical_evidence": "通过分区拟阵约束梯度匹配的小批量选择",
+      "llm_tldr_en": "Proposes PartitionSel for LLM training, selecting minibatches via gradient matching under per-domain budgets, improving convergence and domain coverage.",
+      "llm_tldr_cn": "训练大语言模型时，小批量选择需平衡收敛速度与领域覆盖。现有方法要么独立选择样本，要么学习连续领域权重。本文提出PartitionSel，通过分区拟阵约束下的梯度匹配效用函数进行跨领域小批量选择，减少跨领域冗余。理论证明目标弱子模性，算法具有近似保证，实验显示收敛更快且领域覆盖更好。",
+      "llm_tldr": "训练大语言模型时，小批量选择需平衡收敛速度与领域覆盖。现有方法要么独立选择样本，要么学习连续领域权重。本文提出PartitionSel，通过分区拟阵约束下的梯度匹配效用函数进行跨领域小批量选择，减少跨领域冗余。理论证明目标弱子模性，算法具有近似保证，实验显示收敛更快且领域覆盖更好。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.07881v1",
+      "source": "arxiv",
+      "title": "Breaking the Bubble: Asynchronous Pipeline Parallel Training with Bounded Weight Inconsistency",
+      "abstract": "Pipeline parallelism is essential for training large neural networks, but existing schedules trade off throughput, memory, and optimization consistency. Synchronous pipelines preserve forward/backward weight consistency but suffer from bubbles; asynchronous pipelines remove bubbles but introduce weight-version mismatch, typically requiring weight stashing, prediction, or correction mechanisms. We introduce PACI (Pipeline Asynchronous training with Controlled Inconsistency), a bubble-free asynchronous pipeline method that bounds forward/backward version drift without weight stashing, prediction, additional parameter copies, or global synchronization. The key idea is to use local gradient accumulation as a version-control mechanism: by slowing parameter-version evolution relative to pipeline delay, PACI limits the number of optimizer updates crossed by any micro-batch while preserving steady-state utilization. In GPT-style language-model pretraining, PACI matches the stability and final perplexity of synchronous 1F1B-flush, retains the same peak memory footprint, achieves fully utilized pipeline throughput, and improves training time-to-accuracy by up to $1.69\\times$ over the fastest flush baseline. These results show that forward/backward inconsistency need not be eliminated: when explicitly bounded, it can be safely traded for substantial efficiency gains.",
+      "authors": [
+        "Itay Elam",
+        "Eliron Rahimi",
+        "Avi Mendelson",
+        "Chaim Baskin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-05T22:33:57+00:00",
+      "link": "https://arxiv.org/pdf/2606.07881v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "asynchronous pipeline training for model convergence",
+      "llm_evidence_cn": "异步流水线训练优化模型收敛",
+      "llm_evidence": "异步流水线训练优化模型收敛",
+      "canonical_evidence": "异步流水线训练优化模型收敛",
+      "llm_tldr_en": "Proposes PACI, a bubble-free asynchronous pipeline training method that bounds weight inconsistency without complex mechanisms, improving training efficiency and convergence for large models.",
+      "llm_tldr_cn": "现有异步流水线训练存在权重版本不一致问题，需要复杂的缓存或校正机制。本文提出PACI方法，通过局部梯度累积作为版本控制，在无额外开销下限制前后向版本漂移，实现无气泡异步流水线训练。实验表明，PACI在保持模型质量的同时显著提升训练吞吐，为解决大规模模型训练效率问题提供了简洁有效的方案。",
+      "llm_tldr": "现有异步流水线训练存在权重版本不一致问题，需要复杂的缓存或校正机制。本文提出PACI方法，通过局部梯度累积作为版本控制，在无额外开销下限制前后向版本漂移，实现无气泡异步流水线训练。实验表明，PACI在保持模型质量的同时显著提升训练吞吐，为解决大规模模型训练效率问题提供了简洁有效的方案。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.07999v1",
+      "source": "arxiv",
+      "title": "Efficient Skill Grounding via Code Refactoring with Small Language Models",
+      "abstract": "Effective skill grounding is essential for deploying reusable skills in embodied agents, as even minor embodiment or environmental differences can render an entire skill incompatible. This challenge is particularly pronounced in embodied settings, where agents must operate in dynamic, partially observable environments without access to large language models (LLMs). In this setting, reliance on LLMs is impractical, while small language models (sLMs) remain insufficient for the effective skill grounding required for reliable long-horizon control. We present RECENT, a refactoring-centric agent framework that enables efficient skill grounding with sLMs by decoupling skill semantics from embodiment- and environment-specific execution binding. By representing skills as executable code, RECENT preserves the semantic intent encoded in a skill's control structure while grounding it by modifying only execution bindings through localized refactoring, rather than regenerating code from scratch. We evaluate RECENT across diverse skill grounding scenarios spanning multiple robot embodiments in dynamic environments, demonstrating robust long-horizon performance when deployed with an sLM. Across all scenarios, RECENT achieves the best performance among sLM-based Code-as-Policies (CaP) methods and matches the task performance of LLM-based CaP.",
+      "authors": [
+        "Sera Choi",
+        "Wonje Choi",
+        "Saehun Chun",
+        "Daehee Lee",
+        "Jooyoung Kim",
+        "Chaeun Lee",
+        "Honguk Woo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-06T06:33:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.07999v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "addresses skill grounding for embodied agents using code refactoring with small language models",
+      "llm_evidence_cn": "使用小语言模型通过代码重构解决具身智能体的技能落地问题",
+      "llm_evidence": "使用小语言模型通过代码重构解决具身智能体的技能落地问题",
+      "canonical_evidence": "使用小语言模型通过代码重构解决具身智能体的技能落地问题",
+      "llm_tldr_en": "Proposes RECENT, a refactoring-centric framework for efficient skill grounding in embodied agents using small language models without LLMs.",
+      "llm_tldr_cn": "具身智能体部署中，技能落地因环境差异变得困难，且无法依赖大模型。提出RECENT框架，通过代码重构将技能语义与主体/环境执行绑定解耦，使用小语言模型实现高效技能落地。在多个具身场景中，RECENT用少量样本来适配新环境，而无需大模型。该方法降低了技能迁移成本，增强了具身智能体的实用性。",
+      "llm_tldr": "具身智能体部署中，技能落地因环境差异变得困难，且无法依赖大模型。提出RECENT框架，通过代码重构将技能语义与主体/环境执行绑定解耦，使用小语言模型实现高效技能落地。在多个具身场景中，RECENT用少量样本来适配新环境，而无需大模型。该方法降低了技能迁移成本，增强了具身智能体的实用性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.07985v1",
+      "source": "arxiv",
+      "title": "FMRFusion: Frequency-Aware Multi-View Representation Learning for Heterogeneous Image Fusion",
+      "abstract": "Infrared and visible image fusion aims to generate a composite image that retains significant target information and preserves detailed textures, integrating two heterogeneous modalities. Previous image fusion methods typically adopt a single-module stacking approach to extract features from the two modalities. However, these approaches may result in incomplete learning of their distinct characteristics, thereby limiting the fusion effectiveness and constrain ing robustness in real-world heterogeneous data scenarios. To address these challenges, we propose FMRFusion, a frequency-aware multi-view representation learning network for Heterogeneous Image Fusion. A Multi-Scale Struc tural Perception Module is introduced to effectively capture discriminative structures, extracting fine-grained local structures and essential contextual information. A bilinear frequency decomposition mechanism is employed to sepa rate features into high-frequency and low-frequency components, enabling joint modeling of local details and global representations across different frequency domains. Moreover, a Cross-View Complementary Interaction is incorpo rated to explicitly model and fuse the complementary characteristics between reflected light information and radiative intensity responses, facilitating effective cross-view interaction. We further improve the Performance of the fused results by flow matching, which progressively refines the fused features by learning the transformation from coarse data to high-quality representations. Extensive experiments conducted on multiple benchmark datasets demonstrate that FMRFusion achieves superior and consistent performance across a range of fusion tasks, especially in nighttime scenarios",
+      "authors": [
+        "Tao Zhoua",
+        "Yunlong Liu",
+        "Qinghui Chen",
+        "Zekai Zhang",
+        "Minlong Sun",
+        "Changlin Biana",
+        "Dagang Li",
+        "Wenmin Wang",
+        "Jinglin Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-06T05:23:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.07985v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "frequency-aware multi-view representation learning for image fusion",
+      "llm_evidence_cn": "频率感知多视角表征学习用于图像融合",
+      "llm_evidence": "频率感知多视角表征学习用于图像融合",
+      "canonical_evidence": "频率感知多视角表征学习用于图像融合",
+      "llm_tldr_en": "Proposes FMRFusion, a frequency-aware multi-view representation learning network for heterogeneous image fusion, improving feature extraction and fusion robustness.",
+      "llm_tldr_cn": "现有红外与可见光图像融合方法多采用单模块堆叠，难以充分学习两种模态的独特特征，导致融合效果和鲁棒性受限。本文提出FMRFusion，一种频率感知多视角表征学习网络，通过引入多尺度结构感知模块，有效提取异质图像的多频特征。实验表明该方法在多个融合基准上取得更优的视觉效果和定量指标，证明了表征学习在图像融合任务中的有效性。",
+      "llm_tldr": "现有红外与可见光图像融合方法多采用单模块堆叠，难以充分学习两种模态的独特特征，导致融合效果和鲁棒性受限。本文提出FMRFusion，一种频率感知多视角表征学习网络，通过引入多尺度结构感知模块，有效提取异质图像的多频特征。实验表明该方法在多个融合基准上取得更优的视觉效果和定量指标，证明了表征学习在图像融合任务中的有效性。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.08102v1",
+      "source": "arxiv",
+      "title": "Continual Quadruped Robots Coordination via Semantic Skill Discovery",
+      "abstract": "Multi-quadruped coordination has attracted increasing attention due to its enhanced payload capacity, broader contact coverage, and improved adaptability to challenging tasks. Existing methods for multi-quadruped manipulation typically focus on predefined or closed task families, often relying on multi-agent reinforcement learning (MARL) to train task-specific coordination policies. However, such methods struggle in open-ended continual learning settings, where tasks arrive sequentially and robots are expected to acquire new coordination skills while reusing previously learned ones without catastrophic forgetting. To address this challenge, we propose Conquer, a semantic skill-library framework that formulates continual multi-quadruped coordination as a retrieve-adapt-update process. First, to accommodate varying team sizes across tasks, we design a team-structured Self-Allies-Goal (SAG) backbone that supports variable-cardinality robot teams by explicitly modeling each robot's own state, teammate context, and task goal. For each incoming task, Conquer constructs a task-level semantic descriptor from pre-execution information and retrieves a relevant skill from the library for adaptation. After successful execution, Conquer updates the skill library by extracting trajectory-level semantic descriptors and organizing them according to semantic distance, thereby enabling continual skill accumulation and cross-task knowledge transfer. Simulation experiments show that Conquer achieves a final average success rate of 95.6%, demonstrating strong forward transfer and negligible catastrophic forgetting. Real-world rollouts on Unitree Go2 teams further validate the deployment feasibility of Conquer for practical multi-quadruped coordination. Simulation and real-robot demonstration videos are available at: https://conquer-project.pages.dev/.",
+      "authors": [
+        "Daoqing Wang",
+        "Yuchen Xiao",
+        "Weixuan Huang",
+        "Zhilong Zhang",
+        "Shenghua Wan",
+        "Meng Li",
+        "Lei Yuan",
+        "Yang Yu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-06-06T11:07:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.08102v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multi-agent reinforcement learning for robot coordination",
+      "llm_evidence_cn": "多智能体强化学习用于机器人协调",
+      "llm_evidence": "多智能体强化学习用于机器人协调",
+      "canonical_evidence": "多智能体强化学习用于机器人协调",
+      "llm_tldr_en": "Proposes Conquer, a semantic skill-library framework that uses multi-agent RL to enable continual multi-quadruped coordination without catastrophic forgetting.",
+      "llm_tldr_cn": "该论文针对多四足机器人持续协调问题，提出Conquer框架，通过语义技能库和多智能体强化学习，使机器人能在顺序任务中学习新技能并复用旧技能，避免灾难性遗忘，提升了持续学习场景下的协调能力。",
+      "llm_tldr": "该论文针对多四足机器人持续协调问题，提出Conquer框架，通过语义技能库和多智能体强化学习，使机器人能在顺序任务中学习新技能并复用旧技能，避免灾难性遗忘，提升了持续学习场景下的协调能力。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.08596v1",
+      "source": "arxiv",
+      "title": "Distilling LLM Reasoning into an Interpretable Policy Tree for Human-AI Collaboration",
+      "abstract": "Constructing efficient and reliable policies to assist humans is indispensable for human-AI collaboration. Existing methods mainly follow two lines of work. Most prior work relies on multi-agent reinforcement learning (MARL) to learn black-box policies, which limits interpretability and raises safety concerns. Recent methods query large language models (LLMs) at each decision step, causing slow responses and high inference costs. We propose Collaboration Policy Tree (Co-pi-tree), a closed-loop method that learns an executable policy tree consisting of a partner-behavior prediction tree and an agent-action selection tree. Co-pi-tree constructs a policy by distilling LLM reasoning into policy tree code. It then evaluates the policy through partner interaction, obtains feedback, and uses natural language to summarize the interaction feedback to improve problematic branches. Experiments in Overcooked-AI show that Co-pi-tree improves average reward by 35.4% over the baseline average, while reducing the number of LLM queries by 77.7% and test-time latency by 97.1%. Project page: https://beiwenzhang.github.io/Co-pi-tree/",
+      "authors": [
+        "Beiwen Zhang",
+        "Yongheng Liang",
+        "Guowei Zou",
+        "Haitao Wang",
+        "Hejun Wu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.HC"
+      ],
+      "published": "2026-06-07T12:20:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.08596v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-agent reinforcement learning and LLM distillation for policy tree",
+      "llm_evidence_cn": "多智能体强化学习和LLM蒸馏构建可解释策略树",
+      "llm_evidence": "多智能体强化学习和LLM蒸馏构建可解释策略树",
+      "canonical_evidence": "多智能体强化学习和LLM蒸馏构建可解释策略树",
+      "llm_tldr_en": "Distills LLM reasoning into an interpretable policy tree for human-AI collaboration, combining multi-agent RL with tree-based policies to improve interpretability and efficiency.",
+      "llm_tldr_cn": "针对现有基于多智能体强化学习的策略缺乏可解释性，以及直接使用LLM决策速度慢的问题，本文提出协作策略树（Co-pi-tree），通过将LLM推理蒸馏为可执行的策略树代码，兼顾了决策效率与可解释性，在协作场景中取得了更好的性能表现。",
+      "llm_tldr": "针对现有基于多智能体强化学习的策略缺乏可解释性，以及直接使用LLM决策速度慢的问题，本文提出协作策略树（Co-pi-tree），通过将LLM推理蒸馏为可执行的策略树代码，兼顾了决策效率与可解释性，在协作场景中取得了更好的性能表现。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.08656v1",
+      "source": "arxiv",
+      "title": "From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory",
+      "abstract": "Large language model (LLM) agents are increasingly deployed in long-running settings where improving through experience at test time becomes important. A common approach is to update an explicit memory after each interaction to guide future decisions. However, most existing methods rely on hand-designed prompting rules, making it difficult to align memory updates with downstream objectives over multi-step horizons consistently. We propose MemoPilot, a plug-in memory copilot that explicitly trains the memory update process to improve a frozen LLM's performance across sequential interactions. We formulate memory updating as a multi-turn decision problem and optimize it end-to-end with multi-turn GRPO. Our training recipe introduces (i) a turn-wise reward signal and (ii) a context-independent, turn-level advantage estimation across rollouts, enabling finer-grained credit assignment and more stable training in multi-turn settings. We evaluate MemoPilot on two testbeds: multi-round Rock-Paper-Scissors (RPS) and Limit Texas Hold'em (LHE). Across both environments, MemoPilot substantially improves test-time learning of a frozen player over strong baselines, ranking first in Elo ratings on both games (1762 on LHE and 1590 on RPS) and outperforming all baseline memory methods and proprietary models, including DeepSeek-V3.2.",
+      "authors": [
+        "Yishuo Cai",
+        "Xingyu Guo",
+        "Xuancheng Huang",
+        "Jinhua Du",
+        "Can Huang",
+        "Wenxuan Huang",
+        "Wenhan Ma",
+        "Yuyang Hu",
+        "Aohan Zeng",
+        "Jie Tang",
+        "Xu Sun"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-07T14:53:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.08656v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "uses RL (multi-turn GRPO) to optimize memory updates for LLM agents",
+      "llm_evidence_cn": "使用强化学习（多轮GRPO）优化LLM智能体记忆更新",
+      "llm_evidence": "使用强化学习（多轮GRPO）优化LLM智能体记忆更新",
+      "canonical_evidence": "使用强化学习（多轮GRPO）优化LLM智能体记忆更新",
+      "llm_tldr_en": "Proposes MemoPilot, a plug-in memory copilot that uses multi-turn GRPO reinforcement learning to update the memory of a frozen LLM agent at test time, improving sequential decision performance.",
+      "llm_tldr_cn": "针对LLM智能体测试时学习问题，现有方法依赖手工提示规则，难以对齐长期目标。提出MemoPilot插件，将记忆更新建模为多轮决策问题，使用多轮GRPO强化学习端到端优化记忆更新过程，无需修改基础LLM。在多个环境中验证了该方法能持续提升智能体性能。该方法将强化学习应用于记忆优化，为智能体长期适应提供了新范式。",
+      "llm_tldr": "针对LLM智能体测试时学习问题，现有方法依赖手工提示规则，难以对齐长期目标。提出MemoPilot插件，将记忆更新建模为多轮决策问题，使用多轮GRPO强化学习端到端优化记忆更新过程，无需修改基础LLM。在多个环境中验证了该方法能持续提升智能体性能。该方法将强化学习应用于记忆优化，为智能体长期适应提供了新范式。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}

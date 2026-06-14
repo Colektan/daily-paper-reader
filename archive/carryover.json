@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-13T21:18:32.837164+00:00",
-  "updated_date": "20260613",
+  "generated_at": "2026-06-14T20:49:26.701561+00:00",
+  "updated_date": "20260614",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260613",
+      "updated_date": "20260614",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260613",
+      "updated_date": "20260614",
       "carryover_days": 9,
       "items": [
         {
@@ -34,13 +34,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "adaptive knowledge transfer via hierarchical projection",
-          "llm_evidence_cn": "自适应知识迁移的层次投影方法",
-          "llm_evidence": "自适应知识迁移的层次投影方法",
-          "canonical_evidence": "自适应知识迁移的层次投影方法",
-          "llm_tldr_en": "ProjectionTL integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer across domains.",
-          "llm_tldr_cn": "本文针对多源异构数据迁移中相关性不明、信号混淆的问题，提出ProjectionTL框架，通过层次贝叶斯模型自适应投影实现选择性知识迁移。方法首先构建源引导的层次先验，再通过投影导向的自适应后验进行源选择。实验表明该方法在目标数据有限时显著提升了迁移效果，为跨域学习提供了稳健解决方案。",
-          "llm_tldr": "本文针对多源异构数据迁移中相关性不明、信号混淆的问题，提出ProjectionTL框架，通过层次贝叶斯模型自适应投影实现选择性知识迁移。方法首先构建源引导的层次先验，再通过投影导向的自适应后验进行源选择。实验表明该方法在目标数据有限时显著提升了迁移效果，为跨域学习提供了稳健解决方案。",
+          "llm_evidence_en": "Adaptive knowledge transfer via hierarchical Bayesian projection",
+          "llm_evidence_cn": "通过分层贝叶斯投影的自适应知识迁移",
+          "llm_evidence": "通过分层贝叶斯投影的自适应知识迁移",
+          "canonical_evidence": "通过分层贝叶斯投影的自适应知识迁移",
+          "llm_tldr_en": "ProjectionTL is a unified framework for selective knowledge transfer using hierarchical Bayesian modeling and adaptive projection, improving performance on target tasks with limited data from multiple heterogeneous sources.",
+          "llm_tldr_cn": "ProjectionTL是一种统一的迁移学习框架，整合分层贝叶斯建模与自适应投影，选择性从多异构源迁移知识，在目标数据有限时提升性能。在多个跨域学习任务上超越基线。",
+          "llm_tldr": "ProjectionTL是一种统一的迁移学习框架，整合分层贝叶斯建模与自适应投影，选择性从多异构源迁移知识，在目标数据有限时提升性能。在多个跨域学习任务上超越基线。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -49,45 +49,6 @@
           "matched_requirement_id": "req-10",
           "selection_source": "carryover_cache",
           "paper_id": "2606.08691v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.10196v1",
-          "source": "arxiv",
-          "title": "Fisher-Guided Progressive Parameter Selection for Adaptive Fine-Tuning",
-          "abstract": "Parameter-efficient fine-tuning (PEFT) aims to adapt pretrained models with a small trainable parameter subset, however, most existing methods choose this subset from fixed architectural heuristics rather than using dynamic, task-aware criteria. We introduce \\textbf{FisherAdapTune}, a Fisher-guided Adaptive Fine-Tuning framework that progressively selects parameter groups by tracking the temporal drift of their Fisher geometry. Starting from a PAC-Bayesian view of fine-tuning, we decompose the generalization error bound into Fisher-weighted update costs and show that parameter groups whose curvature contribution has stabilized can be frozen to reduce the error bound without interrupting the remaining adaptation dynamics. FisherAdapTune formulates this criterion with a scale-invariant Jensen-Shannon distance between consecutive Fisher distributions, yielding an adaptive active parameter set. We evaluate our approach on a downstream segmentation task, and results show FisherAdapTune improves the in-distribution performance and zero-shot transfer in multiple settings, validating that Fisher structural drift is a useful signal for efficient, task-aware adaptation. We release our \\href{https://github.com/AtlasAnalyticsLab/FisherAdapTune}{code} publicly to enable further application of our proposed approach.",
-          "authors": [
-            "Ghodsiyeh Rostami",
-            "Po-Han Chen",
-            "Mahdi S. Hosseini"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV",
-            "cs.AI"
-          ],
-          "published": "2026-06-08T21:35:11+00:00",
-          "link": "https://arxiv.org/pdf/2606.10196v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "parameter-efficient fine-tuning for transfer learning",
-          "llm_evidence_cn": "参数高效微调用于迁移学习",
-          "llm_evidence": "参数高效微调用于迁移学习",
-          "canonical_evidence": "参数高效微调用于迁移学习",
-          "llm_tldr_en": "FisherAdapTune progressively selects parameter groups for fine-tuning by tracking Fisher geometry, improving generalization with fewer trainable parameters.",
-          "llm_tldr_cn": "针对参数高效微调中固定选择参数子集的问题，本文提出FisherAdapTune，通过跟踪Fisher几何的时间漂移，逐步冻结稳定参数组，从而在极少可训练参数下提升泛化性能。理论分析证明该方法能降低泛化误差界。",
-          "llm_tldr": "针对参数高效微调中固定选择参数子集的问题，本文提出FisherAdapTune，通过跟踪Fisher几何的时间漂移，逐步冻结稳定参数组，从而在极少可训练参数下提升泛化性能。理论分析证明该方法能降低泛化误差界。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.10196v1",
           "carry_days": 1
         },
         {
@@ -113,13 +74,53 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "self-supervised generative model for policy representation learning",
-          "llm_evidence_cn": "自监督策略表示学习",
-          "llm_evidence": "自监督策略表示学习",
-          "canonical_evidence": "自监督策略表示学习",
-          "llm_tldr_en": "Behavioral INR uses implicit neural representations to learn policy representations from unlabeled multi-policy behavioral data in a self-supervised manner.",
-          "llm_tldr_cn": "该论文针对无标签多策略行为数据中策略表示学习问题，提出了Behavioral INR模型，将隐式神经表示从视觉扩展到行为，通过状态-动作函数和FiLM层实现策略生成与推断。实验表明该方法能有效从混合数据中学习策略先验，无需策略标签。这项工作为机器人行为理解与模仿学习提供了新的表示工具。",
-          "llm_tldr": "该论文针对无标签多策略行为数据中策略表示学习问题，提出了Behavioral INR模型，将隐式神经表示从视觉扩展到行为，通过状态-动作函数和FiLM层实现策略生成与推断。实验表明该方法能有效从混合数据中学习策略先验，无需策略标签。这项工作为机器人行为理解与模仿学习提供了新的表示工具。",
+          "llm_evidence_en": "self-supervised behavioral implicit neural representation for policy learning",
+          "llm_evidence_cn": "自监督行为隐式神经表示用于策略学习",
+          "llm_evidence": "自监督行为隐式神经表示用于策略学习",
+          "canonical_evidence": "自监督行为隐式神经表示用于策略学习",
+          "llm_tldr_en": "Adapts implicit neural representations to policy learning, enabling self-supervised discovery of policies from unlabeled multi-policy behavioral data.",
+          "llm_tldr_cn": "在机器人演示等数据中，每个轨迹由不同策略生成但缺乏标签。本文提出Behavioral INR，借鉴视觉INR思想，将每个策略表示为状态到动作的隐式函数，并通过场景级潜在变量调制，实现无监督的策略识别与生成，为多源行为数据的表征学习提供了新思路。",
+          "llm_tldr": "在机器人演示等数据中，每个轨迹由不同策略生成但缺乏标签。本文提出Behavioral INR，借鉴视觉INR思想，将每个策略表示为状态到动作的隐式函数，并通过场景级潜在变量调制，实现无监督的策略识别与生成，为多源行为数据的表征学习提供了新思路。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "self-supervised learning techniques for feature extraction",
+          "matched_requirement_id": "req-9",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.12200v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.08799v1",
+          "source": "arxiv",
+          "title": "Generalization in Nonlinear Least Squares via Learned Feature Geometry",
+          "abstract": "We study the generalization of ridge-regularized nonlinear least-squares models via on-average algorithmic stability, deriving error bounds for local minimizers in terms of a data-dependent effective dimension that reflects the geometry of the gradient model at the trained parameters, through the empirical Jacobian Gram matrix and a residual--curvature term. In the linear case, where the curvature term vanishes, this recovers the classical effective dimension of the Jacobian kernel covariance, but evaluated at the trained model rather than at initialization as is typical in neural tangent kernel analyses. We further bound this effective dimension via covering complexity of the gradient features, leading to guarantees that depend on learned geometry rather than parameter count. In particular, for manifold-supported data and piecewise Lipschitz Jacobians, the bounds scale with intrinsic dimension, while for one-hidden-layer ReLU networks, the mechanism can be made explicit through counts of activation-stable regions. Experiments on synthetic manifolds, clustered distributions, and benchmark datasets illustrate trained-Jacobian compression, the tightness of the residual-curvature linearization, and agreement between the stability bound and observed generalization gaps. A key feature of our bounds is the simplicity of their derivation, which follows from first principles using the Brascamp--Lieb inequality under strongly log-concave noise.",
+          "authors": [
+            "Ayub Kharel",
+            "Ilja Kuzborski",
+            "Patrick Rebeschini",
+            "Yasin Abbasi-Yadkori"
+          ],
+          "primary_category": "stat.ML",
+          "categories": [
+            "stat.ML",
+            "cs.LG"
+          ],
+          "published": "2026-06-07T19:33:36+00:00",
+          "link": "https://arxiv.org/pdf/2606.08799v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "learned feature geometry for generalization",
+          "llm_evidence_cn": "学习特征几何对泛化的影响",
+          "llm_evidence": "学习特征几何对泛化的影响",
+          "canonical_evidence": "学习特征几何对泛化的影响",
+          "llm_tldr_en": "Studies generalization of nonlinear least squares by deriving bounds based on learned feature geometry via empirical Jacobian Gram matrix, connecting representation learning to effective dimension.",
+          "llm_tldr_cn": "本文通过经验雅可比Gram矩阵和残差-曲率项，推导了岭正则化非线性最小二乘的泛化误差界，将表示学习的几何性质与有效维度联系起来，揭示了训练后的特征几何如何影响模型泛化。",
+          "llm_tldr": "本文通过经验雅可比Gram矩阵和残差-曲率项，推导了岭正则化非线性最小二乘的泛化误差界，将表示学习的几何性质与有效维度联系起来，揭示了训练后的特征几何如何影响模型泛化。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -127,64 +128,63 @@
           "matched_query_text": "representation learning methods improving model performance",
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.12200v1",
+          "paper_id": "2606.08799v1",
           "carry_days": 1
         },
         {
-          "id": "2606.10383v1",
+          "id": "2606.09744v3",
           "source": "arxiv",
-          "title": "A stochastic gradient algorithm for non-separable optimization with convergence guarantee",
-          "abstract": "We study non-separable objectives in which the loss depend on dataset-level quantities. We introduce an SGD-style framework that employs two batch-gradient constructs: the ideal per-batch gradient `$G$' and a cached surrogate `$H$' for cases where full-data terms are expensive.   Notably, in the sample-wise separable case, our method reduces to standard mini-batch SGD. Our main contribution is a unified local convergence theory: under mild smoothness and Jacobian-boundedness assumptions,   we prove local linear convergence under local strong convexity and local $O(1/k)$ sublinear convergence under local convexity for both `$G$'-driven and `$H$'-driven updates.   Crucially, these guarantees hold for fixed step sizes within explicitly characterized ranges; we provide explicit bounds showing how cache staleness, surrogate approximation error, batch size, and step size influence the convergence constants and allowable step-size ranges.",
+          "title": "Learning Dynamics Reveal a Hierarchy of Weight-Induced Layerwise Gram Metrics",
+          "abstract": "We study feed-forward ReLU networks with fixed readout and quadratic loss. The aim is to rewrite gradient descent not primarily as a dynamics in weight space, but as a collective dynamics closed in terms of fields defined on the training-set space. For a single hidden layer, the weight variables can be eliminated from the activation dynamics, yielding a closed equation for the residuals governed by a collective kernel that factorizes into an input-geometric matrix and a dynamical co-activation matrix. For deeper networks, the residual dynamics retains a clean layer-wise kernel structure. However, from depth three onward, closure requires a hierarchy of weight-induced Gram operators that mediate information transport across layers. Moreover, the conjugate-field dynamics is governed by operators satisfying a backward pullback recursion, of which the weight-induced Gram operators are the first nontrivial instances.",
           "authors": [
-            "Yingzhou Li",
-            "Ruofan Wu"
-          ],
-          "primary_category": "math.OC",
-          "categories": [
-            "math.OC",
-            "math.NA"
-          ],
-          "published": "2026-06-09T03:48:27+00:00",
-          "link": "https://arxiv.org/pdf/2606.10383v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "SGD-style algorithm for non-separable optimization with convergence guarantees",
-          "llm_evidence_cn": "用于非可分优化的随机梯度算法及收敛保证",
-          "llm_evidence": "用于非可分优化的随机梯度算法及收敛保证",
-          "canonical_evidence": "用于非可分优化的随机梯度算法及收敛保证",
-          "llm_tldr_en": "Introduces an SGD framework for non-separable objectives using two batch-gradient constructs, proving local linear and sublinear convergence under mild assumptions.",
-          "llm_tldr_cn": "论文针对非可分优化问题提出了一种SGD风格算法，通过理想梯度和缓存代理梯度两种构造，在温和假设下证明了局部线性收敛和次线性收敛。该方法在样本可分离时退化为标准小批量SGD，统一了可分离与非可分优化的收敛理论，对训练效率提升具有指导意义。",
-          "llm_tldr": "论文针对非可分优化问题提出了一种SGD风格算法，通过理想梯度和缓存代理梯度两种构造，在温和假设下证明了局部线性收敛和次线性收敛。该方法在样本可分离时退化为标准小批量SGD，统一了可分离与非可分优化的收敛理论，对训练效率提升具有指导意义。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.10383v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.11275v1",
-          "source": "arxiv",
-          "title": "RoVE: Rotary Value Embeddings Attention for Relative Position-dependent Value Pathways",
-          "abstract": "Rotary Position Embeddings (RoPE) make attention scores position-relative but leave the value pathway position-blind: the message sent by a value token is the same regardless of its distance from the query. We propose RoVE, a parameter-free modification that makes values position-sensitive by rotating them simultaneously with keys, and show that it turns RoPE attention into attentive convolution. This new perspective unifies several independent formulations of the same operation across computer vision, robotics, and modern LLM architectures. Trained 124M and 354M GPT-2 models show consistent empirical gains over RoPE on few-shot in-context learning, out-of-distribution perplexity, and long-context retrieval, with the clearest improvements on tasks that require long-range aggregation.",
-          "authors": [
-            "Alejandro García-Castellanos",
-            "Maurice Weiler",
-            "Erik J Bekkers"
+            "Claudio Nordio"
           ],
           "primary_category": "cs.LG",
           "categories": [
             "cs.LG",
-            "cs.AI"
+            "cond-mat.dis-nn"
           ],
-          "published": "2026-06-09T09:56:50+00:00",
-          "link": "https://arxiv.org/pdf/2606.11275v1",
+          "published": "2026-06-08T17:05:38+00:00",
+          "link": "https://arxiv.org/pdf/2606.09744v3",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Study of neural network learning dynamics via layerwise Gram metrics",
+          "llm_evidence_cn": "通过层间Gram度量研究神经网络学习动力学",
+          "llm_evidence": "通过层间Gram度量研究神经网络学习动力学",
+          "canonical_evidence": "通过层间Gram度量研究神经网络学习动力学",
+          "llm_tldr_en": "Derives a hierarchical set of Gram operators that mediate information transport in deep ReLU networks, providing insights into representation learning.",
+          "llm_tldr_cn": "该论文研究前馈ReLU网络的学习动力学，通过将梯度下降重写为训练集上的集体动力学，从深度三层开始揭示了层间Gram算子层级结构，这些算子传递信息并影响表示学习，为理解深度网络学习机制提供了理论分析。",
+          "llm_tldr": "该论文研究前馈ReLU网络的学习动力学，通过将梯度下降重写为训练集上的集体动力学，从深度三层开始揭示了层间Gram算子层级结构，这些算子传递信息并影响表示学习，为理解深度网络学习机制提供了理论分析。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.09744v3",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.12890v1",
+          "source": "arxiv",
+          "title": "Learning to Adapt: Representation-Based Reinforcement Learning for Multi-Task Skill Transfer",
+          "abstract": "Reinforcement learning has achieved remarkable success in learning complex control policies, yet its applicability remains limited due to sample inefficiency and poor generalization across tasks. In this work, we propose RepMT-SAC, a framework for multi-task RL that enables efficient knowledge sharing and robust transfer to new tasks. RepMT-SAC uses spectral MDP decomposition to capture transferable dynamics, structuring the value function into a task-agnostic core with a minimal task-specific adjustment. This design allows for strong zero-shot performance on in-distribution tasks and rapid few-shot adaptation to out-of-distribution tasks. We evaluate RepMT-SAC on quadcopter trajectory-following tasks across in-distribution and out-of-distribution contexts, demonstrating that it outperforms baselines by up to 30%.",
+          "authors": [
+            "Aryan Naveen",
+            "Haitong Ma",
+            "Haldun Balim",
+            "Na Li"
+          ],
+          "primary_category": "cs.RO",
+          "categories": [
+            "cs.RO"
+          ],
+          "published": "2026-06-11T04:33:03+00:00",
+          "link": "https://arxiv.org/pdf/2606.12890v1",
           "tags": [
             "keyword:RL-VLA-world",
             "keyword:rep-learning",
@@ -192,21 +192,112 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "novel attention architecture improving model performance",
-          "llm_evidence_cn": "新型注意力架构提升模型性能",
-          "llm_evidence": "新型注意力架构提升模型性能",
-          "canonical_evidence": "新型注意力架构提升模型性能",
-          "llm_tldr_en": "RoVE modifies RoPE to rotate value embeddings jointly with keys, turning attention into attentive convolution, yielding consistent gains in few-shot learning and long-context retrieval.",
-          "llm_tldr_cn": "针对当前位置编码中值路径位置不敏感的问题，提出RoVE机制，通过将值向量与键向量同步旋转，使注意力变为位置感知的卷积形式，在GPT-2模型上展示了少样本学习、分布外困惑度和长上下文检索的一致提升。",
-          "llm_tldr": "针对当前位置编码中值路径位置不敏感的问题，提出RoVE机制，通过将值向量与键向量同步旋转，使注意力变为位置感知的卷积形式，在GPT-2模型上展示了少样本学习、分布外困惑度和长上下文检索的一致提升。",
+          "llm_evidence_en": "representation-based RL for multi-task skill transfer with fast adaptation",
+          "llm_evidence_cn": "基于表示的强化学习实现多任务技能迁移与快速适应",
+          "llm_evidence": "基于表示的强化学习实现多任务技能迁移与快速适应",
+          "canonical_evidence": "基于表示的强化学习实现多任务技能迁移与快速适应",
+          "llm_tldr_en": "Proposes RepMT-SAC, a multi-task RL framework using spectral MDP decomposition to learn transferable representations, achieving strong zero-shot and few-shot adaptation.",
+          "llm_tldr_cn": "针对强化学习在多任务下样本效率低和泛化差的问题，本文提出RepMT-SAC框架，通过谱MDP分解提取可迁移动力学，将值函数分解为任务无关核心和最小任务特定调整。在四旋翼轨迹跟踪任务上，该方法在分布内任务上实现强零样本性能，在分布外任务上快速少样本适应，展示了表示学习在RL迁移中的潜力。",
+          "llm_tldr": "针对强化学习在多任务下样本效率低和泛化差的问题，本文提出RepMT-SAC框架，通过谱MDP分解提取可迁移动力学，将值函数分解为任务无关核心和最小任务特定调整。在四旋翼轨迹跟踪任务上，该方法在分布内任务上实现强零样本性能，在分布外任务上快速少样本适应，展示了表示学习在RL迁移中的潜力。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
-          "matched_requirement_id": "req-15",
+          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+          "matched_requirement_id": "req-11",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.11275v1",
+          "paper_id": "2606.12890v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.12499v1",
+          "source": "arxiv",
+          "title": "Action-Effect Memory Pretraining for Robot Manipulation",
+          "abstract": "We present AEM, an Action-Effect Memory pretraining framework for robot manipulation that learns compact temporal representations from vision-action history. Unlike prior robot representation pretraining methods that mainly focus on single-frame visual encoding, AEM targets the temporal nature of manipulation, where the current observation alone is often insufficient under partial observability. AEM models manipulation as an action-driven interaction process by interleaving visual and action features and applying masked modeling to recover missing content from incomplete histories, thereby learning action-conditioned state evolution. The Mamba-encoded output of the final vision token is used as a compact history representation, serving as the global context for decoding and downstream control. This design preserves a single-vector temporal bottleneck while keeping inference efficient. We evaluate AEM with Diffusion Policy and Flow Policy. AEM consistently improves manipulation performance in both simulation and real-world settings, outperforming baselines across clean scenes, cluttered and random scenes, and non-Markovian tasks. Ablation studies further show that history-aware pretraining surpasses single-frame pretraining and direct frame stacking, while reducing inference latency and computational cost.",
+          "authors": [
+            "Yijing Zhou",
+            "Qiwei Liang",
+            "Sitong Zhuang",
+            "Jiaxi Li",
+            "Xianpeng Wang",
+            "Boyang Cai",
+            "Yunyang Mo",
+            "Renjing Xu"
+          ],
+          "primary_category": "cs.RO",
+          "categories": [
+            "cs.RO"
+          ],
+          "published": "2026-06-10T13:58:14+00:00",
+          "link": "https://arxiv.org/pdf/2606.12499v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Pretraining framework that learns compact temporal representations from vision-action history for robot manipulation",
+          "llm_evidence_cn": "从视觉-动作历史中学习紧凑时间表示的预训练框架，提升下游操作性能",
+          "llm_evidence": "从视觉-动作历史中学习紧凑时间表示的预训练框架，提升下游操作性能",
+          "canonical_evidence": "从视觉-动作历史中学习紧凑时间表示的预训练框架，提升下游操作性能",
+          "llm_tldr_en": "Proposes AEM, an action-effect memory pretraining framework that learns temporal representations from interleaved visual and action features via masked modeling, improving downstream manipulation tasks.",
+          "llm_tldr_cn": "现有机器人表示预训练主要关注单帧视觉编码，忽略了操作中的时间依赖性。本文提出AEM，通过交错视觉和动作特征并进行掩码建模，学习动作条件的状态演化表示。预训练后的表示在下游操作任务上显著优于单帧预训练方法，验证了时间建模对机器人操作的重要性。",
+          "llm_tldr": "现有机器人表示预训练主要关注单帧视觉编码，忽略了操作中的时间依赖性。本文提出AEM，通过交错视觉和动作特征并进行掩码建模，学习动作条件的状态演化表示。预训练后的表示在下游操作任务上显著优于单帧预训练方法，验证了时间建模对机器人操作的重要性。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "pretraining methods enhancing downstream model performance",
+          "matched_requirement_id": "req-13",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.12499v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.11867v1",
+          "source": "arxiv",
+          "title": "Harnessing Routing Foresight for Micro-step-level MoE load balancing in RL Post-training",
+          "abstract": "Mixture-of-Experts (MoE) and reinforcement learning (RL) post-training now dominate large language model (LLM) development, yet expert load imbalance remains a critical challenge. Existing load-balancing systems target pre-training by relying on historical step-level statistics. However, these methods fail under the unique workload dynamics of RL post-training: the step-level load is stable, but the tiny batch sizes processed during micro-steps cause severe, high-frequency load fluctuations.   We introduce ForeMoE, a micro-step-level load balancing system for MoE RL post-training. Instead of relying on historical statistics, ForeMoE exploits the multi-stage RL pipeline (rollout, recompute, policy update) by using foreseeable routing information from the rollout stage to proactively guide load balancing in the remaining stages. To support frequent per-micro-step reconfiguration, ForeMoE employs a hierarchical planner that decomposes the NP-hard load balancing problem into tractable sub-components, alongside a transfer engine that leverages complementary hardware paths (CPU-assisted and GPU-direct) for overlapped expert transfer. Evaluations on 64 GPUs demonstrate that ForeMoE achieves up to a 1.45$\\times$ speedup over state-of-the-art RL post-training systems.",
+          "authors": [
+            "Yuming Zhou",
+            "Haoyang Li",
+            "Sheng Lin",
+            "Yanfeng Zhao",
+            "Tong Zhao",
+            "Xupeng Miao",
+            "Jie Jiang",
+            "Fangcheng Fu",
+            "Bin Cui"
+          ],
+          "primary_category": "cs.DC",
+          "categories": [
+            "cs.DC"
+          ],
+          "published": "2026-06-10T09:42:11+00:00",
+          "link": "https://arxiv.org/pdf/2606.11867v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "proposes micro-step-level load balancing for MoE RL post-training to improve training efficiency",
+          "llm_evidence_cn": "提出微步级MoE负载均衡方法用于RL后训练，提升训练效率",
+          "llm_evidence": "提出微步级MoE负载均衡方法用于RL后训练，提升训练效率",
+          "canonical_evidence": "提出微步级MoE负载均衡方法用于RL后训练，提升训练效率",
+          "llm_tldr_en": "Introduces ForeMoE, a micro-step-level load balancing system for MoE RL post-training, using foreseeable routing to handle micro-step load fluctuations.",
+          "llm_tldr_cn": "在MoE大模型的RL后训练中，微步粒度上的负载不平衡严重影响训练效率。现有方法仅适用于预训练。提出ForeMoE系统，利用RL多阶段流水线（推理、重计算、策略更新）中的可预见路由信息，在微步级别进行负载均衡。实验表明显著提升训练吞吐量并降低负载不均衡度。该系统为MoE模型在RL后训练场景下的高效训练提供了解决方案。",
+          "llm_tldr": "在MoE大模型的RL后训练中，微步粒度上的负载不平衡严重影响训练效率。现有方法仅适用于预训练。提出ForeMoE系统，利用RL多阶段流水线（推理、重计算、策略更新）中的可预见路由信息，在微步级别进行负载均衡。实验表明显著提升训练吞吐量并降低负载不均衡度。该系统为MoE模型在RL后训练场景下的高效训练提供了解决方案。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.11867v1",
           "carry_days": 1
         }
       ]
