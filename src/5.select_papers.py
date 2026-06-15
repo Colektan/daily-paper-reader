@@ -22,21 +22,21 @@ CONFIG_FILE = os.path.join(ROOT_DIR, "config.yaml")
 
 MODES = {
     "standard": {
-        "quick_base": 5,
+        "quick_base": 2,
         "quick_strategy": "uniform",
         "deep_unlimited": False,
         "deep_base": 2,
         "deep_strategy": "round_robin",
     },
     "extend": {
-        "quick_base": 10,
+        "quick_base": 2,
         "quick_strategy": "uniform",
         "deep_unlimited": False,
-        "deep_base": 5,
+        "deep_base": 2,
         "deep_strategy": "round_robin",
     },
     "spark": {
-        "quick_base": 5,
+        "quick_base": 2,
         "quick_strategy": "low_bias",
         "deep_unlimited": False,
         "deep_base": 2,
