@@ -1,0 +1,1631 @@
+Title: Hierarchical Projection for Adaptive Knowledge Transfer
+
+URL Source: https://arxiv.org/pdf/2606.08691v1
+
+Published Time: Tue, 09 Jun 2026 01:19:31 GMT
+
+Number of Pages: 21
+
+Markdown Content:
+# Hierarchical Projection for Adaptive Knowledge Transfer 
+
+Samhita Pal 
+
+Vanderbilt University Medical Center Address 
+
+samhita.pal@vumc.org 
+
+Tian Gu 
+
+Columbia University Address 
+
+second.author@example.edu 
+
+## Abstract 
+
+Modern data-driven applications increasingly involve learning from multiple het-erogeneous sources, where a target dataset is limited but related information is available across domains. Naively combining these sources can degrade perfor-mance when relevance varies or spurious signals are present, posing a fundamental challenge for trustworthy cross-domain learning. We propose Projection Transfer Learning (ProjectionTL), a unified framework that integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer. The key idea is to decouple transfer at two levels: first, we construct a source-guided hierar-chical prior that aggregates information across sources using data-driven weights, capturing global alignment between each source and the target; second, we refine this borrowing through a posterior-projection step that operates at the feature level, selectively retaining coordinates that exhibit local agreement with the target signal. This two-stage design enables the method to simultaneously perform source selec-tion and feature selection, thereby mitigating negative transfer while preserving interpretability. ProjectionTL provides a principled approach to integrating hetero-geneous data across domains, bridging statistical modeling and modern machine learning paradigms for robust and interpretable transfer. Through simulations and real-world biomedical applications, we demonstrate improved accuracy, sta-bility, and interpretability compared to existing methods. Our framework offers a scalable and generalizable strategy for trustworthy cross-domain learning in high-dimensional settings. 
+
+## 1 Introduction 
+
+In many scientific domains, it is increasingly common to have multiple heterogeneous datasets that partially overlap in features or modalities, yet share a common prediction task. These datasets, or sources, may vary in quality, scale, and completeness, leading to challenges in jointly learning from them without being misled by uninformative or misaligned sources. Our objective is to develop a principled transfer learning framework that selectively borrows information from multiple sources to improve estimation and prediction in a target dataset, while maintaining robustness to heterogeneity and block-wise missingness. Transfer learning in high-dimensional linear regression has gained popularity with Bastani [2021] who considered a single source. This was extended to multiple sources via Trans-Lasso by Li et al. [2022]. Extensions to GLM succeeded soon [Li et al., 2024, Tian and Feng, 2023]. These methods have several challenges. Firstly, they require individual-level data, which is almost infeasible nowadays owing to data-sharing constraints, thereby leading to federated learning algorithms [Li et al., 2023, Lu et al., 2024]. Secondly, these methods assume complete overlap of the feature space between the target and all sources. Consequently, they may suffer from negative transfer when only subsets of features are shared or when sources exhibit heterogeneous, coordinate-specific deviations 
+
+> Submitted to STAI-X 2026 (Full Paper Track). Do not distribute.
+> arXiv:2606.08691v1 [cs.LG] 7 Jun 2026
+
+from the target. Some works address this limitation of heterogeneous and non-overlapping sources [Duan et al., 2022, Zhao et al., 2023, Chang et al., 2024, Zhao et al., 2023, Pal et al., 2026, Asiaee and Pal, 2026, Ghosh et al., 2026]. In many contemporary applications, these challenges arise naturally. For example, in biomedical studies, multi-center cohorts often collect overlapping but non-identical modalities, such as imaging, genomics, and clinical variables, with substantial variation in measurement protocols and population composition. Similarly, in policy evaluation and real-world evidence generation, historical datasets may differ in covariate availability or data quality, yet contain partially relevant signals for a current target population. These settings require methods that can adaptively borrow information at a finer granularity than the dataset level, while remaining robust to structured heterogeneity and missingness. Most of the above discussed approaches rely on ℓ1 or ℓ2-norm based distance metrics that capture the amount of agreement between the sources and the target. This is not ideal as sources and target models can differ in scale or structure. To address this, Gu et al. [2024] devised a cosine-similarity based distance metric and later Lai et al. [2026] developed a Bayesian transfer learning algorithm called TRADER that uses this new metric to transfer knowledge from sources along with the horseshoe prior [Carvalho et al., 2009] for sparsity. Although these methods can borrow adaptively from different sources with different strengths of similarity with the target, they assume complete overlap of covariates and complete match of signals. [Zhang et al., 2024], on the other hand, proposed CONCERT, which is a Bayesian high-dimensional transfer-learning method that uses covariate-specific spike-and-slab priors to decide which variables should borrow information from which sources, so it can transfer only partially shared signals instead of relying on one global source-target similarity measure. Although CONCERT allows for covariate-level partial transfer, it does not explicitly model source-level heterogeneity through adaptive source weights like TRADER does; that is, once a covariate is deemed transferable, the method does not separately learn how strongly each auxiliary source should contribute to that covariate. To date, there is limited methodological development for transfer learning algorithms that can 
+
+simultaneously (1) adaptively borrow across heterogeneous sources with varying degrees of relevance and (2) selectively borrow across heterogeneous covariate components within each source. In practice, such scenarios arise quite commonly: different institutions, imaging centers, or cohorts may measure partially overlapping modalities, or collect heterogeneous but related variables that only coincide in some subsets of features. Our Bayesian approach, called Projection Transfer Learning (ProjectionTL), targets exactly this gap and combines the two forms of adaptivity: a hierarchical prior performs source-level borrowing , learning which source models are globally aligned with the target, while a posterior-projection step performs component-level borrowing , selectively retaining coordinates that remain transferable after accounting for heterogeneous sparsity across sources. The second projection step for component-level borrowing is motivated by recent developments on projection-based inference and variable selection, where dense posterior estimates are projected onto sparse representations to improve interpretability and stability [Wang and Ghosal, 2023b,a, Chakraborty and Ghosal, 2022, Pal and Ghosal, 2025, 2024, Pal and Ghoshal, 2024, Gili et al., 2026]. These approaches provide strong theoretical guarantees and computational advantages, but they do not explicitly incorporate external source information or address the challenges of multi-source heterogeneity. In particular, existing projection-posterior methods operate within a single dataset and are not designed to disentangle transferable and non-transferable components across multiple sources. Our contributions are fourfold. First, we introduce a novel hierarchical projection framework that enables adaptive, component-wise transfer learning under heterogeneous and partially overlapping feature spaces. Second, we develop a principled weighting mechanism based on validation-informed similarity that quantifies source relevance while allowing for a “no-transfer” fallback. Our approach does not require individual-level data and can work with only summary information from sources. Third, we establish theoretical guarantees for posterior contraction in high-dimensional settings, ex-plicitly accounting for both informative and non-informative source regimes. Finally, we demonstrate through simulations and real data applications that the proposed method achieves improved estima-tion accuracy, variable selection, and robustness compared to existing transfer learning approaches, particularly in settings with partial overlap, source heterogeneity, and block-wise missingness. More-over, compared with recent deep-learning safe-transfer frameworks, our high-dimensional linear formulation offers a complementary advantage: it yields interpretable coefficient-level borrowing decisions together with explicit statistical uncertainty quantification. 2The rest of the paper is organized as follows. In Section 2, we introduce the proposed ProjectionTL framework and describe its hierarchical prior and projection components. Section 3 presents theoreti-cal results on posterior contraction and model selection consistency. Section 4 evaluates performance through extensive simulation studies under varying degrees of overlap and heterogeneity. Section 5 illustrates the method on real-world data from multi-phase Alzheimer’s disease studies. Section 6 concludes with a discussion of limitations and future directions. 
+
+## 2 Methodology 
+
+The following sections introduce ProjectionTL, that provides a unified solution for transfer learning across multiple heterogeneous, partially overlapping, or multi-modal datasets. It automatically adjusts the degree of borrowing both across and within sources, ensuring interpretability, robustness, and improved generalization under complex real-world data integration settings. 
+
+2.1 Problem Setup and Notation 
+
+We observe a target dataset (X, Y ) with X ∈ Rn0×p and Y ∈ Rn0 , and K auxiliary (source) datasets {(Xk, Yk) : k = 1 , 2, . . . , K } that have been fit separately to yield coefficient vectors 
+
+bωk = ( bωk1, . . . , bωkp )T, k = 1 , . . . , K . We want to estimate a sparse target coefficient vector 
+
+β ∈ Rp from modeling Y |X, but may yield unsatisfactory performance due to the small target sample size n0. Given that bωk’s may share certain similarity with β, we want an improved model by selectively borrowing information from these source estimates while preventing negative transfer from incorporating misaligned sources, leading to worse performance than using only the target. 
+
+2.2 Hierarchical Prior from Sources (Vector-Level Borrowing) 
+
+For each target coefficient βj , we construct a prior mean μj by taking a rescaled weighted average of the corresponding coefficients estimated from the K source models, bωkj :               
+
+> μj=
+> KX
+> k=1
+> ηk·(∥ˆβ∥/∥ˆωk∥)·bωkj +ηK+1 ·0,j= 1 , . . . , p, (2.1)
+
+where bβ is the estimated coefficient vector using the target dataset. A natural alternative is to split the target sample and use a validation-based pilot estimate to guide the prior-centering mechanism. However, this can substantially reduce sample efficiency and introduce instability when the target sample size is limited. Therefore, we use the full target sample to construct ( bβ), treating it as an empirical-Bayes hyperparameter construction step rather than direct reuse of the target likelihood. Similar strategies are common in Bayesian information-borrowing and transfer-learning methods [Jin and Yin, 2021, Zhang and Yin, 2023, Lai et al., 2026]. Additional discussion is provided in the Supplement. The weights ηk, k = 1 , 2, . . . , K determine how much each source contributes to μj , assigning larger values to sources that align well with the target signal and smaller ones to unhelpful sources. On the other hand, ηK+1 denotes the prior mean share when none of the sources are well-aligned with the target validation. Since it multiplies to zero, in the case of no source alignment, the prior falls back to a mean 0 non-informative normal distribution. The vector of weights η = ( η1, . . . , η K , η K+1 )T lies on the probability simplex, ensuring that μj is a convex combination of the source coefficients, which keeps the prior mean interpretable as the relative contribution (fraction) of each source. Specifically, the weights are not fixed but learned through a Dirichlet prior whose concentration parameters θk
+
+quantify the alignment of each source model with an independent validation estimate bβ obtained from the held-out portion of the target data:             
+
+> η∼Dirichlet( θ1, . . . , θ K, ζ ),θk=bωT
+> kbβ
+> ∥bωk∥ ∥ bβ∥,(2.2)
+
+where the (K +1) st component with hyperparameter ζ > 0 corresponds to a “no-borrow” option that provides additional shrinkage toward zero when sources are weak or misaligned and θk is the cosine similarity between bωk and bβ, providing a scale-free measure of agreement that emphasizes directional alignment rather than magnitude. Sources that are better aligned with the validation signal receive higher θk and are thus more likely to obtain larger posterior weights ηk, while misaligned sources are 3downweighted. To ensure meaningful comparison across sources, we align each source estimator with the target validation estimate by reversing its sign when necessary, so that all similarity measures are nonnegative. Also, we set ζ = 1 . The use of a validation split ensures that the target-specific direction of the signal is estimated without data leakage, avoiding spurious agreement with noisy training data. Together, these components produce a data-driven blend of source coefficients that adaptively reflects their agreement with the target validation signal, automatically balancing borrowing across sources while guarding against negative transfer. Unlike Lai et al. [2026], who perform vector-level source selection using a source-guided horseshoe prior and do not further refine borrowing at the variable level, we adopt a two-stage strategy. In the first stage, we likewise perform vector-level source selection, but through a simple conjugate normal prior conditional on (μj , σ 2), following Pal and Ghoshal [2024], Pal and Ghosal [2024]. A separate second stage then introduces an explicit component-level projection step that determines which individual variables within both informative and weak sources are worth borrowing for the target model. Specifically,            
+
+> βj|μj, σ 2∼ N (μj, a −1
+> nσ2),σ2∼IG( ν, ν ).(2.3)
+
+This hierarchy constructs a source-guided informative prior by adaptively weighting source estimates according to their agreement with the target validation signal while allowing unhelpful sources to be down-weighted through the Dirichlet weights. Similarity measures (e.g., cosine alignment between 
+
+bωk and bβ) are incorporated into the Dirichlet prior on source weights, yielding a data-driven filtering mechanism that identifies informativeness only at the source level. The subsequent projection step then operates at the component level, refining borrowing by selecting which specific variables within each source contribute to the target model. 
+
+2.3 Posterior Projection with Adaptive Sparsity (Component-Level Refinement) 
+
+Conditioning on the source-guided posterior obtained in the previous stage, we refine borrowing at the component level through an adaptive projection step. The conditional initial posterior of the target parameter is β | y, X, η, σ 2 ∼ Np
+
+ μη , σ 2Vn
+
+ , with Vn =  X⊤X + anIp
+
+−1 and 
+
+μη = Vn
+
+ X⊤y + anW η  , where W ∈ Rp×(K+1) is the rescaled source coefficient matrix with 
+
+(j, k )-th entry Wjk =  ∥ ˆβval ∥/∥ ˆωk∥ˆωkj for k = 1 , . . . , K and Wj,K +1 = 0 for all j, so that W η 
+
+recovers the source-guided prior mean μj in Equation (2.1) . Posterior draws of β quantify uncertainty but are typically dense. To obtain a sparse and interpretable estimator, we project each posterior draw onto a weighted ℓ1-penalized surface using the target design:        
+
+> β∗= arg min
+> u∈Rp
+> n
+> ∥Xβ −Xu ∥22+λ
+> p
+> X
+> j=1
+> |uj|
+> wj
+> o
+> ,(2.4)
+
+with adaptive penalty weights wj defined by the agreement between the validation estimate and each source at coordinate j:    
+
+> wj=
+> KX
+> k=1
+> exp
+> n
+> −  bβj−bωkj
+> 2o
+> .(2.5)
+
+The weights wj aggregate agreement across sources at each coordinate and do not induce additional vector-level source exclusion. Coordinates where at least one source closely matches bβj receive smaller effective penalties and are therefore more likely to be selected (larger wj ), whereas disagree-ment across all sources increases penalization and discourages borrowing. The tuning parameter λ > 0
+
+controls the overall sparsity level and can be chosen by cross-validation or by targeting a projection loss tolerance. Our final estimator is obtained by aggregating the projected draws β∗ across posterior samples, yielding a sparse point estimate with projection-based inclusion probabilities. Overall, the proposed framework combines data-adaptive source-level borrowing with component-wise sparsification. Specifically, a hierarchical prior (equations (2.1) -(2.3) ) aggregates information across sources based on their alignment with the target, yielding a source-adaptive posterior for β.This posterior is then refined through a projection step (equations (2.4) -(2.5) ), which induces sparsity by selectively retaining coordinates that remain consistent with the target signal. This two-stage design enables partial transfer, borrowing information only on coordinates supported by at least one aligned source while suppressing non-transferable components, thereby mitigating negative transfer. Figure 1 provides a schematic overview of the procedure. Note that ProjectionTL does not require any explicit similarity cutoff or transfer threshold. The tuning parameter λ controls 4Figure 1: Schematic diagram of the proposed two-stage ProjectionTL. only the overall sparsity level of the projection posterior and is selected by cross-validation. In contrast, the degree of transfer is determined adaptively through the source-level similarity weights and coordinate-level projection weights. Consequently, borrowing strength is learned directly from the observed agreement between source and target information rather than through an additional transfer-specific tuning parameter. 
+
+2.4 Extension to Multi-Modality 
+
+The ProjectionTL framework extends naturally to multi-modal settings with block-wise missing data as shown in Figure 2. Rather than requiring joint modeling of raw feature spaces across modalities, the method operates at the level of source-specific coefficient estimates, allowing information from different modalities to be integrated through the hierarchical prior. Specifically, for each modality, source-level coefficients are aggregated using the same alignment-based weighting scheme, so that sources contributing relevant modality-specific signals receive larger weights. When a modality is unobserved for a given source or cohort, the corresponding coordinates do not contribute to the prior aggregation. In the projection step, adaptive weights penalize coordinates that lack consistent support across sources and the target validation estimate, effectively restricting borrowing to observed and aligned components. 
+
+Figure 2: Illustration of multi-modal transfer learning problem with block-missingness. This mechanism enables selective transfer across partially overlapping modalities without requir-ing imputation or explicit modeling of missing data. In settings where different cohorts provide complementary but incomplete modalities (such as neurodegenerative disease studies, multi-omics data integration, and electronic health records) the method borrows information only where signals are shared, while downweighting modality-specific noise and discrepancies. Compared to related approaches such as R2 and BR2 [Xu and Qu, 2025], which focus on multi-task learning under 5block-missingness, the proposed framework explicitly addresses transfer learning with adaptive borrowing across heterogeneous sources and modalities. 
+
+## 3 Theoretical Guarantee 
+
+We show optimal contraction rate of our proposed approach based on the following assumptions. First, the target design must be sufficiently well behaved on sparse subsets, so that sparse coefficient vectors are identifiable from the target sample. 
+
+Assumption 1 (Bounded design) . There exists M1 > 0 such that |Xij | ≤ M1 for all j = 1 , . . . , p .
+
+Assumption 2 (Compact parameter space and prior positivity) . The simplex ∆K+1 is the parameter space for η and the prior density of η is continuous and bounded away from 0 and ∞ on ∆K+1 .
+
+Let W = [ ˆ ω1, . . . , ˆωK , 0] ∈ Rp×(K+1) collect the K source coefficients and a dummy column 0 ∈
+
+Rp. Assume the marginal model Y | η, σ 2 ∼ N  XW η , Ση
+
+ with Ση := σ2 In + a−1 
+
+> n
+
+XX T,
+
+and a Dirichlet prior as in (2.2). Then the posterior density of η is 
+
+π(η | Y ) ∝
+
+K+1 Y
+
+> k=1
+
+ηθk −1
+
+> k
+
+
+
+exp 
+
+n
+
+− 12 (Y − XW η )TΣ−1 
+
+> η
+
+(Y − XW η )
+
+o
+
+, η ∈ ∆K+1 . (3.6) Next, we define the population contrast R(η) := E0[( Y − XW η )TΣ−1 
+
+> η
+
+(Y − XW η )] for η ∈
+
+∆K+1 , where E0 denotes expectation under the true law of (Y, X ).
+
+Assumption 3 (Identifiability and unique pseudo-true parameter) . There exists a unique minimizer 
+
+η⋆ := arg min η∈∆K+1 R(η). Moreover, R(η) > R (η⋆) for all η̸ = η⋆.
+
+Assumption 4 (Margin Condition) . 1. (Margin condition in the informative case). In the 
+
+informative regime, η⋆K+1 = 0 and there exists ε0 > 0 and c0 > 0 such that R(η) −
+
+R(η⋆) ≥ c0 whenever ηK+1 ≥ ε0.
+
+2. (Margin condition in the non-informative case). In the non-informative regime, η⋆K+1 = 1 
+
+and there exist ε0 > 0 and c0 > 0 such that R(η)−R(η⋆) ≥ c0 whenever ηK+1 ≤ 1−ε0.
+
+This condition says that the source dictionary is not asymptotically harmful in the sense that there exists a vector η⋆ ∈ ∆K such that ∥ PKk=1 η⋆k bωk − β0∥2 = OP0 (p(s0 log p)/n 0), where P0
+
+denotes the true target data-generating distribution. This condition does not require every source to be useful. It only requires the transfer prior to place sufficient mass near at least one source-weighted combination that approximates the target coefficient at the sparse target rate. When all sources are poorly aligned, the null source allows the procedure to reduce borrowing and behave like a target-only sparse projection posterior. 
+
+Theorem 1 (Posterior contraction of projection transfer posterior) . Suppose Assumptions 1–6 in the Supplement hold, with the projection penalty satisfying λn = O(p(log p)/n 0). Then there exists a constant M > 0 such that            
+
+> ΠProjTL
+> "
+> β:β−β0
+> 2> M
+> rs0log pn0
+> D0,D1, . . . , DK
+> #
+> −→ 0
+
+in P0-probability. Moreover,             
+
+> ΠProjTL
+> 
+> β:1
+> n0
+> X(0) (β−β0)22
+> > M s0log pn0
+> D0,D1, . . . , DK
+> 
+> −→ 0in P0-probability.
+
+## 4 Simulation Study: Overlap by Proportion of Signals 
+
+We consider a setting where transferability is controlled by an overlap ratio ω ∈ [0 , 1] , representing the fraction of the target support shared with each source. The target data follow a linear model 
+
+Y0 = X0β0 + ε0, where X0 ∈ Rn0×p has i.i.d. Np(0 , I p) rows and ε0 ∼ N (0 , σ 2I). The true coefficient vector β0 is s0-sparse with support S = {1, . . . , s 0}, where nonzero entries take values 
+
+±0.5 with equal probability. Each source k = 1 , . . . , K is generated similarly as Yk = Xkω(k) + εk,with Xk having the same distribution as X0 and εk ∼ N (0 , σ 2I). For each source, we define an 6overlap set Ok ⊂ S of size ⌊ωs 0⌋ and a spurious set Nk ⊂ Sc of size nspur . The source coefficients 
+
+ω(k) match β0 on Ok, take independent values ±2 on Nk, and are zero elsewhere. Sets Ok and Nk
+
+are sampled uniformly without replacement. We vary ω ∈ { 0.6, 0.7, 0.8, 0.9, 1.0} and generate 100 independent datasets for each setting. Unless stated otherwise, parameters are fixed at n0 = 100 ,
+
+nk = 100 , p = 200 , K = 10 , s0 = 5 , nspur = 20 , and σ = 1 . All LASSO fits use 10-fold cross-validation with default glmnet settings. We perform a sensitivity analysis for the tuning parameter, which shows the expected transfer-sparsity trade-off. Smaller values of the tuning parameter allow more aggressive borrowing and select larger models, which improves prediction modestly but reduces support recovery accuracy. Larger values produce more conservative models and improve MCC, but overly large penalties increase both prediction and coefficient error. We compare four transfer strategies: ProjectionTL, TRADER [Lai et al., 2026], TransGLM [Li et al., 2024] and CONCERT [Zhang et al., 2024]. For our proposed ProjectionTL method, we use the Median Probability Model (MPM) as our estimator. That is, all coefficient indices for which our model returned non-zero values for more than 50% of the projected posterior samples are included in the model and for these components, we report the posterior mean. For the rest of the components, we report zero, and consider them not selected by our model. Across Monte Carlo replications, we report the estimation error by MSE( ˆβ) = ∥ ˆβ − β0∥22/p , support recovery by Matthews Correlation Coefficient (MCC) between the estimated support and S (for methods without inherent selection, such as TRADER and CONCERT, we apply the natural threshold used in the code). For each 
+
+m ∈ { 0, . . . , s 0} we generate 100 independent datasets and fit all methods. We additionally include target-only baselines that do not borrow any information from the source studies, namely LASSO [Tibshirani, 1996], the Bayesian sparse projection posterior [Pal and Ghoshal, 2024], and the Bayesian horseshoe [Carvalho et al., 2009]. 0.001 0.010 0.100     
+
+> 0.6 0.7 0.8 0.9 1
+
+Overlap ratio ω
+
+> Mean Squared Error
+
+Distribution of coefficient MSE     
+
+> 0.4 0.6 0.8 1.0
+> 0.6 0.7 0.8 0.9 1
+
+Overlap ratio ω
+
+> Matthews Correlation Coefficient
+
+Distribution of support recovery 
+
+Method ProjectionTL 
+
+> TRADER
+> CONCERT−VB
+> TransGLM
+> Target SPP
+> Target LASSO
+> Target HS
+
+Figure 3: Boxplots of average estimation error (MSE, left panel) and support recovery by Matthews Correlation Coefficient (MCC, right panel) of ProjectionTL, TRADER, TransGLM, and CONCERT are shown as functions of the overlap ratio ω ∈ [0 .6, 1] . Results are averaged over 100 Monte Carlo replicates with n0 = nk = 100 , p = 200 , s 0 = 5 .Figure 3 shows that ProjectionTL achieves the lowest coefficient MSE and the highest MCC across all overlap ratios. Its performance is also relatively stable across ω, indicating that the proposed prior-weighting and projection steps can borrow selectively even when the source-target alignment is only partial. In contrast, TRADER, CONCERT, and TransGLM exhibit clearer improvement as ω
+
+increases, suggesting that these methods benefit more strongly when the sources become increasingly aligned with the target, but are less robust under moderate mismatch. The target-only baselines remain comparatively insensitive to ω, as expected, since they do not use source information; their weaker support recovery highlights the benefit of transfer when borrowing is properly controlled. Overall, the 7results indicate that ProjectionTL provides positive transfer across the full range of overlap settings while avoiding the instability and spurious borrowing observed in competing approaches. 
+
+## 5 Real Data Analysis Using ADNI Data 
+
+To evaluate the practical performance of the proposed method, we apply ProjectionTL to real-world data from the Alzheimer’s Disease Neuroimaging Initiative (ADNI), a multi-phase study spanning ADNI1, ADNI-GO, ADNI2, ADNI3, and ADNI4. The outcome of interest is cognitive function, measured by the Mini-Mental State Examination (MMSE), and predictors consist of high-dimensional imaging features related to regional amyloid-β (A β) deposition. Individual cohorts have limited sample sizes relative to the number of predictors, while earlier cohorts provide partially relevant but heterogeneous information due to differences in study design and population characteristics. This creates a natural transfer learning setting. We consider both heterogeneous-source transfer and multi-modal transfer under block-wise missingness to assess how the proposed framework adapts to realistic data integration challenges. 
+
+5.1 Study 1: Heterogeneous Single-Model Sources 
+
+We first consider the heterogeneous-source transfer setting, where multiple cohorts differ in their degree of relevance to the target population but share partially overlapping signal structure. The predictor matrix X consists of p = 166 regional standardized uptake value ratios (SUVRs) from amyloid PET imaging, and the response Y is the baseline MMSE score. We formulate the analysis as a transfer learning problem with one target and two sources. The target dataset consists of newly enrolled participants from a recent study phase [Weiner et al., 2017] with complete PET and MMSE measurements. The first source comprises an earlier cohort ( n1 = 128 ), which provides large-scale A β PET data but differs from the target in imaging protocols and diagnostic criteria. The second source is a larger intermediate cohort ( n2 = 769 ), which is more closely aligned with the target but still exhibits heterogeneity due to evolving study design and cohort composition. These differences induce partial alignment in the underlying amyloid-to-cognition relationship, making this a representative setting for heterogeneous multi-source transfer learning. Table 1 shows that ProjectionTL achieves the lowest test MSE in this setting, indicating effective selective borrowing across cohorts with varying degrees of alignment. Competing methods exhibit higher error, suggesting limited ability to adapt to source heterogeneity and avoid negative transfer. Table 1: Comparison of methods across two study settings. Values are reported as mean test MSE (SD). 
+
+Study Setting BR2 ProjectionTL TRADER TransGLM CONCERT 
+
+1. Heterogeneous Sources 4.5979 3.9524 4.1950 4.1613 4.1184 2. Multi-modal Study 4.1326 3.3196 3.9633 3.5470 3.5809 
+
+5.2 Study 2: Multi-Modal Sources 
+
+We next consider a multi-modal transfer setting with block-wise missingness. We focus on a cohort at a fixed follow-up visit, using MMSE as the prediction target and three modalities as predictors: structural MRI, amyloid PET, and gene expression. These modalities are not jointly observed for all subjects (Figure 4). To define a common feature space, we adopt a block-missing representation in which absent modalities are encoded as zero blocks. Gene expression features are reduced using sure independence screening, retaining the top d = ⌊n0/ log( n0)⌋ features based on marginal correlation with MMSE. We construct multiple sources based on observed modality patterns, and form a smaller heterogeneous target dataset by sampling from these sources. Performance is evaluated using mean squared error on the test set. Table 1 shows that ProjectionTL achieves lower test MSE than the baseline method in this setting, demonstrating robustness to block-wise missingness and effective integration of partially observed modalities. For completeness, we additionally report results for TRADER, TransGLM, and CON-CERT after zero-filling the missing modalities. Since these methods are not designed to handle 8Figure 4: Multimodal data structure of the ADNI transfer-learning design. block-wise missing modalities and require complete covariate information, the resulting comparisons should be interpreted cautiously. Notably, ProjectionTL does not require any imputation because it operates directly on source coefficient estimates rather than raw feature matrices. 
+
+## 6 Discussion 
+
+This paper proposes ProjectionTL, a two-stage framework that combines source-guided Bayesian pri-ors with projection-based sparsification to address heterogeneous multi-source transfer learning. The central contribution lies in decoupling where to borrow (through source-level weighting via a Dirichlet prior) from what to borrow (through component-wise projection), enabling adaptive and interpretable transfer under partial overlap and block-wise missingness. This separation is conceptually clean and practically effective, as reflected in improved estimation accuracy and support recovery across simulations and real data analyses. Empirically, the simulation results demonstrate that ProjectionTL achieves consistent improvements in estimation error and support recovery. Importantly, the results also show that the method is robust in the absence of informative sources, indicating effective control of negative transfer. The real data analysis further illustrates the method’s applicability in complex biomedical settings, where data are collected across multiple phases with varying protocols and partially overlapping features. Several aspects of the framework highlight opportunities for further refinement and extension. The projection step induces sparsity through ℓ1 regularization, which provides stability and interpretability in high-dimensional settings, though alternative projection schemes or debiasing strategies could further enhance estimation of large signals. As future directions, we are developing formal model-selection guarantees and post-projection uncertainty quantification through the technique of debiasing. In addition, the current formulation focuses on linear models, which serve as a foundational setting for high-dimensional transfer learning; extending the framework to accommodate nonlinear relationships and more complex structures would broaden its applicability in modern data settings. 9References 
+
+Amir Asiaee and Samhita Pal. Improving RCT-based treatment effect estimation under covariate mismatch via calibrated alignment. arXiv preprint arXiv:2603.19186 , 2026. Hamsa Bastani. Predicting with proxies: Transfer learning in high dimension. Management Science ,67(5):2964–2984, 2021. Carlos M Carvalho, Nicholas G Polson, and James G Scott. Handling sparsity via the horseshoe. In 
+
+Artificial intelligence and statistics , pages 73–80. PMLR, 2009. Moumita Chakraborty and Subhashis Ghosal. Rates and coverage for monotone densities using projection-posterior. Bernoulli , 28(2):1093–1119, 2022. Jae Ho Chang, Massimiliano Russo, and Subhadeep Paul. Heterogeneous transfer learning for high dimensional regression with feature mismatch. arXiv preprint arXiv:2412.18081 , 2024. Rui Duan, Yang Ning, and Yong Chen. Heterogeneity-aware and communication-efficient distributed statistical inference. Biometrika , 109(1):67–83, 2022. Dhrubajyoti Ghosh, Fakrul Tushar, Lavsen Dahal, Liesbeth Vancoillie, Kyle J Lafata, Ehsan Samei, Joseph Y Lo, and Sheng Luo. Demographic distribution matching between real-world and virtual phantom population. Medical Physics , 53(3):e70364, 2026. Francesco Gili, Geurt Jongbloed, and Aad Van Der Vaart. Semiparametric bernstein–von mises phenomenon via isotonized posterior in wicksell’s problem. The Annals of Statistics , 54(1): 383–407, 2026. Tian Gu, Yi Han, and Rui Duan. Robust angle-based transfer learning in high dimensions. Journal of the Royal Statistical Society Series B: Statistical Methodology , page qkae111, 2024. Huaqing Jin and Guosheng Yin. Unit information prior for adaptive information borrowing from multiple historical datasets. Statistics in Medicine , 40(25):5657–5672, 2021. doi: 10.1002/sim. 9146. Daoyuan Lai, Oscar Hernan Madrid Padilla, and Tian Gu. Bayesian transfer learning for enhanced estimation and inference. Journal of the American Statistical Association , 2026. URL https: //arxiv.org/pdf/2412.02986 . Accepted. Sai Li, T Tony Cai, and Hongzhe Li. Transfer learning for high-dimensional linear regression: Prediction, estimation and minimax optimality. Journal of the Royal Statistical Society Series B: Statistical Methodology , 84(1):149–173, 2022. Sai Li, Tianxi Cai, and Rui Duan. Targeting underrepresented populations in precision medicine: A federated transfer learning approach. The Annals of Applied Statistics , 17(4):2970, 2023. Sai Li, Linjun Zhang, T Tony Cai, and Hongzhe Li. Estimation and inference for high-dimensional generalized linear models with knowledge transfer. Journal of the American Statistical Association ,119(546):1274–1285, 2024. Yuying Lu, Tian Gu, and Rui Duan. Enhancing genetic risk prediction through federated semi-supervised transfer learning with inaccurate electronic health record data. Statistics in biosciences ,pages 1–22, 2024. Samhita Pal and Subhashis Ghosal. Bayesian high-dimensional grouped-regression using sparse projection-posterior. arXiv preprint arXiv:2411.15713 , 2024. Samhita Pal and Subhashis Ghosal. Projection-posterior for variable selection: Weak limit and coverage. Electronic Journal of Statistics , 19(2):3743–3770, 2025. Samhita Pal and Subhashis Ghoshal. Bayesian high-dimensional linear regression with sparse projection-posterior. arXiv preprint arXiv:2410.16577 , 2024. Samhita Pal, Jared D Huling, and Amir Asiaee. Improving RCT-based CATE estimation under covariate mismatch via double calibration. arXiv preprint arXiv:2603.17066 , 2026. 10 Ye Tian and Yang Feng. Transfer learning under high-dimensional generalized linear models. Journal of the American Statistical Association , 118(544):2684–2697, 2023. Robert Tibshirani. Regression shrinkage and selection via the lasso. Journal of the Royal Statistical Society Series B: Statistical Methodology , 58(1):267–288, 1996. Kang Wang and Subhashis Ghosal. Coverage of credible intervals in bayesian multivariate isotonic regression. The Annals of Statistics , 51(3):1376–1400, 2023a. Kang Wang and Subhashis Ghosal. Posterior contraction and testing for multivariate isotonic regression. Electronic Journal of Statistics , 17(1):798–822, 2023b. Michael W Weiner, Dallas P Veitch, Paul S Aisen, Laurel A Beckett, Nigel J Cairns, Robert C Green, Danielle Harvey, Clifford R Jack Jr, William Jagust, John C Morris, et al. The alzheimer’s disease neuroimaging initiative 3: Continued innovation for clinical trial improvement. Alzheimer’s & Dementia , 13(5):561–571, 2017. Qi Xu and Annie Qu. Representation retrieval learning for heterogeneous data integration. arXiv preprint arXiv:2503.09494 , 2025. Hongjian Zhang and Guosheng Yin. Unit information prior for incorporating real-world evidence into randomized controlled trials. Statistical Methods in Medical Research , 32(2):229–241, 2023. doi: 10.1177/09622802221143907. Ruqian Zhang, Yijiao Zhang, Annie Qu, Zhongyi Zhu, and Juan Shen. Covariate-elaborated robust partial information transfer with conditional spike-and-slab prior. arXiv preprint arXiv:2404.03764 ,2024. Ruzhang Zhao, Prosenjit Kundu, Arkajyoti Saha, and Nilanjan Chatterjee. Heterogeneous transfer learning for building high-dimensional generalized linear models with disparate datasets. arXiv preprint arXiv:2312.12786 , 2023. 11 Supplementary Material 
+
+## A Additional Information 
+
+Transfer learning is most useful precisely when the target sample size is limited; hence, removing a non-negligible fraction of the target observations to form a separate validation set can substantially degrade the quality of the target-only pilot estimate. Since this pilot enters downstream through the cosine similarities between the target and source estimates, the rescaling of the source estimates, and the resulting Dirichlet-weighted prior mean, a noisy or unrepresentative validation estimate can adversely affect the entire information-borrowing mechanism. For this reason, we compute the target-only pilot estimate using the full target dataset and use it only to construct the borrowing weights and prior hyperparameters. To assess whether this full-target pilot introduces harmful overfitting, we compare the in-sample and out-of-sample prediction errors under the full-target pilot and the validation-set pilot. As shown in Figure 5, the average out-of-sample prediction MSE minus in-sample prediction MSE, is smaller for the full-target pilot than for the validation-set pilot ( 0.146 
+
+versus 0.240 ). Thus, using the full target sample to guide the prior does not inflate the apparent performance; if anything, it yields a more stable borrowing rule with better out-of-sample behavior. To assess whether reusing the full target dataset (for both informing the conjugate prior mean and posterior updating) introduces harmful optimistic bias, we conduct a simulation under a slightly modified data-generating process compared to Section 4 with n0 = 150 , p = 200 , s = 20 , ω = 0 .8,
+
+σ = 1 , and bmag = 0 .5, running 100 independent replications each fitted with two configurations of ProjectionTL: the proposed full-target informed prior mean, which uses all n0 observations for both prior construction and the likelihood, and a carved out validation set, which reserves 30% of the target observations exclusively for guiding the Dirichlet prior on the weights through the cosine similarity, and uses the remaining 70% for the likelihood. We compute the out-of-sample minus in-sample prediction mean squared error evaluated on an independent test set of ntest = 500 observations, which quantifies overfitting in the sense that a larger gap indicates the model fits the training data more optimistically than it fits new data. The full-target based implementation yields a mean generalization gap of 0.146 compared to 0.240 for the validation-set based approach (Figure 5), with the distribution of per-replication differences concentrated below zero in [X]% of replications and a paired Wilcoxon test strongly failing to reject the null in the direction of double-use harm ( p = [ X]). We conclude that reusing the target data for pilot estimation does not introduce optimistic bias; rather, the split pilot exhibits larger overfitting due to its reduced likelihood sample size of 0.7n0 = 105 < p , which places the model in a harder estimation regime. 
+
+## B Sensitivity Analysis for the Tuning Parameter 
+
+To address the concern that performance may hinge on the choice of the projection tuning parameter 
+
+λ, we vary it over the grid {0.25 λCV , 0.5λCV , λ CV , 2λCV , 4λCV }, where λCV is selected by cross-validation on the target data using the adaptive weights wj from Equation (2.5) . As shown in Figure 6, the five ProjectionTL variants produce nearly identical MSE and MCC curves across all overlap ratios, demonstrating that performance is not sensitive to λ within a fourfold range above and below the cross-validated value. This robustness is attributable to the coordinate-specific weights wj , which govern which variables are selected by concentrating penalty reduction on coordinates where sources agree with the target pilot; the global λ controls only the overall sparsity level and is thus secondary to the adaptive weighting mechanism in determining the transfer-protection trade-off. 
+
+## C Proofs 
+
+Let Cn = n−1X⊤X and write the block partition 
+
+Cn =
+
+Cn(11) Cn(12) 
+
+Cn(21) Cn(22) 
+
+
+
+,
+
+corresponding to coordinates in S0 (block (1) ) and Sc 
+
+> 0
+
+(block (2) ). 
+
+Proof of Theorem 1. The full conditional for the parameter of interest β is given by 
+
+β|(η, σ 2, y) ∼ N ( ˆβR, σ 2Vn),
+
+12 Figure 5: Out-of-sample prediction MSE minus in-sample prediction MSE comparison of full-target vs the validation-set. 0.00 0.25 0.50 0.75 1.00 
+
+0.6 0.7 0.8 0.9 1
+
+Overlap ratio ω
+
+> Mean MCC
+
+MCC by overlap ratio 
+
+0.0025 0.0050 0.0075 0.0100 0.0125 
+
+0.6 0.7 0.8 0.9 1
+
+Overlap ratio ω
+
+> Mean coefficient MSE
+
+MSE by overlap ratio 
+
+Method 
+
+> ProjectionTL (0.25 x lambda_CV)
+> ProjectionTL (0.5 x lambda_CV)
+> ProjectionTL (1 x lambda_CV)
+> ProjectionTL (2 x lambda_CV)
+> ProjectionTL (4 x lambda_CV)
+> Target LASSO (reference)
+
+Figure 6: Sensitivity of ProjectionTL to the projection tuning parameter λ across overlap ratios 
+
+ω ∈ { 0.6, 0.7, 0.8, 0.9, 1.0}; Target LASSO is shown as a fixed reference. 13 where Vn = ( XTX + anIp)−1 and ˆβR = Vn(XTY + anW η ). Defining H(an) = XV nXT,we have Xβ |(η, σ 2, Y ) ∼ N (X ˆβR, σ 2H(an)) . Now, let Zn = n−1/2X(β − β0). Then clearly 
+
+Zn|(η, σ 2, y) ∼ N (mn, n −1σ2H(an)) for mn = n−1/2X( ˆβR − β0).
+
+We can write mn = n−1/2[H(an)ε + anXV n(W η − β0)] since 
+
+ˆβR = Vn(XTXβ 0 + XTε + anW η + anβ0 − anβ0)= Vn(XTX + anIp)β0 + Vn(XTε + an(W η − β0)) .
+
+Consequently, 
+
+Π  max  
+
+> 1≤j≤p
+
+|ZT 
+
+> n
+
+X(j)| > √nλ n 
+
+> 2
+
+| Y , σ 2 = Eη|Y
+
+Π  max  
+
+> 1≤j≤p
+
+|ZT 
+
+> n
+
+X(j)| > √nλ n 
+
+> 2
+
+| η, Y , σ 2 .
+
+We focus on the posterior probability given η as 
+
+Π  max  
+
+> 1≤j≤p
+
+|ZT 
+
+> n
+
+X(j)| > √nλ n 
+
+> 2
+
+| η, Y , σ 2
+
+≤Π  max  
+
+> 1≤j≤p
+
+|(Zn − mn)TX(j)| + max  
+
+> 1≤j≤p
+
+|mT 
+
+> n
+
+X(j)| > √nλ n 
+
+> 2
+
+| η, Y , σ 2
+
+≤Π  max  
+
+> 1≤j≤p
+
+|(Zn − mn)TX(j)| > √nλ n 
+
+> 4
+
+| η, Y , σ 2 + 1 max  
+
+> 1≤j≤p
+
+|mT 
+
+> n
+
+X(j)| > √nλ n
+
+> 4
+
+= I + II , say. First, we move to controlling I conditionally on (η, Y , σ 2). We have 
+
+Zn − mn ∼ N  0, n −1σ2H(an),
+
+so each Uj := (Zn − mn)⊤X(j) is Gaussian with Var( Uj | η, Y , σ 2) =
+
+n−1σ2 X(j)⊤H(an)X(j) ≤ σ2M 21 , using ∥H(an)∥op ≤ 1 and ∥X(j)∥2 ≤ √nM 1 from As-sumption 1. Thus Uj is sub-Gaussian with proxy variance σ2M 21 , and for any t > 0,
+
+Π |Uj | > t | η, Y , σ 2 ≤ 2 exp 
+
+
+
+− t2
+
+2σ2M 21
+
+
+
+.
+
+By the union bound over j = 1 , . . . , p ,
+
+Π
+
+
+
+max  
+
+> 1≤j≤p
+
+|Uj | > t η, Y , σ 2
+
+≤ 2p exp 
+
+
+
+− t2
+
+2σ2M 21
+
+
+
+.
+
+Now set t = √nλ n/4. Then I ≤ 2p exp 
+
+
+
+− nλ 2
+
+> n
+
+32 σ2M 21
+
+
+
+.
+
+If we choose λn such that 
+
+nλ 2
+
+> n
+
+32 σ2M 21
+
+≥ C0 log p for some C0 > 1,
+
+that is, λn ≥ c p(log p)/n, then I ≤ 2p exp( −C0 log p) = 2 p1−C0 → 0. Thus the Gaussian fluctuation part is negligible as long as λn is at least of order p(log p)/n . Then, 
+
+Eη|Y [I] ≤ 2p exp 
+
+
+
+− nλ 2
+
+> n
+
+32 σ2M 21
+
+
+
+→ 0.
+
+Next, we consider 
+
+max  
+
+> 1≤j≤p
+
+|mT 
+
+> n
+
+X(j)| ≤ max  
+
+> 1≤j≤p
+
+n−1/2|X(j)TH(an)ε| + max  
+
+> 1≤j≤pan√n
+
+|X(j)TXV n(W η − β0)| = T1 + T2.
+
+14 Then, by Lemma C.1, under Assumption 1, T1 ≤ σ M 1
+
+√2 log p with probability at least 1 − p−1.
+
+Using ∥X(j)∥2 ≤ √n M 1 and ∥Vn∥op ≤ a−1 
+
+> n
+
+,
+
+T2 = an
+
+√n X(j)⊤XV n(W η − β0)
+
+≤ an
+
+√n ∥X(j)∥2 ∥X∥op ∥Vn∥op ∥W η − β0∥≤ an
+
+√n (√n M 1) ∥X∥op 
+
+1
+
+an
+
+∥W η − β0∥
+
+= M1 ∥X∥op ∥W η − β0∥.
+
+If ∥X∥op ≲ √n under the condition λmax (n−1XTX) < C , then T2 ≲ √nM 1 ∥W η − β0∥
+
+deterministically. Otherwise, under just Assumption 1, we have ∥X∥op ≲ √np and consequently, 
+
+T2 ≲ √npM 1 ∥W η − β0∥. From the bound derived above, 
+
+max  
+
+> 1≤j≤p
+
+|m⊤ 
+
+> n
+
+X(j)| ≤ σM 1
+
+p2 log p + M1∥X∥op ∥W η − β0∥ with high probability .
+
+To pass from the conditional probability Π( · | η, Y , σ 2) to the full posterior Π( · | Y , σ 2), we observe that 
+
+Π
+
+
+
+max  
+
+> 1≤j≤p
+
+|m⊤ 
+
+> n
+
+X(j)| > √nλ n 
+
+> 4
+
+Y , σ 2
+
+
+
+= Eη|Y
+
+II .
+
+Combining these bounds and using Markov’s inequality, we obtain by Markov’s inequality, 
+
+Eη|Y
+
+II  ≤ 8M1∥X∥op Eη|Y ∥W η − β0∥√nλ n
+
+.
+
+Under the informative-source regime, Lemma C.2 gives 
+
+Eη|Y ∥W η − β0∥ ≤ C
+
+r s log pn + ∥β0∥ γn = Op
+
+q s log pn
+
+
+
+,
+
+with γn = o p (s log p)/n .
+
+max  
+
+> 1≤j≤p
+
+|m⊤ 
+
+> n
+
+X(j)| = Op
+
+ M1(σ + √s)plog p,
+
+provided γn = o p (s log p)/n . Choosing λn so that 
+
+√n λ n ≫ M1(σ + √s)plog p, for example λn ≥ Cλ
+
+r s log pn ,
+
+we conclude that 
+
+P0
+
+
+
+max  
+
+> 1≤j≤p
+
+|m⊤ 
+
+> n
+
+X(j)| > √nλ n
+
+> 4
+
+
+
+→ 0,
+
+that is, P0(II = 1) → 0 whenever at least one informative source is present . Choose λn so that √nλ n ≥ 8σM 1
+
+√2 log p. Then, on the same high-probability event, 
+
+II (η, Y ) ≤ 1
+
+n
+
+M1∥X∥op ∥W η − β0∥ > √nλ n
+
+> 8
+
+o
+
+,
+
+and hence, assuming λmax (n−1X⊤X) ≤ C3 so that ∥X∥op ≤ √C3n, we obtain 
+
+Eη|Y [II (η, Y )] ≤ Op
+
+ √n p(s log p)/n 
+
+√n λ n
+
+= Op
+
+p(s log p)/n λn
+
+!
+
+.
+
+Choosing λn ≍ p(s log p)/n with a sufficiently large constant therefore yields 
+
+Eη|Y [II ] P0
+
+−→ 0.
+
+15 Thus the drift contribution vanishes in P0-probability, and hence 
+
+Π
+
+
+
+max  
+
+> 1≤j≤p
+
+|Z⊤ 
+
+> n
+
+X(j)| > √nλ n 
+
+> 2
+
+Y, σ 2
+
+
+
+→ 0.
+
+If no source is informative, Lemma C.2 gives Eη|Y ∥W η − β0∥2 ≤ ∥β0∥2 + op(1) , so that 
+
+T2 ≲ M1∥X∥op ∥β0∥ and 
+
+max  
+
+> 1≤j≤p
+
+|m⊤ 
+
+> n
+
+X(j)| ≲ σM 1
+
+plog p + M1∥X∥op ∥β0∥ + op(∥X∥op ),
+
+so the procedure deterministically falls back on the dummy column and avoids negative transfer. In particular, the contribution of bad sources does not grow faster than ∥X∥op ∥β0∥.Combining the bounds on I and II , we obtain that, under the above assumptions and for a tuning sequence λn satisfying λn ≍ p(s log p)/n ,
+
+Π
+
+
+
+max  
+
+> 1≤j≤p
+
+Z⊤ 
+
+> n
+
+X(j) > √nλ n 
+
+> 2
+
+η, Y , σ 2 P0
+
+−→ 0
+
+whenever at least one informative source is present, while in the absence of informative sources the dummy column guarantees that the mixture error ∥W η − β0∥ remains uniformly bounded and no negative transfer occurs. 
+
+## Lemmas 
+
+Lemma C.1 (Operator norm bounds for the posterior matrices) . Let X be an n×p real matrix and let 
+
+a > 0. We have Vn := ( XTX + anIp)−1 and H := XV nXT. Then the following operator-norm bounds hold: 
+
+∥V ∥op ≤ an−1, ∥H∥op ≤ 1.
+
+Proof. Since XTX is symmetric positive semidefinite, let λ1, . . . , λ p ≥ 0 denote its eigenvalues. Then XTX + anIp is symmetric positive definite with eigenvalues λi + an ≥ an. Hence its inverse 
+
+Vn has eigenvalues 
+
+μi = 1
+
+λi + an
+
+≤ 1
+
+an
+
+,
+
+and therefore ∥Vn∥op = max i μi ≤ 1/a n. For H, take the compact SVD X = U1DU T2 , where 
+
+U1 is n × r, U2 is p × r, and D = diag( d1, . . . , d r ) with di > 0, where r is the rank. In the high-dimensional regime p ≫ n, it holds with probability one under standard random-design assumptions (e.g. i.i.d. sub-Gaussian rows) that rank( X) = n. In the SVD representation X = U1DU T2 , this corresponds to U1 and D being n × n. In this basis, 
+
+Vn = U2(D2 + anIr )−1U T2 + 1
+
+an
+
+U2⊥U2T
+
+> ⊥
+
+,
+
+where U2⊥ spans the orthogonal complement of col( U2). Thus 
+
+H = XV X T = U1D(D2 + anIr )−1D U T1 = U1 diag 
+
+ d21
+
+d21 + a , . . . , d2
+
+> r
+
+d2 
+
+> r
+
++ a
+
+
+
+U T1 .
+
+The eigenvalues of H are therefore 
+
+γi = d2
+
+> i
+
+d2 
+
+> i
+
++ a , i = 1 , . . . , r, together with n − r zeros. Since 0 < d 2 
+
+> i
+
+/(d2 
+
+> i
+
++ a) < 1 for all i, it follows that ∥H∥op = max i γi ≤ 1.
+
+Assumption 5 (Oracle source-mixture accuracy) . Let 
+
+W = W a : a ∈ ∆K+1 , W = [ ˆ ω1, . . . , ˆωK , 0],
+
+where ∆K+1 denotes the probability simplex over the K sources and the dummy column. There exists an oracle weight vector η⋆ ∈ ∆K+1 such that, with high probability, 
+
+∥W η ⋆ − β0∥2 ≤ C
+
+r s log pn .
+
+16 Assumption 6 (Dummy opt-out under non-transferability) . If no informative source or source mixture is available, then the posterior weight on the dummy column satisfies 
+
+Eη|Y [1 − ηK+1 ] = op(1) .
+
+Lemma C.2 (Control of adaptive source mixture with dummy column) . Suppose Assumption 5 and Lemma C.3 hold. Then 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ = Op
+
+r s log pn
+
+!
+
+.
+
+If instead no informative source mixture is available and Assumption 6 holds, then 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ ≤ ∥ β0∥2 + op(1) .
+
+Thus, in the transferable case the adaptive source mixture is close to the target at the sparse high-dimensional rate, while in the non-transferable case the posterior falls back to the dummy column and avoids uncontrolled negative transfer. Proof. Let η⋆ ∈ ∆K+1 denote the oracle source-mixture weight vector from Assumption 5. By the triangle inequality, 
+
+∥W η − β0∥2 ≤ ∥ W η − W η ⋆∥2 + ∥W η ⋆ − β0∥2.
+
+Taking posterior expectation with respect to η | Y gives 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ ≤ Eη|Y
+
+∥W η − W η ⋆∥2
+
+ + ∥W η ⋆ − β0∥2.
+
+The first term is controlled by Lemma C.3, and the second term is controlled by Assumption 5. Therefore, 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ ≤ C
+
+r s log pn + C
+
+r s log pn ,
+
+with high probability, which proves the stated rate. Now consider the non-transferable case. Since the last column of W is the dummy column 0, we have 
+
+W η =
+
+> K
+
+X
+
+> k=1
+
+ηk ˆωk.
+
+Hence, 
+
+∥W η − β0∥2 ≤ ∥ β0∥2 +
+
+> K
+
+X
+
+> k=1
+
+ηk ˆωk
+
+> 2
+
+.
+
+Using the triangle inequality again, 
+
+> K
+
+X
+
+> k=1
+
+ηk ˆωk
+
+> 2
+
+≤
+
+> K
+
+X
+
+> k=1
+
+ηk∥ ˆωk∥2 ≤ (1 − ηK+1 ) max  
+
+> 1≤k≤K
+
+∥ ˆωk∥2.
+
+Taking posterior expectation gives 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ ≤ ∥ β0∥2 + max  
+
+> 1≤k≤K
+
+∥ ˆωk∥2 Eη|Y [1 − ηK+1 ].
+
+By Assumption 6, max 1≤k≤K ∥ ˆωk∥2 = Op(1) and Eη|Y [1 − ηK+1 ] = op(1) , so the second term is 
+
+op(1) . Therefore, 
+
+Eη|Y
+
+∥W η − β0∥2
+
+ ≤ ∥ β0∥2 + op(1) ,
+
+as claimed. 
+
+Lemma C.3 (Posterior rate for the source-mixture center) . Let 
+
+Rn(η) = 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ Yi − X⊤ 
+
+> i
+
+W η 2 , R(η) = E0
+
+h Y − X⊤W η 2i
+
+,
+
+17 for η ∈ ∆K+1 . Suppose Assumptions 2, 3 and Lemmas C.4, C.5 hold. Then 
+
+Eη|Y [∥W η − W η ⋆∥2] = Op
+
+r K log nn
+
+!
+
+.
+
+Consequently, if K log n ≲ s log p, then 
+
+Eη|Y [∥W η − W η ⋆∥2] = Op
+
+r s log pn
+
+!
+
+.
+
+Proof. Let 
+
+rn = M
+
+r K log nn ,
+
+where M > 0 is a sufficiently large constant to be chosen later. Define the bad set 
+
+Bn = η ∈ ∆K+1 : ∥W η − W η ⋆∥2 > r n .
+
+By the quadratic curvature condition in Lemma C.4, for every η ∈ Bn,
+
+R(η) − R(η⋆) ≥ κW r2
+
+> n
+
+.
+
+By the uniform law of large numbers (Lemma C.5), with P0-probability tending to one, 
+
+sup 
+
+> η∈∆K+1
+
+|Rn(η) − R(η)| ≤ κW r2
+
+> n
+
+4 .
+
+On this event, for every η ∈ Bn,
+
+Rn(η) − Rn(η⋆) = {Rn(η) − R(η)} + {R(η) − R(η⋆)} + {R(η⋆) − Rn(η⋆)}≥ − κW r2
+
+> n
+
+4 + κW r2 
+
+> n
+
+− κW r2
+
+> n
+
+4= κW r2
+
+> n
+
+2 .
+
+The posterior density of η is proportional to 
+
+π(η | Y ) ∝ exp 
+
+n
+
+− n
+
+2σ2 Rn(η)
+
+o
+
+π0(η).
+
+Since π0 is bounded above, there exists C1 > 0 such that 
+
+Z
+
+> Bn
+
+exp 
+
+n
+
+− n
+
+2σ2 Rn(η)
+
+o
+
+π0(η) dη ≤ C1 exp 
+
+
+
+− n
+
+2σ2
+
+
+
+Rn(η⋆) + κW r2
+
+> n
+
+2
+
+ 
+
+.
+
+Next, we lower-bound the denominator. Since π0 is bounded away from zero in a neighborhood of 
+
+η⋆, there exists c1 > 0 such that 
+
+π0(η) ≥ c1
+
+for all η in a sufficiently small neighborhood of η⋆. Let 
+
+Un =
+
+n
+
+η ∈ ∆K+1 : ∥η − η⋆∥2 ≤ cn −1/2o
+
+,
+
+where c > 0 is fixed. Since ∆K+1 is K-dimensional, its volume satisfies 
+
+Vol( Un) ≥ c2n−K/ 2
+
+for some c2 > 0. By continuity of Rn on the compact simplex, and because Un is an n−1/2-neighborhood of η⋆, we have 
+
+sup 
+
+> η∈Un
+
+|Rn(η) − Rn(η⋆)| ≤ Cn
+
+18 on the same high-probability event, for a finite constant C > 0. Therefore, 
+
+Z
+
+> ∆K+1
+
+exp 
+
+n
+
+− n
+
+2σ2 Rn(η)
+
+o
+
+π0(η) dη ≥
+
+Z
+
+> Un
+
+exp 
+
+n
+
+− n
+
+2σ2 Rn(η)
+
+o
+
+π0(η) dη
+
+≥ c1c2n−K/ 2 exp 
+
+n
+
+− n
+
+2σ2 Rn(η⋆) − C
+
+o
+
+.
+
+Combining the numerator and denominator bounds gives 
+
+Π( Bn | Y ) ≤ C3nK/ 2 exp −c3nr 2
+
+> n
+
+for constants C3, c 3 > 0. Since 
+
+nr 2 
+
+> n
+
+= M 2K log n, 
+
+we obtain 
+
+Π( Bn | Y ) ≤ C3nK/ 2−c3M 2K .
+
+Choosing M large enough gives 
+
+Π( Bn | Y ) → 0
+
+in P0-probability. Finally, 
+
+Eη|Y [∥W η − W η ⋆∥2]
+
+can be decomposed as 
+
+Eη|Y
+
+∥W η − W η ⋆∥2 1Bcn
+
+ + Eη|Y [∥W η − W η ⋆∥2 1Bn ]
+
+≤ rn +
+
+
+
+2 max  
+
+> 1≤k≤K
+
+∥bωk∥2
+
+
+
+Π( Bn | Y ).
+
+If the source estimates are uniformly bounded in Euclidean norm, namely 
+
+max  
+
+> 1≤k≤K
+
+∥bωk∥2 = Op(1) ,
+
+then the second term is op(rn), and hence 
+
+Eη|Y [∥W η − W η ⋆∥2] = Op(rn) = Op
+
+r K log nn
+
+!
+
+.
+
+If K log n ≲ s log p, then r K log nn ≲
+
+r s log pn ,
+
+which proves the second claim. 
+
+Lemma C.4 (Population margin for the oracle source mixture) . Let R(η) = E0
+
+hY − X⊤W η 2i
+
+.
+
+If η⋆ ∈ arg min η∈∆K+1 R(η), and the covariance matrix Σ = E0(XX ⊤) has positive curvature on the source-mixture span, then 
+
+R(η) − R(η⋆) ≥ κW ∥W η − W η ⋆∥22 .
+
+Proof. Since Y = X⊤β0 + ε and E(ε | X) = 0 , we have 
+
+R(η) = E0
+
+hX⊤(β0 − W η ) + ε 2i
+
+.
+
+The cross term vanishes, so 
+
+R(η) = σ20 + ( W η − β0)⊤Σ(W η − β0).
+
+Let v = W η − W η ⋆. Then 
+
+W η − β0 = ( W η ⋆ − β0) + v.
+
+Therefore, 
+
+R(η) − R(η⋆) = {(W η ⋆ − β0) + v}⊤ Σ {(W η ⋆ − β0) + v}− (W η ⋆ − β0)⊤Σ(W η ⋆ − β0)= v⊤Σv + 2 v⊤Σ(W η ⋆ − β0).
+
+19 Because W η ⋆ minimizes the convex quadratic risk over the convex set W a : a ∈ ∆K+1 , the first-order optimality condition gives 
+
+v⊤Σ(W η ⋆ − β0) ≥ 0
+
+for every η ∈ ∆K+1 . Hence, 
+
+R(η) − R(η⋆) ≥ v⊤Σv.
+
+If Σ has curvature κW on the source-mixture span, then 
+
+v⊤Σv ≥ κW ∥v∥22.
+
+Therefore, 
+
+R(η) − R(η⋆) ≥ κW ∥W η − W η ⋆∥22 .
+
+This proves the lemma. 
+
+Lemma C.5 (Uniform LLN for the squared-error contrast) . Define the empirical and population contrasts 
+
+Rn(η) := 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+ Yi − XT 
+
+> i
+
+W η 2, R(η) := E0
+
+(Y − XTW η )2,
+
+where E0 denotes expectation under the true law of (Y, X). Suppose E0[Y 41 ] < ∞ and the columns 
+
+ˆωk of W satisfy max 1≤k≤K+1 ∥ ˆωk∥1 < ∞ with ˆωK+1 = 0p. Then, under Assumption 1, 
+
+sup 
+
+> η∈∆K+1
+
+Rn(η) − R(η) P0
+
+−→ 0 as n → ∞ .
+
+Proof. For each η ∈ ∆K+1 , define fη (Y, X) :=  Y − XTW η 2. Then Rn(η) =
+
+> 1
+> n
+
+Pni=1 fη (Yi, Xi), R (η) = E0[fη (Y, X)] . We must show 
+
+sup 
+
+> η∈∆K+1
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, Xi) − E0[fη (Y, X)] P0
+
+−→ 0.
+
+Step 1: Pointwise LLN. Fix η ∈ ∆K+1 . By the scalar law of large numbers, it suffices to check 
+
+E0[|fη (Y, X)|] < ∞. Using the triangle inequality and Cauchy-Schwarz, 
+
+|XTW η | =
+
+> K+1
+
+X
+
+> k=1
+
+ηk XT ˆωk ≤
+
+> K+1
+
+X
+
+> k=1
+
+ηk |XT ˆωk| ≤ max  
+
+> k
+
+∥ ˆωk∥1 ∥X∥∞,
+
+where ∥X∥∞ := max j |Xj |. Then, almost surely for some constant C0 not depending on η
+
+|Y − XTW η | ≤ | Y | + |XTW η | ≤ | Y | + C0,
+
+and hence, fη (Y, X) = ( Y − XTW η )2 ≤ 2Y 2 + 2 C20 . Under E0[Y 4] < ∞, we have E0[Y 2] < ∞,so E0[|fη (Y, X)|] < ∞. Thus, by the law of large numbers, 
+
+Rn(η) P0
+
+−→ R(η) for each fixed η ∈ ∆K+1 .
+
+Step 2: Lipschitz continuity in η. Fix (Y, X) and two points η, ˜η ∈ ∆K+1 . Write μη (X) = XTW η 
+
+and μ ˜η (X) = XTW ˜η. Then 
+
+|fη (Y, X) − f ˜η (Y, X)| = (Y − μη )2 − (Y − μ ˜η )2
+
+= (μ ˜η − μη ) 2Y − μη − μ ˜η
+
+
+
+≤ | μ ˜η − μη | 2|Y | + |μη | + |μ ˜η |.
+
+As above, |μη (X)| ≤ C0 and |μ ˜η (X)| ≤ C0. Moreover, since μ ˜η (X) − μη (X) = XTW ( ˜ η − η),
+
+we have |μ˜η (X) − μη (X)| ≤ ∥ X∥∞ ∥W ( ˜ η − η)∥1 ≤ M1 ∥W ∥1 ∥ ˜η − η∥1, where ∥W ∥1 := max k ∥ ˆωk∥1 and we used Assumption 1. Hence |μ ˜η (X) − μη (X)| ≤ L0 ∥ ˜η − η∥1 for some constant L0 > 0 independent of (Y, X ) and η, ˜η. Combining the bounds, 
+
+|fη (Y, X) − f ˜η (Y, X)| ≤ L0 (2 |Y | + 2 C0) ∥ ˜η − η∥1.
+
+20 Thus the family {fη : η ∈ ∆K+1 } is Lipschitz in η with random Lipschitz constant L(Y, X) := 
+
+L0(2 |Y | + 2 C0). with E0[L(Y, X)] < ∞.
+
+Step 3: Uniform convergence. For any δ > 0, we can cover the compact simplex ∆K+1 by a finite 
+
+δ-net with respect to the ℓ1-norm; that is, there exist points η(1) , . . . , η(Mδ ) ∈ ∆K+1 such that for every η ∈ ∆K+1 there is some m with ∥η − η(m)∥1 ≤ δ. Then, for any η, with such an m,
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, Xi) − R(η) ≤ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, Xi) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη(m) (Yi, Xi)
+
++ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη(m) (Yi, Xi) − R(η(m)) + |R(η(m)) − R(η)|.
+
+Using the Lipschitz bound and taking expectations, 
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, Xi) − 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη(m) (Yi, Xi) ≤ δ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+L(Yi, Xi),
+
+and similarly 
+
+|R(η(m)) − R(η)| ≤ δ E0[L(Y, X)] .
+
+Therefore 
+
+sup 
+
+> η∈∆K+1
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, Xi) − R(η) ≤ max 
+
+> 1≤m≤Mδ
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη(m) (Yi, Xi) − R(η(m))
+
++ δ 1
+
+n
+
+> n
+
+X
+
+> i=1
+
+L(Yi, Xi) + δ E0[L(Y, X)] .
+
+By Step 1 and finiteness of Mδ , the maximum over m converges to 0 in P0-probability as n → ∞ .By the LLN and E0[L(Y, X)] < ∞, we also have 
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+L(Yi, Xi) P0
+
+−→ E0[L(Y, X)] .
+
+Hence, for any fixed δ > 0,
+
+lim sup 
+
+> n→∞
+
+sup 
+
+> η∈∆K+1
+
+1
+
+n
+
+> n
+
+X
+
+> i=1
+
+fη (Yi, X i) − R(η) ≤ 2δ E0[L(Y, X)] in P0-probability .
+
+Letting δ ↓ 0 yields sup η∈∆K+1 |Rn(η) − R(η)| P0
+
+−→ 0, as claimed. 21

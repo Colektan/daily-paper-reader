@@ -6,71 +6,62 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-14
-- 运行时间：2026-06-14 21:02:18 UTC
+- 最新运行日期：2026-06-15
+- 运行时间：2026-06-15 23:04:26 UTC
 - 运行状态：成功
-- 本次总论文数：17
+- 本次总论文数：14
 - 精读区：10
-- 速读区：7
+- 速读区：4
 
 ### 今日简报（AI）
-今日聚焦17篇AI前沿，精读触觉视觉对齐与LLM黑箱训练两篇高分论文。 最值得关注的方向：机器人灵巧操作的触觉-视觉融合机制，以及利用强化学习解决LLM黑箱不一致的高效训练方法。 建议优先精读这两篇9分工作，并速读《From Player to Master》看LLM记忆增强的测试时学习。
-- 详情：[/202606/14/README](/202606/14/README)
+今天精读两篇9.0高分论文《Hierarchical Projection for Adaptive Knowledge Transfer》与《Benchmarking Vision-Language-Action Models on SO-101》，速读涵盖FiberTune微调、PRPO策略优化及黑盒RL训练。最值得关注的是层次化知识迁移方法和VLA模型在工业场景中的故障恢复分析。建议优先精读这两篇以掌握自适应迁移与鲁棒评估，速读可快速获取微调与强化学习的最新优化思路。
+- 详情：[/202606/15/README](/202606/15/README)
 
 ### 精读区论文标签
-1. [RGB-S: Image-Aligned Tactile Saliency for Robust Dexterous Manipulation](/202606/14/2606.08765v1-rgb-s-image-aligned-tactile-saliency-for-robust-dexterous-manipulation)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：图像对齐的触觉显著性方法用于鲁棒灵巧操作
-2. [Reformulate LLM Reinforcement Learning for Efficient Training under Black-box Discrepancy](/202606/14/2606.08779v2-reformulate-llm-reinforcement-learning-for-efficient-training-under-black-box-discrepancy)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：重新定义强化学习用于大模型训练以解决训练-推理差异
-3. [ReCoVLA: VLM-Guided Reward Compilation for Failure Recovery in Vision-Language-Action Policies](/202606/14/2606.09630v1-recovla-vlm-guided-reward-compilation-for-failure-recovery-in-vision-language-action-policies)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLM指导的奖励编译用于VLA策略故障恢复
-4. [Fisher-Guided Progressive Parameter Selection for Adaptive Fine-Tuning](/202606/14/2606.10196v1-fisher-guided-progressive-parameter-selection-for-adaptive-fine-tuning)  
+1. [Hierarchical Projection for Adaptive Knowledge Transfer](/202606/15/2606.08691v1-hierarchical-projection-for-adaptive-knowledge-transfer)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：通过Fisher引导的自适应微调进行迁移学习
-5. [SHAPO: Sharpness-Aware Policy Optimization for Safe Exploration](/202606/14/2606.10228v1-shapo-sharpness-aware-policy-optimization-for-safe-exploration)  
+   evidence：通过层次投影的自适应知识迁移的迁移学习
+2. [Benchmarking Vision-Language-Action Models on SO-101: Failure and Recovery Analysis](/202606/15/2606.08881v2-benchmarking-vision-language-action-models-on-so-101-failure-and-recovery-analysis)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于安全强化学习探索的锐度感知策略优化
-6. [Effective Reinforcement Learning for Agentic Search by Recycling Zero-Variance Queries During Training](/202606/14/2606.10709v1-effective-reinforcement-learning-for-agentic-search-by-recycling-zero-variance-queries-during-training)  
+   evidence：在真实世界低成本机器人上基准测试VLA模型，分析失败与恢复
+3. [One Lens, Many Worlds : A Capability-Typed Interface for World-Model Interpretability](/202606/15/2606.09936v1-one-lens-many-worlds--a-capability-typed-interface-for-world-model-interpretability)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：通过回收零方差查询来改进强化学习训练智能体搜索的方法
-7. [A Stationary (and Therefore Compatible) Representation is All You Need](/202606/14/2606.12488v1-a-stationary-and-therefore-compatible-representation-is-all-you-need)  
-   标签：评分：9.0/10、query:rep-learning
-   evidence：通过d-Simplex固定分类器学习平稳表示实现兼容表示学习
-8. [$μ$VLA: On Recurrent Memory for Partially Observable Manipulation in VLA Models](/202606/14/2606.12497v1-vla-on-recurrent-memory-for-partially-observable-manipulation-in-vla-models)  
+   evidence：世界模型的统一可解释性接口
+4. [$μ_0$: A Scalable 3D Interaction-Trace World Model](/202606/15/2606.13769v1-0-a-scalable-3d-interaction-trace-world-model)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：在部分可观察机器人操作中为VLA模型添加循环记忆
-9. [RepWAM: World Action Modeling with Representation Visual-Action Tokenizers](/202606/14/2606.13674v1-repwam-world-action-modeling-with-representation-visual-action-tokenizers)  
+   evidence：基于3D交互轨迹的世界模型，用于机器人学习
+5. [WAM4D: Fast 4D World Action Model via Spatial Register Tokens](/202606/15/2606.14048v1-wam4d-fast-4d-world-action-model-via-spatial-register-tokens)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：面向机器人控制的表示中心世界动作模型与视觉-动作分词器
-10. [Improving Robotic Generalist Policies via Flow Reversal Steering](/202606/14/2606.13675v1-improving-robotic-generalist-policies-via-flow-reversal-steering)  
+   evidence：基于空间注册令牌的快速4D世界动作模型用于机器人操作
+6. [ReactVLA: Fast and Lightweight Reactive Robot Manipulation via Improved Mean Flow Action Generation](/202606/15/2606.14255v1-reactvla-fast-and-lightweight-reactive-robot-manipulation-via-improved-mean-flow-action-generation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLA模型引导机器人操作
+   evidence：用于快速机器人操作的视觉语言动作模型
+7. [Elastic Queries Reinforcement Learning: Self-Aware Policy Execution for VLA Models](/202606/15/2606.14375v1-elastic-queries-reinforcement-learning-self-aware-policy-execution-for-vla-models)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：面向机器人操作的VLA模型弹性查询强化学习
+8. [Hy-Embodied-0.5-VLA: From Vision-Language-Action Models to a Real-World Robot Learning Stack](/202606/15/2606.14409v1-hy-embodied-05-vla-from-vision-language-action-models-to-a-real-world-robot-learning-stack)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：面向机器人的VLA模型及完整学习栈
+9. [Causal Object-Centric Models for Planning with Monte Carlo Tree Search](/202606/15/2606.14418v1-causal-object-centric-models-for-planning-with-monte-carlo-tree-search)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：面向对象的因果世界模型用于基于模型的强化学习与蒙特卡洛树搜索
+10. [Sensitivity Shaping for Latent Modeling](/202606/15/2606.14585v1-sensitivity-shaping-for-latent-modeling)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：通过控制灵敏度正则化生成动力学模型用于机器人规划与分布外检测
 
 ### 速读区论文标签
-1. [Minibatch Selection via Partition Matroid Constrained Gradient Matching](/202606/14/2606.07954v1-minibatch-selection-via-partition-matroid-constrained-gradient-matching)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：通过分区拟阵约束梯度匹配的小批量选择
-2. [FMRFusion: Frequency-Aware Multi-View Representation Learning for Heterogeneous Image Fusion](/202606/14/2606.07985v1-fmrfusion-frequency-aware-multi-view-representation-learning-for-heterogeneous-image-fusion)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：频率感知多视角表征学习用于图像融合
-3. [From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory](/202606/14/2606.08656v1-from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory)  
+1. [FiberTune: Preserving Action-Fiber Visual Residuals in Vision-Language-Action Fine-Tuning](/202606/15/2606.08653v1-fibertune-preserving-action-fiber-visual-residuals-in-vision-language-action-fine-tuning)  
    标签：评分：8.0/10、query:rl-vla-world
-   evidence：使用强化学习（多轮GRPO）优化LLM智能体记忆更新
-4. [Breaking the Bubble: Asynchronous Pipeline Parallel Training with Bounded Weight Inconsistency](/202606/14/2606.07881v1-breaking-the-bubble-asynchronous-pipeline-parallel-training-with-bounded-weight-inconsistency)  
-   标签：评分：7.0/10、query:rep-learning
-   evidence：异步流水线训练优化模型收敛
-5. [Continual Quadruped Robots Coordination via Semantic Skill Discovery](/202606/14/2606.08102v1-continual-quadruped-robots-coordination-via-semantic-skill-discovery)  
+   evidence：在视觉语言动作模型微调中保持视觉残差用于机器人操作
+2. [PRPO: Perception-Reinforced Policy Optimization via Token-Level Dynamic Advantage Reshaping](/202606/15/2606.08708v1-prpo-perception-reinforced-policy-optimization-via-token-level-dynamic-advantage-reshaping)  
+   标签：评分：8.0/10、query:rl-vla-world
+   evidence：基于token级强化学习优化视觉语言模型
+3. [Reformulate LLM Reinforcement Learning for Efficient Training under Black-box Discrepancy](/202606/15/2606.08779v1-reformulate-llm-reinforcement-learning-for-efficient-training-under-black-box-discrepancy)  
    标签：评分：7.0/10、query:rl-vla-world
-   evidence：多智能体强化学习用于机器人协调
-6. [Efficient Skill Grounding via Code Refactoring with Small Language Models](/202606/14/2606.07999v1-efficient-skill-grounding-via-code-refactoring-with-small-language-models)  
-   标签：评分：6.0/10、query:rl-vla-world
-   evidence：使用小语言模型通过代码重构解决具身智能体的技能落地问题
-7. [Distilling LLM Reasoning into an Interpretable Policy Tree for Human-AI Collaboration](/202606/14/2606.08596v1-distilling-llm-reasoning-into-an-interpretable-policy-tree-for-human-ai-collaboration)  
-   标签：评分：6.0/10、query:rl-vla-world
-   evidence：多智能体强化学习和LLM蒸馏构建可解释策略树
+   evidence：在黑盒差异下重新表述LLM强化学习以高效训练
+4. [Generalization in Nonlinear Least Squares via Learned Feature Geometry](/202606/15/2606.08799v2-generalization-in-nonlinear-least-squares-via-learned-feature-geometry)  
+   标签：评分：6.0/10、query:rep-learning
+   evidence：通过学习特征几何的泛化界，表示学习
 
 
 <div class="dpr-home-promo-card">

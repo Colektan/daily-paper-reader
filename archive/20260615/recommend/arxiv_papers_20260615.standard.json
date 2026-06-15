@@ -1,0 +1,636 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-15T22:53:46.332739+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 26,
+    "deep_cap": 4,
+    "deep_selected": 10,
+    "quick_candidates": 40,
+    "quick_skim_target": 4,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.08691v1",
+      "source": "arxiv",
+      "title": "Hierarchical Projection for Adaptive Knowledge Transfer",
+      "abstract": "Modern data-driven applications increasingly involve learning from multiple heterogeneous sources, where a target dataset is limited but related information is available across domains. Naively combining these sources can degrade performance when relevance varies or spurious signals are present, posing a fundamental challenge for trustworthy cross-domain learning. We propose Projection Transfer Learning (ProjectionTL), a unified framework that integrates hierarchical Bayesian modeling with adaptive projection for selective knowledge transfer. The key idea is to decouple transfer at two levels: first, we construct a source-guided hierarchical prior that aggregates information across sources using data-driven weights, capturing global alignment between each source and the target; second, we refine this borrowing through a posterior-projection step that operates at the feature level, selectively retaining coordinates that exhibit local agreement with the target signal. This two-stage design enables the method to simultaneously perform source selection and feature selection, thereby mitigating negative transfer while preserving interpretability. ProjectionTL provides a principled approach to integrating heterogeneous data across domains, bridging statistical modeling and modern machine learning paradigms for robust and interpretable transfer. Through simulations and real-world biomedical applications, we demonstrate improved accuracy, stability, and interpretability compared to existing methods. Our framework offers a scalable and generalizable strategy for trustworthy cross-domain learning in high-dimensional settings.",
+      "authors": [
+        "Samhita Pal",
+        "Tian Gu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ME"
+      ],
+      "published": "2026-06-07T15:44:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.08691v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "transfer learning via hierarchical projection and adaptive knowledge transfer",
+      "llm_evidence_cn": "通过层次投影的自适应知识迁移的迁移学习",
+      "llm_evidence": "通过层次投影的自适应知识迁移的迁移学习",
+      "canonical_evidence": "通过层次投影的自适应知识迁移的迁移学习",
+      "llm_tldr_en": "Proposes Projection Transfer Learning (ProjectionTL), a framework using hierarchical Bayesian modeling and adaptive projection for selective knowledge transfer across heterogeneous sources.",
+      "llm_tldr_cn": "从多个异构源迁移知识时，简单组合可能因源相关性差异或虚假信号而降低性能。本文提出投影迁移学习（ProjectionTL），将层次贝叶斯建模与自适应投影相结合，通过源引导的层次先验聚合信息，并利用稀疏投影选择性地迁移相关知识。在多个跨领域任务中，ProjectionTL在目标数据有限时显著优于现有迁移学习方法。",
+      "llm_tldr": "从多个异构源迁移知识时，简单组合可能因源相关性差异或虚假信号而降低性能。本文提出投影迁移学习（ProjectionTL），将层次贝叶斯建模与自适应投影相结合，通过源引导的层次先验聚合信息，并利用稀疏投影选择性地迁移相关知识。在多个跨领域任务中，ProjectionTL在目标数据有限时显著优于现有迁移学习方法。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.08881v2",
+      "source": "arxiv",
+      "title": "Benchmarking Vision-Language-Action Models on SO-101: Failure and Recovery Analysis",
+      "abstract": "Vision-Language-Action (VLA) models have demonstrated strong generalization in robotic manipulation, yet existing evaluations are primarily conducted in simulation or on expensive robotic platforms, leaving their robustness on affordable real-world robots largely unexplored. We present a standardized real-world benchmark for evaluating representative VLA and imitation learning policies on the low-cost SO-101 robotic platform. The benchmark comprises four representative manipulation tasks together with unified evaluation protocols, enabling systematic comparison under embodiment uncertainty. Using real-world teleoperated demonstrations, we fine-tune and evaluate $π_{0.5}$, SmolVLA, Wall-X, and ACT directly on the physical platform. Beyond conventional task success rates, the benchmark incorporates a structured failure taxonomy, semantic- and execution-level failure decomposition, and recovery-aware evaluation metrics to characterize policy robustness. Experimental results show that stronger pretrained VLA policies generally outperform the imitation learning baseline, although performance remains highly task-dependent under low-cost robotic deployment conditions. Execution instability emerges as the dominant failure source, while recovery capability varies substantially across architectures. These results highlight the importance of failure and recovery analysis beyond binary task success and establish SO-101 as a practical benchmark for evaluating embodied AI systems under realistic low-cost robotic deployment conditions.",
+      "authors": [
+        "Yi Yu",
+        "Xinchuan Qiu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-07T23:39:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.08881v2",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmarks VLA models on real-world low-cost robot, analyzes failure and recovery",
+      "llm_evidence_cn": "在真实世界低成本机器人上基准测试VLA模型，分析失败与恢复",
+      "llm_evidence": "在真实世界低成本机器人上基准测试VLA模型，分析失败与恢复",
+      "canonical_evidence": "在真实世界低成本机器人上基准测试VLA模型，分析失败与恢复",
+      "llm_tldr_en": "Presents a real-world benchmark evaluating VLA and imitation learning policies on SO-101 robot, analyzing failure modes and recovery for affordable robotics.",
+      "llm_tldr_cn": "该论文提出了一个标准化真实世界基准，在低成本SO-101机器人平台上评估多种VLA和模仿学习策略。基准包括四种操作任务，通过真实遥操作演示对模型进行微调。实验揭示了模型在实体不确定性下的鲁棒性问题，并进行了失败与恢复分析。",
+      "llm_tldr": "该论文提出了一个标准化真实世界基准，在低成本SO-101机器人平台上评估多种VLA和模仿学习策略。基准包括四种操作任务，通过真实遥操作演示对模型进行微调。实验揭示了模型在实体不确定性下的鲁棒性问题，并进行了失败与恢复分析。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.09936v1",
+      "source": "arxiv",
+      "title": "One Lens, Many Worlds : A Capability-Typed Interface for World-Model Interpretability",
+      "abstract": "World models are now built on substantially different computational substrates. Latent recurrent state-space models such as PlaNet and the Dreamer family compress observations into recurrent states; token-based models such as IRIS quantize observations into a learned codebook and predict autoregressively with a transformer; and joint-embedding predictive architectures such as I-JEPA predict in a learned latent space with no pixel decoder. The interpretability methods applied to these models, including probing, activation patching, sparse autoencoders, and surprise analysis, share a common set of primitives, yet they are re-implemented from scratch for each architecture because existing hook-and-cache tooling assumes a transformer language model with no notion of actions, environment steps, or imagined rollouts. We argue that this fragmentation reflects the tooling rather than the models, and that the shared structure of world models is captured by a small typed interface. We present WorldModelLens, an open-source interpretability substrate organized around a capability-typed adapter: every model implements four required methods (encode, transition, initial state, sample) and declares a set of optional heads (decode, reward, continue, actor, critic) through an explicit capability descriptor, so that reinforcement-learning and self-supervised world models are first-class without either imitating the other. A single hook and cache layer exposes time-indexed activations, imagination rollouts, and intervention replay over this interface, allowing each analysis to be written once.",
+      "authors": [
+        "Bhavith Chandra Challagundla",
+        "Sanskar Pandey",
+        "Param Thakkar",
+        "Rishikesh Mallagundla",
+        "Yugandhar Reddy Gogireddy",
+        "Wenhao Lu",
+        "Hindol Roy Choudhury",
+        "Shravani Challagundla",
+        "Mohamed Deraz Nasr",
+        "Spursh Deshpande"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-07T19:27:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.09936v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "unified interpretability interface for world models",
+      "llm_evidence_cn": "世界模型的统一可解释性接口",
+      "llm_evidence": "世界模型的统一可解释性接口",
+      "canonical_evidence": "世界模型的统一可解释性接口",
+      "llm_tldr_en": "This paper presents a capability-typed interface for world-model interpretability that unifies probing, patching, and sparse autoencoders across diverse architectures.",
+      "llm_tldr_cn": "世界模型构建在不同计算基座上，如PlaNet、Dreamer、IRIS和I-JEPA，但现有工具重复实现可解释性方法，没有统一接口。本文提出一个能力类型化接口，抽象出探测、激活补丁、稀疏自编码器等共同原语，允许跨架构复用。该接口降低了世界模型可解释性研究的成本，促进了不同架构间的比较和工具共享。",
+      "llm_tldr": "世界模型构建在不同计算基座上，如PlaNet、Dreamer、IRIS和I-JEPA，但现有工具重复实现可解释性方法，没有统一接口。本文提出一个能力类型化接口，抽象出探测、激活补丁、稀疏自编码器等共同原语，允许跨架构复用。该接口降低了世界模型可解释性研究的成本，促进了不同架构间的比较和工具共享。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.13769v1",
+      "source": "arxiv",
+      "title": "$μ_0$: A Scalable 3D Interaction-Trace World Model",
+      "abstract": "World models that capture how actions induce physical change enable scalable robot learning without reliance on embodiment-specific action labels. Pixel-space video models provide broad visual priors but expend model capacity on dense appearance reconstruction, while direct action models require embodiment-specific labels that hinder scalability. We present $μ_0$, a scalable world model based on 3D traces. Rather than predicting dense pixels or directly modeling actions, $μ_0$ forecasts smooth 3D trajectories for salient interaction points such as objects, tools, hands, and contact regions, yielding a compact, embodiment-agnostic motion interface. To enable training from diverse video sources, our TraceExtract system automatically extracts 3D supervision by selecting keypoints, constructing globally aligned traces, and associating motion segments with hierarchical language captions. This TraceExtract supervision pretrains $μ_0$ by combining a pretrained vision-language backbone with a modular trace expert, which represents each query via B-spline control points and predicts future traces. Experiments show that $μ_0$ outperforms baselines in both 2D and 3D trace prediction, including trace prediction models and tokenized VLM methods. Because $μ_0$ is frozen and reusable, it can be paired with action experts for downstream robot embodiments. Despite action-free pretraining, the resulting trace-conditioned policies achieve performance competitive with VLA models pretrained with action supervision, such as $π_0$. These results establish 3D traces as a scalable and transferable representation for cross-embodiment manipulation.",
+      "authors": [
+        "Seungjae Lee",
+        "Yoonkyo Jung",
+        "Jusuk Lee",
+        "Jonghun Shin",
+        "Amir Hossein Shahidzadeh",
+        "Yao-Chih Lee",
+        "H. Jin Kim",
+        "Jia-Bin Huang",
+        "Furong Huang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-11T17:59:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.13769v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "world model for robot learning without action labels",
+      "llm_evidence_cn": "基于3D交互轨迹的世界模型，用于机器人学习",
+      "llm_evidence": "基于3D交互轨迹的世界模型，用于机器人学习",
+      "canonical_evidence": "基于3D交互轨迹的世界模型，用于机器人学习",
+      "llm_tldr_en": "Mu0 forecasts 3D interaction traces to serve as a compact, embodiment-agnostic world model for scalable robot learning from diverse video sources.",
+      "llm_tldr_cn": "现有世界模型依赖像素预测或具体动作标签，限制了扩展性。本文提出Mu0，通过预测3D交互点轨迹作为紧凑的、与具体形态无关的世界模型。TraceExtract系统自动从视频提取3D监督，使模型能从多样视频源学习。实验表明该方法有效预测物理变化，支持可扩展的机器人学习。",
+      "llm_tldr": "现有世界模型依赖像素预测或具体动作标签，限制了扩展性。本文提出Mu0，通过预测3D交互点轨迹作为紧凑的、与具体形态无关的世界模型。TraceExtract系统自动从视频提取3D监督，使模型能从多样视频源学习。实验表明该方法有效预测物理变化，支持可扩展的机器人学习。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14048v1",
+      "source": "arxiv",
+      "title": "WAM4D: Fast 4D World Action Model via Spatial Register Tokens",
+      "abstract": "World action models (WAMs) have recently shown promise in jointly modeling future observations and executable robot actions. However, most existing WAMs still operate in 2D video or latent spaces, where visually plausible rollouts miss the 3D spatial constraints and occluded contact geometry required for precise manipulation. While geometric foundation models offer strong priors for recovering dense 3D structure and motion from visual observations, forcing WAMs to predict the dense 4D representation introduces costly geometric decoding and slows down causal action generation. To address the trade-off, we present WAM4D, a fast 4D world action model that uses lightweight spatial register tokens as training-time future-depth readouts to transfer pretrained geometric priors into a causal video-action transformer, then removes the register branch for lightweight action inference. To prevent non-causal shortcuts, we further design causal mixture attention for the Mixture-of-Transformers (MoT) WAM backbone, defining modality-specific visibility among video, action, and geometry tokens. Comprehensive experiments on RoboTwin 2.0 and challenging real-world manipulation tasks show that WAM4D improves spatial consistency and achieves competitive action prediction while maintaining efficient inference.",
+      "authors": [
+        "Ying Li",
+        "Xiaobao Wei",
+        "Jiajun Cao",
+        "Hao Wang",
+        "Xiaowei Chi",
+        "Chengyu Bai",
+        "Qianpu Sun",
+        "Jiajun Li",
+        "Xiaojie Zhang",
+        "Jian Tang",
+        "Sirui Han",
+        "Shanghang Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-12T02:49:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.14048v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "4D world action model for robot manipulation with spatial register tokens",
+      "llm_evidence_cn": "基于空间注册令牌的快速4D世界动作模型用于机器人操作",
+      "llm_evidence": "基于空间注册令牌的快速4D世界动作模型用于机器人操作",
+      "canonical_evidence": "基于空间注册令牌的快速4D世界动作模型用于机器人操作",
+      "llm_tldr_en": "Presents WAM4D, a fast 4D world action model that uses spatial register tokens to integrate geometric priors for precise manipulation.",
+      "llm_tldr_cn": "该论文提出WAM4D，通过轻量空间注册令牌在训练时注入未来深度信息，实现了快速4D世界动作模型。该方法兼顾了几何精度和生成速度，在精确操作任务中取得领先性能，推动了世界模型在机器人中的应用。",
+      "llm_tldr": "该论文提出WAM4D，通过轻量空间注册令牌在训练时注入未来深度信息，实现了快速4D世界动作模型。该方法兼顾了几何精度和生成速度，在精确操作任务中取得领先性能，推动了世界模型在机器人中的应用。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14255v1",
+      "source": "arxiv",
+      "title": "ReactVLA: Fast and Lightweight Reactive Robot Manipulation via Improved Mean Flow Action Generation",
+      "abstract": "Diffusion-based Vision-Language-Action (VLA) policies have demonstrated strong capability in modeling expressive and multimodal action distributions. However, their reliance on iterative sampling introduces substantial inference latency, which limits their applicability to reactive closed-loop robot manipulation. To address this limitation, we propose \\texttt{ReactVLA}, a lightweight and low-latency VLA framework for real-time robotic manipulation. \\texttt{ReactVLA} combines two complementary designs: (1) an improved Mean Flow (iMF) action generator that reduces expensive multi-step diffusion sampling to one-to-few-step action generation, and (2) Attention Residuals (AttnRes), a dynamic depth-wise feature routing mechanism that replaces uniform residual accumulation to better preserve task-relevant multimodal representations. We evaluate \\texttt{ReactVLA} on large-scale simulation benchmarks, including LIBERO and RoboIMI, as well as real-world robotic manipulation tasks. Experimental results show that \\texttt{ReactVLA} consistently outperforms similarly sized VLA baselines, including SmolVLA and $π_0$. On challenging precision manipulation tasks, \\texttt{ReactVLA} achieves up to a 1.65$\\times$ improvement in task performance while providing more than a 4$\\times$ increase in inference speed compared with leading VLA models. Finally, it reduces real-world policy latency to below 38.6 ms, enabling fast reactive control on physical robot platforms. Please check out our project website at: https://game-loader.github.io/ReactVLA/.",
+      "authors": [
+        "Yanzhao Guo",
+        "Wenkai Chen",
+        "Jianwei Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-12T08:33:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.14255v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Vision-Language-Action model for fast robot manipulation",
+      "llm_evidence_cn": "用于快速机器人操作的视觉语言动作模型",
+      "llm_evidence": "用于快速机器人操作的视觉语言动作模型",
+      "canonical_evidence": "用于快速机器人操作的视觉语言动作模型",
+      "llm_tldr_en": "Proposes ReactVLA, a lightweight VLA framework for real-time robot manipulation using improved Mean Flow action generation and attention residuals.",
+      "llm_tldr_cn": "扩散式VLA策略在机器人操作中面临推理延迟高的问题，限制其在闭环反应式场景中的应用。本文提出ReactVLA，通过改进的Mean Flow动作生成器将扩散采样减至一步或几步，并引入注意力残差机制动态路由特征，实现轻量级低延迟的机器人操作。在多个仿真和真实任务上，ReactVLA在保持高成功率的条件下大幅降低推理时间。",
+      "llm_tldr": "扩散式VLA策略在机器人操作中面临推理延迟高的问题，限制其在闭环反应式场景中的应用。本文提出ReactVLA，通过改进的Mean Flow动作生成器将扩散采样减至一步或几步，并引入注意力残差机制动态路由特征，实现轻量级低延迟的机器人操作。在多个仿真和真实任务上，ReactVLA在保持高成功率的条件下大幅降低推理时间。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14375v1",
+      "source": "arxiv",
+      "title": "Elastic Queries Reinforcement Learning: Self-Aware Policy Execution for VLA Models",
+      "abstract": "Vision-language-action (VLA) models are powerful action generators for robot manipulation, but they are typically executed with fixed inference and replanning schedules. This rigidity ignores the uneven difficulty of robot control: contact-rich or uncertain states may need more computation and fresher feedback, while easier states can often be handled with fewer inference steps and longer open-loop execution. We propose Elastic Queries Reinforcement Learning (EQRL), a framework that makes each VLA policy query elastic. A lightweight latent-schedule adaptor jointly selects the latent input, denoising budget, and action chunk length, without fine-tuning the underlying VLA model. To make scheduling difficulty-aware, EQRL trains a critic over the joint latent-schedule action and derives a state difficulty signal from critic ensemble disagreement. This signal guides compute toward difficult states, while a learned residual allows task-driven correction. We formulate variable chunk execution as query-level macro-action RL with chunk-dependent discounting and an amortized number-of-function-evaluations (NFE) budget. Across simulation and real-robot manipulation, EQRL reduces amortized inference cost while preserving or improving task success.",
+      "authors": [
+        "Ge Wang",
+        "Xinyu Tan",
+        "Xiang Li",
+        "Man Luo",
+        "Chengsi Yao",
+        "Shenhao Yan",
+        "Jiahao Yang",
+        "Fan Feng",
+        "Honghao Cai",
+        "Xiangyuan Wang",
+        "Zhixin Mai",
+        "Yiming Zhao",
+        "Yatong Han",
+        "Zhen Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T12:06:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.14375v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "elastic queries RL for VLA models in robot manipulation",
+      "llm_evidence_cn": "面向机器人操作的VLA模型弹性查询强化学习",
+      "llm_evidence": "面向机器人操作的VLA模型弹性查询强化学习",
+      "canonical_evidence": "面向机器人操作的VLA模型弹性查询强化学习",
+      "llm_tldr_en": "EQRL makes VLA policy queries elastic by adaptively selecting latent input, denoising budget, and action chunk length, improving efficiency in robot manipulation.",
+      "llm_tldr_cn": "该论文指出现有VLA模型在机器人操作中使用固定查询计划，忽视不同状态的难度差异。提出弹性查询强化学习（EQRL），通过轻量级潜调度适配器自动选择输入、去噪预算和动作块长度，无需微调VLA模型。在多种操作场景中，EQRL在保持成功率的同时显著降低计算成本。",
+      "llm_tldr": "该论文指出现有VLA模型在机器人操作中使用固定查询计划，忽视不同状态的难度差异。提出弹性查询强化学习（EQRL），通过轻量级潜调度适配器自动选择输入、去噪预算和动作块长度，无需微调VLA模型。在多种操作场景中，EQRL在保持成功率的同时显著降低计算成本。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14409v1",
+      "source": "arxiv",
+      "title": "Hy-Embodied-0.5-VLA: From Vision-Language-Action Models to a Real-World Robot Learning Stack",
+      "abstract": "In this report, we present Hy-Embodied-0.5-VLA, abbreviated as HyVLA-0.5, an end-to-end system that spans the full robot learning stack: data collection, model design, continued pre-training and supervised fine-tuning, RL post-training, and real-world deployment. Each component serves a distinct role in this stack.",
+      "authors": [
+        "He Zhang",
+        "Lingzhu Xiang",
+        "Haitao Lin",
+        "Zeyu Huang",
+        "Minghui Wang",
+        "Dingyan Zhong",
+        "Yubo Dong",
+        "Yihao Wu",
+        "Yongming Rao",
+        "Dongsheng Zhang",
+        "Wanjia He",
+        "Ling Chen",
+        "Kai Huang",
+        "Jiahao Chen",
+        "Sichang Su",
+        "Xumin Yu",
+        "Ziyi Wang",
+        "Chengwei Zhu",
+        "Xiao Teng",
+        "Yuchun Guo",
+        "Yufeng Zhang",
+        "Yuandong Liu",
+        "Rui Wang",
+        "Zisheng Lu",
+        "Han Hu",
+        "Zhengyou Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T12:45:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.14409v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "VLA model for robotics with full learning stack",
+      "llm_evidence_cn": "面向机器人的VLA模型及完整学习栈",
+      "llm_evidence": "面向机器人的VLA模型及完整学习栈",
+      "canonical_evidence": "面向机器人的VLA模型及完整学习栈",
+      "llm_tldr_en": "Proposes HyVLA-0.5, an end-to-end system covering data collection, model design, pre-training, fine-tuning, RL post-training, and real-world deployment for robot learning.",
+      "llm_tldr_cn": "该论文提出了HyVLA-0.5，一个端到端的机器人学习系统，涵盖数据收集、模型设计、持续预训练、监督微调、强化学习后训练和真实世界部署。每个组件在栈中发挥独特作用。实验验证了系统有效性。该方法为VLA模型在实际机器人中的应用提供了完整解决方案。",
+      "llm_tldr": "该论文提出了HyVLA-0.5，一个端到端的机器人学习系统，涵盖数据收集、模型设计、持续预训练、监督微调、强化学习后训练和真实世界部署。每个组件在栈中发挥独特作用。实验验证了系统有效性。该方法为VLA模型在实际机器人中的应用提供了完整解决方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14418v1",
+      "source": "arxiv",
+      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
+      "abstract": "We introduce COMET (Causal Object-centric Model for Efficient Tree search), a model-based reinforcement learning algorithm that performs Monte Carlo Tree Search in a slot-structured latent space. COMET pairs a frozen unsupervised object-centric encoder with a transformer-based world model, in which actions are bound to objects through a novel action-slot fusion mechanism that is used in slot transition prediction. Policy and value heads use object-causal attention, modulating token interactions by learned per-slot relevance scores so that decision-making concentrates on task-relevant entities. COMET adds an explicit object-level inductive bias to MuZero-style latent planning. Across eight visually and dynamically diverse tasks from the Object-Centric Visual RL benchmark, ManiSkill, Robosuite, and VizDoom, COMET achieves a higher mean normalized score during the early stages of training compared to object-centric and monolithic baselines.",
+      "authors": [
+        "Rodion Vakhitov",
+        "Leonid Ugadiarov",
+        "Alexey Skrynnik",
+        "Aleksandr Panov"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-06-12T12:55:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.14418v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "object-centric world model for model-based RL with MCTS",
+      "llm_evidence_cn": "面向对象的因果世界模型用于基于模型的强化学习与蒙特卡洛树搜索",
+      "llm_evidence": "面向对象的因果世界模型用于基于模型的强化学习与蒙特卡洛树搜索",
+      "canonical_evidence": "面向对象的因果世界模型用于基于模型的强化学习与蒙特卡洛树搜索",
+      "llm_tldr_en": "Introduces COMET, a model-based RL algorithm with a transformer-based object-centric world model and MCTS in latent space, achieving strong performance on diverse tasks via object-level inductive bias.",
+      "llm_tldr_cn": "为提升模型强化学习的效率和泛化性，本文提出COMET算法。其使用冻结的无监督对象中心编码器提取槽结构，结合Transformer世界模型预测对象状态转移，并通过对象因果注意力进行规划。动作与对象通过融合机制绑定，使决策聚焦于任务相关实体。在八个视觉动态任务上，COMET显著优于现有基准，展示了对象级先验在潜在规划中的有效性。该工作为世界模型在机器人操作中的应用奠定了基础。",
+      "llm_tldr": "为提升模型强化学习的效率和泛化性，本文提出COMET算法。其使用冻结的无监督对象中心编码器提取槽结构，结合Transformer世界模型预测对象状态转移，并通过对象因果注意力进行规划。动作与对象通过融合机制绑定，使决策聚焦于任务相关实体。在八个视觉动态任务上，COMET显著优于现有基准，展示了对象级先验在潜在规划中的有效性。该工作为世界模型在机器人操作中的应用奠定了基础。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14585v1",
+      "source": "arxiv",
+      "title": "Sensitivity Shaping for Latent Modeling",
+      "abstract": "Generative dynamics models enable planning in challenging robotic systems, but safe deployment requires reliably detecting policy-induced out-of-distribution (OOD) transitions. Existing methods typically treat the learned dynamics as fixed and attach post hoc support surrogates. We show that these surrogates can fail when the dynamics are locally insensitive to critical action choices: unsupported control actions may produce latent predictions that resemble demonstrated transitions, suppressing OOD signals despite large true predictive errors. To address this, we introduce support-conditioned control-sensitivity regularization, which promotes sensitive local response to control input changes in learned dynamics in high-support training regions. This preserves control-induced variation while limiting unstable extrapolation due to weak empirical support. Experiments in vision-based obstacle avoidance, manipulation, and real-robot navigation show improved OOD detection and safer closed-loop planning.",
+      "authors": [
+        "Hongzhan Yu",
+        "Chenghao Li",
+        "Ruipeng Zhang",
+        "Henrik Christensen",
+        "Sicun Gao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-12T16:01:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.14585v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generative dynamics models for robot planning with OOD detection via control-sensitivity regularization",
+      "llm_evidence_cn": "通过控制灵敏度正则化生成动力学模型用于机器人规划与分布外检测",
+      "llm_evidence": "通过控制灵敏度正则化生成动力学模型用于机器人规划与分布外检测",
+      "canonical_evidence": "通过控制灵敏度正则化生成动力学模型用于机器人规划与分布外检测",
+      "llm_tldr_en": "Proposes support-conditioned control-sensitivity regularization for latent dynamics models, improving OOD detection in robot planning by making latent predictions sensitive to control inputs.",
+      "llm_tldr_cn": "该论文针对机器人规划中生成动力学模型对分布外转移检测不足的问题，指出当模型对关键动作选择不敏感时，后验支持代理会失效。为此，提出了支持条件控制灵敏度正则化，增强高支持区域中潜在模型对控制输入的响应敏感性。实验证明该方法在机器人操纵基准上显著降低了未检测到的分布外转移，提高了规划安全性。",
+      "llm_tldr": "该论文针对机器人规划中生成动力学模型对分布外转移检测不足的问题，指出当模型对关键动作选择不敏感时，后验支持代理会失效。为此，提出了支持条件控制灵敏度正则化，增强高支持区域中潜在模型对控制输入的响应敏感性。实验证明该方法在机器人操纵基准上显著降低了未检测到的分布外转移，提高了规划安全性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.08653v1",
+      "source": "arxiv",
+      "title": "FiberTune: Preserving Action-Fiber Visual Residuals in Vision-Language-Action Fine-Tuning",
+      "abstract": "Action-supervised fine-tuning of vision-language-action (VLA) policies fits demonstrations effectively but constrains only the directions that change predicted actions, leaving visual structure consistent across action-equivalent states free to collapse. We formalize this as residual visual collapse along local action fibers and propose FiberTune, a training-time objective that preserves teacher-structured visual residuals without adding inference-time overhead. FiberTune uses an online action probe to estimate action-predictive feature directions, filters them from intermediate visual-token representations, and aligns the resulting probe-filtered residuals to a frozen visual teacher while regularizing their effective rank. Under identical training conditions, FiberTune improves over task-loss-only fine-tuning in every one of six controlled simulation settings spanning two benchmarks and two architectures (pi_0.5 and OpenVLA-OFT), as well as on physical SO-101 pick-place; representative gains include +10.7 percentage points SR(5) on long-horizon CALVIN ABC-to-D and physical SO-101 task success rising from 72.7% to 78.1%. Residual diagnostics show that these gains coincide with increased probe-filtered residual teacher alignment and effective rank, consistent with the action-fiber motivation.",
+      "authors": [
+        "Haihao Lin",
+        "Xiangsheng Huang",
+        "Xiao Yang",
+        "Weibang Zhou",
+        "Yiqi Zhang",
+        "Bo Yang",
+        "Simin Zeng",
+        "Jiawei Yang",
+        "Zhengyang Wang",
+        "Jiahui Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-06-07T14:41:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.08653v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Preserving visual residuals in VLA fine-tuning for robot manipulation",
+      "llm_evidence_cn": "在视觉语言动作模型微调中保持视觉残差用于机器人操作",
+      "llm_evidence": "在视觉语言动作模型微调中保持视觉残差用于机器人操作",
+      "canonical_evidence": "在视觉语言动作模型微调中保持视觉残差用于机器人操作",
+      "llm_tldr_en": "Proposes FiberTune, a training objective that preserves teacher-structured visual residuals during VLA fine-tuning, preventing visual collapse.",
+      "llm_tldr_cn": "视觉语言动作模型在行动监督微调中，仅约束影响动作的特征方向，导致视觉结构在动作等价状态下退化。本文形式化该现象为沿动作纤维的视觉残差坍塌，并提出FiberTune：通过在线动作探针估计动作预测性特征方向，过滤掉中间视觉令牌表示中的这些方向，然后将剩余残差与冻结视觉教师对齐。实验证明FiberTune在不增加推理开销的情况下，保持了视觉表征质量并提升了下游任务性能。",
+      "llm_tldr": "视觉语言动作模型在行动监督微调中，仅约束影响动作的特征方向，导致视觉结构在动作等价状态下退化。本文形式化该现象为沿动作纤维的视觉残差坍塌，并提出FiberTune：通过在线动作探针估计动作预测性特征方向，过滤掉中间视觉令牌表示中的这些方向，然后将剩余残差与冻结视觉教师对齐。实验证明FiberTune在不增加推理开销的情况下，保持了视觉表征质量并提升了下游任务性能。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Vision language action models in robot manipulation",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.08779v1",
+      "source": "arxiv",
+      "title": "Reformulate LLM Reinforcement Learning for Efficient Training under Black-box Discrepancy",
+      "abstract": "Reinforcement Learning (RL) has emerged as a pivotal post-training paradigm, yet it frequently suffers from unpredictable sub-optimum performance or even training collapses. Recent findings attribute these failures to a hidden train-inference discrepancy (or mismatch), stemming from the disparate underlying engines and architecture. We find that the training policy can actively self-correct such a discrepancy when provided with an appropriate learning signal. Then, we further empirically identify a discrepancy tolerance region: within this region, aggressively narrowing the discrepancy can suppress policy exploration and reduce learning efficiency, whereas outside this region, reducing excessive discrepancy improves optimization consistency and raises the achievable local performance ceiling. According to such findings, we formulate this problem as a Discrepancy-Constrained Markov Decision Process (DCMDP), where reward maximization is coupled with a constraint that aligns training-Inference behavior, achieving stable dual-objective optimization. To adaptively balance performance improvement and discrepancy control, we introduce a Lagrangian relaxation mechanism that dynamically adjusts the relative weight of the two objectives according to the current degree of discrepancy violation. This enables stable dual-objective optimization: the policy is allowed to explore freely within the tolerance region, while being guided back when the discrepancy exceeds the safe boundary. Empirically, DCMDP significantly improves the performance of 8B dense model (Qwen-3-8b) and 30B Mixture-of-Expert model (Qwen-3-30bA3b), and enables a heterogeneous training paradigm, where LLMs can be optimized in high-fidelity training setup while being explicitly aligned for low-cost, resource-constrained inference deployment.",
+      "authors": [
+        "Jiashun Liu",
+        "Runze Liu",
+        "Xu Wan",
+        "Jing Liang",
+        "Hongyao Tang",
+        "Ling Pan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-07T18:49:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.08779v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Reformulating LLM RL for efficient training under black-box discrepancy",
+      "llm_evidence_cn": "在黑盒差异下重新表述LLM强化学习以高效训练",
+      "llm_evidence": "在黑盒差异下重新表述LLM强化学习以高效训练",
+      "canonical_evidence": "在黑盒差异下重新表述LLM强化学习以高效训练",
+      "llm_tldr_en": "Identifies train-inference discrepancy in LLM RL and proposes a self-correcting mechanism with a discrepancy tolerance region to improve training efficiency and stability.",
+      "llm_tldr_cn": "该论文发现LLM强化学习训练中存在隐藏的训练-推理差异，导致不稳定和次优性能。提出主动自我纠正策略：在差异容忍区内不加约束以保持探索，在容忍区外则缩小差异以稳定优化。实验证明该方法显著提高了训练效率和最终性能。该工作为LLM强化学习训练提供了一种新的优化视角，可推广到其他RL场景。",
+      "llm_tldr": "该论文发现LLM强化学习训练中存在隐藏的训练-推理差异，导致不稳定和次优性能。提出主动自我纠正策略：在差异容忍区内不加约束以保持探索，在容忍区外则缩小差异以稳定优化。实验证明该方法显著提高了训练效率和最终性能。该工作为LLM强化学习训练提供了一种新的优化视角，可推广到其他RL场景。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.08799v2",
+      "source": "arxiv",
+      "title": "Generalization in Nonlinear Least Squares via Learned Feature Geometry",
+      "abstract": "We study the generalization of ridge-regularized nonlinear least-squares models via on-average algorithmic stability, deriving error bounds for local minimizers in terms of a data-dependent effective dimension that reflects the geometry of the gradient model at the trained parameters, through the empirical Jacobian Gram matrix and a residual-curvature term. In the linear case, where the curvature term vanishes, this recovers the classical effective dimension of the Jacobian kernel covariance, but evaluated at the trained model rather than at initialization as is typical in neural tangent kernel analyses. We further bound this effective dimension via covering complexity of the gradient features, leading to guarantees that depend on learned geometry rather than parameter count. In particular, for manifold-supported data and piecewise Lipschitz Jacobians, the bounds scale with intrinsic dimension, while for one-hidden-layer ReLU networks, the mechanism can be made explicit through counts of activation-stable regions. Experiments on synthetic manifolds, clustered distributions, and benchmark datasets illustrate trained-Jacobian compression, the tightness of the residual-curvature linearization, and agreement between the stability bound and observed generalization gaps. A key feature of our bounds is the simplicity of their derivation, which follows from first principles using the Brascamp-Lieb inequality under strongly log-concave noise.",
+      "authors": [
+        "Ayub Kharel",
+        "Ilja Kuzborskij",
+        "Patrick Rebeschini",
+        "Yasin Abbasi-Yadkori"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "published": "2026-06-07T19:33:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.08799v2",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generalization bounds via learned feature geometry, representation learning",
+      "llm_evidence_cn": "通过学习特征几何的泛化界，表示学习",
+      "llm_evidence": "通过学习特征几何的泛化界，表示学习",
+      "canonical_evidence": "通过学习特征几何的泛化界，表示学习",
+      "llm_tldr_en": "Studies generalization of nonlinear least-squares via stability, deriving bounds based on learned feature geometry through Jacobian Gram matrix and residual curvature.",
+      "llm_tldr_cn": "本文从算法稳定性角度研究非线性最小二乘模型的泛化，推导出局域极小值点的误差界。该界依赖于训练参数处梯度模型的经验雅可比Gram矩阵和残差曲率项，反映了学习到的特征几何。在非线性情况下，该有效维度保持了训练后的几何而非初始化时的核协方差，为理解表示学习对泛化的影响提供了新视角。",
+      "llm_tldr": "本文从算法稳定性角度研究非线性最小二乘模型的泛化，推导出局域极小值点的误差界。该界依赖于训练参数处梯度模型的经验雅可比Gram矩阵和残差曲率项，反映了学习到的特征几何。在非线性情况下，该有效维度保持了训练后的几何而非初始化时的核协方差，为理解表示学习对泛化的影响提供了新视角。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "How can representation learning improve model generalization and training efficiency?",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.08708v1",
+      "source": "arxiv",
+      "title": "PRPO: Perception-Reinforced Policy Optimization via Token-Level Dynamic Advantage Reshaping",
+      "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) has become an effective paradigm for improving the reasoning capability of Large Vision-Language Models (LVLMs). However, existing RLVR methods primarily rely on trajectory-level outcome rewards, which assign identical learning signals across all generated tokens. This coarse-grained credit assignment is fundamentally mismatched to multimodal reasoning, where only a sparse subset of tokens is causally grounded in visual evidence. Consequently, these pivotal perceptual tokens receive weak supervision and are often overwhelmed by language priors or reasoning-template tokens. To address this limitation, we propose Perception-Reinforced Policy Optimization (PRPO), a token-level reinforcement learning framework that explicitly identifies and reinforces pivotal perceptual tokens within long-horizon multimodal reasoning trajectories. PRPO introduces Robust Visual Dependency (RVD), a principled metric that identifies tokens whose predictions are both visually grounded and perturbation-stable, filtering out brittle or noisy visual tokens. Based on RVD, we further propose Perceptual Advantage Reshaping (PAR), a token-level credit assignment technique that amplifies perceptually informative tokens while preserving stable gradients for non-perceptual tokens. Extensive experiments on seven multimodal reasoning benchmarks demonstrate that PRPO consistently outperforms strong LVLM baselines across both 3B and 7B model scales, achieving average gains of 23.3% and 21.1%, respectively. PRPO achieves state-of-the-art performance with improved training efficiency and stronger cross-task generalization. Our findings highlight the importance of fine-grained credit assignment for scalable multimodal reinforcement learning.",
+      "authors": [
+        "Qiming Li",
+        "Tianlun Li",
+        "Xiaolong Cheng",
+        "Hangyu Li",
+        "Ruiyan Gong",
+        "Kangning Niu",
+        "Kaitao Jiang",
+        "Mu Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-07T16:06:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.08708v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "token-level reinforcement learning for vision-language models",
+      "llm_evidence_cn": "基于token级强化学习优化视觉语言模型",
+      "llm_evidence": "基于token级强化学习优化视觉语言模型",
+      "canonical_evidence": "基于token级强化学习优化视觉语言模型",
+      "llm_tldr_en": "Proposes Perception-Reinforced Policy Optimization (PRPO) that reshapes token-level advantages to give stronger supervision to perceptually important tokens, improving LVLM reasoning.",
+      "llm_tldr_cn": "针对现有RLVR方法对多模态推理中关键视觉token监督不足的问题，提出PRPO算法，在token级别动态调整优势值，使与视觉证据相关的token获得更强学习信号。该方法无需额外标注，可即插即用。实验表明，PRPO显著提升LVLM在视觉推理任务上的准确率，特别是在需要细粒度感知的场景中。该工作为强化学习与视觉语言模型的深度融合提供了新范式。",
+      "llm_tldr": "针对现有RLVR方法对多模态推理中关键视觉token监督不足的问题，提出PRPO算法，在token级别动态调整优势值，使与视觉证据相关的token获得更强学习信号。该方法无需额外标注，可即插即用。实验表明，PRPO显著提升LVLM在视觉推理任务上的准确率，特别是在需要细粒度感知的场景中。该工作为强化学习与视觉语言模型的深度融合提供了新范式。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}
