@@ -1,0 +1,69 @@
+{
+  "label": "2026-06-18",
+  "date": "2026-06-18",
+  "generated_at": "2026-06-18T21:21:17",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202606/18/2606.14765v1-momentum-guided-semantic-forecasting-mofore-for-self-supervised-video-representation-learning",
+      "section": "deep",
+      "title_en": "Momentum-Guided Semantic Forecasting (MoFore) for Self-Supervised Video Representation Learning",
+      "authors": "Qinwu Xu",
+      "date": "2026-06-08",
+      "pdf": "https://arxiv.org/pdf/2606.14765v1",
+      "score": "8.0",
+      "evidence": "通过动量引导语义预测进行自监督视频表征学习",
+      "tldr": "针对自监督视频表示学习中重建与对比方法的局限性，提出MoFore框架。该方法通过从时间间隔上下文剪辑预测未来潜在嵌入，结合对比正则化与随机间隔训练，学习时间预测性表示。在UCF101上，表示具有时间稳定性与类别结构，检索展现运动感知组织。提供无需重建目标的计算高效新范式。",
+      "tags": "query:rep-learning",
+      "abstract_en": "Self-supervised video representation learning has recently advanced through contrastive learning, masked reconstruction, and predictive representation learning. Reconstruction-based approaches such as MAE and VideoMAE learn representations by recovering masked visual content \\cite{he2022mae,tong2022videomae}, while contrastive methods such as CLIP learn semantically meaningful embedding spaces through representation alignment \\cite{radford2021clip}.   In this work, we introduce a Momentum-Guided Semantic Forecasting framework (MoFore) for self-supervised video representation learning. Instead of optimizing for pixel-level reconstruction or task-specific semantic alignment, the proposed method learns temporally predictive video representations by forecasting future latent embeddings from temporally distant context clips. To improve robustness across temporal scales, we further introduce randomized temporal-gap forecasting during training. The framework combines predictive latent forecasting with contrastive regularization to encourage temporal consistency while preventing representation collapse.   Experiments on the UCF101 dataset demonstrate that the proposed framework learns temporally consistent and semantically meaningful video representations without using action labels during training. Quantitative analysis shows strong temporal stability and emergent category-level structure in the learned embedding space, while qualitative retrieval experiments reveal motion-aware organization across related activities. Overall, the results suggest that long-range latent forecasting provides an effective and computationally efficient approach for self-supervised video representation learning without relying on reconstruction-based objectives.",
+      "source": "arxiv",
+      "selection_source": "carryover_cache"
+    },
+    {
+      "paper_id": "202606/18/2606.15134v1-beyond-scalar-distances-semantic-attribute-gradients-from-frozen-mllms-for-visual-embeddings",
+      "section": "deep",
+      "title_en": "Beyond Scalar Distances: Semantic Attribute Gradients from Frozen MLLMs for Visual Embeddings",
+      "authors": "Shubhang Bhatnagar, Dheeraj Baiju, Narendra Ahuja",
+      "date": "2026-06-13",
+      "pdf": "https://arxiv.org/pdf/2606.15134v1",
+      "score": "8.0",
+      "evidence": "使用强化学习（GRPO）训练视觉编码器，通过语义属性梯度改进嵌入",
+      "tldr": "传统视觉编码器使用类标签训练，每个图像对仅以标量距离统一调整嵌入，忽略了具体属性的差异。本文提出SAGA框架，利用冻结的多模态大语言模型生成属性感知的梯度信号，通过GRPO奖励模型对编码器tokens的正确预测，迫使编码器编码具体属性。辅助注意力蒸馏和度量学习损失进一步优化嵌入。在CUB-200等四个细粒度数据集上，零样本图像检索Recall@1提升3-6个百分点，且推理时不增加额外开销。",
+      "tags": "query:rep-learning",
+      "abstract_en": "Vision encoders for retrieval are typically trained with class-label supervision: each training pair reduces to a scalar that uniformly pushes the embedding apart or pulls it together, as if every visual attribute either differed or matched. A multimodal large language model (MLLM), shown the same pair, can articulate those attributes and use them to predict whether the images share a class. We propose \\textbf{SAGA}, a framework that turns this language-grounded, attribute-aware perception into a training signal for the encoder itself. Specifically, we use Group Relative Policy Optimization (GRPO) to reward the MLLM for correct predictions on the vision encoder's tokens. Since correct predictions require those tokens to expose the specific attributes that differ or match between the pair, the gradient pushes the encoder to encode them, replacing the uniform pair-level scalar with attribute-resolved supervision. An auxiliary attention-distillation loss anchors the encoder's embedding to tokens the MLLM attended to, and a standard metric-learning loss shapes the embedding geometry for nearest-neighbour retrieval. The MLLM is frozen throughout and discarded at inference, matching the deployment cost of a metric-learning baseline. SAGA improves Recall@1 by 3 to 6 points over state-of-the-art baselines on CUB-200-2011, Cars-196, FGVC-Aircraft, and iNaturalist Aves on zero-shot image retrieval.",
+      "source": "arxiv",
+      "selection_source": "carryover_cache"
+    },
+    {
+      "paper_id": "202606/18/2606.15765v1-task-instructed-causal-routing-of-vision-foundation-models-for-multi-task-learning",
+      "section": "quick",
+      "title_en": "Task-Instructed Causal Routing of Vision Foundation Models for Multi-Task Learning",
+      "authors": "Donghyun Han, Yuseok Bae, Jung Uk Kim, Hyung-Il Kim",
+      "date": "2026-06-14",
+      "pdf": "https://arxiv.org/pdf/2606.15765v1",
+      "score": "8.0",
+      "evidence": "多任务学习中的视觉基础模型路由",
+      "tldr": "视觉基础模型因预训练目标和数据域不同而具有互补但碎片化的知识，单一模型难以适应多任务密集预测。提出TIGER框架，利用自然语言任务指令引导路由网络分配token级专家权重，并通过反事实损失确保路由决策与专家因果贡献对齐。在NYUD-v2和Pascal Context上超越现有方法，所有VFM保持冻结。证明了指令引导路由与反事实因果对齐能有效协调异构视觉基础模型。",
+      "tags": "query:rep-learning",
+      "abstract_en": "Vision foundation models (VFMs) have demonstrated strong robustness and transferability across a wide range of visual tasks. However, each model typically encodes strong inductive biases shaped by its pre-training objective and data domain, resulting in fragmented yet complementary visual knowledge. As a result, a single model often struggles to capture the diverse visual representations required across multiple dense prediction tasks. To address this limitation, we propose TIGER (Task-Instruction-Guided Expert Routing), a framework that coordinates multiple heterogeneous VFMs for multi-task dense prediction. Instead of naively aggregating expert features, TIGER leverages natural-language task instructions to guide a routing network that assigns token-level expert weights conditioned on task semantics, enabling adaptive integration of complementary expert features. TIGER further introduces a counterfactual loss that aligns routing decisions with each expert's causal contribution by measuring prediction changes when experts are excluded, encouraging more reliable and interpretable routing. We evaluate TIGER on two multi-task dense prediction benchmarks, NYUD-v2 and Pascal Context, where it consistently outperforms recent multi-task learning baselines while keeping all VFMs frozen. These results demonstrate that combining instruction-guided expert routing with counterfactual causal alignment enables effective coordination of heterogeneous vision foundation models.",
+      "source": "arxiv",
+      "selection_source": "carryover_cache"
+    },
+    {
+      "paper_id": "202606/18/2606.16112v1-scaling-adaptive-depth-with-norm-agnostic-residual-networks",
+      "section": "quick",
+      "title_en": "Scaling Adaptive Depth with Norm-Agnostic Residual Networks",
+      "authors": "Tomás Figliolia, Beren Millidge",
+      "date": "2026-06-15",
+      "pdf": "https://arxiv.org/pdf/2606.16112v1",
+      "score": "8.0",
+      "evidence": "范数无关残差架构改进深度模型缩放性能",
+      "tldr": "残差网络随深度增加，残差流范数增长会抑制深层更新贡献，限制模型深度扩展。本文提出NAG架构，通过分离残差流的范数与方向信息，保持各层有效贡献，并自然产生可解释的混合深度机制，自适应跳过注意力/MLP层。在等FLOP训练下，约20-25%的跳过率即可匹配全深度基线性能，同时大幅减少参数和计算开销。该工作识别出深度稀疏性作为固定计算预算下的新缩放轴，使训练极深且FLOP高效的模型成为可能。",
+      "tags": "query:rep-learning",
+      "abstract_en": "Residual architectures are ubiquitous in deep learning, but they suffer from a subtle structural limitation: the norm of the residual stream can grow rapidly with depth. As a result, updates from later layers become small relative to the accumulated residual state. This reduces their impact on the representation and limits the benefits of scaling models in depth. To address this, we introduce NAG, a norm-agnostic residual architecture that separates magnitude from directional information in the residual stream, preserving meaningful layer contributions throughout depth and preventing later updates from being systematically suppressed by residual-norm growth. Importantly, NAG introduces only a negligible number of additional parameters and relies on simple operations that are easily kernel-fusible, preserving training efficiency in practice. We show that this architecture outperforms baseline Transformers, with gains that increase substantially as depth grows, enabling effective training of much deeper models. The norm-agnostic formulation also leads to an interpretable Mixture-of-Depths (MoD) mechanism that adaptively skips both attention and MLP layers. Beyond serving as a post-training accuracy-compute tradeoff, this mechanism can be used as a pretraining-time scaling strategy: under iso-FLOP training, compute saved by reducing per-token forward-pass cost can be reinvested into training on more tokens while keeping the total parameter count and KV-cache budget fixed. In our experiments, moderate Mixture-of-Depths rates of approximately 20%-25% match full-depth baseline performance under equal training compute while substantially reducing the number of executed layer parameters and forward-pass FLOPs. These results identify sparsity in depth as a new scaling axis for fixed-compute training, enabling very deep yet FLOP-efficient models.",
+      "source": "arxiv",
+      "selection_source": "carryover_cache"
+    }
+  ],
+  "errors": []
+}
