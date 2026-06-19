@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-06-19 <!--dpr-date:20260619-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/19/2606.16454v1-sds-lora-overcoming-anisotropic-gradient-scaling-in-low-rank-adaptation" data-sidebar-item="{&quot;title&quot;: &quot;SDS-LoRA: Overcoming Anisotropic Gradient Scaling in Low-Rank Adaptation&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.16454v1-sds-lora-overcoming-anisotropic-gradient-scaling-in-low-rank-adaptation&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;rep-learning&quot;}], &quot;evidence&quot;: &quot;解决LoRA中的各向异性梯度缩放，提升迁移学习效率&quot;}">SDS-LoRA: Overcoming Anisotropic Gradient Scaling in Low-Rank Adaptation</a>
   * 2026-06-18 <!--dpr-date:20260618-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/18/2606.14765v1-momentum-guided-semantic-forecasting-mofore-for-self-supervised-video-representation-learning" data-sidebar-item="{&quot;title&quot;: &quot;Momentum-Guided Semantic Forecasting (MoFore) for Self-Supervised Video Representation Learning&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.14765v1-momentum-guided-semantic-forecasting-mofore-for-self-supervised-video-representation-learning&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;rep-learning&quot;}], &quot;evidence&quot;: &quot;通过动量引导语义预测进行自监督视频表征学习&quot;}">Momentum-Guided Semantic Forecasting (MoFore) for Self-Supervised Video Representation Learning</a>

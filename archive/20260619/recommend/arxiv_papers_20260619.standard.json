@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-19T20:30:35.145697+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 0,
+    "deep_divecandidates": 1,
+    "deep_cap": 2,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 2,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2606.16454v1",
+      "source": "arxiv",
+      "title": "SDS-LoRA: Overcoming Anisotropic Gradient Scaling in Low-Rank Adaptation",
+      "abstract": "Low-Rank Adaptation (LoRA) enables efficient adaptation of large pre-trained models to downstream tasks by parameterizing weight updates with low-rank matrices. In this paper, we investigate the limitations of the LoRA parameterization from a geometric perspective. Specifically, we show that when a full fine-tuning gradient is backpropagated to the low-rank matrices, it undergoes anisotropic scaling driven by their singular values. We argue that this phenomenon is undesirable because it distorts the full fine-tuning gradient by skewing it toward dominant singular directions while suppressing others. Our analyses demonstrate that anisotropic gradient scaling reduces the effective rank of the low-rank matrices' gradients and results in suboptimal alignment between the full fine-tuning gradient and its low-rank approximation in LoRA, thereby exacerbating the gap to full fine-tuning. To address these limitations, we propose a new low-rank parameterization, SDS-LoRA, which structurally decouples singular values from the backward pass. Our method ensures that the full fine-tuning gradient backpropagates only through the orthonormal bases of the low-rank matrices' subspaces, independent of their scales. Convergence analysis demonstrates that while LoRA's convergence rate degrades with the condition number of the low-rank matrices, SDS-LoRA remains independent of it. Experimental results across natural language and vision benchmarks show that SDS-LoRA improves loss convergence and reduces the gap to full fine-tuning, significantly enhancing adaptation performance.",
+      "authors": [
+        "Junghun Oh",
+        "Sungyong Baik",
+        "Kyoung Mu Lee"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-15T09:27:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.16454v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "addresses anisotropic gradient scaling in LoRA for better transfer learning efficiency",
+      "llm_evidence_cn": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
+      "llm_evidence": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
+      "canonical_evidence": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
+      "llm_tldr_en": "SDS-LoRA identifies and mitigates anisotropic gradient scaling in LoRA, improving alignment with full fine-tuning and downstream performance.",
+      "llm_tldr_cn": "低秩自适应（LoRA）在微调大模型时存在各向异性梯度缩放问题，导致梯度被主导奇异方向扭曲。SDS-LoRA通过分析几何特性提出矫正方法，使低秩矩阵梯度方向与全微调梯度对齐。实验证明，该方法提升了有效秩，在下游任务中取得更优的微调效果，推动了高效迁移学习的发展。",
+      "llm_tldr": "低秩自适应（LoRA）在微调大模型时存在各向异性梯度缩放问题，导致梯度被主导奇异方向扭曲。SDS-LoRA通过分析几何特性提出矫正方法，使低秩矩阵梯度方向与全微调梯度对齐。实验证明，该方法提升了有效秩，在下游任务中取得更优的微调效果，推动了高效迁移学习的发展。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "carryover_cache",
+      "paper_id": "2606.16454v1"
+    }
+  ],
+  "quick_skim": []
+}

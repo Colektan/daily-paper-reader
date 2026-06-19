@@ -6,32 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-18
-- 运行时间：2026-06-18 21:21:11 UTC
+- 最新运行日期：2026-06-19
+- 运行时间：2026-06-19 20:32:02 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：2
-- 速读区：2
+- 本次总论文数：1
+- 精读区：1
+- 速读区：0
 
 ### 今日简报（AI）
-今日推荐4篇论文，精读2篇、速读2篇，聚焦自监督视频表示与语义属性梯度。最值得关注的是《Momentum-Guided Semantic Forecasting》用于自监督视频学习，以及《Semantic Attribute Gradients》从冻结MLLM提取语义信息。建议优先研读这两篇精读论文，把握视频自监督与语义梯度在视觉表征中的前沿思路。
-- 详情：[/202606/18/README](/202606/18/README)
+今日精读一篇高分论文，聚焦低秩适应中的梯度各向异性难题。  
+核心发现：SDS-LoRA通过缓解梯度缩放不均衡，显著提升LoRA微调效果。  
+若您关注大模型高效微调，此文值得深入研读。
+- 详情：[/202606/19/README](/202606/19/README)
 
 ### 精读区论文标签
-1. [Momentum-Guided Semantic Forecasting (MoFore) for Self-Supervised Video Representation Learning](/202606/18/2606.14765v1-momentum-guided-semantic-forecasting-mofore-for-self-supervised-video-representation-learning)  
+1. [SDS-LoRA: Overcoming Anisotropic Gradient Scaling in Low-Rank Adaptation](/202606/19/2606.16454v1-sds-lora-overcoming-anisotropic-gradient-scaling-in-low-rank-adaptation)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：通过动量引导语义预测进行自监督视频表征学习
-2. [Beyond Scalar Distances: Semantic Attribute Gradients from Frozen MLLMs for Visual Embeddings](/202606/18/2606.15134v1-beyond-scalar-distances-semantic-attribute-gradients-from-frozen-mllms-for-visual-embeddings)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：使用强化学习（GRPO）训练视觉编码器，通过语义属性梯度改进嵌入
+   evidence：解决LoRA中的各向异性梯度缩放，提升迁移学习效率
 
 ### 速读区论文标签
-1. [Task-Instructed Causal Routing of Vision Foundation Models for Multi-Task Learning](/202606/18/2606.15765v1-task-instructed-causal-routing-of-vision-foundation-models-for-multi-task-learning)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：多任务学习中的视觉基础模型路由
-2. [Scaling Adaptive Depth with Norm-Agnostic Residual Networks](/202606/18/2606.16112v1-scaling-adaptive-depth-with-norm-agnostic-residual-networks)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：范数无关残差架构改进深度模型缩放性能
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">
