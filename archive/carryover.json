@@ -1,55 +1,339 @@
 {
-  "generated_at": "2026-06-21T20:32:36.376239+00:00",
-  "updated_date": "20260621",
+  "generated_at": "2026-06-22T22:14:47.327851+00:00",
+  "updated_date": "20260622",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260616",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260618",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": [
         {
-          "id": "2606.16454v1",
+          "id": "2606.18509v1",
           "source": "arxiv",
-          "title": "SDS-LoRA: Overcoming Anisotropic Gradient Scaling in Low-Rank Adaptation",
-          "abstract": "Low-Rank Adaptation (LoRA) enables efficient adaptation of large pre-trained models to downstream tasks by parameterizing weight updates with low-rank matrices. In this paper, we investigate the limitations of the LoRA parameterization from a geometric perspective. Specifically, we show that when a full fine-tuning gradient is backpropagated to the low-rank matrices, it undergoes anisotropic scaling driven by their singular values. We argue that this phenomenon is undesirable because it distorts the full fine-tuning gradient by skewing it toward dominant singular directions while suppressing others. Our analyses demonstrate that anisotropic gradient scaling reduces the effective rank of the low-rank matrices' gradients and results in suboptimal alignment between the full fine-tuning gradient and its low-rank approximation in LoRA, thereby exacerbating the gap to full fine-tuning. To address these limitations, we propose a new low-rank parameterization, SDS-LoRA, which structurally decouples singular values from the backward pass. Our method ensures that the full fine-tuning gradient backpropagates only through the orthonormal bases of the low-rank matrices' subspaces, independent of their scales. Convergence analysis demonstrates that while LoRA's convergence rate degrades with the condition number of the low-rank matrices, SDS-LoRA remains independent of it. Experimental results across natural language and vision benchmarks show that SDS-LoRA improves loss convergence and reduces the gap to full fine-tuning, significantly enhancing adaptation performance.",
+          "title": "Concept Modulation Models: A Unified Framework for Identifiability and Extrapolation",
+          "abstract": "Reliable generalization in conditional latent variable models requires understanding both identifiability and extrapolation: how observed variation across attributes determines latent structure, and how that structure determines distributions at unseen attributes. However, existing identifiability and extrapolation guarantees are largely model-specific, with separate analyses in nonlinear ICA, causal representation learning, perturbation modeling, and related conditional latent variable models. We introduce concept modulation models (CMMs), an attribute-indexed class of conditional generative models with structure $A\\to Λ\\to C\\to X$, where attributes select modulators, modulators induce latent concept laws, and concepts generate observed features. CMMs lift transition-based identifiability to conditional settings by showing that feature agreement on observed attributes induces a latent concept transition constrained by the CMM class. We express these constraints through attribute potentials, log-density ratios between attribute-conditioned concept laws, separating the generic lifting step from model-specific rigidity arguments. The same potentials control extrapolation: agreement at unseen attributes holds exactly when the transported attribute-potential identities extend to those attributes. This yields algebraic extrapolation criteria, identifies the common potential-based proof objects behind several existing identifiability and extrapolation results, and, when combined with the model-specific rigidity arguments in those works, recovers their stated conclusions.",
           "authors": [
-            "Junghun Oh",
-            "Sungyong Baik",
-            "Kyoung Mu Lee"
+            "Soheun Yi",
+            "Yizhou Lu",
+            "Chandler Squires",
+            "Pradeep Ravikumar"
           ],
           "primary_category": "cs.LG",
           "categories": [
             "cs.LG",
-            "cs.AI"
+            "stat.ML"
           ],
-          "published": "2026-06-15T09:27:50+00:00",
-          "link": "https://arxiv.org/pdf/2606.16454v1",
+          "published": "2026-06-16T21:53:01+00:00",
+          "link": "https://arxiv.org/pdf/2606.18509v1",
           "tags": [
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "addresses anisotropic gradient scaling in LoRA for better transfer learning efficiency",
-          "llm_evidence_cn": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
-          "llm_evidence": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
-          "canonical_evidence": "解决LoRA中的各向异性梯度缩放，提升迁移学习效率",
-          "llm_tldr_en": "SDS-LoRA identifies and mitigates anisotropic gradient scaling in LoRA, improving alignment with full fine-tuning and downstream performance.",
-          "llm_tldr_cn": "低秩自适应（LoRA）在微调大模型时存在各向异性梯度缩放问题，导致梯度被主导奇异方向扭曲。SDS-LoRA通过分析几何特性提出矫正方法，使低秩矩阵梯度方向与全微调梯度对齐。实验证明，该方法提升了有效秩，在下游任务中取得更优的微调效果，推动了高效迁移学习的发展。",
-          "llm_tldr": "低秩自适应（LoRA）在微调大模型时存在各向异性梯度缩放问题，导致梯度被主导奇异方向扭曲。SDS-LoRA通过分析几何特性提出矫正方法，使低秩矩阵梯度方向与全微调梯度对齐。实验证明，该方法提升了有效秩，在下游任务中取得更优的微调效果，推动了高效迁移学习的发展。",
+          "llm_evidence_en": "framework for identifiability and extrapolation in conditional latent variable models, directly addressing representation learning",
+          "llm_evidence_cn": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
+          "llm_evidence": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
+          "canonical_evidence": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
+          "llm_tldr_en": "Introduces Concept Modulation Models (CMMs), a unified framework for identifiability and extrapolation in conditional generative models, bridging several representation learning subfields.",
+          "llm_tldr_cn": "该论文引入概念调制模型（CMM），这是一个属性索引的条件生成模型统一框架，结构为A→Λ→C→X。它统一了非线性ICA、因果表征学习等领域的可识别性和外推分析。CMM提供了跨模型的理论保证，有助于理解属性变化如何影响潜在结构。推进了条件潜变量模型的理论基础。",
+          "llm_tldr": "该论文引入概念调制模型（CMM），这是一个属性索引的条件生成模型统一框架，结构为A→Λ→C→X。它统一了非线性ICA、因果表征学习等领域的可识别性和外推分析。CMM提供了跨模型的理论保证，有助于理解属性变化如何影响潜在结构。推进了条件潜变量模型的理论基础。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.16454v1",
-          "carry_days": 3
+          "paper_id": "2606.18509v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.18663v1",
+          "source": "arxiv",
+          "title": "RegMix-D: Dynamic Data Mixing via Proxy Training Trajectories",
+          "abstract": "Data mixture selection is critical for Large Language Model pretraining. Existing methods such as RegMix select a single static mixture by fitting a regression model on small-scale proxy runs. We propose RegMix-D, a simple extension of RegMix to dynamic mixing. Our key observation is that proxy runs produce not only endpoint losses, but also full loss trajectories, which can be used to further improve data mixture. By training regression model on these trajectories, we can predict optimal mixtures at multiple training stages. RegMix-D supports two deployment modes: an offline variant that generates a complete mixture schedule before target training, and an online variant that adapts the mixture during training using observed loss. Experiments on 25B tokens of the Pile dataset with a 1B parameter target model show that RegMix-D consistently improves over RegMix and DoReMi across 13 downstream tasks while remaining proxy-efficient: it surpasses RegMix even with only 128 proxy models (25% of RegMix's proxy compute budget).",
+          "authors": [
+            "Kaiyan Zhao",
+            "Zhongtao Miao",
+            "Akiko Aizawa",
+            "Yoshimasa Tsuruoka"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL"
+          ],
+          "published": "2026-06-17T04:02:38+00:00",
+          "link": "https://arxiv.org/pdf/2606.18663v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "dynamic data mixing for pretraining improve performance",
+          "llm_evidence_cn": "用于预训练的动态数据混合方法提升下游性能",
+          "llm_evidence": "用于预训练的动态数据混合方法提升下游性能",
+          "canonical_evidence": "用于预训练的动态数据混合方法提升下游性能",
+          "llm_tldr_en": "Proposes RegMix-D, an extension of RegMix that uses proxy training loss trajectories to predict optimal dynamic data mixtures at multiple training stages, improving pretraining efficiency and downstream performance.",
+          "llm_tldr_cn": "RegMix-D利用代理运行的完整损失轨迹训练回归模型，预测多个阶段的最优动态混合比例，支持离线预计算和在线自适应。在25B tokens上实验表明动态混合显著提升预训练效果和下游性能，为大规模语言模型预训练提供了高效数据混合策略。",
+          "llm_tldr": "RegMix-D利用代理运行的完整损失轨迹训练回归模型，预测多个阶段的最优动态混合比例，支持离线预计算和在线自适应。在25B tokens上实验表明动态混合显著提升预训练效果和下游性能，为大规模语言模型预训练提供了高效数据混合策略。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "pretraining methods enhancing downstream model performance",
+          "matched_requirement_id": "req-13",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.18663v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.17967v1",
+          "source": "arxiv",
+          "title": "Learning task-specific subspaces via interventional post-training of speech foundation models",
+          "abstract": "Speech foundation models, pre-trained on large corpora of unlabelled speech data, produce general-purpose representations which are useful across tasks. However, these representations encode information about salient speech variables in a distributed manner, while downstream speech tasks rely on only some of this variability. In this work, we propose a post-training refinement approach using interventional contrastive learning. By leveraging an interventional dataset and multi-part contrastive loss, we learn a transformation from the entangled representation space of speech foundation models into separate content and speaker subspaces. We evaluate the learnt representations on speaker verification and keyword spotting tasks, showing improved out-of-domain speaker verification performance and evidence that speaker and content information are separated across the learned subspaces.",
+          "authors": [
+            "Jack Cox",
+            "Jon Barker"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL"
+          ],
+          "published": "2026-06-16T14:18:20+00:00",
+          "link": "https://arxiv.org/pdf/2606.17967v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Representation learning via interventional contrastive post-training for speech",
+          "llm_evidence_cn": "通过干预对比后训练进行语音表征学习",
+          "llm_evidence": "通过干预对比后训练进行语音表征学习",
+          "canonical_evidence": "通过干预对比后训练进行语音表征学习",
+          "llm_tldr_en": "Proposes interventional contrastive learning to refine speech foundation model representations into separate content and speaker subspaces, improving downstream tasks.",
+          "llm_tldr_cn": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
+          "llm_tldr": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.17967v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.18472v1",
+          "source": "arxiv",
+          "title": "Domain Generalizable Adaptation of 3D Vision-Language Models via Regularized Fine-Tuning",
+          "abstract": "Domain adaptation remains a central challenge in 3D vision, especially for multimodal foundation models that align 3D point clouds with visual and textual data. While these models demonstrate strong general capabilities, adapting them to downstream domains with limited data often leads to overfitting and catastrophic forgetting. To address this, we introduce ReFine3D, a regularized fine-tuning framework designed for domain-generalizable tuning of 3D large multimodal models (LMMs). ReFine3D combines selective layer tuning with two targeted regularization strategies: multi-view consistency across augmented point clouds and text diversity through synonym-based prompts generated by large language models. Additionally, we incorporate point-rendered vision supervision and a test-time augmentation mechanism with confidence-based aggregation to further enhance robustness. Extensive experiments across different 3D domain generalization benchmarks show that ReFine3D improves base-to-novel class generalization by 1.36%, cross-dataset transfer by 2.43%, robustness to corruption by 1.80%, and few-shot accuracy by up to 3.11%, outperforming prior state-of-the-art methods with minimal added computational overhead.",
+          "authors": [
+            "Sneha Paul",
+            "Zachary Patterson",
+            "Nizar Bouguila"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-16T20:31:05+00:00",
+          "link": "https://arxiv.org/pdf/2606.18472v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Regularized fine-tuning for domain generalizable adaptation of 3D VL models",
+          "llm_evidence_cn": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
+          "llm_evidence": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
+          "canonical_evidence": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
+          "llm_tldr_en": "Proposes ReFine3D, a regularized fine-tuning framework for domain-generalizable tuning of 3D LMMs, combining selective layer tuning with multi-view consistency and text diversity.",
+          "llm_tldr_cn": "针对3D大视觉语言模型在有限数据下微调容易过拟合和遗忘的问题，提出ReFine3D框架，通过选择性层微调结合多视角一致性和文本多样性正则化，实现了域泛化自适应。实验表明该方法在多个下游数据集上提升了泛化性能，为3D多模态模型的迁移学习提供了新思路。",
+          "llm_tldr": "针对3D大视觉语言模型在有限数据下微调容易过拟合和遗忘的问题，提出ReFine3D框架，通过选择性层微调结合多视角一致性和文本多样性正则化，实现了域泛化自适应。实验表明该方法在多个下游数据集上提升了泛化性能，为3D多模态模型的迁移学习提供了新思路。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.18472v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.17567v1",
+          "source": "arxiv",
+          "title": "Reducing Learner Redundancy in Boosting via Residual Orthogonalization",
+          "abstract": "While sequential residual fitting is the bedrock of standard boosting frameworks, it inherently breeds learner redundancy by repeatedly revisiting correlated error components. To address this bottleneck, we propose a shift from residual fitting to \\textit{residual orthogonalization} and introduce SCBoost. Our framework tackles redundancy through two complementary mechanisms: Spectral Residual Projection (SRP) and Covariance-Regularized Weighting (CRW). During training, SRP projects each residual target onto the orthogonal complement of the historical prediction subspace, forcing successive learners to capture only novel empirical innovations. During aggregation, CRW optimizes ensemble weights on a validation set with an explicit covariance penalty to mitigate remaining correlations. Theoretically, we provide a finite-sample geometric characterization proving that SRP yields an exact additive residual-energy decomposition. Furthermore, under an isotropic-noise assumption, we rigorously establish the conditions under which this projection improves the effective Signal-to-Noise Ratio. Extensive experiments across ten benchmark datasets demonstrate that SCBoost delivers strong out-of-the-box performance, particularly in accuracy and F1 score. This work reinterprets boosting through a geometric lens, suggesting that explicit redundancy control is a principled and necessary step toward more efficient ensemble architectures.",
+          "authors": [
+            "Ye Su",
+            "Jipeng Guo",
+            "Yong Liu",
+            "Xin Xu",
+            "Gangchun Zhang",
+            "Jinxin Chen",
+            "Di Wu",
+            "Longlong Zhao"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-16T06:13:59+00:00",
+          "link": "https://arxiv.org/pdf/2606.17567v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Residual orthogonalization reduces learner redundancy in boosting",
+          "llm_evidence_cn": "残差正交化减少Boosting中的学习器冗余",
+          "llm_evidence": "残差正交化减少Boosting中的学习器冗余",
+          "canonical_evidence": "残差正交化减少Boosting中的学习器冗余",
+          "llm_tldr_en": "Proposes SCBoost with Spectral Residual Projection and Covariance-Regularized Weighting to reduce learner redundancy by forcing successive learners to capture novel error components.",
+          "llm_tldr_cn": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
+          "llm_tldr": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.17567v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.16193v1",
+          "source": "arxiv",
+          "title": "Cascaded Sparse Autoencoders Learn Multi-Level Visual Concepts in Multimodal LLMs",
+          "abstract": "Multimodal Large Language Models (MLLMs) have demonstrated strong performance on vision-language tasks, yet their internal visual representations remain difficult to interpret. Sparse Autoencoders (SAEs) provide a scalable way to decompose dense model activations into sparse, interpretable features. However, existing SAE architectures primarily recover flat feature dictionaries and are less suited for explicit multi-level concept organization. In this paper, we introduce cascaded sparse autoencoders (CSAEs) for learning hierarchical visual concepts in MLLMs. Rather than nesting or stacking SAE sparse activation codes, CSAEs train a second-level SAE directly on the decoder weights of the first-level SAE, treating learned low-level feature directions as inputs for higher-level abstraction. This design enables CSAEs to learn \"concepts of concepts\" while avoiding drawbacks from the shared-prefix coupling of nesting, Matryoshka-style hierarchies and the bottlenecks of naively stacked SAEs. Experiments across Qwen3-VL, Gemma-3, and LLaVA on multiple visual datasets show that CSAEs improve interpretability in terms of hierarchical concept coherence over state-of-the-art SAE baselines. Results on concept steering further demonstrate that the learned concept groups support effective group-level interventions in MLLM outputs.",
+          "authors": [
+            "Yusong Zhao",
+            "Hengyi Wang",
+            "Tanuja Ganu",
+            "Akshay Nambi",
+            "Hao Wang"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.AI",
+            "cs.LG"
+          ],
+          "published": "2026-06-15T04:10:40+00:00",
+          "link": "https://arxiv.org/pdf/2606.16193v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "learns hierarchical visual representations via cascaded sparse autoencoders",
+          "llm_evidence_cn": "通过级联稀疏自编码器学习层次化视觉表征",
+          "llm_evidence": "通过级联稀疏自编码器学习层次化视觉表征",
+          "canonical_evidence": "通过级联稀疏自编码器学习层次化视觉表征",
+          "llm_tldr_en": "Cascaded sparse autoencoders (CSAEs) enable hierarchical visual concept learning in MLLMs by training a second-level SAE on decoder weights of the first, improving interpretability of visual representations.",
+          "llm_tldr_cn": "多模态大语言模型（MLLMs）中的视觉表示难以解释。现有稀疏自编码器（SAEs）仅恢复扁平特征字典。本文提出级联稀疏自编码器（CSAEs），第一级SAE学习低层视觉特征，第二级SAE直接训练在第一级解码器权重上，从而学习层级化视觉概念。该方法提高了MLLM视觉表示的可解释性和结构表达能力，为理解模型内部视觉处理机制提供了新工具。",
+          "llm_tldr": "多模态大语言模型（MLLMs）中的视觉表示难以解释。现有稀疏自编码器（SAEs）仅恢复扁平特征字典。本文提出级联稀疏自编码器（CSAEs），第一级SAE学习低层视觉特征，第二级SAE直接训练在第一级解码器权重上，从而学习层级化视觉概念。该方法提高了MLLM视觉表示的可解释性和结构表达能力，为理解模型内部视觉处理机制提供了新工具。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.16193v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.16028v1",
+          "source": "arxiv",
+          "title": "The Information-Theoretic Benefit of Shared Representations under Orthogonality Constraints",
+          "abstract": "Modern deep learning architectures are increasingly multi-task and multi-modal, using a pretrained foundation model combined with task-specific, fine-tuned models. Empirically, exploiting similarity across different problems, instead of solving them individually, can significantly improve overall performance. While the generalization and sample complexity properties of multitask learning have been widely studied, the parametric complexity of joint approximation in comparison to separate approximation remains less well understood. The question is particularly relevant in modern deep learning, where models are increasingly required to satisfy structural constraints such as equivariance, conservation laws, or orthogonality. We prove lower and upper bounds on the description-length for separate and joint approximation classes, respectively, in uniform norm. We build a class of orthogonal functions by composing a shared hard feature, realized by a Rademacher-Haar wavelet series, with Sawtooth-Walsh readouts to enforce orthogonality of output coordinates. The dyadic tree structure of the Rademacher-Haar wavelet concentrates the approximation hardness in the common feature component, while the readouts act as task-specific heads. Using an information-theoretic framework, we obtain a sharp gap between the optimal approximation rates achievable by joint and separate coding. Finally, we realize this separation in a neural network model using Heaviside activations via reduction to triangle-wave approximation. Our results show that even under an orthogonality constraint joint approximation requires strictly fewer bits in compositional architectures, provided the tasks share a latent hard feature. This provides theoretical insight into the description-length-efficiency of compositional multi-output architectures and clarifies how neural networks can retain expressivity under geometric constraints.",
+          "authors": [
+            "Thomas Dittrich",
+            "Oliver Potocki",
+            "Philipp Grohs"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.IT",
+            "math.FA"
+          ],
+          "published": "2026-06-14T21:25:58+00:00",
+          "link": "https://arxiv.org/pdf/2606.16028v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "theoretical analysis of shared representations under orthogonality constraints",
+          "llm_evidence_cn": "正交约束下共享表征的理论分析",
+          "llm_evidence": "正交约束下共享表征的理论分析",
+          "canonical_evidence": "正交约束下共享表征的理论分析",
+          "llm_tldr_en": "Proves that shared representations under orthogonality constraints provide parametric complexity benefits for multitask and multimodal learning compared to separate models.",
+          "llm_tldr_cn": "现代多任务多模态深度学习使用共享表征。本文证明在正交约束下，联合近似的参数复杂度优于独立近似，为共享表征的泛化优势提供了理论依据。该结果对设计满足等变性、守恒律等结构约束的神经网络具有指导意义。",
+          "llm_tldr": "现代多任务多模态深度学习使用共享表征。本文证明在正交约束下，联合近似的参数复杂度优于独立近似，为共享表征的泛化优势提供了理论依据。该结果对设计满足等变性、守恒律等结构约束的神经网络具有指导意义。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.16028v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.19203v1",
+          "source": "arxiv",
+          "title": "DASH: Dual-View Self-Distillation with Multi-Layer Hidden Representations for Robust Speech Recognition",
+          "abstract": "Automatic Speech Recognition (ASR) often degrades in real-world noisy environments, making noise robustness essential for deployment. Supervised noise-augmented fine-tuning is a common remedy, but it can introduce a robustness-clean trade-off and overfit to specific corruptions, degrading recognition in clean conditions. We propose DASH, a self-distillation framework that improves robustness by learning clean--noisy consistency from paired views. DASH distills hidden representations from multiple encoder layers to capture features from low-level acoustics to high-level semantics, and stabilizes training by minimizing KL divergence between prototype assignment distributions of clean and noisy views. Experiments on LibriSpeech show that DASH consistently improves recognition under diverse noisy conditions while preserving clean accuracy, achieved by a label-free pre-training stage with minimal additional overhead (about 4% of fine-tuning time) beyond standard fine-tuning.",
+          "authors": [
+            "Jaeeun Baik",
+            "Ui-Hyeop Shin",
+            "Jiwoon Lee",
+            "Woocheol Jeong",
+            "Hyung-Min Park"
+          ],
+          "primary_category": "eess.AS",
+          "categories": [
+            "eess.AS"
+          ],
+          "published": "2026-06-17T15:40:53+00:00",
+          "link": "https://arxiv.org/pdf/2606.19203v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "self-distillation framework using multi-layer hidden representations for robust ASR",
+          "llm_evidence_cn": "利用多层隐藏表示进行自蒸馏以提升语音识别鲁棒性",
+          "llm_evidence": "利用多层隐藏表示进行自蒸馏以提升语音识别鲁棒性",
+          "canonical_evidence": "利用多层隐藏表示进行自蒸馏以提升语音识别鲁棒性",
+          "llm_tldr_en": "Proposes DASH, a self-distillation framework that learns clean-noisy consistency from paired views by distilling multi-layer encoder representations and minimizing KL divergence between prototype assignments, improving ASR robustness without clean performance degradation.",
+          "llm_tldr_cn": "该论文针对语音识别在噪声环境下性能下降的问题，提出双视角自蒸馏框架DASH。DASH从干净和带噪配对视角中学习一致性，通过蒸馏多个编码器层的隐藏表示（从低层声学到高层语义），并最小化原型分配分布的KL散度来稳定训练。在LibriSpeech等数据集上的实验表明，DASH在提升噪声鲁棒性的同时不牺牲干净性能，克服了传统噪声增强微调的鲁棒性-干净权衡。该方法展示了表示学习在鲁棒ASR中的有效应用。",
+          "llm_tldr": "该论文针对语音识别在噪声环境下性能下降的问题，提出双视角自蒸馏框架DASH。DASH从干净和带噪配对视角中学习一致性，通过蒸馏多个编码器层的隐藏表示（从低层声学到高层语义），并最小化原型分配分布的KL散度来稳定训练。在LibriSpeech等数据集上的实验表明，DASH在提升噪声鲁棒性的同时不牺牲干净性能，克服了传统噪声增强微调的鲁棒性-干净权衡。该方法展示了表示学习在鲁棒ASR中的有效应用。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.19203v1",
+          "carry_days": 1
         }
       ]
     }
