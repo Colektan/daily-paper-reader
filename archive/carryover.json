@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-22T22:14:47.327851+00:00",
-  "updated_date": "20260622",
+  "generated_at": "2026-06-27T20:15:30.372767+00:00",
+  "updated_date": "20260627",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260622",
+      "updated_date": "20260627",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260622",
+      "updated_date": "20260627",
       "carryover_days": 9,
       "items": [
         {
@@ -50,7 +50,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18509v1",
-          "carry_days": 1
+          "carry_days": 6
         },
         {
           "id": "2606.18663v1",
@@ -89,7 +89,7 @@
           "matched_requirement_id": "req-13",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18663v1",
-          "carry_days": 1
+          "carry_days": 6
         },
         {
           "id": "2606.17967v1",
@@ -126,7 +126,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.17967v1",
-          "carry_days": 1
+          "carry_days": 6
         },
         {
           "id": "2606.18472v1",
@@ -166,7 +166,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18472v1",
-          "carry_days": 1
+          "carry_days": 6
         },
         {
           "id": "2606.17567v1",
@@ -209,91 +209,7 @@
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
           "paper_id": "2606.17567v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.16193v1",
-          "source": "arxiv",
-          "title": "Cascaded Sparse Autoencoders Learn Multi-Level Visual Concepts in Multimodal LLMs",
-          "abstract": "Multimodal Large Language Models (MLLMs) have demonstrated strong performance on vision-language tasks, yet their internal visual representations remain difficult to interpret. Sparse Autoencoders (SAEs) provide a scalable way to decompose dense model activations into sparse, interpretable features. However, existing SAE architectures primarily recover flat feature dictionaries and are less suited for explicit multi-level concept organization. In this paper, we introduce cascaded sparse autoencoders (CSAEs) for learning hierarchical visual concepts in MLLMs. Rather than nesting or stacking SAE sparse activation codes, CSAEs train a second-level SAE directly on the decoder weights of the first-level SAE, treating learned low-level feature directions as inputs for higher-level abstraction. This design enables CSAEs to learn \"concepts of concepts\" while avoiding drawbacks from the shared-prefix coupling of nesting, Matryoshka-style hierarchies and the bottlenecks of naively stacked SAEs. Experiments across Qwen3-VL, Gemma-3, and LLaVA on multiple visual datasets show that CSAEs improve interpretability in terms of hierarchical concept coherence over state-of-the-art SAE baselines. Results on concept steering further demonstrate that the learned concept groups support effective group-level interventions in MLLM outputs.",
-          "authors": [
-            "Yusong Zhao",
-            "Hengyi Wang",
-            "Tanuja Ganu",
-            "Akshay Nambi",
-            "Hao Wang"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV",
-            "cs.AI",
-            "cs.LG"
-          ],
-          "published": "2026-06-15T04:10:40+00:00",
-          "link": "https://arxiv.org/pdf/2606.16193v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "learns hierarchical visual representations via cascaded sparse autoencoders",
-          "llm_evidence_cn": "通过级联稀疏自编码器学习层次化视觉表征",
-          "llm_evidence": "通过级联稀疏自编码器学习层次化视觉表征",
-          "canonical_evidence": "通过级联稀疏自编码器学习层次化视觉表征",
-          "llm_tldr_en": "Cascaded sparse autoencoders (CSAEs) enable hierarchical visual concept learning in MLLMs by training a second-level SAE on decoder weights of the first, improving interpretability of visual representations.",
-          "llm_tldr_cn": "多模态大语言模型（MLLMs）中的视觉表示难以解释。现有稀疏自编码器（SAEs）仅恢复扁平特征字典。本文提出级联稀疏自编码器（CSAEs），第一级SAE学习低层视觉特征，第二级SAE直接训练在第一级解码器权重上，从而学习层级化视觉概念。该方法提高了MLLM视觉表示的可解释性和结构表达能力，为理解模型内部视觉处理机制提供了新工具。",
-          "llm_tldr": "多模态大语言模型（MLLMs）中的视觉表示难以解释。现有稀疏自编码器（SAEs）仅恢复扁平特征字典。本文提出级联稀疏自编码器（CSAEs），第一级SAE学习低层视觉特征，第二级SAE直接训练在第一级解码器权重上，从而学习层级化视觉概念。该方法提高了MLLM视觉表示的可解释性和结构表达能力，为理解模型内部视觉处理机制提供了新工具。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.16193v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.16028v1",
-          "source": "arxiv",
-          "title": "The Information-Theoretic Benefit of Shared Representations under Orthogonality Constraints",
-          "abstract": "Modern deep learning architectures are increasingly multi-task and multi-modal, using a pretrained foundation model combined with task-specific, fine-tuned models. Empirically, exploiting similarity across different problems, instead of solving them individually, can significantly improve overall performance. While the generalization and sample complexity properties of multitask learning have been widely studied, the parametric complexity of joint approximation in comparison to separate approximation remains less well understood. The question is particularly relevant in modern deep learning, where models are increasingly required to satisfy structural constraints such as equivariance, conservation laws, or orthogonality. We prove lower and upper bounds on the description-length for separate and joint approximation classes, respectively, in uniform norm. We build a class of orthogonal functions by composing a shared hard feature, realized by a Rademacher-Haar wavelet series, with Sawtooth-Walsh readouts to enforce orthogonality of output coordinates. The dyadic tree structure of the Rademacher-Haar wavelet concentrates the approximation hardness in the common feature component, while the readouts act as task-specific heads. Using an information-theoretic framework, we obtain a sharp gap between the optimal approximation rates achievable by joint and separate coding. Finally, we realize this separation in a neural network model using Heaviside activations via reduction to triangle-wave approximation. Our results show that even under an orthogonality constraint joint approximation requires strictly fewer bits in compositional architectures, provided the tasks share a latent hard feature. This provides theoretical insight into the description-length-efficiency of compositional multi-output architectures and clarifies how neural networks can retain expressivity under geometric constraints.",
-          "authors": [
-            "Thomas Dittrich",
-            "Oliver Potocki",
-            "Philipp Grohs"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.IT",
-            "math.FA"
-          ],
-          "published": "2026-06-14T21:25:58+00:00",
-          "link": "https://arxiv.org/pdf/2606.16028v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "theoretical analysis of shared representations under orthogonality constraints",
-          "llm_evidence_cn": "正交约束下共享表征的理论分析",
-          "llm_evidence": "正交约束下共享表征的理论分析",
-          "canonical_evidence": "正交约束下共享表征的理论分析",
-          "llm_tldr_en": "Proves that shared representations under orthogonality constraints provide parametric complexity benefits for multitask and multimodal learning compared to separate models.",
-          "llm_tldr_cn": "现代多任务多模态深度学习使用共享表征。本文证明在正交约束下，联合近似的参数复杂度优于独立近似，为共享表征的泛化优势提供了理论依据。该结果对设计满足等变性、守恒律等结构约束的神经网络具有指导意义。",
-          "llm_tldr": "现代多任务多模态深度学习使用共享表征。本文证明在正交约束下，联合近似的参数复杂度优于独立近似，为共享表征的泛化优势提供了理论依据。该结果对设计满足等变性、守恒律等结构约束的神经网络具有指导意义。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.16028v1",
-          "carry_days": 1
+          "carry_days": 6
         },
         {
           "id": "2606.19203v1",
@@ -333,6 +249,284 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.19203v1",
+          "carry_days": 6
+        },
+        {
+          "id": "2606.22307v1",
+          "source": "arxiv",
+          "title": "Enhancing Protein Representation Learning via Manifold Restore Mixing",
+          "abstract": "Data augmentation (DA) has been proven to be an effective means for improving protein representation learning (PRL) by generating additional training samples. Although mainstream perturbation- and sampling-based augmentation methods can produce data containing sufficient variations, they carry the risk of disrupting the protein structure and function. Some crafted protein homology modeling tools can generate conformations, but reduce structural diversity. The above dilemmas lead us to a question: Can we restore the disrupted structure caused by DA operations, providing data with both the original structure and diverse variations? In this work, we first analyze and empirically reveal the structure defect and performance degradation issues of existing DA methods. Based on the findings, we propose a simple yet effective DA method, Manifold Restore Mixing (MRM), for protein representation learning. Specifically, inspired by manifold mixup, we mix the hidden representations of original and augmented protein data to generate new samples that restore structural information lost in DA while introducing diverse variations. Furthermore, we develop a sample difficulty scheduler that adjusts the beta distribution in mixup to provide models with progressively challenging mixed samples during training, which improves the final performance. Comprehensive experiments on various PRL backbones and downstream tasks demonstrate the effectiveness and generalization of our method. The complete code and weights will be released upon acceptance. We provide a implementation at https://github.com/KingGugu/MRM.",
+          "authors": [
+            "Yizhou Dang",
+            "Chuang Zhao",
+            "Lianbo Ma",
+            "Guibing Guo",
+            "Xingwei Wang",
+            "Zhu Sun"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-21T02:20:14+00:00",
+          "link": "https://arxiv.org/pdf/2606.22307v1",
+          "tags": [
+            "keyword:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "protein representation learning with data augmentation and manifold restore mixing",
+          "llm_evidence_cn": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
+          "llm_evidence": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
+          "canonical_evidence": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
+          "llm_tldr_en": "Proposes Manifold Restore Mixing for protein representation learning, a data augmentation method that restores original structure after perturbation, improving performance without disrupting protein function.",
+          "llm_tldr_cn": "现有数据增强方法可能破坏蛋白质结构，或减少结构多样性。本文提出流形恢复混合，通过先施加扰动再恢复原始结构的方式生成兼具变异性和结构完整性的增强数据。该方法在蛋白质表示学习任务上提升了性能，为生物信息学中的表示学习提供了新思路。",
+          "llm_tldr": "现有数据增强方法可能破坏蛋白质结构，或减少结构多样性。本文提出流形恢复混合，通过先施加扰动再恢复原始结构的方式生成兼具变异性和结构完整性的增强数据。该方法在蛋白质表示学习任务上提升了性能，为生物信息学中的表示学习提供了新思路。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.22307v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.21649v2",
+          "source": "arxiv",
+          "title": "EvoEmbedding: Evolvable Representations for Long-Context Retrieval and Agentic Memory",
+          "abstract": "Existing embedding models are inherently static: they encode text segments in isolation, ignoring their surrounding context and temporal order. This paper introduces EvoEmbedding, a novel embedding model that generates evolvable representations for retrieval. It is tailored for long-context scenarios, where information is dynamic, sequential, and requires continuous state tracking. Our design is simple: EvoEmbedding maintains a continuously updated latent memory as it sequentially processes inputs, and uses it alongside the raw content to jointly generate evolvable embeddings. Consequently, for the same query, our model adapts its representation to retrieve distinct targets based on the evolving context, going beyond static semantic search. To equip the model with this capability, we construct EvoTrain-180K, a diverse dataset for the joint optimization of latent memory and retrieval. Furthermore, we introduce a memory queue to prevent representation collapse during recurrent encoding, alongside segment-batching techniques that tackle significant length variance and accelerate training by 3.8$\\times$. Extensive experiments show that our model not only outperforms larger-scale specialists (e.g., Qwen3-Embedding-8B and KaLM-Embedding-Gemma3-12B) across a range of long-context retrieval benchmarks, but also generalizes well to downstream tasks (e.g., personalization) with contexts 10$\\times$ longer than its training window. Notably, EvoEmbedding seamlessly integrates into agentic workflows to boost performance. For instance, a naive RAG pipeline equipped with our model surpasses dedicated agentic memory systems. Project Page: https://clare-nie.github.io/EvoEmbedding/.",
+          "authors": [
+            "Chang Nie",
+            "Chaoyou Fu",
+            "Junlan Feng",
+            "Caifeng Shan"
+          ],
+          "primary_category": "cs.CL",
+          "categories": [
+            "cs.CL"
+          ],
+          "published": "2026-06-19T17:59:58+00:00",
+          "link": "https://arxiv.org/pdf/2606.21649v2",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "evolvable representations for long-context retrieval, a novel embedding approach",
+          "llm_evidence_cn": "可演化的表示用于长上下文检索，一种新型嵌入方法",
+          "llm_evidence": "可演化的表示用于长上下文检索，一种新型嵌入方法",
+          "canonical_evidence": "可演化的表示用于长上下文检索，一种新型嵌入方法",
+          "llm_tldr_en": "Proposes EvoEmbedding, a representation model generating evolvable embeddings with latent memory, adapting representations based on evolving context for long-context retrieval and agentic memory.",
+          "llm_tldr_cn": "现有嵌入模型静态处理文本，忽略上下文变化。本文提出EvoEmbedding，通过维护持续更新的隐式记忆，在序列处理中生成可演化的嵌入。同一查询可根据上下文演变检索不同目标。该方法在长上下文检索和智能体记忆任务中表现优异，为表示学习提供了新范式。",
+          "llm_tldr": "现有嵌入模型静态处理文本，忽略上下文变化。本文提出EvoEmbedding，通过维护持续更新的隐式记忆，在序列处理中生成可演化的嵌入。同一查询可根据上下文演变检索不同目标。该方法在长上下文检索和智能体记忆任务中表现优异，为表示学习提供了新范式。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.21649v2",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.21590v1",
+          "source": "arxiv",
+          "title": "Radial Basis Function Networks as Projection Heads in Self-Supervised Learning",
+          "abstract": "Self-supervised learning (SSL) typically relies on a backbone encoder followed by a small multilayer perceptron (MLP) projection head, which is conventionally discarded after training, while backbone quality is assessed via costly linear probing on labeled data. We argue that this approach including discarding the projector is rather computationally wasteful. Instead, we propose replacing the MLP head with a radial basis function network (RBFN), whose interpretable center and shape parameters can be exploited to judge representation quality without labels or a separate classifier. To this end, we introduce Scale-Normalized Separation (SNS), a novel label-free quality metric derived solely from the kernel centers and shapes learned during training. Across five canonical SSL architectures (MoCo, SimCLR, BYOL, SwAV and SimSiam) and four image classification datasets, we show that RBFN projection heads are competitive drop-in replacements for standard MLP projectors. We recommend constructing them with three RBF layers activated by the Gaussian radial basis function. Moreover, SNS exhibits strong to very strong positive correlation with established logistic regression metrics, demonstrating that a trained RBFN projector can act as a reliable proxy for backbone representation quality. We additionally publish a novel PyTorch compatible image classification dataset based on Google's Open Images V7 to facilitate reproducible research into representation learning.",
+          "authors": [
+            "Andreas Schliebitz",
+            "Heiko Tapken",
+            "Martin Atzmueller"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.LG"
+          ],
+          "published": "2026-06-19T16:46:54+00:00",
+          "link": "https://arxiv.org/pdf/2606.21590v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "RBFN projection head for self-supervised representation quality",
+          "llm_evidence_cn": "用RBFN投影头评估自监督表示质量",
+          "llm_evidence": "用RBFN投影头评估自监督表示质量",
+          "canonical_evidence": "用RBFN投影头评估自监督表示质量",
+          "llm_tldr_en": "Replaces the MLP projection head in SSL with a radial basis function network, exploiting its interpretable parameters to derive a label-free quality metric (SNS) that correlates well with downstream task performance.",
+          "llm_tldr_cn": "本文针对自监督学习中投影头被丢弃导致计算浪费的问题，提出用径向基函数网络（RBFN）替代MLP投影头。利用RBFN的可解释中心与形状参数，提出无标签质量度量SNS，无需线性探测即可评估表示质量，且与下游性能高度相关。",
+          "llm_tldr": "本文针对自监督学习中投影头被丢弃导致计算浪费的问题，提出用径向基函数网络（RBFN）替代MLP投影头。利用RBFN的可解释中心与形状参数，提出无标签质量度量SNS，无需线性探测即可评估表示质量，且与下游性能高度相关。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.21590v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.21957v1",
+          "source": "arxiv",
+          "title": "Learning by Shifting: Temporal View Construction for Time Series Contrastive Learning",
+          "abstract": "Supervised learning demands large quantities of labeled data, a bottleneck that is expensive and reliant on domain-specific expertise. Self-supervised learning, particularly contrastive learning, has emerged as a compelling alternative, enabling rich representation learning directly from unlabeled data. Yet its success hinges critically on the design of positive and negative sample pairs. Existing approaches for time series rely on hand-crafted augmentations and masking heuristics that embed strong domain assumptions, often limiting generalization across diverse temporal patterns and potentially introducing spurious correlations. In this work, we challenge this paradigm by demonstrating that explicitly encoding temporal shift invariance through a simple, deterministic view construction is sufficient to learn strong representations for time series classification. By exploiting temporal structure, our method, Shift Invariant Feature Training (ShiFT), achieves state-of-the-art performance on six diverse real-world time series benchmark datasets, as well as the UCR and UEA archives, while reducing training time. Beyond empirical performance, we present a systematic analysis of contrastive learning dynamics in time series settings, examining the effects of batch size and the number of negatives on downstream performance. Our findings provide practical insights for designing efficient contrastive learning frameworks for time series representation learning. The source code is publicly available at https://github.com/sfi-norwai/ShiFT.",
+          "authors": [
+            "Abdul-Kazeem Shamba",
+            "Kerstin Bach",
+            "Gavin Taylor"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-20T09:07:30+00:00",
+          "link": "https://arxiv.org/pdf/2606.21957v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "self-supervised contrastive learning for time series with temporal shift invariance",
+          "llm_evidence_cn": "时间序列对比学习，通过时间移位不变性自监督表示学习",
+          "llm_evidence": "时间序列对比学习，通过时间移位不变性自监督表示学习",
+          "canonical_evidence": "时间序列对比学习，通过时间移位不变性自监督表示学习",
+          "llm_tldr_en": "Proposes a contrastive learning method for time series that explicitly encodes temporal shift invariance, reducing reliance on hand-crafted augmentations and improving generalization.",
+          "llm_tldr_cn": "针对时间序列对比学习中手工数据增强依赖领域假设的问题，本文提出显式编码时间移位不变性的对比学习框架。该方法通过构建时间视图对，无需手工增强即可学习鲁棒特征表示。实验证明该方法在多个时间序列下游任务中优于现有自监督方法，具有更好的泛化能力。",
+          "llm_tldr": "针对时间序列对比学习中手工数据增强依赖领域假设的问题，本文提出显式编码时间移位不变性的对比学习框架。该方法通过构建时间视图对，无需手工增强即可学习鲁棒特征表示。实验证明该方法在多个时间序列下游任务中优于现有自监督方法，具有更好的泛化能力。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "self-supervised learning techniques for feature extraction",
+          "matched_requirement_id": "req-9",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.21957v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.23758v1",
+          "source": "arxiv",
+          "title": "Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios",
+          "abstract": "Domain generalization learns from multiple source domains to generalize to unseen target domains. However, it often neglects the realistic case of label mismatch between source and target. Open set domain generalization is then proposed to recognize unseen classes in unseen domains. A simple approach trains one-vs-all classifiers to separate each class and detect outliers as unknown. Yet, the imbalance between few positive samples and many negative samples skews the decision boundary towards the positive ones, leading the model to over-reject out-of-distribution data, even from known classes in unseen domains. In this paper, we propose a novel meta-learning stategy called dualistic MEta-learning with joint DomaIn-Class matching (MEDIC), which considers implicit gradient matching towards inter-domain and inter-class task splits simultaneously to find optimal boundaries balanced for both domains and classes. Experimental results show that MEDIC not only outperforms prior methods in open set scenarios, but also maintains competitive close set generalization ability.",
+          "authors": [
+            "Xiran Wang",
+            "Jian Zhang",
+            "Lei Qi",
+            "Yang Gao",
+            "Yinghuan Shi"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-22T08:58:08+00:00",
+          "link": "https://arxiv.org/pdf/2606.23758v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "dualistic meta-learning with joint domain-class matching for open set domain generalization",
+          "llm_evidence_cn": "双元元学习结合领域-类别匹配用于开集域泛化",
+          "llm_evidence": "双元元学习结合领域-类别匹配用于开集域泛化",
+          "canonical_evidence": "双元元学习结合领域-类别匹配用于开集域泛化",
+          "llm_tldr_en": "Proposes MEDIC, a dualistic meta-learning strategy with joint domain-class matching for open set domain generalization, addressing class imbalance and outlier rejection.",
+          "llm_tldr_cn": "针对开集域泛化中类别不平衡导致模型过度拒绝已知类的问题，本文提出双元元学习策略MEDIC，联合学习领域和类别匹配。该方法通过在元训练中模拟开集场景，训练模型区分已知和未知类。实验表明，MEDIC在多个开集域泛化基准上显著优于现有方法。",
+          "llm_tldr": "针对开集域泛化中类别不平衡导致模型过度拒绝已知类的问题，本文提出双元元学习策略MEDIC，联合学习领域和类别匹配。该方法通过在元训练中模拟开集场景，训练模型区分已知和未知类。实验表明，MEDIC在多个开集域泛化基准上显著优于现有方法。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+          "matched_requirement_id": "req-11",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.23758v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.25659v1",
+          "source": "arxiv",
+          "title": "Learning to Adapt: Reptile-D-Learning for Robust and Efficient Control Under Parametric Uncertainty",
+          "abstract": "Learning-based Lyapunov Control (LLC) provides formal stability guarantees for nonlinear systems, but its validity relies heavily on accurate system models. Parameter variations and uncertainties may invalidate stability constraints, leading to costly retraining. Although D-learning can estimate Lyapunov derivatives without relying on explicit dynamics models, it remains limited by single-task dynamics and degrades under large parameter shifts. We propose Reptile-D-learning, a framework that leverages the Reptile meta-learning algorithm to capture shared dynamical structures across systems with different parameters, thereby learning a generalizable Lyapunov network initialization and a high-performance controller. Experiments on multiple nonlinear control systems demonstrate that Reptile-D-learning significantly improves both generalization and rapid adaptation to unseen parameter configurations.",
+          "authors": [
+            "Haipeng Cao",
+            "Zhaolong Shen",
+            "Quan Quan"
+          ],
+          "primary_category": "cs.RO",
+          "categories": [
+            "cs.RO"
+          ],
+          "published": "2026-06-24T10:11:29+00:00",
+          "link": "https://arxiv.org/pdf/2606.25659v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Reptile meta-learning for robust control under parametric uncertainty",
+          "llm_evidence_cn": "使用Reptile元学习在参数不确定下实现鲁棒控制",
+          "llm_evidence": "使用Reptile元学习在参数不确定下实现鲁棒控制",
+          "canonical_evidence": "使用Reptile元学习在参数不确定下实现鲁棒控制",
+          "llm_tldr_en": "Combines Reptile meta-learning with D-learning to learn a generalizable Lyapunov network initialization for control across varying system parameters.",
+          "llm_tldr_cn": "该论文针对基于学习的Lyapunov控制对参数变化敏感的问题，提出Reptile-D-learning框架。利用Reptile元学习捕捉不同参数系统间的共享动力学结构，学习可泛化的Lyapunov网络初始化和高性能控制器。实验表明该方法在参数偏移下仍能保持稳定，显著提高了控制鲁棒性和适应效率。",
+          "llm_tldr": "该论文针对基于学习的Lyapunov控制对参数变化敏感的问题，提出Reptile-D-learning框架。利用Reptile元学习捕捉不同参数系统间的共享动力学结构，学习可泛化的Lyapunov网络初始化和高性能控制器。实验表明该方法在参数偏移下仍能保持稳定，显著提高了控制鲁棒性和适应效率。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
+          "matched_requirement_id": "req-11",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25659v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.25971v1",
+          "source": "arxiv",
+          "title": "Improving Neural Network Training by Decoupling the Magnitude and Direction of Weight Vectors",
+          "abstract": "Modern neural network training relies on optimizers such as Adam and Muon which act on each weight matrix as a single object. Yet every weight matrix carries two distinct quantities -- a \\emph{magnitude} and a \\emph{direction} -- and all optimizers stepping in the matrix as a whole couple their dynamics: the directional change from an update depends on the current magnitude, while the magnitude drifts as a byproduct of learning the direction, so neither is governed directly by the learning rate. Typical training therefore leans on surrounding recipes such as weight decay and warmup to keep learning stable at scale, though these regulate the coupling only indirectly; other recent methods instead constrain the weight to a fixed-norm sphere, but add no learnable magnitude, leaving scale control to normalization layers alone. We propose \\emph{Magnitude--Direction (MD) Decoupling}, an optimizer modification that factorizes each weight into a fixed-norm direction on a hypersphere and learnable per-row and per-column magnitude gains, updated at separate learning rates, all while the model still sees a single fused weight tensor. The method is agnostic to the base optimizer and removes the need for weight decay and warmup. Across both Adam and Muon, MD Decoupling improves on well-tuned baselines, transfers the optimal LR across model width without retuning, and continues to help at scale on large Mixture-of-Experts (MoE) models. Treating magnitude and direction as separately controlled quantities thus yields more predictable training dynamics and a simple, broadly applicable improvement to modern optimizers.",
+          "authors": [
+            "Alexander Hägele",
+            "Alejandro Hernández-Cano",
+            "Atli Kosson",
+            "Martin Jaggi"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-24T15:40:26+00:00",
+          "link": "https://arxiv.org/pdf/2606.25971v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "decoupling magnitude and direction of weight vectors for training optimization",
+          "llm_evidence_cn": "解耦权重幅度和方向优化训练",
+          "llm_evidence": "解耦权重幅度和方向优化训练",
+          "canonical_evidence": "解耦权重幅度和方向优化训练",
+          "llm_tldr_en": "Proposes decoupling weight magnitude and direction updates to stabilize neural network training, eliminating reliance on weight decay and warmup.",
+          "llm_tldr_cn": "该论文针对现代神经网络训练中优化器将权重幅度与方向耦合导致的不稳定问题，提出解耦更新策略，使学习率独立调控两者。通过理论分析和实验验证，该方法消除了对权重衰减和预热等外部配方的依赖，在多种模型和数据集上实现了更快的收敛和更好的泛化性能。该工作为训练大型神经网络提供了更简洁有效的优化方案。",
+          "llm_tldr": "该论文针对现代神经网络训练中优化器将权重幅度与方向耦合导致的不稳定问题，提出解耦更新策略，使学习率独立调控两者。通过理论分析和实验验证，该方法消除了对权重衰减和预热等外部配方的依赖，在多种模型和数据集上实现了更快的收敛和更好的泛化性能。该工作为训练大型神经网络提供了更简洁有效的优化方案。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25971v1",
           "carry_days": 1
         }
       ]
