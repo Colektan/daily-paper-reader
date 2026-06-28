@@ -1,0 +1,494 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-28T20:28:51.255227+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 35,
+    "deep_cap": 4,
+    "deep_selected": 8,
+    "quick_candidates": 67,
+    "quick_skim_target": 4,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.24815v1",
+      "source": "arxiv",
+      "title": "MANGO: Automated Multi-Agent Test Oracle Generation for Vision-Language-Action Models",
+      "abstract": "Vision-Language-Action (VLA) models are emerging robotic control systems that integrate perception, language understanding, and action generation in a unified architecture. Existing testing approaches for VLA-enabled robots rely on manually constructed symbolic test oracles that determine task success from final environment states. These oracles are costly to construct, require domain expertise, and are often tightly coupled to specific tasks and environments, limiting scalability and reuse. Furthermore, they provide only end-state assessments of task outcomes, offering limited insight into intermediate behavior and fault localization. To address these limitations, we introduce MANGO, a multi-agent framework that automatically generates fine-grained oracles from natural-language descriptions of robotic tasks. MANGO first generates a reusable library of atomic tasks, then generates simulator-grounded oracle definitions for each atomic task, and finally produces executable fine-grained oracles by decomposing complex instructions into ordered sequences of atomic actions and corresponding oracles. The framework uses collaborative Generator, Assessor, and Judge agents that iteratively refine generated artifacts through structured feedback. We evaluate MANGO on the LIBERO_10 and RoboCasa Humanoid Tabletop benchmarks. Results show that MANGO generates executable, fine-grained oracles that detect a similar number of failures as symbolic oracles while accurately localizing them and providing richer diagnostic information. Through ablation studies, we further analyzed component contributions and the effect of initial task set, while preserving oracle quality. Overall, the results show the feasibility and effectiveness of test oracle generation for VLA-enabled robots testing.",
+      "authors": [
+        "Pablo Valle",
+        "Shaukat Ali",
+        "Aitor Arrieta",
+        "Lionel Briand"
+      ],
+      "primary_category": "cs.SE",
+      "categories": [
+        "cs.SE",
+        "cs.RO"
+      ],
+      "published": "2026-06-23T17:00:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.24815v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "VLA model testing oracle generation",
+      "llm_evidence_cn": "VLA模型测试预言生成",
+      "llm_evidence": "VLA模型测试预言生成",
+      "canonical_evidence": "VLA模型测试预言生成",
+      "llm_tldr_en": "Introduces MANGO, a multi-agent framework for automatically generating test oracles for Vision-Language-Action models in robotics, addressing manual oracle limitations.",
+      "llm_tldr_cn": "现有的VLA机器人测试依赖人工构建的符号测试预言，成本高且可扩展性差。本文提出MANGO，一个多智能体框架自动生成测试预言，不仅评估最终状态，还能分析中间行为和故障定位。在多个VLA任务上验证了自动化测试的有效性。",
+      "llm_tldr": "现有的VLA机器人测试依赖人工构建的符号测试预言，成本高且可扩展性差。本文提出MANGO，一个多智能体框架自动生成测试预言，不仅评估最终状态，还能分析中间行为和故障定位。在多个VLA任务上验证了自动化测试的有效性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22027v1",
+      "source": "arxiv",
+      "title": "RARM: Confidence-Gated Progress Reward Modeling for RL in Manipulation",
+      "abstract": "Reinforcement learning for robot manipulation is often bottlenecked by reward design, especially in long-horizon tasks: sparse success rewards provide weak supervision, while hand-crafted dense rewards are tedious to design and generalize poorly across tasks. Progress-based reward models offer a promising alternative by estimating how far an observation has advanced toward task completion, but existing approaches often require task-specific demonstrations or progress labels, and can assign high rewards to visually plausible but physically incorrect states. We introduce the Reference-Anchored Reward Model (RARM), a lightweight visual comparator that converts a single successful demonstration into a dense, progress-aware reward. RARM is trained once on general-purpose videos with a contrastive temporal objective, requiring no robot-specific data, task-specific reward labels, or per-task reward engineering. At deployment, RARM matches rollout clips to reference clips and rewards only confident forward progress, suppressing uncertain matches that may otherwise produce false-positive rewards. Across 9 simulated manipulation tasks from LIBERO and MetaWorld and 4 real-world tasks, RARM achieves the best overall success rates in subsequent RL training, with particularly large gains on long-horizon tasks such as cloth folding, where unreliable progress estimates are especially harmful.",
+      "authors": [
+        "Pengzhi Yang",
+        "Xinyu Wang",
+        "Pengyu Jing",
+        "Kehan Wen",
+        "Yiduo Qu",
+        "Zhenhao Huang",
+        "Minghao Fu",
+        "Xin Liu",
+        "Yaheng Shen",
+        "Fan Shi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-20T13:03:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.22027v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "RL reward modeling for manipulation tasks",
+      "llm_evidence_cn": "用于操作任务的强化学习奖励建模",
+      "llm_evidence": "用于操作任务的强化学习奖励建模",
+      "canonical_evidence": "用于操作任务的强化学习奖励建模",
+      "llm_tldr_en": "RARM converts a single demonstration into a dense, progress-aware reward for RL in manipulation, avoiding hand-crafted reward design.",
+      "llm_tldr_cn": "强化学习在机器人操作中常受限于奖励设计，稀疏奖励提供弱监督，密集奖励难以手工设计且泛化差。本文提出RARM，一种轻量级视觉比较器，利用单个成功演示自动生成密集且感知进度的奖励。RARM通过置信门控机制避免给视觉上合理但物理错误的中间状态高分。实验表明RARM在多种操作任务上显著提升RL训练效率和成功率，为免手工奖励设计提供了实用方案。",
+      "llm_tldr": "强化学习在机器人操作中常受限于奖励设计，稀疏奖励提供弱监督，密集奖励难以手工设计且泛化差。本文提出RARM，一种轻量级视觉比较器，利用单个成功演示自动生成密集且感知进度的奖励。RARM通过置信门控机制避免给视觉上合理但物理错误的中间状态高分。实验表明RARM在多种操作任务上显著提升RL训练效率和成功率，为免手工奖励设计提供了实用方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22027v2",
+      "source": "arxiv",
+      "title": "RARM: Confidence-Gated Progress Reward Modeling for RL in Manipulation",
+      "abstract": "Reinforcement learning for robot manipulation is often bottlenecked by reward design, especially in long-horizon tasks: sparse success rewards provide weak supervision, while hand-crafted dense rewards are tedious to design and generalize poorly across tasks. Progress-based reward models offer a promising alternative by estimating how far an observation has advanced toward task completion, but existing approaches often require task-specific demonstrations or progress labels, and can assign high rewards to visually plausible but physically incorrect states. We introduce the Reference-Anchored Reward Model (RARM), a lightweight visual comparator that converts a single successful demonstration into a dense, progress-aware reward. RARM is trained once on general-purpose videos with a contrastive temporal objective, requiring no robot-specific data, task-specific reward labels, or per-task reward engineering. At deployment, RARM matches rollout clips to reference clips and rewards only confident forward progress, suppressing uncertain matches that may otherwise produce false-positive rewards. Across 9 simulated manipulation tasks from LIBERO and MetaWorld and 4 real-world tasks, RARM achieves the best overall success rates in subsequent RL training, with particularly large gains on long-horizon tasks such as cloth folding, where unreliable progress estimates are especially harmful.",
+      "authors": [
+        "Pengzhi Yang",
+        "Xinyu Wang",
+        "Pengyu Jing",
+        "Kehan Wen",
+        "Yiduo Qu",
+        "Zhenhao Huang",
+        "Minghao Fu",
+        "Xin Liu",
+        "Yaheng Shen",
+        "Fan Shi"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-20T13:03:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.22027v2",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "RL reward modeling for robot manipulation",
+      "llm_evidence_cn": "用于机器人操作的RL奖励建模",
+      "llm_evidence": "用于机器人操作的RL奖励建模",
+      "canonical_evidence": "用于机器人操作的RL奖励建模",
+      "llm_tldr_en": "RARM introduces a confidence-gated progress reward model for RL in manipulation, converting a single demonstration into dense progress-aware rewards without task-specific labels.",
+      "llm_tldr_cn": "该论文针对机器人操作RL中奖励设计困难的问题，提出参考锚定奖励模型RARM，通过轻量级视觉比较器将单个成功演示转换为密集的进度感知奖励，无需任务特定标注，实验证明RARM能有效引导长时序任务的学习，显著提升样本效率，且单次训练后可泛化至多任务。",
+      "llm_tldr": "该论文针对机器人操作RL中奖励设计困难的问题，提出参考锚定奖励模型RARM，通过轻量级视觉比较器将单个成功演示转换为密集的进度感知奖励，无需任务特定标注，实验证明RARM能有效引导长时序任务的学习，显著提升样本效率，且单次训练后可泛化至多任务。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22509v1",
+      "source": "arxiv",
+      "title": "Imagine to Ensure Safety in Hierarchical Reinforcement Learning",
+      "abstract": "This work investigates the safe exploration problem in reinforcement learning, where an agent must maximize cumulative performance while simultaneously satisfying safety constraints. This challenge becomes even more pronounced in long-horizon tasks, where existing safe methods face fundamental limitations due to compounding estimation errors and restricted exploration capabilities. To address this problem, we propose a method that combines a learnable world model with two complementary policies a high-level policy and a low-level policy to promote safety at both hierarchical levels. The high-level policy generates intermediate subgoals that bias exploration toward safe regions, while the low-level policy uses imagined rollouts in the learned world model to reduce unsafe behaviors when reaching these subgoals. The proposed method was evaluated on challenging long-horizon navigation and manipulation tasks with high-dimensional action spaces, where it significantly outperforms existing Safe RL baselines in both success rate and strong empirical constraint satisfaction, consistently meeting the prescribed safety budget across seeds, while prior approaches fail to effectively solve these complex long-horizon scenarios.",
+      "authors": [
+        "Gregory Gorbov",
+        "Artem Latyshev",
+        "Aleksandr I. Panov"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-21T14:04:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.22509v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "combines world model with hierarchical RL for safe exploration",
+      "llm_evidence_cn": "结合世界模型与分层强化学习实现安全探索",
+      "llm_evidence": "结合世界模型与分层强化学习实现安全探索",
+      "canonical_evidence": "结合世界模型与分层强化学习实现安全探索",
+      "llm_tldr_en": "Proposes a method combining a learnable world model with hierarchical policies to ensure safety in long-horizon RL tasks, using imagined rollouts.",
+      "llm_tldr_cn": "该论文针对长程任务中的安全探索问题，提出结合可学习世界模型与分层策略的方法。高层策略生成安全子目标，低层策略在世界模型的想象展开中进行规划。实验表明该方法在多个安全强化学习基准上有效降低了危险行为。这项工作为安全强化学习提供了新的层次化框架。",
+      "llm_tldr": "该论文针对长程任务中的安全探索问题，提出结合可学习世界模型与分层策略的方法。高层策略生成安全子目标，低层策略在世界模型的想象展开中进行规划。实验表明该方法在多个安全强化学习基准上有效降低了危险行为。这项工作为安全强化学习提供了新的层次化框架。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22540v1",
+      "source": "arxiv",
+      "title": "PolicyTrim: Boosting Intrinsic Policy Efficiency of Vision-Language-Action Models",
+      "abstract": "Vision-Language-Action (VLA) models provide a unified paradigm for robotic manipulation, yet their real-world deployment is often bottlenecked by execution efficiency. While existing efforts predominantly focus on compute-centric efficiency to reduce per-step inference latency, the intrinsic \\textbf{policy efficiency} of these models remains largely unexplored. Policy efficiency is fundamentally affected by two factors, namely the effective executable length of predicted action chunks and the total physical steps required to complete a task. These two factors jointly determine the total number of forward inference calls during execution. We observe that current VLA policies struggle with planning unreliability and action redundancy, suffering from severe prediction degradation at the tail of action chunks and tending to generate unnecessarily redundant physical steps. To address this, we propose \\textbf{PolicyTrim}, a reinforcement learning-based post-training framework that extends the reliable action chunk length and reduces redundant physical steps. For reliable chunk extension, we employ a dynamic exploration strategy that explicitly rewards the successful completion of longer executable lengths, progressively pushing the trustworthy prediction horizon to its empirical limit. For step efficiency, we design a redundancy-aware reward that directly favors successful task completions with fewer steps while penalizing unreproducible shortcuts, effectively eliminating redundant physical actions. Extensive experiments across three benchmarks and three VLA models demonstrate that PolicyTrim improves action chunk utilization by 3$\\times$ and reduces physical execution steps by 51.4\\%. Ultimately, our framework delivers up to a 5.83$\\times$ end-to-end deployment speedup without compromising task success rates.",
+      "authors": [
+        "Xianghui Wang",
+        "Feng Chen",
+        "Wenbo Zhang",
+        "Hua Yan",
+        "Zixuan Wang",
+        "Changsheng Li",
+        "Yinjie Lei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T14:54:07+00:00",
+      "link": "https://arxiv.org/pdf/2606.22540v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Policy efficiency method for Vision-Language-Action models in robot manipulation",
+      "llm_evidence_cn": "视觉-语言-动作模型策略效率提升方法",
+      "llm_evidence": "视觉-语言-动作模型策略效率提升方法",
+      "canonical_evidence": "视觉-语言-动作模型策略效率提升方法",
+      "llm_tldr_en": "Identifies intrinsic policy efficiency bottleneck in VLA models and propose PolicyTrim to reduce total inference calls via extended action chunks",
+      "llm_tldr_cn": "视觉-语言-动作模型在机器人操作中面临策略效率瓶颈，现有工作聚焦计算效率。本文定义内在策略效率由有效动作块长度和总步骤数决定，指出当前VLA策略存在规划不可靠和动作冗余问题。提出PolicyTrim方法，通过优化动作块预测和减少冗余步骤，显著降低推理总次数，提升真实部署效率。",
+      "llm_tldr": "视觉-语言-动作模型在机器人操作中面临策略效率瓶颈，现有工作聚焦计算效率。本文定义内在策略效率由有效动作块长度和总步骤数决定，指出当前VLA策略存在规划不可靠和动作冗余问题。提出PolicyTrim方法，通过优化动作块预测和减少冗余步骤，显著降低推理总次数，提升真实部署效率。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25971v1",
+      "source": "arxiv",
+      "title": "Improving Neural Network Training by Decoupling the Magnitude and Direction of Weight Vectors",
+      "abstract": "Modern neural network training relies on optimizers such as Adam and Muon which act on each weight matrix as a single object. Yet every weight matrix carries two distinct quantities -- a \\emph{magnitude} and a \\emph{direction} -- and all optimizers stepping in the matrix as a whole couple their dynamics: the directional change from an update depends on the current magnitude, while the magnitude drifts as a byproduct of learning the direction, so neither is governed directly by the learning rate. Typical training therefore leans on surrounding recipes such as weight decay and warmup to keep learning stable at scale, though these regulate the coupling only indirectly; other recent methods instead constrain the weight to a fixed-norm sphere, but add no learnable magnitude, leaving scale control to normalization layers alone. We propose \\emph{Magnitude--Direction (MD) Decoupling}, an optimizer modification that factorizes each weight into a fixed-norm direction on a hypersphere and learnable per-row and per-column magnitude gains, updated at separate learning rates, all while the model still sees a single fused weight tensor. The method is agnostic to the base optimizer and removes the need for weight decay and warmup. Across both Adam and Muon, MD Decoupling improves on well-tuned baselines, transfers the optimal LR across model width without retuning, and continues to help at scale on large Mixture-of-Experts (MoE) models. Treating magnitude and direction as separately controlled quantities thus yields more predictable training dynamics and a simple, broadly applicable improvement to modern optimizers.",
+      "authors": [
+        "Alexander Hägele",
+        "Alejandro Hernández-Cano",
+        "Atli Kosson",
+        "Martin Jaggi"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-24T15:40:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.25971v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "decoupling magnitude and direction of weight vectors for training",
+      "llm_evidence_cn": "解耦权重向量幅度和方向以优化训练",
+      "llm_evidence": "解耦权重向量幅度和方向以优化训练",
+      "canonical_evidence": "解耦权重向量幅度和方向以优化训练",
+      "llm_tldr_en": "Proposes decoupling weight magnitude and direction in neural network training, enabling direct control over both dynamics and improving convergence.",
+      "llm_tldr_cn": "现代优化器将权重矩阵视为整体，导致幅度和方向耦合，训练依赖权重衰减和预热等间接调节。本文提出直接解耦幅度和方向的方法，允许分别设置学习率，提高了训练稳定性和收敛速度，在多种架构上验证了效果。",
+      "llm_tldr": "现代优化器将权重矩阵视为整体，导致幅度和方向耦合，训练依赖权重衰减和预热等间接调节。本文提出直接解耦幅度和方向的方法，允许分别设置学习率，提高了训练稳定性和收敛速度，在多种架构上验证了效果。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.26397v1",
+      "source": "arxiv",
+      "title": "Deterministic Pareto-Optimal Policy Synthesis for Multi-Objective Reinforcement Learning",
+      "abstract": "Real-world decision-making often requires balancing multiple conflicting objectives, a challenge that standard Reinforcement Learning (RL) frequently addresses by aggregating rewards into a single scalar signal. While effective for simple tasks, this approach often fails to capture the full spectrum of optimal trade-offs, known as the Pareto frontier. In this paper, we introduce a novel preference-conditioned Bellman operator, motivated from the Chebyshev scalarization, designed to compute deterministic Pareto-optimal policies for Multi-Objective Markov Decision Processes (MOMDPs). We prove that this operator satisfies an enveloping property, where the estimated value functions upper-bound the true Pareto frontier, and demonstrate that it monotonically converges to a coverage set of this frontier. Furthermore, we also show how to extract deterministic policies from these converged Q-estimates. This ensures the agent can recover a policy for any given preference, capturing the entire Pareto-optimal frontier while guaranteeing each synthesized policy remains approximately Pareto-optimal. Experimental results validate that our algorithm successfully recovers complex trade-offs, providing a solution for deterministic Pareto-optimal policy synthesis.",
+      "authors": [
+        "Aniruddha Joshi",
+        "Niklas Lauffer",
+        "Sanjit Seshia"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-24T21:28:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.26397v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multi-objective RL algorithm using Pareto-optimal policy synthesis",
+      "llm_evidence_cn": "多目标强化学习帕累托最优策略合成方法",
+      "llm_evidence": "多目标强化学习帕累托最优策略合成方法",
+      "canonical_evidence": "多目标强化学习帕累托最优策略合成方法",
+      "llm_tldr_en": "Proposes a preference-conditioned Bellman operator for deterministic Pareto-optimal policies in multi-objective RL, with proven enveloping property",
+      "llm_tldr_cn": "针对多目标强化学习中权衡多个冲突目标的需求，本文提出了一种基于切比雪夫标量化的偏好条件贝尔曼算子，用于求解确定性的帕累托最优策略。该算子具有包围性质，可确保估计值函数上界真实帕累托前沿。实验证明了其在多目标马尔可夫决策过程中的有效性，为多目标强化学习提供了新思路。",
+      "llm_tldr": "针对多目标强化学习中权衡多个冲突目标的需求，本文提出了一种基于切比雪夫标量化的偏好条件贝尔曼算子，用于求解确定性的帕累托最优策略。该算子具有包围性质，可确保估计值函数上界真实帕累托前沿。实验证明了其在多目标马尔可夫决策过程中的有效性，为多目标强化学习提供了新思路。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.26588v1",
+      "source": "arxiv",
+      "title": "Inference-Time Robot Behavior Steering through Physically-Aware Reconfiguration of Task-Structure",
+      "abstract": "A central challenge in deploying learned robot policies is inference-time behavior steering: redirecting a policy at test time to satisfy user preferences not anticipated during training, without retraining. Existing methods fail in two modes: end-to-end methods require fine-tuning or expert-level guidance, while neuro-symbolic methods rely on predefined symbols whose edits can result in logically reasonable but physically infeasible plans. To address this challenge, we propose ReStruct, which builds upon a neural automaton policy that decomposes a visuomotor policy into a high-level state-machine skeleton capturing task structure and a low-level continuous controller represented as a residual policy. Specifically, ReStruct adopts the automaton to represent the preference and incorporates it into the skeleton through a synchronous product, thereby reconfiguring the task structure. With the controller kept frozen, the action priors provided by the skeleton are updated accordingly to enable physically-aware control under a modified task structure. Extensive experiments from simulation and real-world show that ReStruct steers a wide range of preferences, from object-centric specifications to temporal-logic constraints, and after steering surpasses existing methods, exceeding VLA models in both task success and preference-following by up to 25%.",
+      "authors": [
+        "Yiyuan Pan",
+        "Hanjiang Hu",
+        "Shangtao Li",
+        "Xusheng Luo",
+        "Changliu Liu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-25T04:20:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.26588v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "inference-time behavior steering for robot policies using task structure reconfiguration",
+      "llm_evidence_cn": "通过任务结构重配置实现机器人策略推理时行为引导",
+      "llm_evidence": "通过任务结构重配置实现机器人策略推理时行为引导",
+      "canonical_evidence": "通过任务结构重配置实现机器人策略推理时行为引导",
+      "llm_tldr_en": "Proposes ReStruct, a neural automaton policy that reconfigures task structure at test time to steer robot behavior according to user preferences without retraining.",
+      "llm_tldr_cn": "部署机器人策略时需在测试时调整行为满足用户偏好但无需重新训练。现有方法要么需微调，要么符号推理易产生物理不可行计划。本文提出ReStruct，基于神经自动机策略，将视觉运动策略分解为高层状态机骨架和底层残差控制器，在推理时通过物理感知的任务结构重配置实现行为引导，实验证明其生成物理可行且用户偏好满足的计划。",
+      "llm_tldr": "部署机器人策略时需在测试时调整行为满足用户偏好但无需重新训练。现有方法要么需微调，要么符号推理易产生物理不可行计划。本文提出ReStruct，基于神经自动机策略，将视觉运动策略分解为高层状态机骨架和底层残差控制器，在推理时通过物理感知的任务结构重配置实现行为引导，实验证明其生成物理可行且用户偏好满足的计划。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.17567v1",
+      "source": "arxiv",
+      "title": "Reducing Learner Redundancy in Boosting via Residual Orthogonalization",
+      "abstract": "While sequential residual fitting is the bedrock of standard boosting frameworks, it inherently breeds learner redundancy by repeatedly revisiting correlated error components. To address this bottleneck, we propose a shift from residual fitting to \\textit{residual orthogonalization} and introduce SCBoost. Our framework tackles redundancy through two complementary mechanisms: Spectral Residual Projection (SRP) and Covariance-Regularized Weighting (CRW). During training, SRP projects each residual target onto the orthogonal complement of the historical prediction subspace, forcing successive learners to capture only novel empirical innovations. During aggregation, CRW optimizes ensemble weights on a validation set with an explicit covariance penalty to mitigate remaining correlations. Theoretically, we provide a finite-sample geometric characterization proving that SRP yields an exact additive residual-energy decomposition. Furthermore, under an isotropic-noise assumption, we rigorously establish the conditions under which this projection improves the effective Signal-to-Noise Ratio. Extensive experiments across ten benchmark datasets demonstrate that SCBoost delivers strong out-of-the-box performance, particularly in accuracy and F1 score. This work reinterprets boosting through a geometric lens, suggesting that explicit redundancy control is a principled and necessary step toward more efficient ensemble architectures.",
+      "authors": [
+        "Ye Su",
+        "Jipeng Guo",
+        "Yong Liu",
+        "Xin Xu",
+        "Gangchun Zhang",
+        "Jinxin Chen",
+        "Di Wu",
+        "Longlong Zhao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-16T06:13:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.17567v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Residual orthogonalization reduces learner redundancy in boosting",
+      "llm_evidence_cn": "残差正交化减少Boosting中的学习器冗余",
+      "llm_evidence": "残差正交化减少Boosting中的学习器冗余",
+      "canonical_evidence": "残差正交化减少Boosting中的学习器冗余",
+      "llm_tldr_en": "Proposes SCBoost with Spectral Residual Projection and Covariance-Regularized Weighting to reduce learner redundancy by forcing successive learners to capture novel error components.",
+      "llm_tldr_cn": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
+      "llm_tldr": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "carryover_cache",
+      "paper_id": "2606.17567v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.21792v1",
+      "source": "arxiv",
+      "title": "THREAD: Trajectory Planning for Hybrid Rigid-Soft Manipulators with Environment-Aware Diffusion",
+      "abstract": "Manipulation in confined environments, such as threading a manipulator through narrow apertures, remains a fundamental challenge, especially for conventional rigid robots. Hybrid rigid-soft manipulators offer promise but face two compounding planning challenges: backbone shapes feasible in free space become infeasible under environmental contact, and planning rigid and soft segments independently ignores their kinematic coupling. We present THREAD, the first diffusion-based trajectory planner for hybrid manipulation, learning a generative prior over physically realizable backbone trajectories conditioned on local environment geometry, with physics-inspired losses encoding curvature, smoothness, and collision constraints jointly across both segments. Trained in simulation, THREAD achieves 92.4% task success with 5x fewer collisions than the strongest baseline. We show cross-embodiment real-world transfer with minimal online updates, successfully threading through apertures as small as 1.3x the soft segment diameter.",
+      "authors": [
+        "Shivani Kamtikar",
+        "Pranav Asthana",
+        "Naveen Kumar Uppalapati",
+        "Girish Krishnan",
+        "Girish Chowdhary"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-19T22:55:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.21792v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "trajectory planning for hybrid rigid-soft manipulators with diffusion",
+      "llm_evidence_cn": "混合刚柔操作器的扩散轨迹规划",
+      "llm_evidence": "混合刚柔操作器的扩散轨迹规划",
+      "canonical_evidence": "混合刚柔操作器的扩散轨迹规划",
+      "llm_tldr_en": "THREAD is the first diffusion-based trajectory planner for hybrid rigid-soft manipulators, learning a generative prior conditioned on environment geometry.",
+      "llm_tldr_cn": "针对混合刚柔操作器在受限环境中的轨迹规划难题，本文提出THREAD，首个基于扩散模型的轨迹规划器。它学习一个基于局部环境几何条件的生成先验，并引入物理启发损失以联合编码曲率、平滑性和碰撞约束。在模拟和真实任务上展示了有效规划。",
+      "llm_tldr": "针对混合刚柔操作器在受限环境中的轨迹规划难题，本文提出THREAD，首个基于扩散模型的轨迹规划器。它学习一个基于局部环境几何条件的生成先验，并引入物理启发损失以联合编码曲率、平滑性和碰撞约束。在模拟和真实任务上展示了有效规划。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.21895v1",
+      "source": "arxiv",
+      "title": "Olfactory-Inspired Sparse Combinatorial Coding for Low-Resource Named Entity Recognition",
+      "abstract": "Named Entity Recognition (NER) in low-resource languages suffers from limited supervision and a lack of high-quality pretrained embeddings. Biological olfaction, which relies on sparse combinatorial coding through receptor and glomerular organization, offers a compelling paradigm for learning robust representations under uncertainty. In this paper, we introduce a receptor-glomerular bottleneck - a novel, biologically-inspired olfactory architecture - between standard token embeddings and a BiLSTM-CRF sequence model. We evaluate our architecture across six multilingual datasets trained entirely from scratch (without pre-trained embeddings) under varied data-scale conditions, including a strict 1k-sentence low-resource control. Our results demonstrate that introducing a representation bottleneck yields F1 score improvements under severe data scarcity, primarily by acting as a powerful regularizer. Under the 1k capped training condition, at least one olfactory-inspired configuration achieves the highest mean F1 score across all six datasets. While these improvements represent near-ties with generic bottleneck controls for most languages, the olfactory architecture provides a significant advantage in languages like Bangla (+6.23% F1 over standard baseline and +8.47% F1 over the best control baseline) where generic bottlenecks degrade performance. We also observe improvements in the ultra-low-resource Telugu setting (+4.43% F1) at full-scale, and find that sparse specialization naturally emerges within the receptor layer. Our findings suggest that structured sparse coding inspired by olfactory networks serves as an effective inductive bias and regularizer when representations must be learned from limited or noisy supervision.",
+      "authors": [
+        "Bhushan Deshpande"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-20T06:15:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.21895v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "biologically-inspired sparse combinatorial coding for robust representation learning",
+      "llm_evidence_cn": "生物启发的稀疏组合编码用于鲁棒表示学习",
+      "llm_evidence": "生物启发的稀疏组合编码用于鲁棒表示学习",
+      "canonical_evidence": "生物启发的稀疏组合编码用于鲁棒表示学习",
+      "llm_tldr_en": "Introduces a receptor-glomerular bottleneck inspired by olfactory sparse coding, learning robust token embeddings for low-resource NER without pretrained embeddings.",
+      "llm_tldr_cn": "低资源命名实体识别因缺乏高质量预训练嵌入而困难，本文借鉴生物嗅觉稀疏编码机制，在标准嵌入与序列模型之间插入受体-肾小球瓶颈结构。该结构在无外部预训练嵌入的条件下，从零训练即可在多个语言数据集上显著提升NER性能，尤其在极低资源场景下表现突出。",
+      "llm_tldr": "低资源命名实体识别因缺乏高质量预训练嵌入而困难，本文借鉴生物嗅觉稀疏编码机制，在标准嵌入与序列模型之间插入受体-肾小球瓶颈结构。该结构在无外部预训练嵌入的条件下，从零训练即可在多个语言数据集上显著提升NER性能，尤其在极低资源场景下表现突出。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.17967v1",
+      "source": "arxiv",
+      "title": "Learning task-specific subspaces via interventional post-training of speech foundation models",
+      "abstract": "Speech foundation models, pre-trained on large corpora of unlabelled speech data, produce general-purpose representations which are useful across tasks. However, these representations encode information about salient speech variables in a distributed manner, while downstream speech tasks rely on only some of this variability. In this work, we propose a post-training refinement approach using interventional contrastive learning. By leveraging an interventional dataset and multi-part contrastive loss, we learn a transformation from the entangled representation space of speech foundation models into separate content and speaker subspaces. We evaluate the learnt representations on speaker verification and keyword spotting tasks, showing improved out-of-domain speaker verification performance and evidence that speaker and content information are separated across the learned subspaces.",
+      "authors": [
+        "Jack Cox",
+        "Jon Barker"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-16T14:18:20+00:00",
+      "link": "https://arxiv.org/pdf/2606.17967v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Representation learning via interventional contrastive post-training for speech",
+      "llm_evidence_cn": "通过干预对比后训练进行语音表征学习",
+      "llm_evidence": "通过干预对比后训练进行语音表征学习",
+      "canonical_evidence": "通过干预对比后训练进行语音表征学习",
+      "llm_tldr_en": "Proposes interventional contrastive learning to refine speech foundation model representations into separate content and speaker subspaces, improving downstream tasks.",
+      "llm_tldr_cn": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
+      "llm_tldr": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "carryover_cache",
+      "paper_id": "2606.17967v1",
+      "quick_tier": "8plus"
+    }
+  ]
+}

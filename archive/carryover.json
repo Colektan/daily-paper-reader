@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-27T20:15:30.372767+00:00",
-  "updated_date": "20260627",
+  "generated_at": "2026-06-28T20:28:51.256780+00:00",
+  "updated_date": "20260628",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260627",
+      "updated_date": "20260628",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260627",
+      "updated_date": "20260628",
       "carryover_days": 9,
       "items": [
         {
@@ -50,7 +50,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18509v1",
-          "carry_days": 6
+          "carry_days": 7
         },
         {
           "id": "2606.18663v1",
@@ -89,44 +89,7 @@
           "matched_requirement_id": "req-13",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18663v1",
-          "carry_days": 6
-        },
-        {
-          "id": "2606.17967v1",
-          "source": "arxiv",
-          "title": "Learning task-specific subspaces via interventional post-training of speech foundation models",
-          "abstract": "Speech foundation models, pre-trained on large corpora of unlabelled speech data, produce general-purpose representations which are useful across tasks. However, these representations encode information about salient speech variables in a distributed manner, while downstream speech tasks rely on only some of this variability. In this work, we propose a post-training refinement approach using interventional contrastive learning. By leveraging an interventional dataset and multi-part contrastive loss, we learn a transformation from the entangled representation space of speech foundation models into separate content and speaker subspaces. We evaluate the learnt representations on speaker verification and keyword spotting tasks, showing improved out-of-domain speaker verification performance and evidence that speaker and content information are separated across the learned subspaces.",
-          "authors": [
-            "Jack Cox",
-            "Jon Barker"
-          ],
-          "primary_category": "cs.CL",
-          "categories": [
-            "cs.CL"
-          ],
-          "published": "2026-06-16T14:18:20+00:00",
-          "link": "https://arxiv.org/pdf/2606.17967v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Representation learning via interventional contrastive post-training for speech",
-          "llm_evidence_cn": "通过干预对比后训练进行语音表征学习",
-          "llm_evidence": "通过干预对比后训练进行语音表征学习",
-          "canonical_evidence": "通过干预对比后训练进行语音表征学习",
-          "llm_tldr_en": "Proposes interventional contrastive learning to refine speech foundation model representations into separate content and speaker subspaces, improving downstream tasks.",
-          "llm_tldr_cn": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
-          "llm_tldr": "针对语音基础模型表征编码混杂的问题，提出干预对比后训练方法，通过干预数据集和多部分对比损失，将语音基础模型的纠缠表征空间分解为内容子空间和说话人子空间。在说话人验证和关键词识别任务上验证了所学表征的有效性，表明该方法能提升下游任务的性能。该方法为表征解耦提供了一种新范式。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.17967v1",
-          "carry_days": 6
+          "carry_days": 7
         },
         {
           "id": "2606.18472v1",
@@ -166,50 +129,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18472v1",
-          "carry_days": 6
-        },
-        {
-          "id": "2606.17567v1",
-          "source": "arxiv",
-          "title": "Reducing Learner Redundancy in Boosting via Residual Orthogonalization",
-          "abstract": "While sequential residual fitting is the bedrock of standard boosting frameworks, it inherently breeds learner redundancy by repeatedly revisiting correlated error components. To address this bottleneck, we propose a shift from residual fitting to \\textit{residual orthogonalization} and introduce SCBoost. Our framework tackles redundancy through two complementary mechanisms: Spectral Residual Projection (SRP) and Covariance-Regularized Weighting (CRW). During training, SRP projects each residual target onto the orthogonal complement of the historical prediction subspace, forcing successive learners to capture only novel empirical innovations. During aggregation, CRW optimizes ensemble weights on a validation set with an explicit covariance penalty to mitigate remaining correlations. Theoretically, we provide a finite-sample geometric characterization proving that SRP yields an exact additive residual-energy decomposition. Furthermore, under an isotropic-noise assumption, we rigorously establish the conditions under which this projection improves the effective Signal-to-Noise Ratio. Extensive experiments across ten benchmark datasets demonstrate that SCBoost delivers strong out-of-the-box performance, particularly in accuracy and F1 score. This work reinterprets boosting through a geometric lens, suggesting that explicit redundancy control is a principled and necessary step toward more efficient ensemble architectures.",
-          "authors": [
-            "Ye Su",
-            "Jipeng Guo",
-            "Yong Liu",
-            "Xin Xu",
-            "Gangchun Zhang",
-            "Jinxin Chen",
-            "Di Wu",
-            "Longlong Zhao"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-06-16T06:13:59+00:00",
-          "link": "https://arxiv.org/pdf/2606.17567v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Residual orthogonalization reduces learner redundancy in boosting",
-          "llm_evidence_cn": "残差正交化减少Boosting中的学习器冗余",
-          "llm_evidence": "残差正交化减少Boosting中的学习器冗余",
-          "canonical_evidence": "残差正交化减少Boosting中的学习器冗余",
-          "llm_tldr_en": "Proposes SCBoost with Spectral Residual Projection and Covariance-Regularized Weighting to reduce learner redundancy by forcing successive learners to capture novel error components.",
-          "llm_tldr_cn": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
-          "llm_tldr": "针对Boosting中顺序残差拟合导致学习器反复处理相关误差分量而冗余的问题，提出SCBoost，通过谱残差投影（SRP）迫使后继学习器只捕捉新误差，并通过协方差正则化加权（CRW）优化集成权重。实验表明SCBoost在多个数据集上提升了泛化性能，减少冗余。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.17567v1",
-          "carry_days": 6
+          "carry_days": 7
         },
         {
           "id": "2606.19203v1",
@@ -249,7 +169,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.19203v1",
-          "carry_days": 6
+          "carry_days": 7
         },
         {
           "id": "2606.22307v1",
@@ -275,13 +195,13 @@
             "keyword:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "protein representation learning with data augmentation and manifold restore mixing",
-          "llm_evidence_cn": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
-          "llm_evidence": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
-          "canonical_evidence": "蛋白质表示学习，通过流形恢复混合的数据增强方法",
-          "llm_tldr_en": "Proposes Manifold Restore Mixing for protein representation learning, a data augmentation method that restores original structure after perturbation, improving performance without disrupting protein function.",
-          "llm_tldr_cn": "现有数据增强方法可能破坏蛋白质结构，或减少结构多样性。本文提出流形恢复混合，通过先施加扰动再恢复原始结构的方式生成兼具变异性和结构完整性的增强数据。该方法在蛋白质表示学习任务上提升了性能，为生物信息学中的表示学习提供了新思路。",
-          "llm_tldr": "现有数据增强方法可能破坏蛋白质结构，或减少结构多样性。本文提出流形恢复混合，通过先施加扰动再恢复原始结构的方式生成兼具变异性和结构完整性的增强数据。该方法在蛋白质表示学习任务上提升了性能，为生物信息学中的表示学习提供了新思路。",
+          "llm_evidence_en": "Data augmentation method for protein representation learning",
+          "llm_evidence_cn": "用于蛋白质表征学习的数据增强方法",
+          "llm_evidence": "用于蛋白质表征学习的数据增强方法",
+          "canonical_evidence": "用于蛋白质表征学习的数据增强方法",
+          "llm_tldr_en": "Proposes Manifold Restore Mixing, a data augmentation method that restores disrupted protein structure while preserving variation, enhancing representation learning.",
+          "llm_tldr_cn": "现有蛋白质表征学习的数据增强方法往往破坏蛋白质结构或缺乏多样性。本文提出流形恢复混合（Manifold Restore Mixing），一种新的数据增强策略，通过恢复被增强操作破坏的流形结构，同时保持数据多样性。在多个蛋白质任务上，该方法显著提升了表征质量，优于现有增强方法。该工作为解决蛋白质结构-功能关系中的数据处理问题提供了新视角。",
+          "llm_tldr": "现有蛋白质表征学习的数据增强方法往往破坏蛋白质结构或缺乏多样性。本文提出流形恢复混合（Manifold Restore Mixing），一种新的数据增强策略，通过恢复被增强操作破坏的流形结构，同时保持数据多样性。在多个蛋白质任务上，该方法显著提升了表征质量，优于现有增强方法。该工作为解决蛋白质结构-功能关系中的数据处理问题提供了新视角。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -329,7 +249,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.21649v2",
-          "carry_days": 1
+          "carry_days": 2
         },
         {
           "id": "2606.21590v1",
@@ -368,7 +288,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.21590v1",
-          "carry_days": 1
+          "carry_days": 2
         },
         {
           "id": "2606.21957v1",
@@ -391,13 +311,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "self-supervised contrastive learning for time series with temporal shift invariance",
-          "llm_evidence_cn": "时间序列对比学习，通过时间移位不变性自监督表示学习",
-          "llm_evidence": "时间序列对比学习，通过时间移位不变性自监督表示学习",
-          "canonical_evidence": "时间序列对比学习，通过时间移位不变性自监督表示学习",
-          "llm_tldr_en": "Proposes a contrastive learning method for time series that explicitly encodes temporal shift invariance, reducing reliance on hand-crafted augmentations and improving generalization.",
-          "llm_tldr_cn": "针对时间序列对比学习中手工数据增强依赖领域假设的问题，本文提出显式编码时间移位不变性的对比学习框架。该方法通过构建时间视图对，无需手工增强即可学习鲁棒特征表示。实验证明该方法在多个时间序列下游任务中优于现有自监督方法，具有更好的泛化能力。",
-          "llm_tldr": "针对时间序列对比学习中手工数据增强依赖领域假设的问题，本文提出显式编码时间移位不变性的对比学习框架。该方法通过构建时间视图对，无需手工增强即可学习鲁棒特征表示。实验证明该方法在多个时间序列下游任务中优于现有自监督方法，具有更好的泛化能力。",
+          "llm_evidence_en": "self-supervised contrastive learning for time series",
+          "llm_evidence_cn": "自监督对比学习用于时间序列",
+          "llm_evidence": "自监督对比学习用于时间序列",
+          "canonical_evidence": "自监督对比学习用于时间序列",
+          "llm_tldr_en": "Proposes temporal view construction for time series contrastive learning, learning shift invariance without hand-crafted augmentations.",
+          "llm_tldr_cn": "现有时间序列自监督对比学习依赖于手工数据增强和掩码启发式方法，限制了泛化能力。本文提出通过显式编码时间位移不变性来构建正样本对，无需领域特定的手工增强，在多元时间序列基准上取得了改进的表示质量。",
+          "llm_tldr": "现有时间序列自监督对比学习依赖于手工数据增强和掩码启发式方法，限制了泛化能力。本文提出通过显式编码时间位移不变性来构建正样本对，无需领域特定的手工增强，在多元时间序列基准上取得了改进的表示质量。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -433,13 +353,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "dualistic meta-learning with joint domain-class matching for open set domain generalization",
-          "llm_evidence_cn": "双元元学习结合领域-类别匹配用于开集域泛化",
-          "llm_evidence": "双元元学习结合领域-类别匹配用于开集域泛化",
-          "canonical_evidence": "双元元学习结合领域-类别匹配用于开集域泛化",
-          "llm_tldr_en": "Proposes MEDIC, a dualistic meta-learning strategy with joint domain-class matching for open set domain generalization, addressing class imbalance and outlier rejection.",
-          "llm_tldr_cn": "针对开集域泛化中类别不平衡导致模型过度拒绝已知类的问题，本文提出双元元学习策略MEDIC，联合学习领域和类别匹配。该方法通过在元训练中模拟开集场景，训练模型区分已知和未知类。实验表明，MEDIC在多个开集域泛化基准上显著优于现有方法。",
-          "llm_tldr": "针对开集域泛化中类别不平衡导致模型过度拒绝已知类的问题，本文提出双元元学习策略MEDIC，联合学习领域和类别匹配。该方法通过在元训练中模拟开集场景，训练模型区分已知和未知类。实验表明，MEDIC在多个开集域泛化基准上显著优于现有方法。",
+          "llm_evidence_en": "meta-learning for domain generalization",
+          "llm_evidence_cn": "元学习用于域泛化",
+          "llm_evidence": "元学习用于域泛化",
+          "canonical_evidence": "元学习用于域泛化",
+          "llm_tldr_en": "Proposes dualistic meta-learning strategy for open set domain generalization, addressing class mismatch and over-rejection.",
+          "llm_tldr_cn": "现有域泛化方法忽略了源域和目标域标签不匹配的现实情况，导致模型在开放集场景下过度拒绝已知类。本文提出一种名为MEDIC的双重元学习策略，通过联合域-类匹配来缓解正负样本不平衡问题，在开放集域泛化中提升对未知类的识别能力。",
+          "llm_tldr": "现有域泛化方法忽略了源域和目标域标签不匹配的现实情况，导致模型在开放集场景下过度拒绝已知类。本文提出一种名为MEDIC的双重元学习策略，通过联合域-类匹配来缓解正负样本不平衡问题，在开放集域泛化中提升对未知类的识别能力。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -451,21 +371,25 @@
           "carry_days": 1
         },
         {
-          "id": "2606.25659v1",
+          "id": "2606.22383v1",
           "source": "arxiv",
-          "title": "Learning to Adapt: Reptile-D-Learning for Robust and Efficient Control Under Parametric Uncertainty",
-          "abstract": "Learning-based Lyapunov Control (LLC) provides formal stability guarantees for nonlinear systems, but its validity relies heavily on accurate system models. Parameter variations and uncertainties may invalidate stability constraints, leading to costly retraining. Although D-learning can estimate Lyapunov derivatives without relying on explicit dynamics models, it remains limited by single-task dynamics and degrades under large parameter shifts. We propose Reptile-D-learning, a framework that leverages the Reptile meta-learning algorithm to capture shared dynamical structures across systems with different parameters, thereby learning a generalizable Lyapunov network initialization and a high-performance controller. Experiments on multiple nonlinear control systems demonstrate that Reptile-D-learning significantly improves both generalization and rapid adaptation to unseen parameter configurations.",
+          "title": "Structured Hyperedge Adaptation for Parameter-Efficient Fine-Tuning of Vision Transformers",
+          "abstract": "Parameter-efficient fine-tuning (PEFT) has become a practical solution for adapting large pretrained vision transformers (ViTs) to downstream tasks while updating only a small subset of parameters. However, existing adapter-based methods perform adaptation independently for each token, implicitly assuming that token refinements should be learned in isolation. This token-wise formulation overlooks the structured relationships among tokens that naturally arise in visual scenes, potentially leading to redundant updates and spatially inconsistent feature refinement. In this work, we revisit the design of parameter-efficient adapters and propose to perform adaptation in hyperedge space rather than token space. We introduce HyperAdapter, a hypergraph-based adapter architecture that enables structured, group-aware adaptation through soft token routing. HyperAdapter constructs a soft hypergraph over ViT tokens using prototype-based assignments, aggregates token features into latent hyperedge representations, applies lightweight bottleneck adaptation at the hyperedge level, and diffuses the resulting updates back to tokens via the hypergraph incidence structure. This design injects an explicit structural inductive bias into PEFT while preserving the modularity and efficiency of standard adapters. Extensive experiments across diverse visual benchmarks demonstrate that structured hyperedge adaptation consistently outperforms strong PEFT baselines under comparable parameter budgets, with particularly pronounced gains on tasks requiring structured reasoning. Our results suggest that the choice of adaptation space is a critical yet underexplored dimension in parameter-efficient transfer for ViTs.",
           "authors": [
-            "Haipeng Cao",
-            "Zhaolong Shen",
-            "Quan Quan"
+            "Edwin Kwadwo Tenagyei",
+            "Lei Wang",
+            "Ugochukwu Ejike Akpudo",
+            "Jun Zhou",
+            "Yongsheng Gao"
           ],
-          "primary_category": "cs.RO",
+          "primary_category": "cs.CV",
           "categories": [
-            "cs.RO"
+            "cs.CV",
+            "cs.AI",
+            "cs.LG"
           ],
-          "published": "2026-06-24T10:11:29+00:00",
-          "link": "https://arxiv.org/pdf/2606.25659v1",
+          "published": "2026-06-21T08:09:08+00:00",
+          "link": "https://arxiv.org/pdf/2606.22383v1",
           "tags": [
             "keyword:RL-VLA-world",
             "keyword:rep-learning",
@@ -473,52 +397,56 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Reptile meta-learning for robust control under parametric uncertainty",
-          "llm_evidence_cn": "使用Reptile元学习在参数不确定下实现鲁棒控制",
-          "llm_evidence": "使用Reptile元学习在参数不确定下实现鲁棒控制",
-          "canonical_evidence": "使用Reptile元学习在参数不确定下实现鲁棒控制",
-          "llm_tldr_en": "Combines Reptile meta-learning with D-learning to learn a generalizable Lyapunov network initialization for control across varying system parameters.",
-          "llm_tldr_cn": "该论文针对基于学习的Lyapunov控制对参数变化敏感的问题，提出Reptile-D-learning框架。利用Reptile元学习捕捉不同参数系统间的共享动力学结构，学习可泛化的Lyapunov网络初始化和高性能控制器。实验表明该方法在参数偏移下仍能保持稳定，显著提高了控制鲁棒性和适应效率。",
-          "llm_tldr": "该论文针对基于学习的Lyapunov控制对参数变化敏感的问题，提出Reptile-D-learning框架。利用Reptile元学习捕捉不同参数系统间的共享动力学结构，学习可泛化的Lyapunov网络初始化和高性能控制器。实验表明该方法在参数偏移下仍能保持稳定，显著提高了控制鲁棒性和适应效率。",
+          "llm_evidence_en": "hyperedge-based adaptation for efficient fine-tuning improves representation learning",
+          "llm_evidence_cn": "基于超边的自适应微调方法提升表征学习效率",
+          "llm_evidence": "基于超边的自适应微调方法提升表征学习效率",
+          "canonical_evidence": "基于超边的自适应微调方法提升表征学习效率",
+          "llm_tldr_en": "HyperAdapter performs PEFT in hyperedge space to capture structured token relationships, improving efficiency and spatial consistency over token-wise adapters.",
+          "llm_tldr_cn": "针对现有参数高效微调方法忽略token间结构化关系的问题，提出在超边空间进行自适应的HyperAdapter，利用超边捕获视觉场景中的结构化关系，减少冗余更新并提升特征一致性，在多个下游任务上以更少参数取得更优性能。",
+          "llm_tldr": "针对现有参数高效微调方法忽略token间结构化关系的问题，提出在超边空间进行自适应的HyperAdapter，利用超边捕获视觉场景中的结构化关系，减少冗余更新并提升特征一致性，在多个下游任务上以更少参数取得更优性能。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
-          "matched_requirement_id": "req-11",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.25659v1",
+          "paper_id": "2606.22383v1",
           "carry_days": 1
         },
         {
-          "id": "2606.25971v1",
+          "id": "2606.25488v1",
           "source": "arxiv",
-          "title": "Improving Neural Network Training by Decoupling the Magnitude and Direction of Weight Vectors",
-          "abstract": "Modern neural network training relies on optimizers such as Adam and Muon which act on each weight matrix as a single object. Yet every weight matrix carries two distinct quantities -- a \\emph{magnitude} and a \\emph{direction} -- and all optimizers stepping in the matrix as a whole couple their dynamics: the directional change from an update depends on the current magnitude, while the magnitude drifts as a byproduct of learning the direction, so neither is governed directly by the learning rate. Typical training therefore leans on surrounding recipes such as weight decay and warmup to keep learning stable at scale, though these regulate the coupling only indirectly; other recent methods instead constrain the weight to a fixed-norm sphere, but add no learnable magnitude, leaving scale control to normalization layers alone. We propose \\emph{Magnitude--Direction (MD) Decoupling}, an optimizer modification that factorizes each weight into a fixed-norm direction on a hypersphere and learnable per-row and per-column magnitude gains, updated at separate learning rates, all while the model still sees a single fused weight tensor. The method is agnostic to the base optimizer and removes the need for weight decay and warmup. Across both Adam and Muon, MD Decoupling improves on well-tuned baselines, transfers the optimal LR across model width without retuning, and continues to help at scale on large Mixture-of-Experts (MoE) models. Treating magnitude and direction as separately controlled quantities thus yields more predictable training dynamics and a simple, broadly applicable improvement to modern optimizers.",
+          "title": "Distill on a Diet: Efficient Knowledge Distillation via Learnable Data Pruning",
+          "abstract": "Knowledge Distillation (KD) is widely used to obtain compact models for efficient inference in resource-constrained environments. Yet the computational overhead of the distillation process itself is often overlooked, raising the question of whether a better student model can be obtained with less data and less compute via data pruning. However, existing data pruning methods are not designed for KD: some introduce substantial overhead, such as obtaining training dynamics through retraining, while others rely on heuristic selection rules that fail to capture what KD actually requires, often resulting in suboptimal subsets. To address these issues, we propose IF-Beta, an efficient data pruning framework that combines influence functions with a learnable sampling policy. Empirically, we first demonstrate that influence functions can serve as an effective and efficient estimator of sample impact in KD settings, where only a pretrained teacher is available. Building on this, our sampling policy is specifically parameterized by a Beta distribution, whose highly flexible two-parameter family allows the policy to adapt to diverse pruning regimes rather than being tied to fixed heuristic forms. Next, we formulate KD pruning as optimizing this policy through a bilevel objective, where the inner loop operates in the teacher feature space with a KD-aligned objective, enabling fast proxy training, while the outer loop updates the policy parameters to maximize distillation performance. This design ensures that IF-Beta is both computationally efficient and inherently aligned with the goals of KD. Extensive experiments on CIFAR-10/100 and ImageNet show that IF-Beta consistently outperforms other baselines across a wide range of pruning ratios. Remarkably, IF-Beta enables students trained on less data and less compute to surpass the performance of students distilled on the full dataset.",
           "authors": [
-            "Alexander Hägele",
-            "Alejandro Hernández-Cano",
-            "Atli Kosson",
-            "Martin Jaggi"
+            "Yifan Wu",
+            "Yiqi Wang",
+            "Xichen Ye",
+            "Wenjing Yan",
+            "Xiaoqiang Li",
+            "Cheng Jin",
+            "Xiangyu Yue",
+            "Weizhong Zhang"
           ],
           "primary_category": "cs.LG",
           "categories": [
             "cs.LG"
           ],
-          "published": "2026-06-24T15:40:26+00:00",
-          "link": "https://arxiv.org/pdf/2606.25971v1",
+          "published": "2026-06-24T07:17:05+00:00",
+          "link": "https://arxiv.org/pdf/2606.25488v1",
           "tags": [
             "keyword:rep-learning",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "decoupling magnitude and direction of weight vectors for training optimization",
-          "llm_evidence_cn": "解耦权重幅度和方向优化训练",
-          "llm_evidence": "解耦权重幅度和方向优化训练",
-          "canonical_evidence": "解耦权重幅度和方向优化训练",
-          "llm_tldr_en": "Proposes decoupling weight magnitude and direction updates to stabilize neural network training, eliminating reliance on weight decay and warmup.",
-          "llm_tldr_cn": "该论文针对现代神经网络训练中优化器将权重幅度与方向耦合导致的不稳定问题，提出解耦更新策略，使学习率独立调控两者。通过理论分析和实验验证，该方法消除了对权重衰减和预热等外部配方的依赖，在多种模型和数据集上实现了更快的收敛和更好的泛化性能。该工作为训练大型神经网络提供了更简洁有效的优化方案。",
-          "llm_tldr": "该论文针对现代神经网络训练中优化器将权重幅度与方向耦合导致的不稳定问题，提出解耦更新策略，使学习率独立调控两者。通过理论分析和实验验证，该方法消除了对权重衰减和预热等外部配方的依赖，在多种模型和数据集上实现了更快的收敛和更好的泛化性能。该工作为训练大型神经网络提供了更简洁有效的优化方案。",
+          "llm_evidence_en": "learnable data pruning for knowledge distillation to reduce computational overhead",
+          "llm_evidence_cn": "可学习数据剪枝用于知识蒸馏降低计算开销",
+          "llm_evidence": "可学习数据剪枝用于知识蒸馏降低计算开销",
+          "canonical_evidence": "可学习数据剪枝用于知识蒸馏降低计算开销",
+          "llm_tldr_en": "IF-Beta is a data pruning framework for knowledge distillation that combines influence functions with a learnable selection strategy, enabling efficient student model training with less data and compute.",
+          "llm_tldr_cn": "知识蒸馏通常计算开销大，本文提出IF-Beta框架，结合影响函数与可学习数据剪枝策略，自动选择对蒸馏最有价值的数据子集。实验表明，该方法能在显著减少训练数据和计算量的同时，获得比传统方法更优的学生模型，有效提升了知识蒸馏的训练效率。",
+          "llm_tldr": "知识蒸馏通常计算开销大，本文提出IF-Beta框架，结合影响函数与可学习数据剪枝策略，自动选择对蒸馏最有价值的数据子集。实验表明，该方法能在显著减少训练数据和计算量的同时，获得比传统方法更优的学生模型，有效提升了知识蒸馏的训练效率。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -526,7 +454,84 @@
           "matched_query_text": "training optimization strategies for better model convergence",
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.25971v1",
+          "paper_id": "2606.25488v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.22589v1",
+          "source": "arxiv",
+          "title": "Training-free Task Classification for Multi-Task Model Merging",
+          "abstract": "Ever since the advent of foundation models and the pre-training-finetuning paradigm, there have been numerous efforts to merge multiple task-specific experts into a single multi-task model. Prior work largely focuses on finding a single merged model, but it often underperforms individual experts due to parameter interference. To resolve this, dynamic model merging employs routing to activate task-relevant parameters per input. However, existing routers typically require either additional training with abundant labeled datasets or assume the access to task IDs of each input at inference time. In this work, we aim to close the gap to expert performance without additional training or task-ID-access assumption. To this end, we formulate routing as training-free task classification for each test input. Using singular value decomposition (SVD)-based low-rank manifold approximations for each task, SiM scores tasks by the projection residual of the test input feature onto each task manifold and routes accordingly. The task manifolds are pre-computable offline from a pretrained backbone using a small per-task support set (e.g., 32 examples per task) prior to merging process, requiring no router training and no data during the merging process. Moreover, SiM integrates seamlessly with subspace-/mask-based merging that represents task-expert via lightweight compressed task vectors, avoiding the need to store full expert parameters. Experiments across computer vision and natural language processing benchmarks under task-unknown inference demonstrate that SiM substantially improves merged-model performance and consistently narrows the gap to individual task experts.",
+          "authors": [
+            "Jungyong Son",
+            "Jinwook Jung",
+            "Sungyong Baik"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-21T16:51:29+00:00",
+          "link": "https://arxiv.org/pdf/2606.22589v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "training-free task classification for dynamic model merging",
+          "llm_evidence_cn": "无需训练的任务分类用于动态模型合并",
+          "llm_evidence": "无需训练的任务分类用于动态模型合并",
+          "canonical_evidence": "无需训练的任务分类用于动态模型合并",
+          "llm_tldr_en": "Proposes a training-free router for dynamic model merging that classifies tasks at inference without task IDs or additional training, achieving performance close to individual experts.",
+          "llm_tldr_cn": "多任务模型合并通常需要单独训练路由或知晓任务ID，限制了实用性。本文提出一种无需训练的任务分类方法，利用聚类和最近邻分类，在推理时自动识别输入所属任务并激活对应专家参数。在多个多任务场景下，无需任何额外训练即可达到接近独立专家模型的性能，显著提升了模型合并的效率。",
+          "llm_tldr": "多任务模型合并通常需要单独训练路由或知晓任务ID，限制了实用性。本文提出一种无需训练的任务分类方法，利用聚类和最近邻分类，在推理时自动识别输入所属任务并激活对应专家参数。在多个多任务场景下，无需任何额外训练即可达到接近独立专家模型的性能，显著提升了模型合并的效率。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.22589v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.25086v1",
+          "source": "arxiv",
+          "title": "Training for the Model You Return: Improving Optimization for Iterate-Averaged Language Models",
+          "abstract": "Many modern Language Model (LM) pipelines return an averaged model, such as an exponential moving average of the training iterates, rather than the final iterate itself. This raises a fundamental question: given that we will return an iterate average, how should we change training to improve the performance of this average? We study this question by formulating optimizer design for the iterate-average estimator as an optimal-control problem. In a continuous-time stochastic quadratic model, we solve for the control strategy that minimizes the error of the returned average subject to a penalty on the size of the intervention. A practical approximation to this controller yields PACE, a lightweight wrapper around AdamW that pulls the live weights toward their exponential moving average with a clipped, per-coordinate control strength. We prove that a stylized version of PACE converges at the standard stochastic convex optimization rate, up to a factor depending on the averaging rule, while in the quadratic setting it can strictly improve the limiting squared error of the iterate-average estimator and can do so by an arbitrarily large factor on some instances. Empirically, our results suggest that PACE improves over AdamW and EMA-evaluated AdamW in supervised fine-tuning of 1-2B parameter LMs and in GPT-2 pretraining on FineWeb for a wide range of learning rates, decay schedules, and other hyperparameters.",
+          "authors": [
+            "Kwok Chun Au",
+            "Adam Block"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "stat.ML"
+          ],
+          "published": "2026-06-23T18:47:40+00:00",
+          "link": "https://arxiv.org/pdf/2606.25086v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Optimizer design for iterate-averaged language models using optimal control",
+          "llm_evidence_cn": "针对迭代平均语言模型的优化器设计，采用最优控制",
+          "llm_evidence": "针对迭代平均语言模型的优化器设计，采用最优控制",
+          "canonical_evidence": "针对迭代平均语言模型的优化器设计，采用最优控制",
+          "llm_tldr_en": "Poses optimizer design for iterate-average estimators as optimal control, yielding PACE wrapper that improves AdamW for averaged models",
+          "llm_tldr_cn": "现代语言模型训练常返回迭代平均而非最终参数，但现有优化器未针对平均模型设计。本文将此问题建模为连续时间随机二次模型的最优控制问题，求解最优策略并近似得到PACE优化器。PACE作为AdamW的轻量包装，可显著提升平均模型的性能，为训练优化提供了新视角。",
+          "llm_tldr": "现代语言模型训练常返回迭代平均而非最终参数，但现有优化器未针对平均模型设计。本文将此问题建模为连续时间随机二次模型的最优控制问题，求解最优策略并近似得到PACE优化器。PACE作为AdamW的轻量包装，可显著提升平均模型的性能，为训练优化提供了新视角。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25086v1",
           "carry_days": 1
         }
       ]

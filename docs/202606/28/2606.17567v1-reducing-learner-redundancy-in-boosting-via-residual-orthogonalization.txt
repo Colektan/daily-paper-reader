@@ -1,0 +1,1174 @@
+Title: Reducing Learner Redundancy in Boosting via Residual Orthogonalization
+
+URL Source: https://arxiv.org/pdf/2606.17567v1
+
+Published Time: Wed, 17 Jun 2026 00:40:44 GMT
+
+Number of Pages: 23
+
+Markdown Content:
+# Reducing Learner Redundancy in Boosting via Residual Orthogonalization 
+
+Ye Su a, Jipeng Guo b, Yong Liu c,* , Xin Xu d, Gangchun Zhang a, Jinxin Chen a, Di Wu e,* , and Longlong Zhao a,* aShenzhen Institutes of Advanced Technology, Chinese Academy of Sciences, Shenzhen 518055, China 
+
+> b
+
+College of Information Science and Technology, Beijing University of Chemical Technology, Beijing 100029, China 
+
+> c
+
+Gaoling School of Artificial Intelligence, Renmin University of China, Beijing 100872, China 
+
+> d
+
+School of Computer Science, Central China Normal University, Hubei 430000, China 
+
+> e
+
+the School of Computing, Engineering and Mathematical Sciences, La Trobe University, Melbourne VIC 3086, Australia 
+
+> *
+
+Corresponding authors. Emails: liuyonggsai@ruc.edu.cn, d.wu@latrobe.edu.au, ll.zhao@siat.ac.cn 
+
+Abstract 
+
+While sequential residual fitting is the bedrock of standard boosting frameworks, it inherently breeds learner redundancy by repeatedly revisiting correlated error components. To address this bottleneck, we propose a shift from residual fitting to residual orthogonalization and introduce SCBoost. Our framework tackles redundancy through two complementary mechanisms: Spectral Residual Projection (SRP) and Covariance-Regularized Weighting (CRW). During training, SRP projects each residual target onto the orthogonal complement of the historical prediction subspace, forcing successive learners to capture only novel empirical innovations. During aggregation, CRW optimizes ensemble weights on a validation set with an explicit covariance penalty to mitigate remaining correlations. Theoretically, we provide a finite-sample geometric characterization proving that SRP yields an exact additive residual-energy decomposition. Furthermore, under an isotropic-noise assumption, we rigorously establish the conditions under which this projection improves the effective Signal-to-Noise Ratio. Extensive experiments across ten benchmark datasets demonstrate that SCBoost delivers strong out-of-the-box performance, particularly in accuracy and F1 score. This work reinterprets boosting through a geometric lens, suggesting that explicit redundancy control is a principled and necessary step toward more efficient ensemble architectures. 
+
+# 1 Introduction 
+
+Modern boosting frameworks like XGBoost and LightGBM [ CG16 , KMF +17 ] owe their success primarily to engineering optimizations in efficiency and feature handling. However, their statistical core, sequential residual fitting, has remained largely unchanged for decades [ Sch99 , BH07 , MBGS14 ]. This paradigm inherently breeds redundancy by training new learners on highly correlated residuals, creating a “redundancy bottleneck” that limits the ensemble’s generalization capability. Breaking 1
+
+> arXiv:2606.17567v1 [cs.LG] 16 Jun 2026
+
+Full Function Space  
+
+> h(1)
+> h(2)
+> h(3) h(4) Redundant Gradient Components
+
+Optimal F ∗
+
+(a) Standard Residual Fitting   
+
+> h(1)
+> Ht−1
+> h(2) ⊥h(1)
+> h(3) Purified Target (Orthogonal Innovation)
+
+Optimal F ∗
+
+(b) SCBoost (Ours) 
+
+Figure 1: Conceptual Landscape of Boosting Paradigms. (a) Standard Boosting performs greedy descent in the original function space, leading to redundant updates and “zig-zagging” behavior. (b) SCBoost projects each residual onto the orthogonal complement of the historical subspace Ht−1 before training, ensuring that each new learner captures geometrically distinct information and accelerates convergence towards the optimal ensemble F ∗.this ceiling requires addressing this statistical limitation directly, even if it necessitates rethinking the computational trade-offs that have defined the past decade of development. While prior efforts have sought to promote diversity through methods like negative correlation learning (NCL) [ LY99 , LYH00 , WCY10 ] or randomization [ Die00 , Kot11 , WTB20 ], they often treat diversity as a secondary objective, imposing soft penalties that create an unstable trade-off with fitting accuracy. More importantly, they fail to address the root cause of the problem in boosting, the correlated nature of the residual targets themselves [BFLS98]. To break the redundancy bottleneck, we propose a shift from residual fitting to residual orthogo-nalization. As illustrated in Figure 1, this mechanism compels each new learner to approximate only the error component geometrically distinct from the existing ensemble. By projecting the learning target onto the functional null space of historical predictors, we eliminate signal redundancy and promote the extraction of novel information. The primary contribution of this study is the introduction of residual orthogonalization as a fundamental paradigm shift for boosting. We move beyond the traditional fit-and-add logic and establish a new implementation, SCBoost , whose contributions are structured as follows: 
+
+• Core Principle . We introduce Spectral Residual Projection (SRP) to modify the residual target before fitting each new learner. By applying spectral decomposition to the prediction history, SRP projects the residual onto the orthogonal complement of the selected historical prediction subspace. 
+
+• Geometric Characterization . We show that SRP is an exact empirical orthogonal projection on the training sample. This yields an additive decomposition of the residual energy into a historical component and an orthogonal innovation component. 
+
+• Noise Interpretation . Under an explicit fixed-subspace isotropic-noise assumption, we characterize how projection changes the noise energy and the effective SNR. The analysis shows that SNR improves only when the removed signal fraction is smaller than the removed noise fraction. 
+
+• Aggregation Strategy . We introduce Covariance-Regularized Weighting (CRW) to 2aggregate the learned predictors. CRW uses validation-set covariance regularization to reduce the influence of highly correlated learners, and is motivated by the ambiguity decomposition under squared loss. 
+
+# 2 SCBoost 
+
+Standard boosting fits residuals sequentially but does not explicitly control the correlation between new learners and the existing ensemble, which can lead to redundant updates (Figure 1(a)). We propose SCBoost, a boosting framework based on residual orthogonalization. Instead of fitting the raw residual directly, Spectral Residual Projection (SRP) projects the residual target onto the orthogonal complement of the historical prediction subspace (Figure 1(b)). To aggregate the learned predictors, Covariance-Regularized Weighting (CRW) then assigns ensemble weights with an additional covariance penalty. SRP controls the target used for learner induction, while CRW controls the final aggregation. 
+
+2.1 Spectral Residual Projection 
+
+Algorithm Description. Let the residual vector at iteration t be r(t) = y − σ(F(t−1) ), where 
+
+F(t−1) is the current logit output on the training data and σ(·) is the sigmoid function. We maintain a prediction history matrix H(t−1) = [ h(1) , h(2) , . . . , h(t−1) ] ∈ Rn×(t−1) , where h(j) denotes the prediction vector of the j-th base learner on the training data. At step t, we compute the singular value decomposition H(t−1) = UΣV ⊤. Let Uk = [ u ∗
+
+1, . . . , u ∗ k] ∈ Rn×k be the top-k left singular vectors selected by the energy threshold α ∈ (0 , 1): 
+
+P ∗i = 1 kσ2
+
+> i
+
+P ∗j = 1 min( n,t −1) σ2
+
+> j
+
+≥ α. 
+
+We define the projection operators Pk = UkU⊤ 
+
+> k
+
+, Qk = In − Pk. The projected residual target is ˜r(t) = Qkr(t) = r(t) − Uk(U⊤ 
+
+> k
+
+r(t)). The next learner is trained to fit ˜r(t) rather than the raw residual r(t). This projection guarantees orthogonality of the training target to the selected historical prediction subspace. It does not by itself guarantee that the fitted learner h(t) is exactly orthogonal to the previous learners, since the fitted learner also depends on the approximation capacity and optimization procedure of the base learner. 
+
+Theoretical Analysis. We first record the deterministic geometric property of SRP. This result is finite-sample and does not require a distributional assumption. 
+
+Proposition 2.1 (Empirical Orthogonal Projection. The detialed proof in Appendix A) . Let 
+
+Ht−1 = span (Uk), where Uk has orthonormal columns. Let Pk = UkU⊤ 
+
+> k
+
+and Qk = In − Pk. For any residual vector r(t) ∈ Rn, the SRP target ˜r(t) = Q ∗ kr(t) satisfies ˜r(t) = arg min ∗z ∈ Rn |z −
+
+r(t)| ∗ 22 s.t. ⟨z, u⟩ = 0 , ∀u ∈ H ∗ t − 1. Moreover, |r(t)|22 = |Pkr(t)|22 + |Qkr(t)|22. Equivalently, 
+
+|˜r(t)|22 = |r(t)| ∗ 22 − X ∗i = 1 k(u⊤ 
+
+> i
+
+r(t))2.
+
+Proposition 2.1 shows that SRP removes exactly the component of the current residual lying in the selected historical prediction subspace. The result is an empirical statement on the training vectors. It should not be interpreted as a guarantee of functional orthogonality outside the training sample. We next give a limited statistical interpretation of SRP under an explicit fixed-subspace noise model. The assumption that the projection is fixed relative to the noise is essential. In the 3standard boosting implementation, the historical learners are trained from the same labels, so the projection matrix can be label-noise dependent. The following result should therefore be read as a fixed-subspace characterization of the projection operation, not as an unconditional robustness theorem for the full adaptive algorithm. 
+
+Proposition 2.2 (Fixed-Subspace Noise and SNR Characterization. The detialed proof in Appendix B) . Let r = s + ϵ, where s ∈ Rn is deterministic and ϵ ∼ N (0, ν 2In). Assume that Pk is a fixed rank-k orthogonal projector independent of ϵ, and let Qk = In − Pk with d = rank (Qk) = n − k.Then 
+
+E|Qkϵ|22 = dν 2 =
+
+
+
+1 − kn
+
+
+
+E|ϵ|22.
+
+Furthermore, for any δ ∈ (0 , 1) , with probability at least 1 − δ,
+
+|Qkϵ|22 ≤ ν2 h
+
+d + 2 pd log(1 /δ ) + 2 log(1 /δ )
+
+i
+
+.
+
+For the full projected residual, for any η > 0,
+
+|Qkr|22 ≤ (1 + η)|Qks|22 + (1 + η−1)|Qkϵ|22.
+
+If 0 ≤ k < n and s̸ = 0, define SNR (r) = |s|22 
+
+> nν 2
+
+and SNR (Qkr) = |Qk s|22 
+
+> (n−k)ν2
+
+. Let ρ = |Pk s|22
+
+> |s|22
+
+be the fraction of signal energy removed by the projection. Then 
+
+SNR( Qkr)SNR( r) = 1 − ρ
+
+1 − k/n .
+
+Thus, the SNR improves if and only if ρ < kn .
+
+Proposition 2.2 states the condition under which projection improves the effective SNR. SRP always reduces the expected energy of isotropic noise under the fixed-subspace assumption, but it improves SNR only when the removed signal fraction is smaller than the removed noise fraction. This condition is important because an overly aggressive projection may also remove useful residual signal. The optimization effect of SRP can also be described by a simple one-step identity. Let 
+
+r = Pkr + Qkr = p + q. Assume that the learner prediction vector h is normalized, |h|2 = 1, and lies in the projected subspace, i.e., h ∈ Range (Qk). With the optimal scalar step size η⋆ = ⟨q, h⟩,we have |r − η⋆h|22 = |p|22 + |q|22 − ⟨ q, h⟩2
+
+= |Pkr|22 + (1 − γ2)|Qkr|22,
+
+where γ = ⟨Qk r,h⟩|Qk r|2 .This identity shows that SRP focuses the new update on the orthogonal innovation component 
+
+Qkr. It does not imply that the full residual energy always decreases faster than standard gradient boosting. 
+
+2.2 Covariance-Regularized Weighting 
+
+Algorithm Description. SRP orthogonalizes the training target before learner induction, but the fitted learners may still be correlated because of limited learner capacity and finite-sample effects. CRW addresses this issue at the aggregation stage. Let H ∗ val ∈ Rm×T be the validation prediction matrix, where H ∗ val [i, j ] = h(j)(xi), xi ∈ X ∗ val . Let ¯H ∗ val be the column-centered version of 4Algorithm 1 SCBoost Algorithm  
+
+> 1:
+
+Input: Dataset S = (xi, y i) ∗ i = 1 n, iterations T , learning rate η, projection threshold α,covariance coefficient λ ∗ cov  
+
+> 2:
+
+Data Split: Partition S into training set D ∗ train = ( X ∗ tr, y ∗ tr ) and internal validation set 
+
+D ∗ val = ( X ∗ val, y ∗ val ).  
+
+> 3:
+
+Initialize logits F(0) = 0 on D ∗ train . 
+
+> 4:
+
+Initialize prediction history H(0) ← [].  
+
+> 5:
+
+for t = 1 to T do  
+
+> 6:
+
+Compute residual on D ∗ train : r(t) = y ∗ tr − σ(F(t−1) ).  
+
+> 7:
+
+// Spectral Residual Projection (SRP)  
+
+> 8:
+
+if t > 1 then  
+
+> 9:
+
+Perform SVD: H(t−1) = UΣV ⊤. 
+
+> 10:
+
+Select top-k components U ∗ k by Eq. ( ?? ).  
+
+> 11:
+
+Project residual: ˜ r(t) = r(t) − U ∗ k(U ∗ k⊤r(t)).  
+
+> 12:
+
+else  
+
+> 13:
+
+˜r(t) = r(t). 
+
+> 14:
+
+end if  
+
+> 15:
+
+Train weak learner h(t) on ( X ∗ tr, ˜r(t)).  
+
+> 16:
+
+Update logits: F(t) = F(t−1) + ηh (t)(X ∗ tr ).  
+
+> 17:
+
+Update prediction history: H(t) ← [H(t−1) , h (t)(X ∗ tr )].  
+
+> 18:
+
+end for  
+
+> 19:
+
+// Covariance-Regularized Weighting (CRW)  
+
+> 20:
+
+Construct validation prediction matrix H ∗ val with H ∗ val [i, j ] = h(j)(xi) for xi ∈ X ∗ val . 
+
+> 21:
+
+Compute covariance matrix C = 1 
+
+> m
+
+¯H ∗ val ⊤ ¯H ∗ val . 
+
+> 22:
+
+Solve min w∈∆T L (y ∗ val, σ (H ∗ val w)) + λcov w⊤Cw . 
+
+> 23:
+
+Output: Final predictor F (x) = PTt=1 wth(t)(x). 
+
+H ∗ val , and define C = 1 
+
+> m
+
+¯H ∗ val ⊤ ¯H ∗ val . The final ensemble uses weights w on the probability simplex ∆ T =
+
+
+
+w ∈ R ∗ +T : PTt=1 wt = 1 
+
+
+
+. We solve min 
+
+> w∈∆T
+
+L (y ∗ val, σ (H ∗ val w)) + λcov w⊤Cw , (1) where L(·, ·) is the logistic loss and λcov ≥ 0 controls the strength of covariance regularization. The term w⊤Cw penalizes covariance-weighted aggregate prediction variance on the validation set. This encourages the final ensemble to avoid placing large weights on mutually redundant predictors when doing so does not improve validation loss. 
+
+Theoretical Motivation. We do not use a standalone Rademacher-complexity theorem to justify Eq. (1) . While recent literature has deeply analyzed the high-dimensional risk and implicit bias of boosting under squared loss ( ℓ2-boosting) [ SLL26 ], we use the standard ambiguity decomposition as a motivation for covariance-aware aggregation. For squared loss and convex weights, define F (x) = PTt=1 wth(t)(x). Then the following identity holds for each sample ( x, y ): (F (x) − y)2 =
+
+> T
+
+X
+
+> t=1
+
+wt(h(t)(x) − y)2
+
+−
+
+> T
+
+X
+
+> t=1
+
+wt(h(t)(x) − F (x)) 2.
+
+5The second term is the ambiguity term. For a fixed weighted average individual error, increasing ambiguity reduces the squared error of the ensemble. Since strongly correlated learners tend to have smaller ambiguity, the covariance penalty in Eq. (1) is consistent with this decomposition. This argument is a motivation for CRW under squared loss; it is not a generalization guarantee for the logistic-loss objective. 
+
+2.3 Algorithm Summary 
+
+SCBoost differs from diversity-promoting methods such as NCL in where the diversity constraint is introduced. SCBoost modifies the target used to train each new learner, while CRW adjusts the final aggregation weights. The complete procedure is summarized in Algorithm 1. 
+
+• Target vs. Output: SRP orthogonalizes the learning target on the training sample. This is different from directly penalizing correlations among model outputs during learner training. 
+
+• Pre-emptive vs. Corrective: SRP removes the selected historical component from the residual before fitting the next learner. CRW then handles remaining correlations after the learners have been trained. 
+
+• Geometric Interpretation: SRP decomposes the residual into a historical component and an orthogonal innovation component. The next learner is trained on the innovation component. 
+
+# 3 Experiments and Results 
+
+In this section, we report the experimental results regarding our proposed SCBoost algorithm in modeling real-world binary classification task in various domains. The primary objective is to evaluate its prediction performance, ensemble diversity, robustness under different noisy ratio settings, hyperparameter sensitivity analysis and ablation studies to quantify the contribution of each key component of our method. 
+
+3.1 Setup 
+
+Dataset. We used five different datasets from OpenML repository, which are all publicly available. These datasets include Madelon (2,600 samples, 500 features) [ GLM +07 ], Jasmine (2,984 samples, 144 features), Bioresponse (3,751 samples, 1,776 features), Creditcard (284,807 samples, 30 features) [ DPCJB15 ], OVA Uterus (1,545 samples, 10,936 features) [ SK10 ], QSAR (1,055 samples, 41 features), Scene (2,407 samples, 300 features), Letter (20,000 samples, 42 features), Pol (10,082 samples, 27 features) and the Elevators (16,599 samples, 17 features). We employed random undersampling [HK18, LT20] to address class imbalance in the Creditcard and OVA Uterus datasets. 
+
+Baselines. We selected a comprehensive set of seven baseline algorithms (RF [ Bre01 ], ADA [ FS97 ], GBDT [ Fri01 ], XGB [ CG16 ], LGBM [ KMF +17 ], CAT [ PGVD18 ], and NGB [ DAD +20 ]) that represent the major paradigms in EL and the current SOTA in gradient boosting. This allows for a thorough comparison, situating SCBoost’s performance within the broader landscape of ensemble methods. The specific parameter configurations for each baseline and SCBoost are provided in Appendix F. 
+
+Metrics and Protocol. Our experimental evaluation was designed to be comprehensive, assessing both the prediction performance and the underlying ensemble diversity of SCBoost against SOTA baselines. To rigorously measure performance, we employed a suite of standard classification metrics, including overall accuracy (ACC), the F1 score (F1) and Area Under the ROC Curve 6Table 1: Out-of-the-box performance for SCBoost compared with the SOAT ensemble algorithms. 
+
+Dataset Metric RF ADA GBDT XGB LGBM CAT NGB SCBoost 
+
+Madelon ACC 0.7150 ∗∗ 0.6112 ∗∗ 0.7327 ∗∗ 0.8212 ∗∗ 0.8139 ∗∗ 0.8465 ∗ 0.7285 ∗∗ 0.9396 
+
+F1 0.7210 ∗∗ 0.6118 ∗∗ 0.7410 ∗∗ 0.8233 ∗∗ 0.8330 ∗∗ 0.8462 ∗ 0.7349 ∗∗ 0.9385 
+
+AUC 0.7892 ∗∗ 0.6525 ∗∗ 0.8206 ∗∗ 0.8917 ∗ 0.9002 ∗ 0.9148 ∗ 0.8084 ∗∗ 0.9649 
+
+Jasmine ACC 0.8150 ∗∗ 0.7929 ∗∗ 0.8083 ∗∗ 0.8026 ∗∗ 0.8046 ∗∗ 0.8053 ∗∗ 0.8006 ∗∗ 0.9381 
+
+F1 0.8363 ∗ 0.8115 ∗∗ 0.8274 ∗∗ 0.8179 ∗∗ 0.8207 ∗∗ 0.8248 ∗ 0.8287 ∗∗ 0.9391 
+
+AUC 0.8809 ∗ 0.8434 ∗∗ 0.8632 ∗ 0.8608 ∗ 0.8640 ∗ 0.8741 ∗ 0.8538 ∗∗ 0.9590 
+
+Bioresponse ACC 0.8049 ∗∗ 0.7563 ∗∗ 0.7870 ∗∗ 0.8009 ∗∗ 0.7985 ∗∗ 0.7897 ∗∗ 0.7649 ∗∗ 0.9323 
+
+F1 0.8212 ∗∗ 0.7770 ∗∗ 0.8078 ∗∗ 0.8179 ∗∗ 0.8174 ∗∗ 0.8093 ∗∗ 0.7903 ∗∗ 0.9377 
+
+AUC 0.8774 ∗ 0.8240 ∗∗ 0.8543 ∗ 0.8720 ∗ 0.8735 ∗ 0.8633 ∗ 0.8320 ∗∗ 0.9576 
+
+Creditcard ACC 0.9685 0.9645 ∗ 0.9614 ∗ 0.9736 0.9716 ∗ 0.9675 ∗ 0.9400 ∗ 0.9797 
+
+F1 0.9677 0.9643 ∗ 0.9608 ∗ 0.9731 0.9711 ∗ 0.9667 ∗ 0.9377 ∗ 0.9797 
+
+AUC 0.9923 0.9874 ∗ 0.9911 ∗ 0.9933 0.9916 0.9934 0.9857 ∗ 0.9896 OVA Uterus ACC 0.9075 0.9078 0.9037 ∗ 0.8913 ∗ 0.9358 0.9117 0.8913# ∗ 0.9517 
+
+F1 0.9035 0.9054 0.9039 ∗ 0.8918 ∗ 0.9349 0.9110 ∗ 0.8939# ∗ 0.9544 
+
+AUC 0.9632 0.9647 0.9629 0.9644 0.9749 0.9703 0.9578# 0.9749 
+
+QSAR ACC 0.9341 0.8835 ∗∗ 0.9327 0.9256 0.9313 0.9243 0.8878 ∗∗ 0.9326 F1 0.9340 0.8856 ∗ 0.9336 0.9253 0.9314 0.9255 0.8893 ∗∗ 0.9314 AUC 0.9807 0.9472 ∗ 0.9702 0.9727 0.9752 0.9721 ∗ 0.9482 ∗ 0.9796 Scene ACC 0.9443 ∗∗ 0.9606 ∗ 0.9803 0.9710 0.9768 0.9640 ∗ 0.9640 ∗ 0.9803 
+
+F1 0.9441 ∗∗ 0.9612 ∗ 0.9802 0.9712 0.9768 0.9644 ∗ 0.9647 ∗ 0.9803 
+
+AUC 0.9869 0.9949 0.9955 0.9946 0.9965 0.9956 0.9898 0.9938 Letter ACC 0.9963 ∗∗ 0.9843 ∗∗ 0.9928 ∗∗ 0.9982 0.9983 0.9970 ∗ 0.9814 ∗∗ 0.9989 
+
+F1 0.9522 ∗∗ 0.7837 ∗∗ 0.9040 ∗∗ 0.9775 0.9788 0.9614 ∗ 0.7032 ∗∗ 0.9864 
+
+AUC 0.9998 0.9912 ∗ 0.9985 0.9999 0.9999 0.9997 0.9720 ∗∗ 0.9949 Pol ACC 0.9847 ∗∗ 0.9388 ∗∗ 0.9687 ∗∗ 0.9888 ∗∗ 0.9896 ∗ 0.9876 ∗∗ 0.9504 ∗∗ 0.9965 
+
+F1 0.9886 ∗∗ 0.9539 ∗∗ 0.9766 ∗∗ 0.9916 ∗∗ 0.9922 ∗ 0.9907 ∗∗ 0.9633 ∗∗ 0.9974 
+
+AUC 0.9990 0.9849 ∗∗ 0.9963 ∗ 0.9994 0.9994 0.9994 0.9859 ∗∗ 0.9975 Elevators ACC 0.8625 ∗∗ 0.8352 ∗∗ 0.8596 ∗∗ 0.8921 ∗∗ 0.8907 ∗∗ 0.8882 ∗∗ 0.8131 ∗∗ 0.9678 
+
+F1 0.9055 ∗∗ 0.8884 ∗∗ 0.9046 ∗∗ 0.9246 ∗∗ 0.9244 ∗∗ 0.9230 ∗∗ 0.8764 ∗∗ 0.9765 
+
+AUC 0.9132 ∗ 0.8852 ∗∗ 0.9083 ∗ 0.9418 ∗ 0.9391 ∗ 0.9378 ∗ 0.8503 ∗∗ 0.9735 
+
+Note: For the OVA Uterus dataset, the NGB results (#) were obtained with natural gradient=False due to numerical instability in the official setting. All baselines marked with ∗ are significantly different from SCBoost according to the Wilcoxon signed-rank test, where ∗ denotes p < 0.05 and ∗∗ denotes p < 0.01. 
+
+7(AUC). To evaluate ensemble diversity, we employed three well-established diversity measures: Q-statistic (Q-s), Disagreement (Dis), and Ambiguity (Amb). To avoid data leakage and ensure reliable evaluation, we used Stratified ten-fold cross-validation across all experiments with strict isolation of preprocessing. Crucially, for SCBoost, we employed a nested validation strategy to optimize the CRW weights: within each training fold, we performed an internal 80/20 split. The 80% subset was used for SRP projection and base learner training, while the held-out 20% subset was reserved strictly for covariance estimation and weight optimization. Finally, we reported the averaged results over ten-fold cross-validation. The best results are highlighted in bold , and the second-best results are underlined. 
+
+Environmental Setting. All experiments were conducted locally using Jupyter Notebook in an Anaconda environment on Windows 10 (Version 10.0.19045). The hardware infrastructure utilized an Intel processor (Intel64 Family 6 Model 151 Stepping 2, GenuineIntel) equipped with 20 logical cores. The software stack was built on Python 3.12.4, utilizing the following key libraries: pandas 2.2.2, numpy 1.26.4, scikit-learn 1.7.2, statsmodels 0.14.2, imbalanced-learn 0.14.0, lightgbm 4.3.0, xgboost 2.0.3, catboost 1.2.3, and NGBoost 0.5.7. 
+
+3.2 Out-of-the-box Performance Comparison 
+
+Table 1 reports the out-of-the-box performance of SCBoost and seven ensemble baselines on ten benchmark datasets. These results showed that SCBoost achieved the best or tied-best ACC and F1 on nine datasets, with clear gains on Madelon, Jasmine, Bioresponse, Pol, and Elevators. The AUC results were more mixed: SCBoost performed best or tied for best on Madelon, Jasmine, Bioresponse, OVA Uterus, and Elevators, but was not uniformly superior on Creditcard, QSAR, Scene, Letter, and Pol. Wilcoxon signed-rank tests indicated that many improvements were significant, while the differences were smaller or insignificant on datasets where several baselines already performed competitively. These results demonstrated the effectiveness of SCBoost in an out-of-the-box setting, where extensive hyperparameter tuning may be impractical due to limited computational resources. 
+
+3.3 Comparison with Tuned SOTA Baselines 
+
+Table 2 presents the comparison between SCBoost with fixed default parameters and seven tuned ensemble baselines on five benchmark datasets. These results reported that SCBoost achieved the best ACC and F1 on all five datasets, and obtained the best AUC on four of them. The gains were clear on Madelon, Jasmine, and Bioresponse, where SCBoost improved over the strongest tuned baseline by a large margin in ACC and F1. On Creditcard, SCBoost achieved the best ACC and F1, while its AUC was lower than that of LGBM and XGB. On OVA Uterus, SCBoost obtained the best ACC, F1, and AUC, although the differences in AUC were small. Although tuning improved most baselines, SCBoost still achieved the strongest overall ACC and F1 without dataset-specific tuning, suggesting that its gains were not merely replaceable by hyperparameter optimization. 
+
+3.4 Ensemble Diversity Analysis 
+
+Table 3 summarizes the diversity metrics on three benchmark datasets. These results exhibited taht SCBoost obtained higher Dis and Amb scores than the baselines, while its Q-s values were close to zero. These results were consistent with the empirical effect of SRP: the residual target was projected onto the orthogonal complement of the selected historical prediction subspace before training the next learner, which reduced components already represented by previous learners. This does not guarantee exact orthogonality of the fitted learners, since the base learner may only approximate the projected target. The higher Amb scores were also consistent with the role of 8Table 2: Performance of SCBoost (default) against tuned SOTA ensembles. 
+
+Dataset Metric RF ADA GBDT XGB LGBM CAT NGB SCBoost 
+
+Madelon ACC 0.7104 ∗∗ 0.6292 ∗∗ 0.8500 ∗ 0.8469 ∗ 0.8415 ∗∗ 0.8681 0.7500# ∗∗ 0.9396 
+
+F1 0.7276 ∗∗ 0.6265 ∗∗ 0.8555 0.8492 ∗ 0.8437 ∗ 0.8672 0.7565# ∗∗ 0.9385 
+
+AUC 0.7855 ∗∗ 0.6850 ∗∗ 0.9163 0.9108 0.9088 0.9315 0.8236# ∗∗ 0.9649 
+
+Jasmine ACC 0.8093 ∗∗ 0.7999 ∗∗ 0.8140 ∗∗ 0.8170 ∗∗ 0.8150 ∗ 0.8194 ∗ 0.8086# ∗∗ 0.9381 
+
+F1 0.8365 ∗ 0.8200 ∗ 0.8303 ∗ 0.8381 ∗ 0.8372 ∗ 0.8396 ∗ 0.8282# ∗ 0.9391 
+
+AUC 0.8722 0.8496 ∗ 0.8691 0.8637 0.8639 ∗ 0.8769 0.8597# 0.9590 
+
+Bioresponse ACC 0.7787 ∗∗ 0.7638 ∗∗ 0.8030 ∗∗ 0.8054 ∗∗ 0.8040 ∗∗ 0.8022 ∗∗ 0.7926# ∗∗ 0.9323 
+
+F1 0.7972 ∗∗ 0.7838 ∗∗ 0.8210 ∗∗ 0.8230 ∗∗ 0.8213 ∗∗ 0.8215 ∗∗ 0.8129# ∗∗ 0.9377 
+
+AUC 0.8516 ∗ 0.8271 ∗∗ 0.8727 0.8765 0.8731 0.8710 0.8605# 0.9576 
+
+Creditcard ACC 0.9593 0.9685 0.9705 0.9736 0.9787 0.9726 0.9583# 0.9797 
+
+F1 0.9579 0.9682 0.9699 0.9731 0.9783 0.9721 0.9582# 0.9797 
+
+AUC 0.9905 0.9876 0.9910 0.9935 0.9943 0.9915 0.9909# 0.9896 OVA Uterus ACC 0.9318 0.9278 0.9318 0.9195 0.9318 0.9358 0.9195# 0.9517 
+
+F1 0.9325 0.9278 0.9316 0.9196 0.9309 0.9362 0.9199# 0.9544 
+
+AUC 0.9672 0.9731 0.9703 0.9649 0.9718 0.9691 ∗ 0.9587# ∗∗ 0.9749 
+
+Note: The NGB results (#) were obtained with natural gradient=False due to numerical instability in the official setting. See Appendix F for details. All baselines marked with ∗ are significantly different from SCBoost according to the Wilcoxon signed-rank test, where ∗ denotes p < 0.05 and ∗∗ denotes p < 0.01. 
+
+Table 3: Diversity metrics of ensemble methods across benchmark datasets. 
+
+Dataset Metric RF ADA GBDT XGB LGBM CAT NGB SCBoost Madelon 
+
+Dis ( ↑) 0.4734 ∗∗∗ 0.4962 ∗∗∗ 0.0869# 0.2047 ∗∗∗ 0.2047 ∗∗∗ 0.397 ∗∗∗ 0.0483 ∗∗∗ 0.9900 
+
+Q-s ( ↓) 0.0858 -0.0006 -0.3039# 0.8669 0.8669 0.9851 0.9829 0.0000 Amb ( ↑) 0.1572 ∗∗∗ 0.0625 ∗∗∗ 0.0086 0.0368 ∗∗∗ 0.0368 ∗∗∗ 0.0030 ∗∗∗ 0.0023 ∗∗∗ 0.5004 Jasmine 
+
+Dis ( ↑) 0.2871 ∗∗∗ 0.4593 ∗∗∗ 0.1105 0.0913 ∗∗∗ 0.0913 ∗∗∗ 0.0335 ∗∗∗ 0.0212 ∗∗∗ 0.9900 
+
+Q-s ( ↓) 0.7054 0.1761 -0.0886 # 0.9687 0.9687 0.9875 0.9890 0.0000 Amb ( ↑) 0.0898 ∗∗∗ 0.1970 ∗∗∗ 0.0400 0.0094 ∗∗∗ 0.0094 ∗∗∗ 0.0027 ∗∗∗ 0.0019 ∗∗∗ 0.5000 Bioresponse 
+
+Dis ( ↑) 0.3418 ∗∗∗ 0.4974 ∗∗∗ 0.0705# 0.0757 ∗∗∗ 0.0757 ∗∗∗ 0.0467 ∗∗∗ 0.0617 ∗∗∗ 0.9900 
+
+Q-s ( ↓) 0.5505 0.0553 -0.2129 # 0.9768 0.9768 0.9832 0.8929 0.0000 Amb ( ↑) 0.1205 ∗∗∗ 0.1720 ∗∗∗ 0.0080 0.0089 ∗∗∗ 0.0089 ∗∗∗ 0.0005 ∗∗∗ 0.0142 ∗∗∗ 0.4577 
+
+Note: If SCBoost and some baselines yield identical fold-level values, resulting in zero paired differences. In such cases, the Wilcoxon signed-rank test is not applicable (#). All baselines marked with ∗ are significantly different from SCBoost according to the Wilcoxon signed-rank test, where ∗ denotes p < 0.05, ∗∗ denotes p < 0.01, and ∗∗∗ denotes 
+
+p < 0.001. 
+
+9(a) ACC (b) F1 (c) AUC 
+
+# 0.4 
+
+# 0.6 
+
+# 0.8 
+
+# 1.0 
+
+# 0.4 
+
+# 0.6 
+
+# 0.8 
+
+# 1.0 
+
+# 0.4 
+
+# 0.6 
+
+# 0.8 
+
+# 1.0 
+
+# RF ADA GBDT XGB LGBM CAT NGB SCBoost 
+
+# 10% 20% 30% Figure 2: Robustness evaluation for SCBoost and baselines against increasing levels (10%-30%) of label noise based on Madelon dataset. CRW, which penalized validation-set covariance during weight optimization. Beyond statistical metrics, SCBoost exhibited a significantly flatter singular value spectrum in its prediction history compared to GBDT in Appendix C. This slower spectral decay provided direct geometric evidence that SRP effectively forces learners to span a broader, less redundant prediction subspace. Overall, this study indicates that SRP and CRW reduced empirical learner redundancy under the reported diversity metrics. 
+
+3.5 Robustness Analysis 
+
+Figure 2 and Figure 3 reports the robustness results under 10%-30% label-flip noise on Madelon and Jasmine. These results showed that SCBoost maintained competitive performance as the noise ratio increased, while several baselines showed larger degradation. These results were consistent with the motivation of SRP: instead of fitting the full residual r(t), SCBoost trained each new learner on the projected target ˜r(t), which removed the component lying in the selected historical prediction subspace. The fixed-subspace analysis in Proposition 2.2 showed that such a projection reduced the expected energy of isotropic noise under explicit independence assumptions, and improved SNR only when the removed signal fraction was smaller than the removed noise fraction. Since the robustness experiments used label-flip noise rather than additive Gaussian noise, these results 10 0.5 
+
+# 0.6 
+
+# 0.7 
+
+# 0.8 
+
+# 0.9 
+
+# 1.0 
+
+# 0.5 
+
+# 0.6 
+
+# 0.7 
+
+# 0.8 
+
+# 0.9 
+
+# 1.0 
+
+# 0.5 
+
+# 0.6 
+
+# 0.7 
+
+# 0.8 
+
+# 0.9 
+
+# 1.0 
+
+# RF ADA GBDT XGB LGBM CAT NGB SCBoost 
+
+# 10% 20% 30% 
+
+> (a) ACC (b) F1 (c) AUC
+
+Figure 3: Robustness evaluation for SCBoost and baselines against increasing levels (10%-30%) of label noise based on Jasmine dataset. 11 0.001 0.01 0.05 0.1 0.5         
+
+> Learning Rate ( )
+> 0.940
+> 0.945
+> 0.950
+> 0.955
+> 0.960
+> Score
+> Jasmine
+> ACC
+> F1
+> AUC
+> 0.001 0.01 0.05 0.1 0.5
+> Learning Rate ( )
+> 0.94
+> 0.95
+> 0.96
+> Score
+> Madelon
+> ACC
+> F1
+> AUC
+> 0.001 0.01 0.05 0.1 0.5
+> Learning Rate ( )
+> 0.94
+> 0.95
+> 0.96
+> Score
+> Bioresponse
+> ACC
+> F1
+> AUC
+
+Figure 4: Learning rate sensitivity analysis of SCBoost on Jasmine, Madelon, and Bioresponse. We evaluated η ∈ 0.001 , 0.01 , 0.05 , 0.1, 0.5 and reported ACC, F1, and AUC for each dataset. Table 4: Ablation of SCBoost algorithm based on three datasets. 
+
+Dataset Metric SRP CRW SRP+CRW Madelon 
+
+ACC 0.9285 0.9158 0.9396 
+
+F1 0.9257 0.9152 0.9385 
+
+AUC 0.9467 0.9640 0.9649 Jasmine 
+
+ACC 0.9143 0.8643 0.9381 
+
+F1 0.9135 0.8759 0.9391 
+
+AUC 0.9367 0.9277 0.9590 Bioresponse 
+
+ACC 0.8628 0.8537 0.9323 
+
+F1 0.8690 0.8686 0.9377 
+
+AUC 0.9025 0.9153 0.9576 
+
+should be interpreted as empirical evidence of noise robustness, not as a direct validation of the fixed-subspace SNR analysis. 
+
+3.6 Hyperparameter Sensitivity Analysis 
+
+Figure 4 reports the sensitivity of SCBoost to the learning rate η on Jasmine, Madelon, and Bioresponse. We evaluated η ∈ 0.001 , 0.01 , 0.05 , 0.1, 0.5 using ACC, F1, and AUC. Overall, SCBoost remained stable across different learning rates, especially in terms of AUC. On all three datasets, larger learning rates generally improved ACC and F1, with η = 0 .5 giving the best or near-best results. In contrast, η = 0 .1 led to a small performance drop on Madelon and Bioresponse, suggesting that the effect of η was not strictly monotonic. These results indicated that SCBoost was not highly sensitive to small learning rates and that a moderately large learning rate could improve empirical performance under the default setting. Additionally, Appendix D showed that shallow trees underfit orthogonal innovations, while deep trees ( D > 5) overfit without improving the redundancy ratio. Therefore, SCBoost optimally requires moderate-depth learners. 
+
+3.7 Ablation 
+
+Table 4 presents the ablation results on Madelon, Jasmine, and Bioresponse. SRP alone outperformed CRW alone, suggesting that modifying the residual target was more influential than only reweighting 12 the trained learners. Combining SRP and CRW achieved the best performance on all three datasets. For example, on Bioresponse, SRP+CRW improved ACC by more than 7% compared with either component alone. These results were consistent with the roles of the two components: SRP removed the selected historical component from the residual target as described in Proposition 2.1, while CRW reduced the influence of highly correlated learners through validation-set covariance regularization. Overall, the ablation results indicated that both target projection and covariance-aware aggregation contributed to the final performance. 
+
+# 4 Conclusion 
+
+In this work, we re-examined learner redundancy in gradient boosting and proposed a shift from traditional residual fitting to explicit residual orthogonalization. Our proposed framework, SCBoost, achieves this through a dual mechanism: purifying the learning target via Spectral Residual Projection (SRP) and penalizing ensemble correlation via Covariance-Regularized Weighting (CRW). We theoretically characterized SRP’s ability to isolate empirical innovations and improve the effective noise level, which was corroborated by SCBoost’s strong default performance across multiple benchmark datasets. Although we observed some metric-specific variations that depend on data characteristics, our findings clearly demonstrate the value of geometric target modification in ensemble learning. Future work will focus on designing more computationally scalable projection techniques, enabling this non-redundant boosting paradigm to be deployed on larger-scale industrial applications. 
+
+# Acknowledgements 
+
+This work was supported in part by the National Natural Science Foundation of China under Grant 62403043. The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. 
+
+# References 
+
+[ASY +19] Takuya Akiba, Shotaro Sano, Toshihiko Yanase, Takeru Ohta, and Masanori Koyama. Optuna: A next-generation hyperparameter optimization framework. In Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining , pages 2623–2631, 2019. [BFLS98] Peter Bartlett, Yoav Freund, Wee Sun Lee, and Robert E. Schapire. Boosting the margin: A new explanation for the effectiveness of voting methods. The Annals of Statistics , 26(5):1651–1686, 1998. [BH07] Peter B¨ uhlmann and Torsten Hothorn. Boosting algorithms: Regularization, prediction and model fitting, 2007. [Bre96] Leo Breiman. Bagging predictors. Machine Learning , 24(2):123–140, 1996. [Bre01] Leo Breiman. Random forests. Machine learning , 45(1):5–32, 2001. [BY02] Peter B¨ uhlmann and Bin Yu. Analyzing bagging. The Annals of Statistics , 30(4):927– 961, 2002. 13 [CCY12] He Chen, Anthony G. Cohn, and Xin Yao. Ensemble learning by negative correlation learning. In Ensemble Machine Learning , pages 177–201. Springer, New York, NY, 2012. [CG16] Tianqi Chen and Carlos Guestrin. XGBoost: A scalable tree boosting system. In Pro-ceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining , pages 785–794, 2016. [CY09] He Chen and Xin Yao. Regularized negative correlation learning for neural network ensembles. IEEE Transactions on Neural Networks , 20(12):1962–1979, 2009. [DAD +20] Tony Duan, Avati Anand, Daisy Yi Ding, Kevin K. Thai, Sudipto Basu, Andrew Ng, and Alejandro Schuler. NGBoost: Natural gradient boosting for probabilistic prediction. In International Conference on Machine Learning , pages 2690–2700. PMLR, 2020. [Die00] Thomas G. Dietterich. An experimental comparison of three methods for constructing ensembles of decision trees: Bagging, boosting, and randomization. Machine Learning ,40(2):139–157, 2000. [DPCJB15] Andrea Dal Pozzolo, Olivier Caelen, Reid A. Johnson, and Gianluca Bontempi. Cali-brating probability with undersampling for unbalanced classification. In 2015 IEEE Symposium Series on Computational Intelligence , pages 159–166. IEEE, 2015. [Fri01] Jerome H. Friedman. Greedy function approximation: A gradient boosting machine. 
+
+The Annals of Statistics , 29(5):1189–1232, 2001. [FS97] Yoav Freund and Robert E. Schapire. A decision-theoretic generalization of on-line learning and an application to boosting. Journal of Computer and System Sciences ,55(1):119–139, 1997. [GEW06] Pierre Geurts, Damien Ernst, and Louis Wehenkel. Extremely randomized trees. 
+
+Machine Learning , 63(1):3–42, 2006. [GHZZ18] Siyu Gu, Yijiang Hou, Li Zhang, and Yue Zhang. Regularizing deep neural networks with an ensemble-based decorrelation method. In Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI) , volume 1, pages 2177–2183, 2018. [GLM +07] Isabelle Guyon, J. Li, T. Mader, P. A. Pletscher, G. Schneider, and M. Uhr. Competitive baseline methods set new standards for the NIPS 2003 feature selection benchmark. 
+
+Pattern Recognition Letters , 28(12):1438–1444, 2007. [HK18] Taha Hasanin and Taghi Khoshgoftaar. The effects of random undersampling with simulated class imbalance for big data. In 2018 IEEE International Conference on Information Reuse and Integration (IRI) , pages 70–79. IEEE, 2018. [KMF +17] Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, and Tie-Yan Liu. LightGBM: A highly efficient gradient boosting decision tree. In Advances in Neural Information Processing Systems 30 , 2017. [Kot11] Sotiris Kotsiantis. Combining bagging, boosting, rotation forest and random subspace methods. Artificial Intelligence Review , 35(3):223–240, 2011. 14 [LT20] Boyu Liu and Grigorios Tsoumakas. Dealing with class imbalance in classifier chains via random undersampling. Knowledge-Based Systems , 192:105292, 2020. [LY99] Yong Liu and Xin Yao. Ensemble learning via negative correlation. Neural Networks ,12(10):1399–1404, 1999. [LYH00] Yong Liu, Xin Yao, and Tetsuya Higuchi. Evolutionary ensembles with negative correlation learning. IEEE Transactions on Evolutionary Computation , 4(4):380–387, 2000. [MBGS14] Andreas Mayr, Harald Binder, Olaf Gefeller, and Matthias Schmid. The evolution of boosting algorithms. Methods of Information in Medicine , 53(06):419–427, 2014. [PGVD18] Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, and Nikita Dvornik. Cat-Boost: Unbiased boosting with categorical features. In Advances in Neural Information Processing Systems 31 , 2018. [Sch99] Robert E. Schapire. A brief introduction to boosting. In Proceedings of the 16th International Joint Conference on Artificial Intelligence (IJCAI) , volume 99, pages 1401–1406, 1999. [SK10] Gregor Stiglic and Peter Kokol. Stability of ranked gene lists in large microarray analysis studies. BioMed Research International , 2010(1):616358, 2010. [SLL26] Ye Su, Jian Li, and Yong Liu. When does ℓ2-boosting overfit benignly? high-dimensional risk asymptotics and the ℓ1 implicit bias. arXiv preprint arXiv:2605.06314 , 2026. [SZGG +26] Ye Su, Longlong Zhao, Diego Garcia-Gil, Jipeng Guo, Gangchun Zhang, Jinxin Chen, and Jinsong Chen. Itboost: Information-theoretic trust for robust boosting. arXiv preprint arXiv:2605.04671 , 2026. [WCY10] Shi Wang, He Chen, and Xin Yao. Negative correlation learning for classification ensembles. In The 2010 International Joint Conference on Neural Networks (IJCNN) ,pages 1–8. IEEE, 2010. [WTB20] Yeming Wen, Dixian Tran, and Jimmy Ba. BatchEnsemble: An alternative approach to efficient ensemble and lifelong learning. arXiv preprint arXiv:2002.06715, 2020. [XLS17] Binxin Xie, Yixuan Liang, and Le Song. Diverse neural network learns true target functions. In Artificial Intelligence and Statistics , pages 1216–1224. PMLR, 2017. [Yu19] Jianbo Yu. A selective deep stacked denoising autoencoders ensemble with negative correlation learning for gearbox fault diagnosis. Computers in Industry , 108:62–72, 2019. [ZGW +25] Chao Zhang, Changsheng Guo, Xin Wang, Shifei Ding, Feng Wu, and Dongyue Zhang. Robust decorrelated stochastic configuration networks ensemble via weighted negative correlation learning. IEEE Transactions on Systems, Man, and Cybernetics: Systems ,2025. 15 A Proof of Proposition 2.1 
+
+Proof. Since U⊤ 
+
+> k
+
+Uk = Ik, we have 
+
+P2 
+
+> k
+
+= ( UkU⊤ 
+
+> k
+
+)( UkU⊤ 
+
+> k
+
+)= Uk(U⊤ 
+
+> k
+
+Uk)U⊤
+
+> k
+
+= UkIkU⊤ 
+
+> k
+
+= Pk,
+
+and 
+
+P⊤ 
+
+> k
+
+= ( UkU⊤ 
+
+> k
+
+)⊤ = UkU⊤ 
+
+> k
+
+= Pk.
+
+Thus Pk is the orthogonal projector onto Ht−1 = span( Uk). Moreover, 
+
+Q2 
+
+> k
+
+= ( In − Pk)2
+
+= In − 2Pk + P2
+
+> k
+
+= In − Pk = Qk,
+
+and 
+
+Q⊤ 
+
+> k
+
+= ( In − Pk)⊤ = In − P⊤ 
+
+> k
+
+= In − Pk = Qk.
+
+Hence Qk is the orthogonal projector onto H⊥
+
+> t−1
+
+.For any feasible z, z ∈ H ⊥
+
+> t−1
+
+, so Qkz = z and Pkz = 0. Since 
+
+r(t) = Pkr(t) + Qkr(t),
+
+we obtain 
+
+|z − r(t)|22 = |z − Pkr(t) − Qkr(t)|22
+
+= |(z − Qkr(t)) − Pkr(t)|22.
+
+Because z − Qkr(t) ∈ H ⊥ 
+
+> t−1
+
+and Pkr(t) ∈ H t−1,
+
+⟨z − Qkr(t), Pkr(t)⟩ = 0 .
+
+Therefore, 
+
+|z − r(t)|22 = |z − Qkr(t)|22 + |Pkr(t)|22.
+
+The second term is independent of z, and the first term is uniquely minimized at z = Qkr(t). Hence ˜r(t) = Qkr(t) = arg min 
+
+> z∈Rn
+
+|z − r(t)|22
+
+s.t. ⟨z, u⟩ = 0 , ∀u ∈ H t−1.
+
+Next, 
+
+|r(t)|22 = |Pkr(t) + Qkr(t)|22
+
+= |Pkr(t)|22 + |Qkr(t)|22 + 2 ⟨Pkr(t), Qkr(t)⟩.
+
+The cross term satisfies 
+
+⟨Pkr(t), Qkr(t)⟩ = ( r(t))⊤P⊤ 
+
+> k
+
+Qkr(t)
+
+= ( r(t))⊤Pk(In − Pk)r(t)
+
+= ( r(t))⊤(Pk − P2
+
+> k
+
+)r(t) = 0 .
+
+16 Thus 
+
+|r(t)|22 = |Pkr(t)|22 + |Qkr(t)|22.
+
+Since Pkr(t) = Pki=1 (u⊤ 
+
+> i
+
+r(t))ui and {ui}ki=1 is orthonormal, 
+
+|Pkr(t)|22 =
+
+> k
+
+X
+
+> i=1
+
+(u⊤ 
+
+> i
+
+r(t))ui
+
+> 22
+
+=
+
+> k
+
+X
+
+> i=1
+
+(u⊤ 
+
+> i
+
+r(t))2.
+
+Therefore, 
+
+|˜r(t)|22 = |Qkr(t)|22
+
+= |r(t)|22 − | Pkr(t)|22
+
+= |r(t)|22 −
+
+> k
+
+X
+
+> i=1
+
+(u⊤ 
+
+> i
+
+r(t))2.
+
+# B Proof of Proposition 2.2 
+
+Proof. Since Pk is a fixed rank-k orthogonal projector, P⊤ 
+
+> k
+
+= Pk, P2 
+
+> k
+
+= Pk, and rank (Pk) = k.Hence Qk = In − Pk satisfies 
+
+Q⊤ 
+
+> k
+
+= Qk,
+
+Q2 
+
+> k
+
+= Qk,
+
+rank( Qk) = n − k = d. 
+
+Therefore, there exists an orthogonal matrix R ∈ Rn×n such that 
+
+Qk = R
+
+Id 00 0
+
+
+
+R⊤.
+
+Let g = ν−1R⊤ϵ. Since ϵ ∼ N (0, ν 2In) and R is orthogonal, g ∼ N (0, In). Thus 
+
+|Qkϵ|22 = ϵ⊤Q⊤ 
+
+> k
+
+Qkϵ = ϵ⊤Qkϵ
+
+= ν2g⊤
+
+Id 00 0
+
+
+
+g
+
+= ν2
+
+> d
+
+X
+
+> i=1
+
+g2 
+
+> i
+
+.
+
+Since gi i.i.d. 
+
+∼ N (0 , 1), Pdi=1 g2 
+
+> i
+
+∼ χ2
+
+> d
+
+. Therefore, 
+
+E|Qkϵ|22 = ν2E
+
+" dX
+
+> i=1
+
+g2
+
+> i
+
+#
+
+= ν2
+
+> d
+
+X
+
+> i=1
+
+E[g2 
+
+> i
+
+] = dν 2.
+
+17 Also, 
+
+E|ϵ|22 =
+
+> n
+
+X
+
+> i=1
+
+E[ϵ2 
+
+> i
+
+] = nν 2.
+
+Hence E|Qkϵ|22 = dν 2 = ( n − k)ν2
+
+=
+
+
+
+1 − kn
+
+
+
+nν 2
+
+=
+
+
+
+1 − kn
+
+
+
+E|ϵ|22.
+
+Let X = Pdi=1 g2 
+
+> i
+
+∼ χ2
+
+> d
+
+. For any x > 0, 
+
+P
+
+
+
+X ≥ d + 2 √dx + 2 x
+
+
+
+≤ e−x.
+
+Taking x = log(1 /δ ) gives 
+
+P
+
+
+
+X ≤ d + 2 pd log(1 /δ ) + 2 log(1 /δ )
+
+
+
+≥ 1 − δ. 
+
+Since |Qkϵ|22 = ν2X, with probability at least 1 − δ,
+
+|Qkϵ|22 ≤ ν2 h
+
+d + 2 pd log(1 /δ ) + 2 log(1 /δ )
+
+i
+
+.
+
+Next, since r = s + ϵ,
+
+Qkr = Qks + Qkϵ.
+
+Let a = Qks and b = Qkϵ. Then 
+
+|Qkr|22 = |a + b|22 = |a|22 + 2 ⟨a, b⟩ + |b|22.
+
+For any η > 0, 0 ≤ | √ηa − η−1/2b|22
+
+= η|a|22 − 2⟨a, b⟩ + η−1|b|22.
+
+Thus 2⟨a, b⟩ ≤ η|a|22 + η−1|b|22.
+
+Therefore, 
+
+|Qkr|22 ≤ (1 + η)|a|22 + (1 + η−1)|b|22
+
+= (1 + η)|Qks|22 + (1 + η−1)|Qkϵ|22.
+
+Finally, assume 0 ≤ k < n and s̸ = 0. Since Pk and Qk are orthogonal complementary projectors, 
+
+|s|22 = |Pks|22 + |Qks|22.
+
+By ρ = |Pks|22/|s|22, we have 
+
+|Qks|22 = |s|22 − | Pks|22 = (1 − ρ)|s|22.
+
+18 Therefore, SNR( Qkr)SNR( r) = |Qks|22/(( n − k)ν2)
+
+|s|22/(nν 2)= n|Qks|22
+
+(n − k)|s|22
+
+= n(1 − ρ)|s|22
+
+(n − k)|s|22
+
+= 1 − ρ
+
+1 − k/n .
+
+Thus SNR( Qkr) > SNR( r)
+
+⇐⇒ 1 − ρ
+
+1 − k/n > 1
+
+⇐⇒ 1 − ρ > 1 − kn ⇐⇒ ρ < kn .
+
+# C Spectral Evidence of Prediction Diversity 
+
+To examine the structure of the learned ensemble, Figure 5 compared the normalized singular value spectra of the prediction history matrices for SCBoost and GBDT on the Jasmine dataset. GBDT showed a faster spectral decay, indicating that its prediction history was more concentrated in the leading singular directions. In contrast, SCBoost produced a flatter average spectrum across 10-fold cross-validation, suggesting that its learners covered a broader empirical prediction subspace. This observation was consistent with the role of SRP, which removes the selected historical component from the residual target before fitting the next learner. The result should be interpreted as empirical evidence of reduced prediction redundancy, not as a direct validation of the fixed-subspace SNR analysis. 
+
+# D Effect of Base Learner Capacity 
+
+We further evaluated the effect of base learner depth on SCBoost using the Jasmine dataset. The energy threshold was fixed to α = 0 .9, and the tree depth was varied over D ∈ [1 , 8]. Figure 6 reported test accuracy and the redundancy ratio. Accuracy increased from shallow trees to moderate depths and reached its best value at D = 5. The redundancy ratio decreased over the same range, suggesting that moderate-capacity learners better fitted the projected residual targets. When the depth was further increased, accuracy did not continue to improve. These results indicated that SCBoost benefited from sufficient learner capacity, but deeper trees did not necessarily provide better generalization. 
+
+# E Time Complexity Analysis of SCBoost 
+
+Understanding the computational characteristics of SCBoost is essential for assessing its scalability. The time complexity is composed of three main components across T iterations: 
+
+• Weak Learner Training: Training a regression tree of depth D at each iteration takes 
+
+O(nd log n), where d is the number of features. Over T iterations, this sums to O(T nd log n). 19 0 20 40 60 80 100 
+
+## Component Index 
+
+## 10 −2 
+
+## 10 −1 
+
+## 10 0
+
+> Normalized Energy (Log Scale)
+
+## Average Spectral Decay 
+
+## SCBoost (Purified) 
+
+## GBDT (Redundant) Figure 5: Normalized singular value spectra of prediction history matrices for SCBoost and GBDT on the Jasmine dataset, averaged over 10-fold cross-validation. 
+
+• SRP: At iteration t, SRP performs a truncated SVD on the prediction history matrix 
+
+H(t−1) ∈ Rn×(t−1) . Note that while our implementation stores predictions instead of residuals, the dimensions remain identical to the residual history case. Thus, the computational cost remains O(n(t − 1) 2) per iteration. The cumulative cost over T iterations is 
+
+> T
+
+X
+
+> t=1
+
+O(nt 2) = n
+
+> T
+
+X
+
+> t=1
+
+t2 ≈ O(nT 3). (2) 
+
+• CRW: Solving the convex optimization problem for the final weights involves the covariance matrix of size T × T , requiring O(nT 2 + T 3). Combining these components, the overall time complexity of SCBoost is dominated by the SRP step: 
+
+O(nT 3 + T nd log n). (3) To evaluate practical implications, Table 5 shows the wall-clock training time of SCBoost against several baselines on all five datasets, using the same computational environment. The results 20 1 2 3 4 5 6 7 8
+
+Base Learner Depth ( D)
+
+0.75 
+
+0.80 
+
+0.85 
+
+0.90 
+
+0.95 
+
+1.00 
+
+> Mean Accuracy
+
+0.7627 0.7644 
+
+0.7775 0.7802 0.7832 0.7781 0.7788 
+
+0.7658 
+
+Test Accuracy 
+
+Approximation Gap 
+
+0.0 
+
+0.2 
+
+0.4 
+
+0.6 
+
+0.8 
+
+1.0 
+
+> Redundancy Ratio
+
+0.8865 
+
+0.7269 
+
+0.6691 0.6597 0.6438 0.6810 0.7249 0.7333 
+
+Capacity vs. Approximation Gap Figure 6: Effect of base learner depth on SCBoost on the Jasmine dataset. We reported test accuracy and redundancy ratio for tree depths D ∈ [1 , 8] with α = 0 .9. revealed a critical limitation of our current SCBoost implementation. Compared to highly optimized frameworks like LGBM and XGB, SCBoost was consistently one to two orders of magnitude slower. For instance, on the OVA Uterus dataset, SCBoost took approximately 38.3 seconds, whereas LGBM and XGB finished in just 3.3 and 5.4 seconds, respectively. This significant computational overhead stems primarily from the SRP step, which performs an SVD on an ever-growing residual history matrix R at each iteration. This O(n(t − 1) 2) cost per iteration quickly becomes a bottleneck, especially for large n or T .
+
+Analysis of the Bottleneck. Unlike traditional boosting algorithms (e.g., XGB, LGBM) which scale linearly with T (O(T nd log n)), SCBoost exhibits a cubic dependence on the number of iterations ( T 3) and linear dependence on sample size ( n) for the SVD operations. This theoretical overhead explains the wall-clock time gap observed in Table 5. While this cost is significant, it is the price paid for the strict residual orthogonalization that eliminates redundancy. The memory complexity also grows as O(nT ), as the algorithm must store the full history of prediction vectors to maintain orthogonality. Consequently, the current exact implementation of SCBoost is best suited for scenarios where model compactness and diversity are prioritized over training speed, or where n
+
+and T are moderate. 21 Table 5: The wall-clock time comparison in seconds across five benchmark datasets. The values represent the total time required for training each model.                                              
+
+> Algorithm OVA Uterus Madelon Jasmine Bioresponse Creditcard
+> RF 1.7351 4.2346 1.2916 2.8999 1.1460 ADA 33.3357 8.2298 1.3550 13.8556 1.0961 GBDT 82.8157 20.6285 1.5783 27.7559 1.3447 XGB 5.3688 1.2161 0.1807 1.8623 0.1249 LGBM 3.2822 0.5968 0.1420 1.2505 0.1064 CAT 53.9535 8.2213 2.7265 34.7516 0.5754 NGB 78.6066 24.0307 3.6228 41.0628 1.7493 SCBoost 38.3050 29.4093 26.4415 29.1272 29.0681
+
+# F Parameter Configurations 
+
+To ensure a fair and reproducible comparison of the algorithms’ intrinsic capabilities, we fixed only the random seed (random state=42) and n estimators=100 for reproducibility, while keeping all other parameters at their official recommended values as provided by the respective software packages (e.g., Scikit-learn). The proposed SCBoost algorithm was configured in the same way, following an official setup consistent with these baselines. It is well known that leading ensemble methods such as XGB and LGBM are highly sensitive to hyperparameter tuning, and their performance can often be substantially improved through data-specific optimization. Our deliberate choice to use default parameters is intended to assess the baseline robustness and practical usability of each method out of the box. This design isolates the intrinsic performance of the underlying architectures without the confounding effects of extensive, and often computationally expensive tuning, an important consideration for real-world applications where such tuning may be infeasible. For the high-dimensional OVA Uterus dataset, however, NGB’s official configuration (natural gradient=True) consistently failed with a LinAlgError. This issue, known to arise from the inversion of the Fisher Information Matrix in high-dimensional settings, persisted even with official stabilization options. To obtain a valid comparison, we disabled this mechanism by setting natural gradient=False, effectively reverting the model to standard gradient boosting. Results obtained under this modification are denoted with an asterisk (*) in our tables. To ensure a fair and rigorous comparison against the performance ceiling of each baseline model, we conducted an extensive hyperparameter search. This process was automated using the Optuna framework [ ASY +19 ], a SOTA Bayesian optimization library. For each baseline algorithm, the optimization objective was to maximize the mean accuracy score obtained through a 10-fold stratified cross-validation procedure on each dataset, with a fixed random seed (‘rando state=42‘) for reproducibility. The optimization for each model on each dataset was performed for 50 trials , where each trial corresponded to a unique set of hyperparameters selected by Optuna’s Tree-structured Parzen Estimator sampler. The specific hyperparameter search spaces were configured as follows. For RF , n estimators was searched in the integer range [50, 200] and 
+
+max depth in [3, 8]. For GBDT , XGB , LGBM , and CAT , we searched n estimators in [50, 200], 
+
+max depth in [3, 8], and learning rate on a log-uniform scale between 10 −3 and 1.0. For ADA and 
+
+NGB , we searched n estimators in [50, 200] and learning rate on a log-uniform scale between 10 −3 and 1.0. The set of hyperparameters yielding the highest cross-validation accuracy was then used to report the final tuned performance in main Table 2. As stated in the main text, SCBoost 22 was not subjected to this tuning process and retained its default parameters for all comparisons. 
+
+# G Related Work 
+
+Boosting. The history of boosting algorithms is a testament to the power of iterative improvement. From the foundational AdaBoost [ FS97 ] and Gradient Boosting Machines [ Fri01 ] to modern titans like XGBoost [ CG16 ] and LightGBM [ KMF +17 ], the dominant trajectory of innovation has been overwhelmingly focused on two axes: computational acceleration (e.g., histogram-based binning, optimized tree construction) and specialized feature handling (e.g., CatBoost’s target-based encoding) [ PGVD18 ]. While these engineering breakthroughs have made boosting scalable to massive datasets, and recent advancements like ITBoost [ SZGG +26 ] have introduced information-theoretic approaches to enhance algorithmic robustness, they largely operate within the unchanged paradigm of sequential residual fitting. Consequently, the fundamental issue of learner redundancy has been largely sidestepped. 
+
+Ensemble diversity. The quest for ensemble diversity has yielded two main approaches. Ran-domization strategies [ GEW06 ], effective in parallel paradigms like bagging [ Bre96 , BY02 ], are merely passive heuristics in boosting, failing to counteract its sequentially-induced redundancy. More active methods, like NCL [ CY09 , CCY12 , Yu19 ] and decorrelation penalties [ XLS17 , GHZZ18 , ZGW +25 ], introduce diversity as a soft constraint within the loss function. This creates a contentious trade-off between accuracy and diversity, and can weaken individual learners or complicate convergence. Crucially, all these methods treat diversity as an external property to be encouraged, rather than an intrinsic goal of the learning target itself. They try to influence the learners, but they do not modify the problem each learner is asked to solve. In summary, there exists a clear gap in the boosting paradigm: the lack of a principled, explicit, and direct mechanism that is architected specifically to eliminate redundancy during the sequential training process, without resorting to implicit loss-level penalties or passive randomization. The limitations of existing diversity-promoting methods when applied to boosting underscore the necessity for a novel approach that operates on a different level of abstraction. This critical gap motivates our work to fundamentally rethink how diversity is instilled in boosted ensembles. 23
