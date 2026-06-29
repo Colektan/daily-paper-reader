@@ -1,0 +1,518 @@
+Title: Enhancing Protein Representation Learning via Manifold Restore Mixing
+
+URL Source: https://arxiv.org/pdf/2606.22307v1
+
+Published Time: Tue, 23 Jun 2026 01:57:25 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# Enhancing Protein Representation Learning via Manifold Restore Mixing 
+
+# Yizhou Dang 
+
+Software College, Northeastern University Shenyang, China dangyz@mails.neu.edu.cn 
+
+# Chuang Zhao 
+
+Tianjin University Tianjin, China zhaochuang@tju.edu.cn 
+
+# Lianbo Ma 
+
+Software College, Northeastern University Shenyang, China malb@swc.neu.edu.cn 
+
+# Guibing Guo ∗
+
+Software College, Northeastern University Shenyang, China guogb@swc.neu.edu.cn 
+
+# Xingwei Wang 
+
+School of Computer Science and Engineering, Northeastern University Shenyang, China wangxw@mail.neu.edu.cn 
+
+# Zhu Sun ∗
+
+Information Systems Technology and Design, Singapore University of Technology and Design Singapore, Singapore sunzhuntu@gmail.com 
+
+## Abstract 
+
+Data augmentation (DA) has been proven to be an effective means for improving protein representation learning (PRL) by generating additional training samples. Although mainstream perturbation-and sampling-based augmentation methods can produce data con-taining sufficient variations, they carry the risk of disrupting the protein structure and function. Some crafted protein homology modeling tools can generate conformations, but reduce structural diversity. The above dilemmas lead us to a question: Can we restore the disrupted structure caused by DA operations, providing data with both the original structure and diverse variations? In this work, we first analyze and empirically reveal the structure defect and per-formance degradation issues of existing DA methods. Based on the findings, we propose a simple yet effective DA method, Manifold 
+
+Restore Mixing (MRM), for protein representation learning. Specif-ically, inspired by manifold mixup, we mix the hidden representa-tions of original and augmented protein data to generate new sam-ples that restore structural information lost in DA while introduc-ing diverse variations. Furthermore, we develop a sample difficulty scheduler that adjusts the beta distribution in mixup to provide mod-els with progressively challenging mixed samples during training, which improves the final performance. Comprehensive experiments on various PRL backbones and downstream tasks demonstrate the effectiveness and generalization of our method. The complete code and weights will be released upon acceptance. We provide a imple-mentation at https://github.com/KingGugu/MRM. 
+
+## CCS Concepts 
+
+• Applied computing → Bioinformatics . 
+
+> ∗Corresponding authors.
+> This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+> KDD ’26, Jeju Island, Republic of Korea
+> ©2026 Copyright held by the owner/author(s). ACM ISBN 979-8-4007-2259-2/2026/08 https://doi.org/10.1145/3770855.3818845
+
+## Keywords 
+
+Protein Representation Learning; Manifold Mixup 
+
+ACM Reference Format: 
+
+Yizhou Dang, Chuang Zhao, Lianbo Ma, Guibing Guo, Xingwei Wang, and Zhu Sun. 2026. Enhancing Protein Representation Learning via Manifold Restore Mixing. In Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining V.2 (KDD ’26), August 09–13, 2026, Jeju Island, Republic of Korea. ACM, New York, NY, USA, 12 pages. https: //doi.org/10.1145/3770855.3818845 
+
+## 1 Introduction 
+
+Proteins are one of the essential biological entities for building cells and maintaining life activities, which consist of one or more 1D amino acid chains and perform various functions by folding into 3D conformations [ 68 , 70 ]. Understanding and modeling pro-teins are significant for life sciences [26, 30]. In recent years, deep learning has emerged as a powerful tool in protein understanding, which learns representations of protein structures and then uses them for a variety of tasks, such as protein design [ 9 , 43 ], struc-ture classification [ 12 , 46 ], protein folds quality assessment [ 2], and function prediction [ 14 , 81 ]. Early approaches focused on modeling the 1D amino acid sequence of proteins [ 5, 52 , 57 ]. Subsequently, some researchers explored learning protein representations with 3D geometric structures [ 10 , 72 ]. More recently, methods that si-multaneously model 1D and 3D structures have been proposed and demonstrated outstanding performance [12, 61, 79]. Due to the challenge of experimental protein 3D structure de-termination, the 3D structural data available for model training is limited [ 4 , 79 ]. To address this, many data augmentation methods have been proposed to produce data with diverse variations. The augmented data can be used to enhance model performance on downstream tasks [ 31 , 56 ] or for self-supervised pretraining [ 17 , 79 ]. For example, replacing amino acid residues [ 56 ], introducing noise into the atomic coordinates [ 12 ], or sampling protein sub-structures [ 17 , 21 ], etc. Despite the effectiveness, the above perturbation- and sampling-based augmentation operations may disrupt or lose the structure of the core functional domain in proteins, which is essen-tial for model learning and prediction [ 14 , 43 ]. This issue ultimately prevents the model from effectively learning protein structures or  
+
+> arXiv:2606.22307v1 [cs.LG] 21 Jun 2026 KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al.
+
+1D Sequence 
+
+Coordinate Nnoise Residue Substitution 
+
+3D Structures    
+
+> Original Augmented Original Augmented
+
+Figure 1: Illustration of structure issues in the existing pro-tein DA (highlighted in red boxes). The substitution alters the protein’s folding pattern. The coordinate noise disrupts the original conformation. The spatial relationship between different residues has changed. 
+
+establishing structure-function relationships, thereby compromis-ing the performance of downstream tasks. For example, as illus-trated in Figure 1, if the substituted amino acid interacts differently with its neighbors, it may alter the protein’s folding pattern, ren-dering it unable to perform its function. Coordinate perturbations may disrupt the original conformation, thereby affecting biological activity. Additionally, although protein homology modeling tools [ 67 , 69 ] or diffusion models [ 13 , 39 ] can generate protein confor-mations, some studies have indicated that these methods result in new data with limited structural diversity [65]. The aforementioned predicament leads us to a question: Can we restore the disrupted structure caused by DA operations, providing data with both the original structure and diverse variations? In this work, we first review and analyze the struc-tural issues that common augmentation operations may introduce. Furthermore, we empirically demonstrate the performance degrada-tion they cause. Based on the limitations and findings, we propose a simple yet effective DA method, Manifold Restore Mixing (MRM), for protein representation learning. Inspired by the manifold mixup [35 , 59 ], we leverage representation-level mixing operations to fuse information from both original and augmented protein data to re-pair structural damage incurred during data augmentation in the latent space. This generates data that preserves original structures while incorporating rich variations. The original representation and the final mixed representation are jointly integrated into the model training process. Furthermore, we developed a difficulty scheduler that gradually reduces the proportion of raw representations in final mixed samples during training by adjusting the beta distri-bution of mixup, providing the model with samples ranging from easy to difficult. Lastly, we introduce a two-stage training strategy to avoid the noise and convergence instability introduced by the hybrid representation at the beginning of training. The main contributions can be summarized follows: 
+
+• We highlight the defects of existing protein DA methods in pre-serving essential structural information. Analytical and empirical studies further substantiate our findings. 
+
+• We propose Manifold Restore Mixing, a manifold augmentation method that restores structural information lost in DA while introducing diverse variations to the augmented data. We equip MRM with a sample difficulty scheduler with two-stage regular-ized training, further improving performance. 
+
+• We conduct comprehensive experiments on multiple PRL back-bones and downstream tasks to demonstrate the effectiveness and generalization of our method. It improves the performance of various typical PRL methods and outperforms existing data augmentation techniques & protein language models. 
+
+## 2 Related Work 
+
+Protein Representation Learning. PRL has attracted much atten-tion in the fields of bioinformatics [ 30 , 38 ]. Early works focused on sequence-based PRL since proteins are chains of amino acids [ 48 ]. They leveraged the long short-term memory [ 47 ], one-dimensional convolutional neural network [ 50 ], and Transformer [ 15 , 48 ] to capture the sequential pattern and semantic relationships between residues. Later, structure-based methods emerged due to their abil-ity to capture spatial relationships [ 10 , 65 ]. Another reason is that the function of a protein is determined by its structure. For example, 3DCNN [ 10 ] used 3D atomic densities of proteins as input, employ-ing alternating convolutional layers to assess the quality of protein folds. More recently, some researchers proposed methods that si-multaneously capture sequential (1D) and spatial relationships (3D), achieving state-of-the-art (SOTA) performance [ 12 , 20 , 34 , 79 ]. CD-Conv [ 12 ], utilized continuous and discrete approaches to model the irregular and regular structures in proteins. ProNet [ 61 ] captured hierarchical relations among different levels (amino acid, back-bone, and all-atom levels). In addition, pre-trained models based on large-scale data [ 38 , 49 ] and clustering methods [ 46 ] have also demonstrated satisfactory performance. Since the 1D sequence and 3D structure of a protein provide different types of information for model learning and achieve SOTA performance, our research focuses on methods that combine both 1D and 3D structures. 
+
+Mixup for Data Augmentation. Mixup [ 75 ] was first proposed in the field of vision as a simple and effective data augmentation method, which generates new samples by linearly interpolating the two input images. Following this idea, there appears to be a number of mixup-based methods [ 7 , 24 , 35 , 36 , 59 ]. CutMix [ 74 ] and Man-ifold Mixup [ 59 ] improved mixup into cutting-based and feature-based. DiffuseMix [ 22 ] combined a generative model and the mixup method. Beyond the visual domain, mixup has also demonstrated capabilities in tasks such as graph learning [ 16 , 23 ] and natural language processing [ 76 , 77 ]. In bioinformatics, MixingDTA [ 31 ]interpolated embeddings of neighboring entities to improve affin-ity prediction. R-Mixup [ 28 ] leveraged the log Euclidean distance metrics from the Riemannian manifold, tailoring for biological net-works. Due to the complexity of protein structures, existing mixup methods cannot be directly applied to PRL. Our experiments in Section 5 also demonstrate that directly applying manifold-based methods compromises model performance. In this work, we begin with the structural information damage issues caused by existing protein DA methods and propose restoration mixing methods. Fur-thermore, unlike previous approaches that employ DA to construct contrastive views during pre-training [ 17 , 79 ], we focus on directly utilizing augmented data to enhance performance on downstream tasks, achieving satisfactory results. Enhancing Protein Representation Learning via Manifold Restore Mixing KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea 
+
+Table 1: Summary of existing data augmentation methods and their impact on structural information.             
+
+> Operation Object Correspondence Between 1D and 3D 1D and 3D Structure Deletion/Crop/Cut/Subsequence [56, 80] 1D Sequence No amino acid corresponds to the 3D coordinates 1D Incomplete, 3D do not apply Swap/Shuffle/Reverse [56] The original order has been disrupted Insert/Expansion/Contraction [56] No 3D coordinates correspond to amino acids Substitution/Mask [48, 56, 78, 79] Retained 1D Incomplete, some residues have been altered Torsion Angle Perturbation [33] 3D Structure Retained 1D Retained, 3D has been altered Gaussian Coordinate Noise [20, 21, 33] Rotation/Translation [42] Substructure Sampling [17, 27, 78, 79] 1D & 3D Retrained Incomplete, partial 1D & 3D structure loss Subspace Sampling [27, 79]
+
+Table 2: Performance of two representative backbones with different protein data augmentation operations. Results higher than the baseline model are highlighted in red, while results less than or equal to the base model are highlighted in green. 
+
+Method Fold Classification Enzyme Gene Ontology Enzyme Fold Superfamily Family Average Reaction BP MF CC Commission GearNet Base 28.4 42.6 95.3 55.4 79.4 0.356 0.503 0.414 0.730 w/ Substitution 24.9 41.1 94.2 53.4 77.6 0.342 0.491 0.392 0.719 w/ Mask 28.2 43.3 95.1 55.5 78.5 0.347 0.499 0.405 0.737 w/ Torsion Angle Perturbation 25.3 42.3 95.5 54.4 79.2 0.359 0.496 0.409 0.735 w/ Gaussian Coordinate Noise 28.1 42.9 94.8 55.3 79.8 0.353 0.501 0.416 0.726 w/ Substructure Sampling 27.1 41.8 93.9 54.3 78.7 0.350 0.487 0.398 0.722 w/ Subspace Sampling 27.7 42.3 94.5 54.8 79.6 0.339 0.482 0.401 0.714 CDConv Base 56.7 77.7 99.6 78.0 88.5 0.453 0.654 0.479 0.843 w/ Substitution 47.5 75.4 98.9 73.9 87.3 0.444 0.649 0.463 0.849 w/ Mask 55.9 78.1 99.4 77.8 88.2 0.455 0.651 0.456 0.822 w/ Torsion Angle Perturbation 47.9 78.5 99.5 75.3 86.9 0.438 0.647 0.482 0.827 w/ Substructure Sampling 50.2 77.0 99.6 75.6 87.8 0.441 0.639 0.458 0.847 w/ Subspace Sampling 55.4 76.9 99.6 77.3 88.6 0.436 0.642 0.467 0.819 
+
+## 3 Defect of Existing DA Methods 3.1 Protein 1D Sequence and 3D Structure 
+
+A protein P is expressed as a relational graph GP , made up of ( 
+
+V, E, R ). V is the set of nodes, and each node represents a residue in protein and includes the amino acid residue type and 3D coordi-nate [ 34 ]. E is the set of edges among nodes with their types R, such as the edges between two residues located within a certain distance on the protein sequence or 3D coordinates. When only the residue sequence of the protein is considered (disregarding spatial rela-tionships), the graph reduces to a sequence where edges are solely defined by adjacency in the primary structure (i.e., R is restricted to peptide-bond connections between consecutive residues, with 3D coordinate information excluded from node attributes). The goal of protein representation learning is to map GP (or its sequence-only variant) into a low-dimensional embedding that contains biological information for downstream tasks. 
+
+## 3.2 Data Augmentation for PRL 
+
+Mainstream protein DA applies specific perturbations or transfor-mations on the original GP to generate augmented data GP𝑎 , which can be formulated as GP𝑎 = Aug (G P ). We summary commonly used protein DA methods in Table 1. The details of each augmen-tation operation are presented in Appendix B. Note that in this work, we focus on applying augmented data to downstream tasks. Self-supervised pre-training based on augmented views [ 34 , 79 ] are not involved our discussion and are left for future work. We can observe that most 1D operations disrupt the correspon-dence between 1D and 3D structures, rendering augmented data unusable for methods requiring both 1D and 3D information as input. Typically, these operations are only applicable to purely se-quential methods like LSTMs and Transformers. A few operators, such as Mask and Substitute, can preserve this correspondence. 3D operations primarily involve perturbations of coordinates and struc-ture, with such methods typically preserving the sequence, number, and type of residues. The final category of methods focuses on sampling, operating simultaneously on both the 1D sequence and the 3D structure. All augmentation methods result in some degree of loss of the original protein information. However, unlike image augmentation, where altering numerous pixels can still preserve the original meaning, even minor changes to a few amino acids or structural elements in a protein can directly impact its ultimate function. Next, we will validate our hypothesis. 
+
+## 3.3 Empirical Results 
+
+We select two representative PRL backbone networks, GearNet [ 79 ]and CDConv [ 12 ], and evaluate the performance from different augmentation methods across four categories of downstream tasks. These two backbones have been widely adopted in many works [ 6, 46 , 64 ]. Experimental details are provided in Section 5.1. To ensure a fair comparison, we add augmented data as additional samples to the training process. The results are presented in Table 2. Noted that among the operations for 1D sequences, we only adopted Substitution and Mask, as the remaining would prevent 1D KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al. 
+
+and 3D structures from aligning. Rotation and Translation were not employed because these augmentations are ineffective for models satisfying SE(3) invariance [ 12 , 25 , 79 ]. It should be noted that the CDConv uses Gaussian Coordinate Noise by default [12]. From the table, we can observe that only a few augmentation methods achieved marginal improvements on a handful of tasks. In most cases, training models with additional augmented data resulted in a significant decline in prediction accuracy. For example, after adding augmented data with replaced residues, the classifi-cation accuracy of GearNet and CDCcnv decreased by 3.5% and 6.2%, respectively, on Fold. Substructure Sampling and Subspace Sampling resulted in significant performance degradation for both models across all three domains in the Gene Ontology Term Predic-tion task. The results spanning multiple augmentation operations and prediction tasks on representative PRL backbones validate our hypothesis. Existing augmentation methods disrupt the original protein structure, preventing models from learning accurate protein representations. When applied to downstream tasks, they struggle to deliver performance gains and usually result in degradation. 
+
+## 4 Methodology 
+
+We illustrate our propose MRM in Figure 2. We first elaborate on how MRM performs the mixing operation in Section 4.1. Then, Section 4.2 introduces the difficulty scheduler to adjust the beta dis-tribution of MRM during training, providing samples that progress from easy to hard. Finally, the two-stage regularized training strat-egy involved the original and the mixed representations are pre-sented in Section 4.3. 
+
+## 4.1 Manifold Restore Mixing 
+
+The aforementioned analysis and empirical studies raise a ques-tion: how can we restore the structural information lost during data augmentation? A straightforward approach is to combine the original data with the augmented data, ensuring the final samples retain both the rich variations from augmentation and the essential structural information from the original data. However, the data format of amino acids and coordinates prevents direct combination. To achieve this “addition”, we draw inspiration from manifold mixup [ 59 ]. We fuse the original and augmented data at the low-dimensional representation level, enabling the final representa-tion to embody information from both simultaneously. Specifically, given a PRL backbone neural network 𝑁 𝑒𝑡 (G P ) = 𝑁 𝑒𝑡 𝑘 (𝑅 𝑘 (G P )
+
+where 𝑅 𝑘 denotes the part of the neural network mapping the input data to the hidden representation at layer 𝑘 , and 𝑁 𝑒𝑡 𝑘 denotes the part mapping such hidden representation to the output 𝑦 . We first select a random layer 𝑘 from a set of eligible layers in the network. Then, we process the original data GP and augmented data GP𝑎 as usual, until reaching layer 𝑘 . This provides us with two intermedi-ate representations 𝑅 𝑘 (G P ) and 𝑅 𝑘 (G P𝑎 ). Next, we perform mixup [ 75 ] on these representations, producing the mixed representation: 
+
+˜𝑅 𝑘 = 𝜆 · 𝑅 𝑘 (G P𝑎 ) + ( 1 − 𝜆 ) · 𝑅 𝑘 (G P ), (1) where 𝜆 ∼ Beta (𝛼 1, 𝛼 2) is the mixup weight from beta distribution. we continue the forward pass in the network from layer 𝑘 using mixed representation ˜𝑅 𝑘 to obtain the final output ˜𝑅 𝑓 . This output is used to compute the loss value with the original label 𝑦 and Layer 1 
+
+Aug.     
+
+> Layer k
+> Output
+> Mixup
+> λ~ Beta(α 1, α 2)
+> α1＞α2＞1α1=α 2＞1α2＞α1＞1
+> 0.0 1.0
+
+MRM  
+
+> with step s with step s
+> …
+> …
+> …
+> …
+
+Lcls 
+
+Lcls 
+
+## +  
+
+> Representations
+> Probability Density Function with Different α1and α 2
+
+Figure 2: The illustration of our proposed MRM. The original data is augmented through a randomly sampled operation from the pool. Then, representations of the original data and augmented data are mixed at layer 𝑘 of the network. Finally, they are used to compute the classification loss. 
+
+gradients that update the parameters of the neural network. We do not perform any operations on the label 𝑦 . Details of applying mixed representations to training are presented in Section 4.3. 
+
+## 4.2 Difficulty Scheduler 
+
+General mixup sample the weights from a fixed beta distribution with 𝛼 1 = 𝛼 2 < 1 [75], which brings two issues. 
+
+Small 𝛼 causes monopoly effect. First, small alpha (generally 0.2 or 0.3 in previous works[ 37 , 74 , 75 ]) values cause the beta distribu-tion to exhibit peaks at 𝜆 = 0 and 𝜆 = 1, meaning the mixed samples are either dominated by the original samples or by the augmented samples. The former fails to introduce diverse variations, while the latter yields minimal restoration effects. Inspired by RegMixup [45 ], we set both 𝛼 1 and 𝛼 1 to values greater than 1 in our manifold restore mixing, which brings 𝜆 closer to 0.5, enabling the mixed representations to incorporate sufficient characteristics from both the original and augmented samples. 
+
+Fixed 𝛼 limits the interpolation space. Secondly, in protein representation learning, existing data usually originates from pro-teins shaped by natural selection with stable structure and function, providing models with clear fitting targets and lower learning dif-ficulty [ 30 , 68 ]. In contrast, augmented protein data introduces variations that mimic natural environments [ 29 , 53 ]. Consequently, while maintaining the same labels 𝑦 , this data presents models with higher learning difficulty [ 17 , 56 ]. However, fixing 𝛼 keeps the weight distribution of 𝜆 unchanged during training, i.e., the sample difficulty remains constant. Existing research has demonstrated that training samples arranged from easy to difficult can effectively enhance model performance and robustness [ 3, 63 ]. Therefore, we design a simple curriculum learning module that provides sam-ples from easy to hard by adjusting the beta distribution during training. Based on the solution of the first issue, given initial value 
+
+𝛼 1 > 𝛼 2 > 1, as shown in the lower half of Figure 2, we reset the beta distribution every epoch during training with the step 𝑠 :
+
+𝛼 𝑛  
+
+> 1
+
+= 𝛼 𝑛 −11 − 𝑠, 𝛼 𝑛  
+
+> 2
+
+= 𝛼 𝑛 −12 + 𝑠. (2) where 𝛼 𝑛 −11 and 𝛼 𝑛 −12 are previous value. The 𝛼 𝑛  
+
+> 1
+
+and 𝛼 𝑛  
+
+> 2
+
+are new values for the beta distribution. So 𝜆 ∼ Beta (𝛼 𝑛  
+
+> 1
+
+, 𝛼 𝑛  
+
+> 2
+
+) is the new Enhancing Protein Representation Learning via Manifold Restore Mixing KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea 
+
+mixup weight. When 𝛼 1 and 𝛼 2 are different, the weight distribu-tion is shifted to one side. The larger the difference, the larger the shift. Therefore, we only need to adjust the 𝛼 value to adjust the distribution of the mixup weight 𝜆 , and thus the sample difficulty. The above adjustment enables the probability distribution of 𝜆 to gradually shift from a leftward bias to a rightward bias between the intervals (0, 1), i.e., increasing the weight of the augmented data in final representations. As the weights increase, the samples gradually move from easier to harder, further improving the performance. In practice, to maintain simplicity and avoid extreme weight values caused by excessive differences between 𝛼 1 and 𝛼 2, we pro-pose an alternative approach to implementing this scheduler. Given initial values 𝛼 1 > 𝛼 2 > 1, we set the scheduling endpoints to 
+
+𝛼 2 > 𝛼 1 > 1. That is, 𝛼 1 gradually increases to 𝛼 2, while 𝛼 2 progres-sively decreases to 𝛼 1. At this point, the step size 𝑠 can be calculated based on the total number of epoch 𝐸 , i.e., 𝑠 = (𝛼 1 − 𝛼 2)/ 𝐸 .
+
+## 4.3 Two-Stage Regularized Training 
+
+During training, we constructed an augmentation operation pool containing all augmentation operations listed in Table 5. Given an original protein data GP , we randomly select an operation from the augmentation pool to augment it, yielding GP𝑎 . The GP𝑎 is then fed into manifold restore mixing to obtain the final representation ˜𝑅 𝑓 
+
+as described in Section 4.1. Next, we present the training process. At the very beginning of training, the model parameters are merely initialized and have not undergone sufficient learning and optimization. Therefore, to avoid noise and convergence issues caused by mixing representations at this stage, we adopt a two-stage training strategy. In the first stage, we only utilize original data for model training and disable the MRM: 
+
+L𝑓 𝑖𝑟𝑠𝑡 = L𝐶𝐿𝑆 (𝑁 𝑒𝑡 (G P ), 𝑦 ) , (3) where L𝐶𝐿𝑆 is the classification loss. Following previous works [12 , 65 ], we use negative log-likelihood loss for single-label protein classification tasks and binary cross-entropy loss for multi-label protein classification tasks. After the model parameters converge on the original data, we activate the manifold restore mixing module with the difficulty scheduler in the second stage. Instead of directly replacing the original data and its representation with the mixed representation, we add a term to the Equation (3): 
+
+L𝑠𝑒𝑐𝑜𝑛𝑑 = L𝐶𝐿𝑆 (𝑁 𝑒𝑡 (G P ), 𝑦 ) + 𝛾 L𝐶𝐿𝑆 ( ˜𝑅 𝑓 , 𝑦 ), (4) where 𝛾 is the weight used to control the contribution of the mixed sample loss. In Equation (4), we explicitly combine empirical risk minimization (ERM, the first term) based on the original protein data with vicinal risk minimization (VRM, the second term) based on the mixed samples, which has been proven to enhance model performance effectively [ 45 ]. The former ensures in-distribution fit-ting accuracy, while the latter explores reasonable variation within the sample vicinity based on the restored representation, thereby avoiding the limitations of a single paradigm. 
+
+## 5 Experiments 5.1 Experimental Setup 
+
+Evaluation Tasks and Datasets. Following the previous work [ 12 , 65 ], we evaluate the effectiveness of our approach across four protein-related tasks: Protein Fold Classification (FOLD), Enzyme Reaction Classification (ER), Gene Ontology Term Prediction (GO), and Enzyme Commission (EC) number prediction. For FOLD, we evaluate performance under three scenarios: fold, superfamily, and family classification. For GO, we assess performance across three sub-tasks: biological process (BP), molecular function (MF), and cellular component (CC) ontology term prediction. We conduct five runs and report the average results for our methods. Details of tasks and datasets are provided in the Appendix C.1. 
+
+Evaluation Metrics. The classification accuracy is used for single-label classification tasks (FOLD and Reaction). For multi-label clas-sification tasks, GO and EC, we adopt the protein-centric maximum F-score 𝐹 𝑚𝑎𝑥 , which is based on the precision and recall of the predictions. 
+
+Baseline Methods. To comprehensively evaluate the superiority of our approach, we selected various PRL methods and mixup methods as baselines. The PRL method can be categorized into three cate-gories based on its inputs, which could be 1D sequences, 3D struc-tures, or both. 1) Sequence-based encoders: CNN [ 50 ], ResNet [47 ], 
+
+LSTM [ 47 ] and Transformer [ 47 ]. 2) Structure-based methods: 
+
+GCN [ 32 ], GAT [58 ], 3DCNN [10 ]. 3) Sequence-structure based methods: GraphQA [2 ], GVP [25 ], IEConv [ 18 ], New IEConv 
+
+[ 17 ], GearNet [ 79 ], GearNet-edge [ 79 ], ProNet [ 61 ], CDConv 
+
+[12 ]. Our research focuses on methods that consider both 1D and 3D structures. Therefore, among these methods, we selected GearNet, GearNet-edge, ProNet, and CDConv as the backbones to imple-ment our method. These methods are selected not only for their representativeness and SOTA performance, but also because they provide complete open-source code with implementation details, which facilitates rigorous and fair comparisons. Since there are currently no mixup methods specifically designed for PRL, and protein data cannot be directly mixed like images, we compared several general and representative manifold-based mixup methods, including Manifold Mixup [ 59 ], NFM [ 37 ], and RegManifold .Since RegMixup [ 45 ] can only be applied to images, we combined it with Manifold Mixup [59] to form RegManifold. 
+
+## 5.2 Overall Improvements 
+
+The performance of different PRL backbone methods and adding our proposed MRM are summarized in Table 3. From the table, we have the following observations: 
+
+• Overall, methods that model protein 3D structures (e.g., 3DCNN) outperform those that model only 1D residue sequences, while approaches that simultaneously perceive both 1D and 3D struc-tures (e.g., ProNet, CDConv) achieve satisfactory performance. The 1D and 3D structures provide different information about proteins [ 20 ], so understanding both facilitates the learning of accurate protein representations for downstream tasks. 
+
+• MRM achieves significant performance improvements across four representative 1D and 3D perception PRL backbone networks. For the Fold Classification task, it delivers absolute performance gains of 3.1% and 4.1% for GearNet-Edge and CDConv regard-ing Fold. For Superfamily, the absolute increases are 2.2% and 3.0%, respectively. Regarding Enzyme Reaction Classification, it delivers an absolute improvement equal to or exceeding 1% for four backbones. Compared to the failure of traditional data KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al. 
+
+Table 3: Performance comparison of different PRL methods and our MRM. The “w/ MRM” represents adding our MRM on corresponding PRL methods. The performance of baseline methods are copied from [ 12 ]. We report the maximum of F1 score (𝐹 𝑚𝑎𝑥 ) for Enzyme Commission and Gene Ontology prediction tasks; and Top-1 accuracy (%) for Fold and Reaction classification. 
+
+Method Fold Classification Enzyme Gene Ontology Enzyme Fold Superfamily Family Average Reaction BP MF CC Commission 1D CNN [50] 11.3 13.4 53.4 26.0 51.7 0.244 0.354 0.287 0.545 ResNet [47] 10.1 7.21 23.5 13.6 24.1 0.280 0.405 0.304 0.605 LSTM [47] 6.41 4.33 18.1 9.6 11.0 0.225 0.321 0.283 0.425 Transformer [50] 9.22 8.81 40.4 19.5 26.6 0.264 0.211 0.405 0.238 3D GCN [32] 16.8 21.3 82.8 40.3 67.3 0.252 0.195 0.329 0.320 GAT [58] 12.4 16.5 72.7 33.9 55.6 0.284 0.317 0.385 0.368 3DCNN [10] 31.6 45.4 92.5 56.5 72.2 0.240 0.147 0.305 0.077 (3+1)D GraphQA [2] 23.7 32.5 84.4 46.9 60.8 0.308 0.329 0.413 0.509 GVP [25] 16.0 22.5 83.8 40.8 65.5 0.326 0.426 0.420 0.489 IEConv [18] 45.0 69.7 98.8 71.2 87.2 - - - -New IEConv [17] 47.6 70.2 99.2 72.3 87.2 0.374 0.544 0.444 0.735 GearNet [79] 28.4 42.6 95.3 55.4 79.4 0.356 0.503 0.414 0.730 
+
+w/ MRM 31.1 45.5 95.8 57.5 81.1 0.368 0.514 0.426 0.751 
+
+GearNet-Edge [79] 44.0 66.7 99.1 69.9 86.6 0.403 0.580 0.450 0.810 
+
+w/ MRM 47.1 69.9 99.3 72.1 87.5 0.412 0.591 0.463 0.829 
+
+ProNet [61] 51.5 69.9 99.0 73.5 86.0 - - - -
+
+w/ MRM 53.7 72.7 99.3 75.2 87.2 - - - -CDConv [12] 56.7 77.7 99.6 78.0 88.5 0.453 0.654 0.479 0.843 
+
+w/ MRM 60.8 81.7 99.7 80.7 89.5 0.462 0.667 0.496 0.868 Table 4: Performance comparison of different mixup-based baselines and our MRM. 
+
+Method Fold Classification Enzyme Gene Ontology Enzyme Fold Superfamily Family Average Reaction BP MF CC Commission GearNet Base 28.4 42.6 95.3 55.4 79.4 0.356 0.503 0.414 0.730 w/ Manifold 0.1 12.8 0.2 4.4 77.8 0.349 0.474 0.386 0.715 w/ TS Manifold 27.5 41.3 94.2 54.3 79.0 0.353 0.491 0.407 0.733 w/ NFM 0.1 10.4 0.1 3.5 77.5 0.343 0.487 0.371 0.694 w/ TS NFM 28.0 41.6 94.7 54.8 79.2 0.348 0.494 0.403 0.711 w/ RegManifold 28.2 42.1 95.0 55.1 78.9 0.352 0.492 0.396 0.735 w/ TS RegManifold 28.8 43.1 95.4 55.8 79.7 0.355 0.506 0.418 0.740 
+
+w/ MRM 31.1 45.5 95.8 57.5 81.1 0.368 0.514 0.426 0.751 
+
+CDConv Base 56.7 77.7 99.6 78.0 88.5 0.453 0.654 0.479 0.843 w/ Manifold 0.1 25.0 0.1 8.4 86.1 0.437 0.627 0.437 0.845 w/ TS Manifold 55.8 77.6 99.3 77.6 87.9 0.445 0.641 0.462 0.847 w/ NFM 0.3 28.4 0.6 9.8 87.4 0.435 0.608 0.458 0.823 w/ TS NFM 56.9 78.1 99.5 78.2 88.3 0.439 0.635 0.466 0.835 w/ RegManifold 55.7 77.0 99.4 77.4 87.8 0.449 0.640 0.473 0.845 w/ TS RegManifold 57.2 78.6 99.2 78.3 88.6 0.455 0.649 0.483 0.852 
+
+w/ MRM 60.8 81.7 99.7 80.7 89.5 0.462 0.667 0.496 0.868 
+
+augmentation methods on GO Term Prediction, MRM achieved performance improvements in all cases. On the EC prediction task, it improves GearNet and CDConv by 2.1% and 2.5%. 
+
+• The above results demonstrate that MRM enables the learned representations to more accurately and comprehensively reflect protein structures, catalytic activities, functions, and catalytic biochemical reactions. Combining Table 2 and Table 3, MRM pro-vides models with data that incorporates both original structural information and diverse variations through its representation-level restore effects and difficulty scheduler. It enables traditional protein DA to be directly applied to improve downstream tasks, showing both effectiveness and generalization. 
+
+## 5.3 Comparison with Mixup-Based Methods 
+
+We compared the proposed method with existing mixup-based methods. The results are presented in Table 4. In our experiments, we observed that directly enabling existing methods at the start of training prevents the model from learning meaningful protein representations, resulting in inferior performance. Therefore, we in-troduced a “TS” (Two-Stage) variant for each mixup-based method: Enhancing Protein Representation Learning via Manifold Restore Mixing KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea 
+
+Table 5: Performance comparison between different protein language models and our method across four tasks. Baseline results are from [65], [60] and [62]. The “AR” represents the average ranking a method achieves across all evaluated tasks. 
+
+Method Pretraining Dataset Fold Classification ER Gene Ontology EC AR Fold Super. Family Ave. BP MF CC DeepFRI [44] Pfam 10M 15.3 20.6 73.2 36.4 63.3 0.399 0.465 0.460 0.631 11.6 ESM-1b [49] UniRef50 24M 26.8 60.1 97.8 61.6 83.1 0.470 0.657 0.488 0.864 7.1 ProtBERT-BFD [11] BFD 2.1B 26.6 55.8 97.6 60.0 72.2 0.279 0.456 0.408 0.838 11.3 IEConv (Residue Level) [17] PDB 476K 50.3 80.6 99.7 76.9 88.1 0.468 0.661 0.516 - 3.3 LM-GVP [66] UniRef100 0.21B - - - - - 0.417 0.545 0.527 0.664 8.5 ESM-2 [38] UniRef50 24M - 78.9 99.9 - 87.2 0.460 0.661 0.445 0.880 5.6 GearNet-E-IE with RTP [79] AlphaFoldDB 805K 48.8 71.0 99.4 73.1 86.6 0.430 0.604 0.465 0.843 8.6 GearNet-E-IE with DP [79] AlphaFoldDB 805K 50.9 73.5 99.4 74.6 87.5 0.448 0.616 0.464 0.839 7.7 GearNet-E-IE with AP [79] AlphaFoldDB 805K 56.5 76.3 99.6 77.5 86.8 0.458 0.625 0.473 0.853 5.9 GearNet-E-IE with DP [79] AlphaFoldDB 805K 51.8 77.8 99.6 76.4 87.0 0.458 0.626 0.465 0.859 6.1 GearNet-E-IE with MC [79] AlphaFoldDB 805K 54.1 80.5 99.9 78.2 87.5 0.490 0.654 0.488 0.874 3.0 SaProt-PDB [54] PDB 60K 52.5 77.8 99.6 76.6 87.7 0.465 0.669 0.415 0.888 4.4 
+
+CDConv w/ MRM - 60.8 81.7 99.7 80.7 89.5 0.462 0.667 0.496 0.868 2.3 Table 6: Performance comparison of different methods on GO and EC under different sequence cutoffs.                                                                                                                                                                                        
+
+> Method GO-BP GO-MF GO-CC EC 30% 40% 50% 70% 95% 30% 40% 50% 70% 95% 30% 40% 50% 70% 95% 0.300 0.400 0.500 0.700 0.950 CNN 0.197 0.195 0.197 0.211 0.244 0.238 0.243 0.256 0.292 0.354 0.258 0.257 0.260 0.263 0.387 0.366 0.361 0.372 0.429 0.545 ResNet 0.230 0.230 0.234 0.249 0.280 0.282 0.288 0.308 0.347 0.405 0.277 0.273 0.280 0.278 0.304 0.409 0.412 0.450 0.526 0.605 LSTM 0.194 0.192 0.195 0.205 0.225 0.223 0.229 0.245 0.276 0.321 0.263 0.264 0.269 0.270 0.283 0.249 0.249 0.270 0.333 0.425 Transformer 0.267 0.265 0.262 0.262 0.264 0.184 0.187 0.195 0.204 0.211 0.378 0.382 0.388 0.395 0.405 0.167 0.173 0.175 0.197 0.238 GearNet 0.251 0.250 0.248 0.248 0.252 0.180 0.183 0.187 0.194 0.195 0.318 0.318 0.320 0.323 0.329 0.245 0.246 0.246 0.280 0.320 GearNet-E 0.345 0.347 0.354 0.378 0.403 0.444 0.461 0.490 0.537 0.580 0.394 0.394 0.401 0.408 0.450 0.625 0.646 0.694 0.757 0.810 CDConv 0.381 0.390 0.401 0.428 0.453 0.533 0.533 0.577 0.621 0.654 0.428 0.435 0.440 0.451 0.479 0.689 0.720 0.760 0.809 0.843
+> Ours 0.389 0.398 0.410 0.439 0.462 0.544 0.563 0.588 0.633 0.667 0.445 0.451 0.456 0.470 0.496 0.725 0.752 0.790 0.835 0.868
+
+first, train the base model; then enable the corresponding augmen-tation method in the second stage. We can observe that existing manifold mixup and its variants fail to apply to PRL, leading to performance degradation in most cases and even preventing mod-els from learning meaningful representations in some instances. We attribute this phenomenon to the fact that these methods mix different protein data, which may generate biologically implausi-ble samples in the manifold space, thereby preventing the model from learning accurate representations. Thanks to representations thoroughly learned from the original data, we also observe that two-stage training improves performance. Our MRM demonstrates superiority among different tasks and backbones. 
+
+## 5.4 Comparison with Protein LLMs 
+
+Recently, protein-specific large language models (Protein LLMs) have revolutionized protein science by enabling more efficient struc-ture prediction, function annotation, and design [ 73 ]. These meth-ods typically rely on extensive pre-training with massive datasets to learn representations. Here, we compare our method with protein large language models and present the results in Table 5. We can observe that even without any pre-training, our method achieves the best performance on Fold and Enzyme Reaction Classification. It also achieves the highest average ranking across all methods. Fur-thermore, our representational restore paradigm may also offer in-sights for improving pre-training or self-supervised learning meth-ods, as data augmentation may also required during pre-training to construct self-supervised signals for Protein LLMs [34, 79]. 
+
+## 5.5 Go and EC under Different Sequence Cutoffs 
+
+For gene ontology term prediction and enzyme commission number prediction tasks, we follow the evaluation protocol used by previous work [ 14 , 46 , 65 ] to divide the test set based on the sequence similar-ity to the training set. The cutoffs are 30%, 40%, 50%, 70%, and 95%. This systematic evaluation across different similarity thresholds helps assess model generalization ability and robustness [ 65 ]. The results are presented in Table 6. We observe consistent improve-ments across different cutoffs and tasks. Even at lower sequence similarity cutoffs, the gains achieved are comparable to those at higher sequence similarity cutoffs. This further demonstrates that our method provides the backbone network with training samples that contain rich information and sufficient variation, thereby en-hancing model accuracy and generalization. The effective gains achieved at lower sequence similarity cutoffs also underscore the practical applicability of our approach in real-world scenarios. 
+
+## 5.6 Ablation Study 
+
+We conduct an ablation study to verify the effectiveness of different components in our MRM. We compare the following variants: (1): Removing the Substitution and Mask from the operation pool. (2): Removing the Torsion Angle Perturbation and Gaussian Coordinate Noise from the operation pool. (3): Removing the Substructure Sam-pling and Subspace Sampling from the operation pool. (4): Enabling the MRM (i.e., Equation (4)) at the beginning of training without a KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al. 
+
+Table 7: The results of ablation study. The PRL backbone here is the CDConv. 
+
+Variant Fold Classification Enzyme Gene Ontology Enzyme Fold Superfamily Family Average Reaction BP MF CC Commission Ours 60.8 81.7 99.7 80.7 89.5 0.462 0.667 0.492 0.868 (1) w/o 1D Sequence Augmentation 60.0 81.2 99.7 80.3 89.2 0.458 0.662 0.484 0.859 (2) w/o 3D Structure Augmentation 59.7 80.5 99.6 79.9 89.1 0.460 0.660 0.487 0.857 (3) w/o Sampling Augmentation 58.9 80.1 99.6 79.5 88.9 0.458 0.658 0.486 0.861 (4) w/o Two-Stage Training 59.2 79.5 99.5 79.4 89.2 0.459 0.661 0.489 0.855 (5) w/o Difficulty Scheduler 59.6 80.6 99.6 79.9 89.0 0.457 0.662 0.490 0.860 Base 56.7 77.7 99.6 78.0 88.5 0.453 0.654 0.479 0.843 0.2 0.6 1.0 1.4 1.8          
+
+> Value of
+> 76
+> 81
+> 86
+> 91
+> Accuracy (%)
+> 80.7
+> 89.5
+> 0.2 0.6 1.0 1.4 1.8
+> Value of
+> 0.30
+> 0.45
+> 0.60
+> 0.75
+> 0.90
+> Fmax
+> 0.462
+> 0.667
+> 0.496
+> 0.868
+> Fold-Ave. Reaction GO-BP GO-MF GO-CC EC
+
+Figure 3: Effect of strength 𝛾 on model performance. We high-light the best performance of each task for ease of reading. 
+
+two-stage strategy. (5): Removing the Difficulty Scheduler in Sec-tion 4.2 with a fixed beta distribution. The results are presented in Table 7. We can observe that all components contribute to the final performance. For augmentation operations, the best performance is achieved when alloperations are incorporated. Thanks to our restore module, information loss caused by different operations can be mitigated, while the augmentations themselves provide suffi-cient variation. Simultaneously, different augmentation operations contribute differently to various tasks. Sampling augmentation contributes more to fold classification, while sequence-based oper-ations show significant benefits for GO and EC. Additionally, the two-stage training strategy and difficulty scheduler help the model learn more accurate and robust representations. 
+
+## 5.7 Hyperparameter Investigation 
+
+We investigate the impact of mixed sample loss strength 𝛾 on per-formance. The results are illustrated in Figure 3. The impact of initial values 𝛼 1 and 𝛼 2 on performance is investigated in Appendix D.1. We observe that optimal performance typically occurs when 
+
+𝛾 = 1.0, i.e., when the original and mixed samples have the same weights in training. This demonstrates that the augmented data af-ter restoration exhibits nearly identical functionality to the original data, enabling the model to learn representations equally well from both, validating the effectiveness of our MRM. 
+
+## 5.8 Visualization of MRM Restoration 
+
+We use t-SNE [ 40 ] to visualize the representations of the augmented data after restoration (i.e., the final mixed representation) and those without restoration in the intermediate layer (Fold task). As illus-trated in Figure 4, before restoration, the distance between the 30 20 10 0 10 20 30       
+
+> 30
+> 20
+> 10
+> 0
+> 10
+> 20
+> 30
+> Original and Augmented Representations
+> Original
+> DA Augmented
+> 30 20 10 010 20 30
+> 30
+> 20
+> 10
+> 0
+> 10
+> 20
+> 30
+> Original and Restored Representations
+> Original
+> MRM Restored
+
+Figure 4: The t-SNE visualization of different representations in the intermediate layer of the backbone network (CDConv). 
+
+representation of proteins augmented by DA and the original pro-tein representation is relatively large (average Euclidean distance: 5.67). This distance is reduced after using MRM to restore the rep-resentations of augmented data (average Euclidean distance: 4.02), but some variation remained. This restoration process achieves our goal: to provide samples that retain both the original structural information and diverse variations. 
+
+## 6 Conclusion 
+
+In this work, we analyze and empirically reveal the structure in-formation destruction and performance degradation of existing protein DA operations for PRL. We propose manifold restore mix-ing to provide augmented data that preserves original structures while incorporating rich variations. We equip MRM with a sample difficulty scheduler with two-stage regularized training, further improving the performance. Comprehensive experiments demon-strate the effectiveness and generalization ability of our proposed MRM. Our work not only promotes the design of DA methods in computational biology but may also offer insights into construct-ing self-supervised signals for Protein LLM pre-training. For fu-ture work, we aim to dynamically adjust operations by integrating Bayesian optimization [ 71 ] or reinforcement learning [ 8]. Also, ex-tending the MRM to the multimodal PRL [ 54 , 55 ] or incorporating structure prediction methods, such as AlphaFold3 [ 1], to further optimize the DA process are promising avenues for exploration. 
+
+## 7 Limitations and Ethical Considerations 
+
+The datasets are publicly available from previous works, down-loaded via official APIs. We do not disclose any non-open-source data. We ensure that our actions comply with ethical standards and Enhancing Protein Representation Learning via Manifold Restore Mixing KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea 
+
+have no privacy concerns. Due to resource constraints, we are cur-rently unable to evaluate MRM during Protein LLMs pre-training. Furthermore, since the representation restore performs in the latent space, in-depth biological analysis may prove challenging. We eval-uated MRM solely through the performance profiles of downstream tasks. Future research should incorporate more biological perspec-tives (e.g., conservation of active-site residues and 3D structure similarity) to facilitate the development of more effective methods. Also, we clarify that restore refers to restoring structure-relevant latent information that is degraded by data augmentation opera-tions, rather than reconstructing a fully physically realizable 3D conformation in coordinate space. 
+
+## Acknowledgments 
+
+This research is partially supported by the National Natural Sci-ence Foundation of China under Grant No. (62576083, 62432003, U25A20431). This research is also supported by the Ministry of Education, Singapore, under its Academic Research Fund (AcRF) Tier 1 grant, and funded through the SMU-SUTD Internal Research Grant Call (SMU-SUTD 2023_02_01), and in part by the Ministry of Education, Singapore, under its Academic Research Fund Tier 2 (Award No. MOE-T2EP201230015). The authors greatly appreciate the anonymous reviewers for their valuable comments. 
+
+## References 
+
+[1] Josh Abramson, Jonas Adler, Jack Dunger, Richard Evans, Tim Green, Alexander Pritzel, Olaf Ronneberger, Lindsay Willmore, Andrew J Ballard, Joshua Bambrick, et al . 2024. Accurate structure prediction of biomolecular interactions with AlphaFold 3. Nature 630, 8016 (2024), 493–500. [2] Federico Baldassarre, David Menéndez Hurtado, Arne Elofsson, and Hossein Azizpour. 2021. GraphQA: protein model quality assessment using graph convo-lutional networks. Bioinformatics 37, 3 (2021), 360–366. [3] Yoshua Bengio, Jérôme Louradour, Ronan Collobert, and Jason Weston. 2009. Curriculum learning. In ICML . 41–48. [4] Helen M Berman, John Westbrook, Zukang Feng, Gary Gilliland, Talapady N Bhat, Helge Weissig, Ilya N Shindyalov, and Philip E Bourne. 2000. The protein data bank. Nucleic acids research 28, 1 (2000), 235–242. [5] Nadav Brandes, Dan Ofer, Yam Peleg, Nadav Rappoport, and Michal Linial. 2022. ProteinBERT: a universal deep-learning model of protein sequence and function. 
+
+Bioinformatics 38, 8 (2022), 2102–2110. [6] Huiyu Cai, Zuobai Zhang, Mingkai Wang, Bozitao Zhong, Quanxiao Li, Yuxuan Zhong, Yanling Wu, Tianlei Ying, and Jian Tang. 2024. Pretrainable geometric graph neural network for antibody affinity maturation. Nature communications 
+
+15, 1 (2024), 7785. [7] Chengtai Cao, Fan Zhou, Yurou Dai, Jianping Wang, and Kunpeng Zhang. 2024. A survey of mix-based data augmentation: Taxonomy, methods, applications, and explainability. Comput. Surveys 57, 2 (2024), 1–38. [8] Ekin D Cubuk, Barret Zoph, Dandelion Mane, Vijay Vasudevan, and Quoc V Le. 2019. Autoaugment: Learning augmentation strategies from data. In CVPR .113–123. [9] Justas Dauparas, Ivan Anishchenko, Nathaniel Bennett, Hua Bai, Robert J Ragotte, Lukas F Milles, Basile IM Wicky, Alexis Courbet, Rob J de Haas, Neville Bethel, et al . 2022. Robust deep learning–based protein sequence design using Protein-MPNN. Science 378, 6615 (2022), 49–56. [10] Georgy Derevyanko, Sergei Grudinin, Yoshua Bengio, and Guillaume Lamoureux. 2018. Deep convolutional networks for quality assessment of protein folds. 
+
+Bioinformatics 34, 23 (2018), 4046–4053. [11] Ahmed Elnaggar, Michael Heinzinger, Christian Dallago, Ghalia Rehawi, Yu Wang, Llion Jones, Tom Gibbs, Tamas Feher, Christoph Angerer, Martin Steineg-ger, et al . 2021. ProtTrans: towards cracking the language of life’s code through self-supervised learning. TPAMI 44 (2021), 7112–7127. [12] Hehe Fan, Zhangyang Wang, Yi Yang, and Mohan Kankanhalli. 2023. Continuous-discrete convolution for geometry-sequence modeling in proteins. In ICLR .[13] Cong Fu, Keqiang Yan, Limei Wang, Wing Yee Au, Michael Curtis McThrow, Tao Komikado, Koji Maruhashi, Kanji Uchino, Xiaoning Qian, and Shuiwang Ji. 2024. A latent diffusion model for protein structure generation. In Learning on graphs conference . PMLR, 29–1. [14] Vladimir Gligorijević, P Douglas Renfrew, Tomasz Kosciolek, Julia Koehler Leman, Daniel Berenberg, Tommi Vatanen, Chris Chandler, Bryn C Taylor, Ian M Fisk, Hera Vlamakis, et al . 2021. Structure-based protein function prediction using graph convolutional networks. Nature communications 12, 1 (2021), 3168. [15] Chengyue Gong, Adam Klivans, James Madigan Loy, Tianlong Chen, Daniel Jesus Diaz, et al . 2024. Evolution-inspired loss functions for protein representation learning. In ICML .[16] Xiaotian Han, Zhimeng Jiang, Ninghao Liu, and Xia Hu. 2022. G-mixup: Graph data augmentation for graph classification. In ICML . PMLR, 8230–8248. [17] Pedro Hermosilla and Timo Ropinski. 2022. Contrastive representation learning for 3d protein structures. arXiv preprint arXiv:2205.15675 (2022). [18] Pedro Hermosilla, Marco Schäfer, Matej Lang, Gloria Fackelmann, Pere-Pau Vázquez, Barbora Kozlikova, Michael Krone, Tobias Ritschel, and Timo Ropinski. 2021. Intrinsic-Extrinsic Convolution and Pooling for Learning on 3D Protein Structures. In ICLR .[19] Jie Hou, Badri Adhikari, and Jianlin Cheng. 2018. DeepSF: deep convolutional neural network for mapping protein sequences to folds. Bioinformatics 34, 8 (2018), 1295–1303. [20] Bozhen Hu, Cheng Tan, Jun Xia, Yue Liu, Lirong Wu, Jiangbin Zheng, Yongjie Xu, Yufei Huang, and Stan Z Li. 2024. Learning complete protein representation by dynamically coupling of sequence and structure. NIPS 37 (2024), 137673–137697. [21] Bozhen Hu, Zelin Zang, Cheng Tan, and Stan Z Li. 2024. Deep Manifold Trans-formation for Protein Representation Learning. In ICASSP . IEEE, 1801–1805. [22] Khawar Islam, Muhammad Zaigham Zaheer, Arif Mahmood, and Karthik Nan-dakumar. 2024. Diffusemix: Label-preserving data augmentation with diffusion models. In CVPR . 27621–27630. [23] Tianrui Jia, Haoyang Li, Cheng Yang, Tao Tao, and Chuan Shi. 2024. Graph invariant learning with subgraph co-mixup for out-of-distribution generalization. In AAAI , Vol. 38. 8562–8570. [24] Xin Jin, Hongyu Zhu, Siyuan Li, Zedong Wang, Zicheng Liu, Juanxi Tian, Chang Yu, Huafeng Qin, and Stan Z Li. 2024. A survey on mixup augmentations and beyond. arXiv preprint arXiv:2409.05202 (2024). [25] Bowen Jing, Stephan Eismann, Patricia Suriana, Raphael John Lamarre Town-shend, and Ron Dror. 2021. Learning from Protein Structure with Geometric Vector Perceptrons. In ICLR .[26] John Jumper, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvunakool, Russ Bates, Augustin Žídek, Anna Potapenko, et al . 2021. Highly accurate protein structure prediction with Al-phaFold. nature 596, 7873 (2021), 583–589. [27] Dan Kalifa, Uriel Singer, and Kira Radinsky. 2025. FusionProt: Fusing Sequence and Structural Information for Unified Protein Representation Learning. bioRxiv 
+
+(2025), 2025–08. [28] Xuan Kan, Zimu Li, Hejie Cui, Yue Yu, Ran Xu, Shaojun Yu, Zilong Zhang, Ying Guo, and Carl Yang. 2023. R-mixup: Riemannian mixup for biological networks. In KDD . 1073–1085. [29] Takeshi Kawabata, Motonori Ota, and Ken Nishikawa. 1999. The protein mutant database. Nucleic acids research 27, 1 (1999), 355–357. [30] Gyuri Kim, Sewon Lee, Eli Levy Karin, Hyunbin Kim, Yoshitaka Moriwaki, Sergey Ovchinnikov, Martin Steinegger, and Milot Mirdita. 2025. Easy and accurate protein structure prediction using ColabFold. Nature Protocols 20, 3 (2025), 620– 642. [31] Youngoh Kim, Dongmin Bang, Bonil Koo, Jungseob Yi, Changyun Cho, Jeonguk Choi, and Sun Kim. 2025. MixingDTA: improved drug–target affinity prediction by extending mixup with guilt-by-association. Bioinformatics 41, Supplement_1 (2025), i105–i114. [32] TN Kipf. 2016. Semi-supervised classification with graph convolutional networks. 
+
+arXiv preprint arXiv:1609.02907 (2016). [33] Jing Lan, Hexiao Ding, Hongzhao Chen, Yufeng Jiang, Nga-Chun Ng, Gerald WY Cheng, Zongxi Li, Jing Cai, Liang-ting Lin, and Jung Sun Yoo. 2025. Contrastive Multi-Task Learning with Solvent-Aware Augmentation for Drug Discovery. 
+
+arXiv preprint arXiv:2508.01799 (2025). [34] Youhan Lee, Hasun Yu, Jaemyung Lee, and Jaehoon Kim. 2023. Pre-training se-quence, structure, and surface features for comprehensive protein representation learning. In ICLR .[35] Boyi Li, Felix Wu, Ser-Nam Lim, Serge Belongie, and Kilian Q Weinberger. 2021. On feature normalization and data augmentation. In CVPR . 12383–12392. [36] Siyuan Li, Zedong Wang, Zicheng Liu, Juanxi Tian, Di Wu, Cheng Tan, Weiyang Jin, and Stan Z Li. 2022. Openmixup: Open mixup toolbox and benchmark for visual representation learning. arXiv preprint arXiv:2209.04851 (2022). [37] Soon Hoe Lim, N Benjamin Erichson, Francisco Utrera, Winnie Xu, and Michael W Mahoney. 2022. Noisy feature mixup. In ICLR .[38] Zeming Lin, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita Smetanin, Robert Verkuil, Ori Kabeli, Yaniv Shmueli, et al . 2023. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science 
+
+379, 6637 (2023), 1123–1130. [39] Amy X Lu, Wilson Yan, Sarah A Robinson, Simon Kelow, Kevin K Yang, Vladimir Gligorijevic, Kyunghyun Cho, Richard Bonneau, Pieter Abbeel, and Nathan C Frey. 2025. All-atom protein generation with latent diffusion. In ICLR 2025 Workshop on Generative and Experimental Perspectives for Biomolecular Design .KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al. 
+
+[40] Laurens van der Maaten and Geoffrey Hinton. 2008. Visualizing data using t-SNE. 
+
+JMLR 9, Nov (2008), 2579–2605. [41] Alexey G Murzin, Steven E Brenner, Tim Hubbard, and Cyrus Chothia. 1995. SCOP: a structural classification of proteins database for the investigation of sequences and structures. Journal of molecular biology 247, 4 (1995), 536–540. [42] Viet Thanh Duy Nguyen and Truong-Son Hy. 2025. Advances in Protein Repre-sentation Learning: Methods, Applications, and Future Directions. arXiv preprint arXiv:2503.16659 (2025). [43] Sergey Ovchinnikov and Po-Ssu Huang. 2021. Structure-based protein design with deep learning. Current opinion in chemical biology 65 (2021), 136–144. [44] Hakime Öztürk, Arzucan Özgür, and Elif Ozkirimli. 2018. DeepDTA: deep drug– target binding affinity prediction. Bioinformatics 34, 17 (2018), i821–i829. [45] Francesco Pinto, Harry Yang, Ser Nam Lim, Philip Torr, and Puneet Dokania. 2022. Using mixup as a regularizer can surprisingly improve accuracy & out-of-distribution robustness. NIPS 35 (2022), 14608–14622. [46] Ruijie Quan, Wenguan Wang, Fan Ma, Hehe Fan, and Yi Yang. 2024. Clustering for protein representation learning. In CVPR . 319–329. [47] Roshan Rao, Nicholas Bhattacharya, Neil Thomas, Yan Duan, Peter Chen, John Canny, Pieter Abbeel, and Yun Song. 2019. Evaluating protein transfer learning with TAPE. NIPS 32 (2019). [48] Roshan M Rao, Jason Liu, Robert Verkuil, Joshua Meier, John Canny, Pieter Abbeel, Tom Sercu, and Alexander Rives. 2021. MSA transformer. In ICML . PMLR, 8844–8856. [49] Alexander Rives, Joshua Meier, Tom Sercu, Siddharth Goyal, Zeming Lin, Jason Liu, Demi Guo, Myle Ott, C Lawrence Zitnick, Jerry Ma, et al . 2021. Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences. PNAS 118, 15 (2021), e2016239118. [50] Amir Shanehsazzadeh, David Belanger, and David Dohan. 2020. Is transfer learn-ing necessary for protein landscape prediction? arXiv preprint arXiv:2011.03443 
+
+(2020). [51] Incheol Shin, Keumseok Kang, Juseong Kim, Sanghun Sel, Jeonghoon Choi, Jae-Wook Lee, Ho Young Kang, and Giltae Song. 2023. AptaTrans: a deep neural network for predicting aptamer-protein interaction using pretrained encoders. 
+
+BMC bioinformatics 24, 1 (2023), 447. [52] Nils Strodthoff, Patrick Wagner, Markus Wenzel, and Wojciech Samek. 2020. UDSMProt: universal deep sequence models for protein classification. Bioinfor-matics 36, 8 (2020), 2401–2409. [53] Romain A Studer, Benoit H Dessailly, and Christine A Orengo. 2013. Residue mutations and their impact on protein structure and function: detecting beneficial and pathogenic changes. Biochemical journal 449, 3 (2013), 581–594. [54] Jin Su, Chenchen Han, Yuyang Zhou, Junjie Shan, Xibin Zhou, and Fajie Yuan. 2024. SaProt: Protein Language Modeling with Structure-aware Vocabulary. In 
+
+ICLR .[55] Jin Su, Xibin Zhou, Xuting Zhang, and Fajie Yuan. 2024. Protrek: Navigating the protein universe through tri-modal contrastive learning. bioRxiv (2024), 2024–05. [56] Rui Sun, Lirong Wu, Haitao Lin, Yufei Huang, and Stan Z Li. 2024. Enhancing protein predictive models via Proteins Data Augmentation: A benchmark and new directions. arXiv preprint arXiv:2403.00875 (2024). [57] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. Attention is all you need. NIPS 30 (2017). [58] Petar Veličković, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro Liò, and Yoshua Bengio. 2018. Graph Attention Networks. In ICLR .[59] Vikas Verma, Alex Lamb, Christopher Beckham, Amir Najafi, Ioannis Mitliagkas, David Lopez-Paz, and Yoshua Bengio. 2019. Manifold mixup: Better representa-tions by interpolating hidden states. In ICML . PMLR, 6438–6447. [60] Chao Wang, Zhedong Zheng, Yifan Sun, Hehe Fan, and Yi Yang. 2025. Pro-teinAdapter: Adapting Pre-trained Large Protein Models for Efficient Protein Representation Learning. OpenReview (2025). [61] Limei Wang, Haoran Liu, Yi Liu, Jerry Kurtin, and Shuiwang Ji. 2023. Learning Hierarchical Protein Representations via Complete 3D Graph Networks. In ICLR .[62] Mingqing Wang, Zhiwei Nie, Yonghong He, Athanasios V Vasilakos, and Zhixiang Ren. 2025. Aligning sequence and structure representations leveraging protein domains for function prediction. ESWA 278 (2025), 127246. [63] Xin Wang, Yudong Chen, and Wenwu Zhu. 2021. A survey on curriculum learning. 
+
+TPAMI 44, 9 (2021), 4555–4576. [64] Xiaorui Wang, Xiaodan Yin, Dejun Jiang, Huifeng Zhao, Zhenxing Wu, Odin Zhang, Jike Wang, Yuquan Li, Yafeng Deng, Huanxiang Liu, et al . 2024. Multi-modal deep learning enables efficient and accurate annotation of enzymatic active sites. Nature Communications 15, 1 (2024), 7348. [65] Yusong Wang, Shiyin Tan, Jialun Shen, Yicheng Xu, Haobo Song, Qi Xu, Prayag Tiwari, and Mingkun Xu. 2025. Enhancing Graph Contrastive Learning for Protein Graphs from Perspective of Invariance. In ICML .[66] Zichen Wang, Steven A Combs, Ryan Brand, Miguel Romero Calvo, Panpan Xu, George Price, Nataliya Golovach, Emmanuel O Salawu, Colby J Wise, Sri Priya Ponnapalli, et al . 2022. Lm-gvp: an extensible sequence and structure informed deep learning framework for protein property prediction. Scientific reports 12, 1 (2022), 6832. [67] Andrew Waterhouse, Martino Bertoni, Stefan Bienert, Gabriel Studer, Gerardo Tauriello, Rafal Gumienny, Florian T Heer, Tjaart A P de Beer, Christine Rempfer, Lorenza Bordoli, et al . 2018. SWISS-MODEL: homology modelling of protein structures and complexes. Nucleic acids research 46, W1 (2018), W296–W303. [68] Joseph L Watson, David Juergens, Nathaniel R Bennett, Brian L Trippe, Jason Yim, Helen E Eisenach, Woody Ahern, Andrew J Borst, Robert J Ragotte, Lukas F Milles, et al . 2023. De novo design of protein structure and function with RFdiffusion. 
+
+Nature 620, 7976 (2023), 1089–1100. [69] Benjamin Webb and Andrej Sali. 2016. Comparative protein structure modeling using MODELLER. Current protocols in bioinformatics 54, 1 (2016), 5–6. [70] David Whitford. 2013. Proteins: structure and function . John Wiley & Sons. [71] Jia Wu, Xiu-Yun Chen, Hao Zhang, Li-Dong Xiong, Hang Lei, and Si-Hao Deng. 2019. Hyperparameter optimization for machine learning models based on Bayesian optimization. Journal of Electronic Science and Technology 17, 1 (2019), 26–40. [72] Tian Xia and Wei-Shinn Ku. 2021. Geometric graph representation learning on protein structure prediction. In KDD . 1873–1883. [73] Yijia Xiao, Wanjia Zhao, Junkai Zhang, Yiqiao Jin, Han Zhang, Zhicheng Ren, Renliang Sun, Haixin Wang, Guancheng Wan, Pan Lu, et al . 2025. Protein large language models: A comprehensive survey. arXiv preprint arXiv:2502.17504 
+
+(2025). [74] Sangdoo Yun, Dongyoon Han, Seong Joon Oh, Sanghyuk Chun, Junsuk Choe, and Youngjoon Yoo. 2019. Cutmix: Regularization strategy to train strong classifiers with localizable features. In ICCV . 6023–6032. [75] Hongyi Zhang, Moustapha Cisse, Yann N Dauphin, and David Lopez-Paz. 2018. mixup: Beyond Empirical Risk Minimization. In ICLR .[76] Le Zhang, Zichao Yang, and Diyi Yang. 2022. TreeMix: Compositional Constituency-based Data Augmentation for Natural Language Understanding. In COLING . 5243–5258. [77] Rongzhi Zhang, Yue Yu, and Chao Zhang. 2020. SeqMix: Augmenting Active Sequence Labeling via Sequence Mixup. In EMNLP . 8566–8579. [78] Zuobai Zhang, Chuanrui Wang, Minghao Xu, Vijil Chenthamarakshan, Aurélie Lozano, Payel Das, and Jian Tang. 2023. A systematic study of joint representation learning on protein sequences and structures. arXiv preprint arXiv:2303.06275 
+
+(2023). [79] Zuobai Zhang, Minghao Xu, Arian Rokkum Jamasb, Vijil Chenthamarakshan, Aurelie Lozano, Payel Das, and Jian Tang. 2023. Protein Representation Learning by Geometric Structure Pretraining. In ICLR .[80] Hanjing Zhou, Mingze Yin, Wei Wu, Mingyang Li, Kun Fu, Jintai Chen, Jian Wu, and Zheng Wang. 2025. ProtCLIP: Function-informed protein multi-modal learning. In AAAI , Vol. 39. 22937–22945. [81] Xiaogen Zhou, Wei Zheng, Yang Li, Robin Pearce, Chengxin Zhang, Eric W Bell, Guijun Zhang, and Yang Zhang. 2022. I-TASSER-MTD: a deep-learning-based platform for multi-domain protein structure and function prediction. Nature protocols 17, 10 (2022), 2326–2353. 
+
+## A Overview 
+
+The appendix is organized as follows: 
+
+• Section B provides details about protein data augmentation oper-ations involved in this work. 
+
+• Section C provides details about our experimental settings, in-cluding evaluation tasks (C.1) and implementation details (C.2). 
+
+• Section D provides additional hyperparameter investigation (D.1). 
+
+## B Augmentation Operations 
+
+Here, we provide a detailed explanation of every operation that appears in Section 3. 
+
+## B.1 1D Sequence Operations 
+
+Deletion [ 56 ]. It randomly deletes some amino acids from the protein sequence to generate a new sequence variant. 
+
+Crop [ 56 ]. It is similar to Deletion but operating on subsequences. It randomly deletes a continuous subsequence from the protein sequence instead of single amino acids. 
+
+Cut [56 ]. It cuts the protein sequence into multiple sub-sequences and randomly reassembles them to form a new sequence. Enhancing Protein Representation Learning via Manifold Restore Mixing KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea 
+
+Subsequence [56 , 80 ]. It selects some sub-sequences and assembles them sequentially into a new sequence. 
+
+Swap [56 ]. It randomly swaps the positions of two amino acids in the protein sequence to introduce minor changes. 
+
+Shuffle [ 56 ]. It first randomly selects a subsequence within the protein amino acid sequence. It then disrupts the order of amino acids only within this selected subsequence. 
+
+Global Reverse [56 ]. It flips the order of all amino acids in the sequence to create a new variant while maintaining the original amino acid composition. 
+
+Insertion [ 56 ]. It randomly inserts some amino acids into the protein sequence to create variation. 
+
+Expansion [56 ]. Inspired by AptaTrans [ 51 ], this sequence-level method first finds Frequent Consecutive Subsequences (FCS) in the protein. It then expands the sequence by adding copies of the FCS at a specific location. 
+
+Repeat Contraction [ 56 ]. Also inspired by AptaTrans [ 51 ], this sequence-level augmentation locates FCS in the protein. It directly deletes some copies of the FCS to shorten the sequence while pre-serving key patterns. 
+
+Substitution [ 56 ]. It adopts a random replacement strategy (since 20 amino acids lack word-like proximity) to substitute some amino acids in the sequence. Here we made some improvements on this operation. First, we categorizes 20 amino acids into six functional groups: hydrophobic/aliphatic (A, V, L, I, M), aromatic (F, Y, W), polar uncharged (S, T, N, Q), negatively charged (D, E), positively charged (K, R, H), and special (G, C, P). When substituting a target amino acid, there are two probabilistic choices: either replace it with another amino acid from the same functional group (to re-tain chemical properties) or replace it with alanine (A, the simplest aliphatic neutral amino acids. It primarily functions as a “spacer amino acid” in protein structures, maintaining the flexibility of the polypeptide chain rather than forming specific functional struc-tures.). The dual-option design balances structural conservation and controlled variation. 
+
+Mask [48 , 78 , 79 ]. It randomly selects some amino acids in the sequence and replaces them with a special Mask token. 
+
+## B.2 3D Structure Operations 
+
+Torsion Angle Perturbation [ 33 ]. It is a 3D structural augmenta-tion method for ligands, designed to simulate the conformational flexibility of ligands under different solvent conditions. It applies Gaussian noise to the torsion angles of the ligand’s initial 3D struc-ture to generate unbiased, unbound-like torsional topologies, while keeping the ligand’s atomic types unchanged. 
+
+Gaussian Coordinate Noise [20 , 21 , 33 ]. It is a 3D geometric augmentation method for protein amino acid coordinates, designed to enhance the model’s robustness to small spatial variations of proteins. During the data preprocessing stage, after normalizing the amino acid coordinates, it adds isotropic Gaussian noise to the 3D coordinates of each amino acid, simulating minor fluctuations in protein spatial structure caused by environmental factors. 
+
+Rotation [ 42 ]. It rotates the protein’s 3D structure by a random angle around a randomly selected axis in 3D space. 
+
+Translation [42 ]. It shifts the entire set of 3D coordinates of a protein by a small random vector in the spatial domain. 
+
+## B.3 1D & 3D Operations 
+
+Substructure Sampling [ 17 , 27 , 78 , 79 ]. It is a method of sampling local sub - structures from protein sequences or 3D structures. For example, it may randomly select a continuous fragment from the protein sequence or a local region from the 3D structure, so that the model can learn more local features and interactions, enhancing the model’s recognition ability for specific sub - structures of proteins. 
+
+Subspace Sampling [ 27 , 79 ]. It is designed to capture spatially correlated structural motifs (e.g., functional domains with close spatial proximity). It randomly selects a residue 𝑝 as the center, then extracts all residues within a predefined Euclidean distance radius 𝑑 from 𝑝 .
+
+## C Experimental Details C.1 Evaluation Tasks 
+
+We evaluated the model’s effectiveness across four tasks, adhering to the task and evaluation settings widely adopted in prior work [12, 46, 79]. Specific details are as follows: 
+
+Protein Fold Classification. It is a key task in PRL that aims to cat-egorize proteins based on their three-dimensional structural folds, which are crucial for understanding evolutionary relationships and functional similarities. The fold classification task is conducted us-ing the SCOPe 1.75 dataset [ 19 ], containing 16,712 proteins across 1,195 fold classes. The 3D coordinates of proteins are derived from the SCOPe 1.75 database [ 41 ]. The dataset provides three evaluation scenarios: Fold: Excludes proteins from the same superfamily dur-ing training; Superfamily: Excludes proteins from the same family during training; Family: Includes proteins from the same family during training. Mean accuracy is used as the metric [65]. 
+
+Enzyme Reaction Classification. This task predicts the type of chemical reaction catalyzed by an enzyme, based on the four-level Enzyme Commission (EC) hierarchy. The dataset includes 384 four-level Enzyme Commission classes and comprises 29,215/2,562/5,651 proteins for training/validation/test, respectively [ 12 , 46 ]. Mean accuracy is used as the evaluation metric [65]. 
+
+Gene Ontology Term Prediction. It is a multi-label classification task that assigns proteins to terms in the Gene Ontology (GO) data-base, which describes functions across three domains: biological process (BP), molecular function (MF), and cellular component (CC). The dataset is organized into three hierarchical ontologies: biologi-cal process (BP, 1,943 classes), molecular function (MF, 489 classes), and cellular component (CC, 320 classes). The train/validate/test sets contain 29,898/3,322/3,415 proteins, respectively [ 12 , 46 ]. The evaluation metric is 𝐹 𝑚𝑎𝑥 .
+
+Enzyme Commission Number Prediction. It is a multi-label task focused on assigning detailed EC numbers to enzymes, cover-ing three- and four-level classifications across hundreds of classes. The train/validate/test sets contain 15,550/1,729/1,919 proteins, re-spectively [ 12 , 46 ]. Following previous work, for GO term and EC number prediction, we employ the multi-cutoff splits to ensure the test set only includes PDB chains with a sequence identity ≤ 95% to the training set. The evaluation metric is 𝐹 𝑚𝑎𝑥 .KDD ’26, August 09–13, 2026, Jeju Island, Republic of Korea Yizhou Dang, et al. 
+
+Table 8: Hyperparameters and their settings for the augmentation operations employed in our experiments. 
+
+Operation Hyperparameter Range Substitution Substitution Ratio Randomly sampling from [0.05 , 0.2]
+
+Mask Mask Ratio Randomly sampling from [0.05 , 0.2]
+
+Torsion Angle Perturbation Perturbation Angle Range Randomly sampling from [− 5, 5]
+
+Gaussian Coordinate Noise Noise Range The mean is 0, and the standard deviation range is [0.05 , 0.1]ÅSubstructure Sampling Sampling Ratio Randomly sampling from [0.6, 0.8]
+
+Subspace Sampling Sampling Radius Range Randomly sampling [10 .0 − 20 .0]Å2-10 4-10 6-10 8-10 2-12 4-12 6-12 8-12 2-14 4-14 6-14 8-14 2-16 4-16 6-16 8-16                           
+
+> Initial Value of 1and 2
+> 76
+> 81
+> 86
+> 91
+> Accuracy (%)
+> 80.7
+> 89.5
+> 2-10 4-10 6-10 8-10 2-12 4-12 6-12 8-12 2-14 4-14 6-14 8-14 2-16 4-16 6-16 8-16
+> Initial Value of 1and 2
+> 0.30
+> 0.45
+> 0.60
+> 0.75
+> 0.90
+> Fmax
+> 0.462
+> 0.667
+> 0.492
+> 0.868
+> Fold-Ave. Reaction GO-BP GO-MF GO-CC EC
+
+Figure 5: Effect of initial value 𝛼 1 and 𝛼 2 on model performance. For example, “ 2 − 10 ” represents initial 𝛼 1 = 2 and 𝛼 2 = 10 . We highlight the best performance of each task for ease of reading. 
+
+## C.2 Implementation Details 
+
+We adopt the codes provided by the authors for all baselines. We carefully tune all the hyperparameters as reported in the papers to ensure fair comparison. For our MRM, we tune the initial 𝛼 1, 𝛼 2 and 
+
+𝛾 in the range of {2, 4, 6, 8}, {10 , 12 , 14 , 16 }, {0.2, 0.6, 1.0, 1.4, 1.8},respectively. We do not set an additional step size 𝑠 , but instead adopt the simplified implementation of the difficulty scheduler proposed in Section 4.2. For hyperparameters in data augmentation operations, we also set them within the ranges recommended in the original paper. We summarize the settings of these operations’ hyperparameters in Table 8. 
+
+## D Additional Experimental Results D.1 Hyperparameter Investigation 
+
+We investigate the impact of initial values 𝛼 1 and 𝛼 2 on model per-formance. The results are illustrated in Figure 5. We can observe that optimal performance typically occurs at “ 4 − 10 ” and “ 4 − 14 ”and their vicinity. Both smaller 𝛼 1 and larger 𝛼 2 (or an excessively difference between 𝛼 1 and 𝛼 2) lead to performance degradation. Appropriate values of 𝛼 1 and 𝛼 2 ensure the model is provided with samples that contain sufficient original information and rich varia-tion. As shown in Figure 2 and Equation (1), an excessively small 𝛼 1
+
+results in a low proportion of augmented protein data in the final mixed representations, failing to introduce sufficient variation to enhance model performance and robustness. Excessively large 𝛼 1
+
+reduces the proportion of original protein data in the final mixed representations, causing loss of crucial protein information. Since optimal settings cluster closely together, our method minimizes the need for extensive hyperparameter tuning. In practice, we rec-ommend that users prioritize tuning the initial values of 𝛼 1 and 𝛼 2
+
+near the optimal settings shown in Figure 5.

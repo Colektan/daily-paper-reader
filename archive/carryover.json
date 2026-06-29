@@ -1,57 +1,17 @@
 {
-  "generated_at": "2026-06-28T20:28:51.256780+00:00",
-  "updated_date": "20260628",
+  "generated_at": "2026-06-29T21:09:00.767291+00:00",
+  "updated_date": "20260629",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260628",
+      "updated_date": "20260629",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260628",
+      "updated_date": "20260629",
       "carryover_days": 9,
       "items": [
-        {
-          "id": "2606.18509v1",
-          "source": "arxiv",
-          "title": "Concept Modulation Models: A Unified Framework for Identifiability and Extrapolation",
-          "abstract": "Reliable generalization in conditional latent variable models requires understanding both identifiability and extrapolation: how observed variation across attributes determines latent structure, and how that structure determines distributions at unseen attributes. However, existing identifiability and extrapolation guarantees are largely model-specific, with separate analyses in nonlinear ICA, causal representation learning, perturbation modeling, and related conditional latent variable models. We introduce concept modulation models (CMMs), an attribute-indexed class of conditional generative models with structure $A\\to Λ\\to C\\to X$, where attributes select modulators, modulators induce latent concept laws, and concepts generate observed features. CMMs lift transition-based identifiability to conditional settings by showing that feature agreement on observed attributes induces a latent concept transition constrained by the CMM class. We express these constraints through attribute potentials, log-density ratios between attribute-conditioned concept laws, separating the generic lifting step from model-specific rigidity arguments. The same potentials control extrapolation: agreement at unseen attributes holds exactly when the transported attribute-potential identities extend to those attributes. This yields algebraic extrapolation criteria, identifies the common potential-based proof objects behind several existing identifiability and extrapolation results, and, when combined with the model-specific rigidity arguments in those works, recovers their stated conclusions.",
-          "authors": [
-            "Soheun Yi",
-            "Yizhou Lu",
-            "Chandler Squires",
-            "Pradeep Ravikumar"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "stat.ML"
-          ],
-          "published": "2026-06-16T21:53:01+00:00",
-          "link": "https://arxiv.org/pdf/2606.18509v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "framework for identifiability and extrapolation in conditional latent variable models, directly addressing representation learning",
-          "llm_evidence_cn": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
-          "llm_evidence": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
-          "canonical_evidence": "条件潜变量模型中可识别性和外推的统一框架，直接涉及表征学习",
-          "llm_tldr_en": "Introduces Concept Modulation Models (CMMs), a unified framework for identifiability and extrapolation in conditional generative models, bridging several representation learning subfields.",
-          "llm_tldr_cn": "该论文引入概念调制模型（CMM），这是一个属性索引的条件生成模型统一框架，结构为A→Λ→C→X。它统一了非线性ICA、因果表征学习等领域的可识别性和外推分析。CMM提供了跨模型的理论保证，有助于理解属性变化如何影响潜在结构。推进了条件潜变量模型的理论基础。",
-          "llm_tldr": "该论文引入概念调制模型（CMM），这是一个属性索引的条件生成模型统一框架，结构为A→Λ→C→X。它统一了非线性ICA、因果表征学习等领域的可识别性和外推分析。CMM提供了跨模型的理论保证，有助于理解属性变化如何影响潜在结构。推进了条件潜变量模型的理论基础。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.18509v1",
-          "carry_days": 7
-        },
         {
           "id": "2606.18663v1",
           "source": "arxiv",
@@ -89,47 +49,7 @@
           "matched_requirement_id": "req-13",
           "selection_source": "carryover_cache",
           "paper_id": "2606.18663v1",
-          "carry_days": 7
-        },
-        {
-          "id": "2606.18472v1",
-          "source": "arxiv",
-          "title": "Domain Generalizable Adaptation of 3D Vision-Language Models via Regularized Fine-Tuning",
-          "abstract": "Domain adaptation remains a central challenge in 3D vision, especially for multimodal foundation models that align 3D point clouds with visual and textual data. While these models demonstrate strong general capabilities, adapting them to downstream domains with limited data often leads to overfitting and catastrophic forgetting. To address this, we introduce ReFine3D, a regularized fine-tuning framework designed for domain-generalizable tuning of 3D large multimodal models (LMMs). ReFine3D combines selective layer tuning with two targeted regularization strategies: multi-view consistency across augmented point clouds and text diversity through synonym-based prompts generated by large language models. Additionally, we incorporate point-rendered vision supervision and a test-time augmentation mechanism with confidence-based aggregation to further enhance robustness. Extensive experiments across different 3D domain generalization benchmarks show that ReFine3D improves base-to-novel class generalization by 1.36%, cross-dataset transfer by 2.43%, robustness to corruption by 1.80%, and few-shot accuracy by up to 3.11%, outperforming prior state-of-the-art methods with minimal added computational overhead.",
-          "authors": [
-            "Sneha Paul",
-            "Zachary Patterson",
-            "Nizar Bouguila"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-16T20:31:05+00:00",
-          "link": "https://arxiv.org/pdf/2606.18472v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Regularized fine-tuning for domain generalizable adaptation of 3D VL models",
-          "llm_evidence_cn": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
-          "llm_evidence": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
-          "canonical_evidence": "通过正则化微调实现3D视觉语言模型的域泛化自适应",
-          "llm_tldr_en": "Proposes ReFine3D, a regularized fine-tuning framework for domain-generalizable tuning of 3D LMMs, combining selective layer tuning with multi-view consistency and text diversity.",
-          "llm_tldr_cn": "针对3D大视觉语言模型在有限数据下微调容易过拟合和遗忘的问题，提出ReFine3D框架，通过选择性层微调结合多视角一致性和文本多样性正则化，实现了域泛化自适应。实验表明该方法在多个下游数据集上提升了泛化性能，为3D多模态模型的迁移学习提供了新思路。",
-          "llm_tldr": "针对3D大视觉语言模型在有限数据下微调容易过拟合和遗忘的问题，提出ReFine3D框架，通过选择性层微调结合多视角一致性和文本多样性正则化，实现了域泛化自适应。实验表明该方法在多个下游数据集上提升了泛化性能，为3D多模态模型的迁移学习提供了新思路。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.18472v1",
-          "carry_days": 7
+          "carry_days": 8
         },
         {
           "id": "2606.19203v1",
@@ -169,48 +89,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.19203v1",
-          "carry_days": 7
-        },
-        {
-          "id": "2606.22307v1",
-          "source": "arxiv",
-          "title": "Enhancing Protein Representation Learning via Manifold Restore Mixing",
-          "abstract": "Data augmentation (DA) has been proven to be an effective means for improving protein representation learning (PRL) by generating additional training samples. Although mainstream perturbation- and sampling-based augmentation methods can produce data containing sufficient variations, they carry the risk of disrupting the protein structure and function. Some crafted protein homology modeling tools can generate conformations, but reduce structural diversity. The above dilemmas lead us to a question: Can we restore the disrupted structure caused by DA operations, providing data with both the original structure and diverse variations? In this work, we first analyze and empirically reveal the structure defect and performance degradation issues of existing DA methods. Based on the findings, we propose a simple yet effective DA method, Manifold Restore Mixing (MRM), for protein representation learning. Specifically, inspired by manifold mixup, we mix the hidden representations of original and augmented protein data to generate new samples that restore structural information lost in DA while introducing diverse variations. Furthermore, we develop a sample difficulty scheduler that adjusts the beta distribution in mixup to provide models with progressively challenging mixed samples during training, which improves the final performance. Comprehensive experiments on various PRL backbones and downstream tasks demonstrate the effectiveness and generalization of our method. The complete code and weights will be released upon acceptance. We provide a implementation at https://github.com/KingGugu/MRM.",
-          "authors": [
-            "Yizhou Dang",
-            "Chuang Zhao",
-            "Lianbo Ma",
-            "Guibing Guo",
-            "Xingwei Wang",
-            "Zhu Sun"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-21T02:20:14+00:00",
-          "link": "https://arxiv.org/pdf/2606.22307v1",
-          "tags": [
-            "keyword:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Data augmentation method for protein representation learning",
-          "llm_evidence_cn": "用于蛋白质表征学习的数据增强方法",
-          "llm_evidence": "用于蛋白质表征学习的数据增强方法",
-          "canonical_evidence": "用于蛋白质表征学习的数据增强方法",
-          "llm_tldr_en": "Proposes Manifold Restore Mixing, a data augmentation method that restores disrupted protein structure while preserving variation, enhancing representation learning.",
-          "llm_tldr_cn": "现有蛋白质表征学习的数据增强方法往往破坏蛋白质结构或缺乏多样性。本文提出流形恢复混合（Manifold Restore Mixing），一种新的数据增强策略，通过恢复被增强操作破坏的流形结构，同时保持数据多样性。在多个蛋白质任务上，该方法显著提升了表征质量，优于现有增强方法。该工作为解决蛋白质结构-功能关系中的数据处理问题提供了新视角。",
-          "llm_tldr": "现有蛋白质表征学习的数据增强方法往往破坏蛋白质结构或缺乏多样性。本文提出流形恢复混合（Manifold Restore Mixing），一种新的数据增强策略，通过恢复被增强操作破坏的流形结构，同时保持数据多样性。在多个蛋白质任务上，该方法显著提升了表征质量，优于现有增强方法。该工作为解决蛋白质结构-功能关系中的数据处理问题提供了新视角。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.22307v1",
-          "carry_days": 1
+          "carry_days": 8
         },
         {
           "id": "2606.21649v2",
@@ -249,7 +128,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.21649v2",
-          "carry_days": 2
+          "carry_days": 3
         },
         {
           "id": "2606.21590v1",
@@ -288,7 +167,7 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2606.21590v1",
-          "carry_days": 2
+          "carry_days": 3
         },
         {
           "id": "2606.21957v1",
@@ -326,93 +205,7 @@
           "matched_requirement_id": "req-9",
           "selection_source": "carryover_cache",
           "paper_id": "2606.21957v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.23758v1",
-          "source": "arxiv",
-          "title": "Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios",
-          "abstract": "Domain generalization learns from multiple source domains to generalize to unseen target domains. However, it often neglects the realistic case of label mismatch between source and target. Open set domain generalization is then proposed to recognize unseen classes in unseen domains. A simple approach trains one-vs-all classifiers to separate each class and detect outliers as unknown. Yet, the imbalance between few positive samples and many negative samples skews the decision boundary towards the positive ones, leading the model to over-reject out-of-distribution data, even from known classes in unseen domains. In this paper, we propose a novel meta-learning stategy called dualistic MEta-learning with joint DomaIn-Class matching (MEDIC), which considers implicit gradient matching towards inter-domain and inter-class task splits simultaneously to find optimal boundaries balanced for both domains and classes. Experimental results show that MEDIC not only outperforms prior methods in open set scenarios, but also maintains competitive close set generalization ability.",
-          "authors": [
-            "Xiran Wang",
-            "Jian Zhang",
-            "Lei Qi",
-            "Yang Gao",
-            "Yinghuan Shi"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-22T08:58:08+00:00",
-          "link": "https://arxiv.org/pdf/2606.23758v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "meta-learning for domain generalization",
-          "llm_evidence_cn": "元学习用于域泛化",
-          "llm_evidence": "元学习用于域泛化",
-          "canonical_evidence": "元学习用于域泛化",
-          "llm_tldr_en": "Proposes dualistic meta-learning strategy for open set domain generalization, addressing class mismatch and over-rejection.",
-          "llm_tldr_cn": "现有域泛化方法忽略了源域和目标域标签不匹配的现实情况，导致模型在开放集场景下过度拒绝已知类。本文提出一种名为MEDIC的双重元学习策略，通过联合域-类匹配来缓解正负样本不平衡问题，在开放集域泛化中提升对未知类的识别能力。",
-          "llm_tldr": "现有域泛化方法忽略了源域和目标域标签不匹配的现实情况，导致模型在开放集场景下过度拒绝已知类。本文提出一种名为MEDIC的双重元学习策略，通过联合域-类匹配来缓解正负样本不平衡问题，在开放集域泛化中提升对未知类的识别能力。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
-          "matched_requirement_id": "req-11",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.23758v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.22383v1",
-          "source": "arxiv",
-          "title": "Structured Hyperedge Adaptation for Parameter-Efficient Fine-Tuning of Vision Transformers",
-          "abstract": "Parameter-efficient fine-tuning (PEFT) has become a practical solution for adapting large pretrained vision transformers (ViTs) to downstream tasks while updating only a small subset of parameters. However, existing adapter-based methods perform adaptation independently for each token, implicitly assuming that token refinements should be learned in isolation. This token-wise formulation overlooks the structured relationships among tokens that naturally arise in visual scenes, potentially leading to redundant updates and spatially inconsistent feature refinement. In this work, we revisit the design of parameter-efficient adapters and propose to perform adaptation in hyperedge space rather than token space. We introduce HyperAdapter, a hypergraph-based adapter architecture that enables structured, group-aware adaptation through soft token routing. HyperAdapter constructs a soft hypergraph over ViT tokens using prototype-based assignments, aggregates token features into latent hyperedge representations, applies lightweight bottleneck adaptation at the hyperedge level, and diffuses the resulting updates back to tokens via the hypergraph incidence structure. This design injects an explicit structural inductive bias into PEFT while preserving the modularity and efficiency of standard adapters. Extensive experiments across diverse visual benchmarks demonstrate that structured hyperedge adaptation consistently outperforms strong PEFT baselines under comparable parameter budgets, with particularly pronounced gains on tasks requiring structured reasoning. Our results suggest that the choice of adaptation space is a critical yet underexplored dimension in parameter-efficient transfer for ViTs.",
-          "authors": [
-            "Edwin Kwadwo Tenagyei",
-            "Lei Wang",
-            "Ugochukwu Ejike Akpudo",
-            "Jun Zhou",
-            "Yongsheng Gao"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV",
-            "cs.AI",
-            "cs.LG"
-          ],
-          "published": "2026-06-21T08:09:08+00:00",
-          "link": "https://arxiv.org/pdf/2606.22383v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "hyperedge-based adaptation for efficient fine-tuning improves representation learning",
-          "llm_evidence_cn": "基于超边的自适应微调方法提升表征学习效率",
-          "llm_evidence": "基于超边的自适应微调方法提升表征学习效率",
-          "canonical_evidence": "基于超边的自适应微调方法提升表征学习效率",
-          "llm_tldr_en": "HyperAdapter performs PEFT in hyperedge space to capture structured token relationships, improving efficiency and spatial consistency over token-wise adapters.",
-          "llm_tldr_cn": "针对现有参数高效微调方法忽略token间结构化关系的问题，提出在超边空间进行自适应的HyperAdapter，利用超边捕获视觉场景中的结构化关系，减少冗余更新并提升特征一致性，在多个下游任务上以更少参数取得更优性能。",
-          "llm_tldr": "针对现有参数高效微调方法忽略token间结构化关系的问题，提出在超边空间进行自适应的HyperAdapter，利用超边捕获视觉场景中的结构化关系，减少冗余更新并提升特征一致性，在多个下游任务上以更少参数取得更优性能。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.22383v1",
-          "carry_days": 1
+          "carry_days": 2
         },
         {
           "id": "2606.25488v1",
@@ -440,13 +233,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "learnable data pruning for knowledge distillation to reduce computational overhead",
-          "llm_evidence_cn": "可学习数据剪枝用于知识蒸馏降低计算开销",
-          "llm_evidence": "可学习数据剪枝用于知识蒸馏降低计算开销",
-          "canonical_evidence": "可学习数据剪枝用于知识蒸馏降低计算开销",
-          "llm_tldr_en": "IF-Beta is a data pruning framework for knowledge distillation that combines influence functions with a learnable selection strategy, enabling efficient student model training with less data and compute.",
-          "llm_tldr_cn": "知识蒸馏通常计算开销大，本文提出IF-Beta框架，结合影响函数与可学习数据剪枝策略，自动选择对蒸馏最有价值的数据子集。实验表明，该方法能在显著减少训练数据和计算量的同时，获得比传统方法更优的学生模型，有效提升了知识蒸馏的训练效率。",
-          "llm_tldr": "知识蒸馏通常计算开销大，本文提出IF-Beta框架，结合影响函数与可学习数据剪枝策略，自动选择对蒸馏最有价值的数据子集。实验表明，该方法能在显著减少训练数据和计算量的同时，获得比传统方法更优的学生模型，有效提升了知识蒸馏的训练效率。",
+          "llm_evidence_en": "knowledge distillation with learnable data pruning to optimize training",
+          "llm_evidence_cn": "通过可学习数据剪枝优化知识蒸馏训练",
+          "llm_evidence": "通过可学习数据剪枝优化知识蒸馏训练",
+          "canonical_evidence": "通过可学习数据剪枝优化知识蒸馏训练",
+          "llm_tldr_en": "Distill on a Diet proposes IF-Beta, a learnable data pruning framework for efficient knowledge distillation, reducing training overhead.",
+          "llm_tldr_cn": "该论文针对知识蒸馏过程计算开销大的问题，提出IF-Beta框架，将影响函数与可学习数据剪枝结合，从训练数据中选择对蒸馏最关键的子集。该方法避免昂贵的重训练开销，且能自适应地捕捉蒸馏需求。实验表明在使用大幅减少的数据时，IF-Beta仍能获得与学生模型相当甚至更好的性能，显著提升了蒸馏效率。",
+          "llm_tldr": "该论文针对知识蒸馏过程计算开销大的问题，提出IF-Beta框架，将影响函数与可学习数据剪枝结合，从训练数据中选择对蒸馏最关键的子集。该方法避免昂贵的重训练开销，且能自适应地捕捉蒸馏需求。实验表明在使用大幅减少的数据时，IF-Beta仍能获得与学生模型相当甚至更好的性能，显著提升了蒸馏效率。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -455,44 +248,6 @@
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
           "paper_id": "2606.25488v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.22589v1",
-          "source": "arxiv",
-          "title": "Training-free Task Classification for Multi-Task Model Merging",
-          "abstract": "Ever since the advent of foundation models and the pre-training-finetuning paradigm, there have been numerous efforts to merge multiple task-specific experts into a single multi-task model. Prior work largely focuses on finding a single merged model, but it often underperforms individual experts due to parameter interference. To resolve this, dynamic model merging employs routing to activate task-relevant parameters per input. However, existing routers typically require either additional training with abundant labeled datasets or assume the access to task IDs of each input at inference time. In this work, we aim to close the gap to expert performance without additional training or task-ID-access assumption. To this end, we formulate routing as training-free task classification for each test input. Using singular value decomposition (SVD)-based low-rank manifold approximations for each task, SiM scores tasks by the projection residual of the test input feature onto each task manifold and routes accordingly. The task manifolds are pre-computable offline from a pretrained backbone using a small per-task support set (e.g., 32 examples per task) prior to merging process, requiring no router training and no data during the merging process. Moreover, SiM integrates seamlessly with subspace-/mask-based merging that represents task-expert via lightweight compressed task vectors, avoiding the need to store full expert parameters. Experiments across computer vision and natural language processing benchmarks under task-unknown inference demonstrate that SiM substantially improves merged-model performance and consistently narrows the gap to individual task experts.",
-          "authors": [
-            "Jungyong Son",
-            "Jinwook Jung",
-            "Sungyong Baik"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-06-21T16:51:29+00:00",
-          "link": "https://arxiv.org/pdf/2606.22589v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "training-free task classification for dynamic model merging",
-          "llm_evidence_cn": "无需训练的任务分类用于动态模型合并",
-          "llm_evidence": "无需训练的任务分类用于动态模型合并",
-          "canonical_evidence": "无需训练的任务分类用于动态模型合并",
-          "llm_tldr_en": "Proposes a training-free router for dynamic model merging that classifies tasks at inference without task IDs or additional training, achieving performance close to individual experts.",
-          "llm_tldr_cn": "多任务模型合并通常需要单独训练路由或知晓任务ID，限制了实用性。本文提出一种无需训练的任务分类方法，利用聚类和最近邻分类，在推理时自动识别输入所属任务并激活对应专家参数。在多个多任务场景下，无需任何额外训练即可达到接近独立专家模型的性能，显著提升了模型合并的效率。",
-          "llm_tldr": "多任务模型合并通常需要单独训练路由或知晓任务ID，限制了实用性。本文提出一种无需训练的任务分类方法，利用聚类和最近邻分类，在推理时自动识别输入所属任务并激活对应专家参数。在多个多任务场景下，无需任何额外训练即可达到接近独立专家模型的性能，显著提升了模型合并的效率。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.22589v1",
           "carry_days": 1
         },
         {
@@ -517,13 +272,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Optimizer design for iterate-averaged language models using optimal control",
-          "llm_evidence_cn": "针对迭代平均语言模型的优化器设计，采用最优控制",
-          "llm_evidence": "针对迭代平均语言模型的优化器设计，采用最优控制",
-          "canonical_evidence": "针对迭代平均语言模型的优化器设计，采用最优控制",
-          "llm_tldr_en": "Poses optimizer design for iterate-average estimators as optimal control, yielding PACE wrapper that improves AdamW for averaged models",
-          "llm_tldr_cn": "现代语言模型训练常返回迭代平均而非最终参数，但现有优化器未针对平均模型设计。本文将此问题建模为连续时间随机二次模型的最优控制问题，求解最优策略并近似得到PACE优化器。PACE作为AdamW的轻量包装，可显著提升平均模型的性能，为训练优化提供了新视角。",
-          "llm_tldr": "现代语言模型训练常返回迭代平均而非最终参数，但现有优化器未针对平均模型设计。本文将此问题建模为连续时间随机二次模型的最优控制问题，求解最优策略并近似得到PACE优化器。PACE作为AdamW的轻量包装，可显著提升平均模型的性能，为训练优化提供了新视角。",
+          "llm_evidence_en": "training optimization for iterate-averaged LMs",
+          "llm_evidence_cn": "迭代平均语言模型的训练优化",
+          "llm_evidence": "迭代平均语言模型的训练优化",
+          "canonical_evidence": "迭代平均语言模型的训练优化",
+          "llm_tldr_en": "PACE improves optimization for iterate-averaged LMs by formulating as optimal control, achieving better average performance.",
+          "llm_tldr_cn": "许多语言模型训练流程返回迭代平均模型而非最终迭代，现有优化器未针对这一场景设计。本文通过最优控制理论为平均估计器设计优化器，提出PACE算法。PACE作为AdamW的轻量包装，在连续时间随机二次模型上求解最优干预策略。实验证明PACE能有效提升平均模型的性能，为语言模型训练提供了新的优化思路。",
+          "llm_tldr": "许多语言模型训练流程返回迭代平均模型而非最终迭代，现有优化器未针对这一场景设计。本文通过最优控制理论为平均估计器设计优化器，提出PACE算法。PACE作为AdamW的轻量包装，在连续时间随机二次模型上求解最优干预策略。实验证明PACE能有效提升平均模型的性能，为语言模型训练提供了新的优化思路。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -532,6 +287,210 @@
           "matched_requirement_id": "req-12",
           "selection_source": "carryover_cache",
           "paper_id": "2606.25086v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.22567v1",
+          "source": "arxiv",
+          "title": "Concept-Constrained Prompt Learning for Few-Shot CLIP Adaptation",
+          "abstract": "Few-shot prompt learning is an effective strategy for adapting CLIP to downstream tasks, but class-only prompt optimization can overfit base-class supervision and weaken transfer to unseen classes. We propose Concept-Constrained Prompt Learning (CCPL), a lightweight regularization framework that anchors learnable class prompts to frozen concept-level text prototypes without updating CLIP encoders. CCPL learns a set of shared context tokens, instantiates class prompts by appending class names, and constructs frozen concept prototypes from a class-level concept bank. During training, a text-space cosine consistency objective aligns learnable class-prompt embeddings with frozen concept prototypes; concept dropout provides additional regularization against over-reliance on fixed concept lists. At inference, CCPL optionally fuses class-prompt logits with concept-prototype logits using a controllable ensemble weight alpha. Our default configuration uses text-space concept regularization lambda = 0.5, concept dropout p = 0.3 and weak concept-guided fusion (alpha = 0.1), with no KL-based prediction consistency term. Experiments under identical automatically-generated fallback splits show that CCPL improves the base-to-new harmonic mean on DTD (+0.6) and EuroSAT (+2.9) compared with CoOp, while remaining near-neutral on OxfordPets (-0.1). Ablations indicate that text-space concept regularization is consistently beneficial, while the best concept-guided inference strength is dataset- and protocol-sensitive. These results suggest concept constraints are most effective when concept prototypes align naturally with dataset semantics, and identify fine-grained categories as a current boundary condition. The code is released at: https://github.com/richael-sang/concept-constrained-prompt-learning.",
+          "authors": [
+            "Na Sang",
+            "Ding Ma",
+            "Rui Sang",
+            "Yuxuan Liu"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "cs.CL",
+            "cs.GR"
+          ],
+          "published": "2026-06-21T16:09:32+00:00",
+          "link": "https://arxiv.org/pdf/2606.22567v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Few-shot prompt learning with concept constraints for better transfer",
+          "llm_evidence_cn": "概念约束的少样本提示学习以提升迁移效果",
+          "llm_evidence": "概念约束的少样本提示学习以提升迁移效果",
+          "canonical_evidence": "概念约束的少样本提示学习以提升迁移效果",
+          "llm_tldr_en": "Proposes Concept-Constrained Prompt Learning (CCPL) to improve few-shot CLIP adaptation by anchoring prompts to concept prototypes.",
+          "llm_tldr_cn": "少样本提示学习容易过拟合基类，削弱对新类的迁移能力。本文提出CCPL，通过将可学习类提示锚定到冻结的概念原型上，并引入文本空间余弦一致性损失，有效提升了新类的泛化能力。实验表明CCPL在多个下游任务上优于现有方法。",
+          "llm_tldr": "少样本提示学习容易过拟合基类，削弱对新类的迁移能力。本文提出CCPL，通过将可学习类提示锚定到冻结的概念原型上，并引入文本空间余弦一致性损失，有效提升了新类的泛化能力。实验表明CCPL在多个下游任务上优于现有方法。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.22567v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.22874v1",
+          "source": "arxiv",
+          "title": "SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers",
+          "abstract": "Long contexts have become standard in pretrained LLMs, yet they remain expensive to run: prefill compute grows quadratically with sequence length, and every decode step re-reads a key-value cache that grows linearly with it. Sparse attention cuts these costs by attending only to a relevant subset of past tokens, but selecting that subset is itself expensive. We present SpotAttention, a lightweight selector that attaches to a frozen pretrained transformer and learns by KL distillation to estimate its attention distribution. The selector picks the top-K keys each query attends to, and because its estimate is a calibrated distribution, a dual top-p rule reads the per-query, per-layer budget directly from it. Across Qwen3 (dense, 4B-32B) and Qwen3.5 (hybrid linear/full attention, 4B-9B), SpotAttention matches dense accuracy at contexts up to 128K tokens, eight times the training length. Decode at L=128K runs 3.9x faster than FlashAttention and 1.8x faster than Twilight, the strongest training-free baseline. Quantizing the selector's K-cache to INT4 or FP4 microscale shrinks it 3.5x at no accuracy cost.",
+          "authors": [
+            "Huzama Ahmad",
+            "Se-Young Yun"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "published": "2026-06-22T05:39:12+00:00",
+          "link": "https://arxiv.org/pdf/2606.22874v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Plug-in sparse attention to optimize pretrained LLM efficiency",
+          "llm_evidence_cn": "即插即用的块稀疏注意力优化预训练大模型效率",
+          "llm_evidence": "即插即用的块稀疏注意力优化预训练大模型效率",
+          "canonical_evidence": "即插即用的块稀疏注意力优化预训练大模型效率",
+          "llm_tldr_en": "Presents SpotAttention, a lightweight selector that learns attention distribution via distillation to enable sparse attention for long-context LLMs.",
+          "llm_tldr_cn": "长上下文预训练LLM推理成本高。本文提出SpotAttention，通过KL蒸馏学习注意力分布，从而选择相关子集进行稀疏注意力。该方法即插即用，在不降低效果前提下显著加速推理。在多种模型上验证了效率提升。",
+          "llm_tldr": "长上下文预训练LLM推理成本高。本文提出SpotAttention，通过KL蒸馏学习注意力分布，从而选择相关子集进行稀疏注意力。该方法即插即用，在不降低效果前提下显著加速推理。在多种模型上验证了效率提升。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.22874v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.25665v1",
+          "source": "arxiv",
+          "title": "Learning Subset-Shared Invariances for Domain Generalization with Mixture-of-Experts",
+          "abstract": "Domain generalization (DG) aims to learn a model from one or more source domains that generalizes to an unseen target domain without accessing target data during training. A common approach enforces invariance of representations across all source domains, assuming predictive structure is globally shared. However, we demonstrate that enforcing invariance across more domains gradually restricts the feasible representation space, discarding transferable predictive factors that are not universally shared. To address this limitation, we propose subset-shared invariance, where predictive structure is assumed stable only within domain subsets. We implement this principle with a mixture-of-experts architecture, where each expert aligns the specific domains it serves and a routing mechanism composes subset-invariant components for prediction. This creates a routing-conditioned invariance, jointly learned with the representation. To facilitate effective decomposition, we develop training objectives that encourage selective alignment, confident and balanced routing, and diverse expert specialization. Experiments on DomainBed benchmarks demonstrate improved out-of-domain generalization and greater robustness under increasing domain heterogeneity. Our results suggest that DG should move beyond enforcing a single global invariance and instead model invariance through partially shared structure across domain subsets.",
+          "authors": [
+            "Tien-Hung Nguyen",
+            "Tien-Dat Tran",
+            "M. -Duong Nguyen",
+            "Kok-Seng Wong"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-24T10:24:57+00:00",
+          "link": "https://arxiv.org/pdf/2606.25665v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "subset-shared invariance for domain generalization via mixture-of-experts",
+          "llm_evidence_cn": "通过混合专家实现子集共享不变性用于域泛化",
+          "llm_evidence": "通过混合专家实现子集共享不变性用于域泛化",
+          "canonical_evidence": "通过混合专家实现子集共享不变性用于域泛化",
+          "llm_tldr_en": "Proposes subset-shared invariance to avoid discarding transferable factors, implemented with a mixture-of-experts architecture for domain generalization.",
+          "llm_tldr_cn": "该论文针对域泛化中强制全局不变性会丢弃可迁移预测因子的局限性，提出子集共享不变性，即预测结构仅在域子集内稳定。利用混合专家（MoE）架构实现该原则，每个专家对齐特定域子集。该方法在保留更多可迁移特征的同时提升了泛化性能，为表示学习提供了一种新的不变性学习方法。",
+          "llm_tldr": "该论文针对域泛化中强制全局不变性会丢弃可迁移预测因子的局限性，提出子集共享不变性，即预测结构仅在域子集内稳定。利用混合专家（MoE）架构实现该原则，每个专家对齐特定域子集。该方法在保留更多可迁移特征的同时提升了泛化性能，为表示学习提供了一种新的不变性学习方法。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25665v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.25197v1",
+          "source": "arxiv",
+          "title": "Efficient Adaptive Data Acquisition via Pretrained Belief Representations",
+          "abstract": "Learning effective policies for adaptive data acquisition remains challenging: posterior-based methods rely on surrogate models and posterior approximations that can be misspecified or biased, while direct policy-learning methods map from historical observations and fail to exploit available model representations, making learning harder. We introduce policy learning with belief representations (POLAR), based on the insight that optimal data acquisition depends on the observation history only through a sufficient belief state. Specifically, POLAR decouples representation learning from policy learning by leveraging pretrained predictive foundation models as belief-state encoders, training a policy head on top of their representations. This yields a simple, unified amortised policy learning framework for Bayesian experimental design, Bayesian optimisation, and active learning, differing only in the task-specific utility used to train the policy. Empirically, we find that POLAR outperforms state-of-the-art amortised methods across diverse tasks while requiring far fewer training samples, demonstrating a significant step in the scalability and efficiency of amortised data acquisition.",
+          "authors": [
+            "Daolang Huang",
+            "Zhuoyue Huang",
+            "Conor Hassan",
+            "Luigi Acerbi",
+            "Samuel Kaski",
+            "Tom Rainforth"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG",
+            "stat.ML"
+          ],
+          "published": "2026-06-23T21:40:47+00:00",
+          "link": "https://arxiv.org/pdf/2606.25197v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "decouples representation learning from policy learning using pretrained belief representations",
+          "llm_evidence_cn": "使用预训练的信念表示解耦表示学习与策略学习",
+          "llm_evidence": "使用预训练的信念表示解耦表示学习与策略学习",
+          "canonical_evidence": "使用预训练的信念表示解耦表示学习与策略学习",
+          "llm_tldr_en": "POLAR decouples representation learning from policy learning by leveraging pretrained foundation models as belief state encoders, enabling efficient adaptive data acquisition.",
+          "llm_tldr_cn": "该论文针对自适应数据采集策略学习困难的问题，提出POLAR方法，通过将表示学习与策略学习解耦，利用预训练基础模型作为信念状态编码器，直接学习策略。该方法避免了传统后验方法的偏差，并通过信念表示提高了策略效率。实验表明，POLAR在多个采集任务中显著优于现有方法，展示了预训练表示在策略学习中的潜力。",
+          "llm_tldr": "该论文针对自适应数据采集策略学习困难的问题，提出POLAR方法，通过将表示学习与策略学习解耦，利用预训练基础模型作为信念状态编码器，直接学习策略。该方法避免了传统后验方法的偏差，并通过信念表示提高了策略效率。实验表明，POLAR在多个采集任务中显著优于现有方法，展示了预训练表示在策略学习中的潜力。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25197v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.24088v1",
+          "source": "arxiv",
+          "title": "Autoencoder based optimized SSL representations: Complexity Minimization and improved Dysarthric ASR",
+          "abstract": "Self-supervised learning (SSL) models extract rich speech representations but often come with high-dimensional features, increasing computational complexity. This work explores an SSL-AutoEncoder (SSL-AE) bottlenecking approach to efficiently reduce feature dimensions while maintaining dysarthric Automatic Speech Recognition (ASR) performance. By leveraging an autoencoder, we transform high-dimensional SSL features into a compact space, reducing model complexity and training time. Our method preserves essential speech information, achieving reduced Word Error Rates (WER) while significantly lowering computational costs. Experiments show SSL-AE bottlenecking reduces training time by 8x compared to the SSL baseline, demonstrating efficiency without sacrificing recognition performance. These results highlight AE as an effective solution for SSL feature compression in resource-constrained environments.",
+          "authors": [
+            "Paban Sapkota",
+            "Hemant Kumar Kathania",
+            "Mikko Kurimo",
+            "Shrikanth Narayanan",
+            "Sudarsana Reddy Kadiri"
+          ],
+          "primary_category": "eess.AS",
+          "categories": [
+            "eess.AS"
+          ],
+          "published": "2026-06-23T03:05:42+00:00",
+          "link": "https://arxiv.org/pdf/2606.24088v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Self-supervised learning autoencoder bottleneck for reducing feature complexity",
+          "llm_evidence_cn": "自监督学习自编码器瓶颈降低特征复杂度",
+          "llm_evidence": "自监督学习自编码器瓶颈降低特征复杂度",
+          "canonical_evidence": "自监督学习自编码器瓶颈降低特征复杂度",
+          "llm_tldr_en": "Proposes SSL-AE bottlenecking to reduce dimensions of SSL features while improving dysarthric ASR performance and reducing training time.",
+          "llm_tldr_cn": "本文针对自监督学习（SSL）特征维度高导致计算复杂的问题，提出SSL-自编码器瓶颈方法。通过将高维SSL特征压缩到低维空间，在保持语音信息的同时显著降低模型复杂度和训练时间。实验表明，该方法在发音障碍语音识别上取得了更低的词错误率，训练速度提升8倍。",
+          "llm_tldr": "本文针对自监督学习（SSL）特征维度高导致计算复杂的问题，提出SSL-自编码器瓶颈方法。通过将高维SSL特征压缩到低维空间，在保持语音信息的同时显著降低模型复杂度和训练时间。实验表明，该方法在发音障碍语音识别上取得了更低的词错误率，训练速度提升8倍。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "self-supervised learning techniques for feature extraction",
+          "matched_requirement_id": "req-9",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.24088v1",
           "carry_days": 1
         }
       ]
