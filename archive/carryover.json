@@ -1,175 +1,17 @@
 {
-  "generated_at": "2026-07-04T21:26:37.175937+00:00",
-  "updated_date": "20260704",
+  "generated_at": "2026-07-05T21:30:47.634144+00:00",
+  "updated_date": "20260705",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260704",
+      "updated_date": "20260705",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260704",
+      "updated_date": "20260705",
       "carryover_days": 9,
       "items": [
-        {
-          "id": "2606.25086v1",
-          "source": "arxiv",
-          "title": "Training for the Model You Return: Improving Optimization for Iterate-Averaged Language Models",
-          "abstract": "Many modern Language Model (LM) pipelines return an averaged model, such as an exponential moving average of the training iterates, rather than the final iterate itself. This raises a fundamental question: given that we will return an iterate average, how should we change training to improve the performance of this average? We study this question by formulating optimizer design for the iterate-average estimator as an optimal-control problem. In a continuous-time stochastic quadratic model, we solve for the control strategy that minimizes the error of the returned average subject to a penalty on the size of the intervention. A practical approximation to this controller yields PACE, a lightweight wrapper around AdamW that pulls the live weights toward their exponential moving average with a clipped, per-coordinate control strength. We prove that a stylized version of PACE converges at the standard stochastic convex optimization rate, up to a factor depending on the averaging rule, while in the quadratic setting it can strictly improve the limiting squared error of the iterate-average estimator and can do so by an arbitrarily large factor on some instances. Empirically, our results suggest that PACE improves over AdamW and EMA-evaluated AdamW in supervised fine-tuning of 1-2B parameter LMs and in GPT-2 pretraining on FineWeb for a wide range of learning rates, decay schedules, and other hyperparameters.",
-          "authors": [
-            "Kwok Chun Au",
-            "Adam Block"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI",
-            "stat.ML"
-          ],
-          "published": "2026-06-23T18:47:40+00:00",
-          "link": "https://arxiv.org/pdf/2606.25086v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "optimizer design for iterate-averaged language models, PACE wrapper for AdamW",
-          "llm_evidence_cn": "针对迭代平均语言模型的优化器设计，PACE包装器改进AdamW",
-          "llm_evidence": "针对迭代平均语言模型的优化器设计，PACE包装器改进AdamW",
-          "canonical_evidence": "针对迭代平均语言模型的优化器设计，PACE包装器改进AdamW",
-          "llm_tldr_en": "PACE is a lightweight wrapper around AdamW that optimizes training for potentially returned iterate averages, improving convergence.",
-          "llm_tldr_cn": "许多语言模型训练后返回迭代平均（如EMA）而非最终参数，但标准训练未为此优化。本文将迭代平均估计器的优化器设计建模为最优控制问题，求解得到实用近似PACE。PACE作为AdamW的轻量包装器，在多种语言模型预训练任务中加速收敛并提升平均模型性能。",
-          "llm_tldr": "许多语言模型训练后返回迭代平均（如EMA）而非最终参数，但标准训练未为此优化。本文将迭代平均估计器的优化器设计建模为最优控制问题，求解得到实用近似PACE。PACE作为AdamW的轻量包装器，在多种语言模型预训练任务中加速收敛并提升平均模型性能。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.25086v1",
-          "carry_days": 5
-        },
-        {
-          "id": "2606.29184v1",
-          "source": "arxiv",
-          "title": "BaRA: Bayesian Adaptive Rank Allocation for Parameter-Efficient Fine-Tuning",
-          "abstract": "While Low-rank adaptation (LoRA) enables highly efficient fine-tuning by constraining task-specific updates to fixed low-rank subspaces, this rigid design limits representational flexibility and often results in overconfident predictions and miscalibrated uncertainty, especially in low-data regimes. Recent Bayesian LoRA variants improve uncertainty estimation by modeling posterior distributions over adaptation parameters. However, these approaches typically rely on fixed or heuristically determined ranks, overlooking the inherently context-dependent nature of adaptation capacity. In this paper, we propose BaRA, a Bayesian Adaptive Rank Allocation framework for parameter-efficient fine-tuning. Drawing inspiration from probabilistic topic models, BaRA dynamically allocates adaptation capacity by activating a sparse, context-dependent subset of disentangled latent factors, enabling instance-wise variation in effective rank. This Bayesian formulation provides principled, data-driven capacity control, mitigating over-parameterization while preserving expressiveness. Beyond the modeling contribution, we provide a complexity-theoretic generalization analysis showing that the generalization gap of BaRA depends on the learned joint effective rank $\\bar{s}_{Φ,θ}$ induced by the global-local gate, rather than the maximum rank $r$. This result explains why sparse adaptive rank allocation can reduce the effective hypothesis complexity while preserving input-dependent expressiveness. Extensive experiments on diverse natural language benchmarks demonstrate that BaRA consistently improves predictive performance, robustness, and uncertainty calibration compared to standard LoRA and existing Bayesian LoRA variants.",
-          "authors": [
-            "Zhibin Duan",
-            "Yuhong Wang",
-            "Jiahong Fu",
-            "Zongsheng Yue",
-            "Bo Chen",
-            "Zongben Xu"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-06-28T04:08:09+00:00",
-          "link": "https://arxiv.org/pdf/2606.29184v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Bayesian adaptive rank allocation for parameter-efficient fine-tuning",
-          "llm_evidence_cn": "贝叶斯自适应秩分配用于参数高效微调",
-          "llm_evidence": "贝叶斯自适应秩分配用于参数高效微调",
-          "canonical_evidence": "贝叶斯自适应秩分配用于参数高效微调",
-          "llm_tldr_en": "Proposes BaRA, a Bayesian framework that adaptively allocates ranks for LoRA fine-tuning, improving representational flexibility and uncertainty calibration.",
-          "llm_tldr_cn": "LoRA固定秩限制了表示灵活性，且易导致过置信预测。现有贝叶斯LoRA变体使用固定或启发式秩。本文提出BaRA，受概率主题模型启发，自适应分配秩，建模后验分布。在低数据场景下，BaRA提升了不确定性校准和下游性能，且计算开销小。",
-          "llm_tldr": "LoRA固定秩限制了表示灵活性，且易导致过置信预测。现有贝叶斯LoRA变体使用固定或启发式秩。本文提出BaRA，受概率主题模型启发，自适应分配秩，建模后验分布。在低数据场景下，BaRA提升了不确定性校准和下游性能，且计算开销小。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.29184v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.23758v1",
-          "source": "arxiv",
-          "title": "Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios",
-          "abstract": "Domain generalization learns from multiple source domains to generalize to unseen target domains. However, it often neglects the realistic case of label mismatch between source and target. Open set domain generalization is then proposed to recognize unseen classes in unseen domains. A simple approach trains one-vs-all classifiers to separate each class and detect outliers as unknown. Yet, the imbalance between few positive samples and many negative samples skews the decision boundary towards the positive ones, leading the model to over-reject out-of-distribution data, even from known classes in unseen domains. In this paper, we propose a novel meta-learning stategy called dualistic MEta-learning with joint DomaIn-Class matching (MEDIC), which considers implicit gradient matching towards inter-domain and inter-class task splits simultaneously to find optimal boundaries balanced for both domains and classes. Experimental results show that MEDIC not only outperforms prior methods in open set scenarios, but also maintains competitive close set generalization ability.",
-          "authors": [
-            "Xiran Wang",
-            "Jian Zhang",
-            "Lei Qi",
-            "Yang Gao",
-            "Yinghuan Shi"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-22T08:58:08+00:00",
-          "link": "https://arxiv.org/pdf/2606.23758v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "dualistic meta-learning for open set domain generalization",
-          "llm_evidence_cn": "双面元学习用于开放集域泛化",
-          "llm_evidence": "双面元学习用于开放集域泛化",
-          "canonical_evidence": "双面元学习用于开放集域泛化",
-          "llm_tldr_en": "Proposes MEDIC, a dualistic meta-learning strategy with domain-class matching for open set domain generalization, addressing class imbalance.",
-          "llm_tldr_cn": "开放集域泛化面临标签不匹配和类别不平衡问题。本文提出一种双面元学习策略MEDIC，结合领域-类别联合匹配，通过元学习来缓解过拒绝现象。在多个基准上，MEDIC在未知类检测和已知类泛化方面均取得显著提升。该方法展示了元学习在领域泛化中的潜力。",
-          "llm_tldr": "开放集域泛化面临标签不匹配和类别不平衡问题。本文提出一种双面元学习策略MEDIC，结合领域-类别联合匹配，通过元学习来缓解过拒绝现象。在多个基准上，MEDIC在未知类检测和已知类泛化方面均取得显著提升。该方法展示了元学习在领域泛化中的潜力。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
-          "matched_requirement_id": "req-11",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.23758v1",
-          "carry_days": 5
-        },
-        {
-          "id": "2606.29658v1",
-          "source": "arxiv",
-          "title": "Multi-Source Transfer Learning of Sparse Single-Index Models",
-          "abstract": "Transfer learning leverages knowledge from related source domains to improve learning in a target domain. Recent theoretical advances cover a broad range of regression settings within (generalized) linear models. Despite their diversity, these methods share two common constraints: they assume a known link function or linear structure and require direct access to raw source data. To move beyond these constraints, we propose a source-data-free transfer learning framework based on the single-index model (SIM). Instead of requiring raw source data, our method transfers only summary statistics derived from a generalized Stein's lemma in a one-time communication. This design preserves privacy and avoids side effects caused by dissimilarities of unknown nonlinear link functions across domains. To capture flexible, unknown nonlinearity, we employ a multilayer perceptron guided by the pre-estimated index from the transferred statistics, which significantly mitigates overfitting. Extensive experiments on synthetic data and a real-world application demonstrate consistent improvements over existing (generalized) linear model-based approaches. The proposed framework thus offers a practical, privacy-preserving, and nonlinear-adaptive solution for transfer learning.",
-          "authors": [
-            "Ye Tian"
-          ],
-          "primary_category": "stat.ME",
-          "categories": [
-            "stat.ME",
-            "stat.ML"
-          ],
-          "published": "2026-06-28T23:55:54+00:00",
-          "link": "https://arxiv.org/pdf/2606.29658v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "source-data-free multi-source transfer learning for single-index models",
-          "llm_evidence_cn": "无需原始数据的多源迁移学习单索引模型",
-          "llm_evidence": "无需原始数据的多源迁移学习单索引模型",
-          "canonical_evidence": "无需原始数据的多源迁移学习单索引模型",
-          "llm_tldr_en": "Proposes a source-data-free transfer learning framework for single-index models using only summary statistics, preserving privacy and handling non-linear link functions.",
-          "llm_tldr_cn": "现有迁移学习通常假设已知链接函数或线性结构，且需要原始源数据，限制了应用。本文提出基于单索引模型的无源数据迁移框架，仅传递由广义Stein引理导出的汇总统计量，保护隐私且适应未知非线性链接。理论分析和实验表明，该方法在回归任务中有效利用多源信息，优于直接学习。",
-          "llm_tldr": "现有迁移学习通常假设已知链接函数或线性结构，且需要原始源数据，限制了应用。本文提出基于单索引模型的无源数据迁移框架，仅传递由广义Stein引理导出的汇总统计量，保护隐私且适应未知非线性链接。理论分析和实验表明，该方法在回归任务中有效利用多源信息，优于直接学习。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.29658v1",
-          "carry_days": 1
-        },
         {
           "id": "2607.00926v1",
           "source": "arxiv",
@@ -193,13 +35,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "generative meta-learning with human feedback for domain adaptation using RL",
-          "llm_evidence_cn": "使用强化学习的生成式元学习与人类反馈进行域适应",
-          "llm_evidence": "使用强化学习的生成式元学习与人类反馈进行域适应",
-          "canonical_evidence": "使用强化学习的生成式元学习与人类反馈进行域适应",
-          "llm_tldr_en": "Proposes GMHF, a generative meta-learning framework with human feedback, using a neural ODE as a digital twin and an RL agent to bridge domain gaps.",
-          "llm_tldr_cn": "域适应中目标域完全无数据时泛化困难。本文提出生成式元学习与人类反馈（GMHF），利用条件神经常微分方程作为数字孪生生成数据，强化学习智能体优化生成策略，结合专家直觉对齐目标域物理规律。理论证明了泛化界，实验验证了域适应性能提升。",
-          "llm_tldr": "域适应中目标域完全无数据时泛化困难。本文提出生成式元学习与人类反馈（GMHF），利用条件神经常微分方程作为数字孪生生成数据，强化学习智能体优化生成策略，结合专家直觉对齐目标域物理规律。理论证明了泛化界，实验验证了域适应性能提升。",
+          "llm_evidence_en": "Generative Meta-Learning with Human Feedback using RL",
+          "llm_evidence_cn": "利用强化学习的生成式元学习与人类反馈",
+          "llm_evidence": "利用强化学习的生成式元学习与人类反馈",
+          "canonical_evidence": "利用强化学习的生成式元学习与人类反馈",
+          "llm_tldr_en": "GMHF combines meta-learning with human feedback and RL to generate data that aligns with expert beliefs, improving generalization to new domains.",
+          "llm_tldr_cn": "机器学习模型在面对分布外环境时泛化能力不足。本文提出生成式元学习与人类反馈框架，利用条件神经ODE作为生成数字孪生，结合强化学习智能体，通过专家直觉指导数据合成。理论分析了泛化误差下界，实验证明对齐人类信念能显著降低风险。为元学习与迁移学习提供了新思路。",
+          "llm_tldr": "机器学习模型在面对分布外环境时泛化能力不足。本文提出生成式元学习与人类反馈框架，利用条件神经ODE作为生成数字孪生，结合强化学习智能体，通过专家直觉指导数据合成。理论分析了泛化误差下界，实验证明对齐人类信念能显著降低风险。为元学习与迁移学习提供了新思路。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -208,128 +50,6 @@
           "matched_requirement_id": "req-11",
           "selection_source": "carryover_cache",
           "paper_id": "2607.00926v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.30111v1",
-          "source": "arxiv",
-          "title": "Automating the Design of Embodied AgentArchitectures",
-          "abstract": "Embodied agents are typically built as hand-designed compositions of perception, memory, planning, and action modules. This modularity exposes a large architectural design space, but current systems still rely on researcher intuition to choose where information is stored, how observations are processed, and how model calls are connected. Agent Architecture Search (AAS) automates such design for text-domain agents, but has not been systematically evaluated on perceptual embodied agents through simulator rollouts. We study this transfer. We introduce AgentCanvas, a typed-graph runtime that hosts embodied executors as editable node-and-wire programs with simulator-aware execution and episode-level logs, and KDLoop, a coding-agent search procedure that cycles through proposal, critique, experiment, and distillation, with triggered reflection after stalls. We evaluate three AAS variants across four embodied executors spanning vision-language navigation, embodied question answering, and language-conditioned manipulation. The resulting 3x4 matrix shows that architecture-level search can produce deployable and directional success-rate gains on embodied tasks, while one apparent high-scoring candidate is rejected as leak-bearing. At the same time, the experiments expose constraints that are muted in text-domain AAS: optimization signals can be masked by rollout noise, search can become trapped in local edit basins, and episode-level credit assignment only partially emerges even when detailed logs are available. These results characterize both the promise and the current limits of automated architecture search for embodied agents.",
-          "authors": [
-            "Jian Zhou",
-            "Sihao Lin",
-            "Jin Li",
-            "Shuai Fu",
-            "Gengze Zhou",
-            "Qi Wu"
-          ],
-          "primary_category": "cs.RO",
-          "categories": [
-            "cs.RO",
-            "cs.AI",
-            "cs.LG"
-          ],
-          "published": "2026-06-29T10:45:37+00:00",
-          "link": "https://arxiv.org/pdf/2606.30111v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "automated design of embodied agent architectures using neural architecture search",
-          "llm_evidence_cn": "使用神经架构搜索自动化设计具身智能体架构",
-          "llm_evidence": "使用神经架构搜索自动化设计具身智能体架构",
-          "canonical_evidence": "使用神经架构搜索自动化设计具身智能体架构",
-          "llm_tldr_en": "This paper studies transferring Agent Architecture Search to embodied agents, introducing AgentCanvas runtime and KDLoop search procedure to automate design of perception, memory, planning, and action modules.",
-          "llm_tldr_cn": "当前具身智能体架构依赖人工设计。本文探索将文本域的Agent Architecture Search迁移到具身智能体，提出AgentCanvas运行时和KDLoop搜索过程。在仿真环境中系统评估，发现搜索可自动发现有效架构，但性能仍受限于感知和记忆组件的设计。",
-          "llm_tldr": "当前具身智能体架构依赖人工设计。本文探索将文本域的Agent Architecture Search迁移到具身智能体，提出AgentCanvas运行时和KDLoop搜索过程。在仿真环境中系统评估，发现搜索可自动发现有效架构，但性能仍受限于感知和记忆组件的设计。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "Advances in representation learning and neural architecture search for AI",
-          "matched_requirement_id": "req-17",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.30111v1",
-          "carry_days": 3
-        },
-        {
-          "id": "2606.28932v1",
-          "source": "arxiv",
-          "title": "DLR: Zero-Inference-Cost Latent Residuals for Low-Rank Pre-Training",
-          "abstract": "Large language models have driven recent progress in language and multimodal AI, yet pre-training them at scale is prohibitively expensive. Low-rank pre-training, which factorizes each weight matrix into a rank-r product to reduce both parameters and FLOPs, is a promising response but typically lags full-rank training in quality. We propose Duplicated Latent Residual (DLR), a training-only, parameter-free, foldable plug-in for low-rank pre-training. DLR augments the standard low-rank output Bz with a fixed structured residual alpha/sqrt(K) * Expand_K(z) that replicates each latent coordinate K = ceil(d_out/r) times across the output. With alpha fixed, DLR adds zero learnable parameters per layer; after training, it is absorbed into the up-projection in closed form, B* = B + alpha/sqrt(K) R^T, so deployment parameter count, FLOPs and memory match the underlying low-rank backbone exactly. Across LLaMA models from 60M to 7B parameters, DLR strengthens low-rank pre-training on C4 validation perplexity in most settings, with the clearest gains at 130M and above; folded checkpoints transfer cleanly to supervised fine-tuning on standard benchmarks.",
-          "authors": [
-            "Dong Wang",
-            "Wenwu Tang",
-            "Yun Cheng",
-            "Olga Saukh"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-27T14:07:45+00:00",
-          "link": "https://arxiv.org/pdf/2606.28932v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "zero-inference-cost latent residuals for low-rank pre-training",
-          "llm_evidence_cn": "低秩预训练中零推理成本的潜在残差",
-          "llm_evidence": "低秩预训练中零推理成本的潜在残差",
-          "canonical_evidence": "低秩预训练中零推理成本的潜在残差",
-          "llm_tldr_en": "DLR adds a fixed structured residual to low-rank outputs, improving quality without extra parameters or inference cost, enabling better low-rank pre-training.",
-          "llm_tldr_cn": "针对低秩预训练质量落后于全秩训练的问题，提出DLR（复制潜在残差），在低秩输出上添加固定的结构化残差，不增加可学习参数和推理成本，显著提升低秩预训练质量，在语言和多模态任务上验证了有效性。",
-          "llm_tldr": "针对低秩预训练质量落后于全秩训练的问题，提出DLR（复制潜在残差），在低秩输出上添加固定的结构化残差，不增加可学习参数和推理成本，显著提升低秩预训练质量，在语言和多模态任务上验证了有效性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.28932v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.29463v1",
-          "source": "arxiv",
-          "title": "CellDETR: A Detection-Guided Framework for Scalable Cell Representation Learning from Histopathology Images",
-          "abstract": "Recent advances in pathology foundation models have substantially improved patch and slide level representation learning from whole-slide images (WSIs).However, cell-level representations learning remain underexplored, limiting cell resolved interpretability, biological discovery, and clinical translation. We propose CellDETR, a detection-guided framework built on Deformable DETR for scalable cell representation learning from WSIs. By introducing location feature decoupling and box-constrained attention mechanism, CellDETR enables automated extraction of cell-level embeddings, and outperform existing state-of-the-art methods in supervised cell classification on PanNuke data. In addition, by incorporating contrastive learning design, we build a CellDETR-based pretraining model for scalable cell representation learning from unlabeled WSIs, which improves downstream cell classification performance. Furthermore, we show that after pretraining with Xenium spatial transcriptomics-derived cell annotations, CellDETR achieves accurate cross-dataset cell classification, demonstrating the transferability and biological relevance of the learned cell embeddings. Together, CellDETR provides a scalable route toward general cell-level representation learning framework for interpretable computational patholog",
-          "authors": [
-            "Shikang Zhang",
-            "Guojun Li",
-            "Yicong Mao",
-            "Chulin Sha"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-06-28T15:39:44+00:00",
-          "link": "https://arxiv.org/pdf/2606.29463v1",
-          "tags": [
-            "keyword:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "representation learning from histopathology using detection-guided framework",
-          "llm_evidence_cn": "从病理图像进行细胞表征学习的检测引导框架",
-          "llm_evidence": "从病理图像进行细胞表征学习的检测引导框架",
-          "canonical_evidence": "从病理图像进行细胞表征学习的检测引导框架",
-          "llm_tldr_en": "CellDETR introduces a detection-guided framework for scalable cell representation learning from WSIs, outperforming SOTA in cell classification.",
-          "llm_tldr_cn": "针对病理图像中细胞级别表征学习不足的问题，提出CellDETR框架，基于Deformable DETR引入位置特征解耦和框约束注意力，自动提取细胞级嵌入，在PanNuke数据集上超越现有方法，结合对比学习进一步提升了表征质量。",
-          "llm_tldr": "针对病理图像中细胞级别表征学习不足的问题，提出CellDETR框架，基于Deformable DETR引入位置特征解耦和框约束注意力，自动提取细胞级嵌入，在PanNuke数据集上超越现有方法，结合对比学习进一步提升了表征质量。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.29463v1",
           "carry_days": 1
         },
         {
@@ -355,13 +75,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Gradient smoothing as training convergence optimization",
-          "llm_evidence_cn": "梯度平滑作为训练收敛优化方法",
-          "llm_evidence": "梯度平滑作为训练收敛优化方法",
-          "canonical_evidence": "梯度平滑作为训练收敛优化方法",
-          "llm_tldr_en": "Gradient Smoothing introduces depth-wise gradient augmentation that smooths block-wise updates across layers, improving convergence with minimal overhead.",
-          "llm_tldr_cn": "该论文提出深度梯度增强（Depth-wise Gradient Augmentation），沿深度方向对逐块优化器更新进行平滑变换，实例化为局部的窗口平滑操作；该方法可即插即用于SGD、Adam等优化器，在少量计算开销下显著改善训练收敛速度与稳定性。",
-          "llm_tldr": "该论文提出深度梯度增强（Depth-wise Gradient Augmentation），沿深度方向对逐块优化器更新进行平滑变换，实例化为局部的窗口平滑操作；该方法可即插即用于SGD、Adam等优化器，在少量计算开销下显著改善训练收敛速度与稳定性。",
+          "llm_evidence_en": "training optimization via gradient smoothing",
+          "llm_evidence_cn": "通过梯度平滑优化训练",
+          "llm_evidence": "通过梯度平滑优化训练",
+          "canonical_evidence": "通过梯度平滑优化训练",
+          "llm_tldr_en": "Introduces Depth-wise Gradient Augmentation and Gradient Smoothing, a family of methods that smooth layer-wise updates to improve optimization for deep neural networks with minimal overhead.",
+          "llm_tldr_cn": "针对深度神经网络训练中优化器更新缺乏层间协调的问题，提出深度梯度增强框架和梯度平滑方法族。通过对各层优化器更新进行深度方向平滑（如窗口平滑算子），协调层间更新，在几乎不增加计算开销的情况下，显著提升了SGD、Adam等优化器的收敛速度与最终性能，在多种网络和任务上验证了有效性。",
+          "llm_tldr": "针对深度神经网络训练中优化器更新缺乏层间协调的问题，提出深度梯度增强框架和梯度平滑方法族。通过对各层优化器更新进行深度方向平滑（如窗口平滑算子），协调层间更新，在几乎不增加计算开销的情况下，显著提升了SGD、Adam等优化器的收敛速度与最终性能，在多种网络和任务上验证了有效性。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -412,48 +132,7 @@
           "matched_requirement_id": "req-10",
           "selection_source": "carryover_cache",
           "paper_id": "2606.28117v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2607.01657v1",
-          "source": "arxiv",
-          "title": "Domain Generalization via Text-Anchored Information Bottleneck",
-          "abstract": "Visual recognition models often fail when deployed in new environments. Domain Generalization (DG) addresses this by learning representations that remain invariant to environment-specific variations. Recent approaches increasingly rely on large vision-language models, assuming that preserving their expressive visual representations improves robustness. However, we show that such visual expressiveness can instead propagate spurious cues that tie representations to the training environments, hindering invariant learning. We therefore discard visual guidance and instead treat the language embedding space as the primary source of domain invariance, naturally acting as an information bottleneck that preserves core semantics while suppressing domain-specific variations. Extensive experiments across diverse backbones exhibit state-of-the-art performance and further analyze what makes guidance effective for robust generalization. These findings shift the focus of DG from improving representations to designing supervision that enforces invariance.",
-          "authors": [
-            "Eunyi Lyou",
-            "Yunjeong Choi",
-            "Junho Lee",
-            "Joonseok Lee"
-          ],
-          "primary_category": "cs.CV",
-          "categories": [
-            "cs.CV"
-          ],
-          "published": "2026-07-02T03:31:34+00:00",
-          "link": "https://arxiv.org/pdf/2607.01657v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "domain generalization via text-anchored information bottleneck for invariant representation learning",
-          "llm_evidence_cn": "通过文本锚定信息瓶颈进行域泛化，学习不变表示",
-          "llm_evidence": "通过文本锚定信息瓶颈进行域泛化，学习不变表示",
-          "canonical_evidence": "通过文本锚定信息瓶颈进行域泛化，学习不变表示",
-          "llm_tldr_en": "Proposes Text-Anchored Information Bottleneck for domain generalization, using language embedding as a domain-invariant bottleneck to suppress spurious visual cues and improve robustness.",
-          "llm_tldr_cn": "视觉域泛化中，现有方法依赖大规模视觉-语言模型，但视觉表示的丰富性可能传播伪相关。本文提出文本锚定信息瓶颈，将语言嵌入作为主要域不变源，通过信息瓶颈约束保留核心语义、抑制域特定变化。在多个DG基准上，该方法超越了基于视觉表示的方法，验证了语言空间在域泛化中的关键作用。",
-          "llm_tldr": "视觉域泛化中，现有方法依赖大规模视觉-语言模型，但视觉表示的丰富性可能传播伪相关。本文提出文本锚定信息瓶颈，将语言嵌入作为主要域不变源，通过信息瓶颈约束保留核心语义、抑制域特定变化。在多个DG基准上，该方法超越了基于视觉表示的方法，验证了语言空间在域泛化中的关键作用。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "representation learning methods improving model performance",
-          "matched_requirement_id": "req-8",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.01657v1",
-          "carry_days": 1
+          "carry_days": 2
         },
         {
           "id": "2607.01762v1",
@@ -478,13 +157,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "asymmetric representation learning with role-aware neural convex divergence",
-          "llm_evidence_cn": "基于角色感知神经凸散度的非对称表示学习",
-          "llm_evidence": "基于角色感知神经凸散度的非对称表示学习",
-          "canonical_evidence": "基于角色感知神经凸散度的非对称表示学习",
-          "llm_tldr_en": "This paper proposes a role-aware neural convex divergence head for asymmetric representation learning, achieving structured scores with source-target projections and input-convex Bregman divergence.",
-          "llm_tldr_cn": "提出角色感知神经凸散度头用于非对称表示学习，通过源-目标角色投影和输入凸Bregman散度生成有结构的非负分数，在词汇蕴含、句子蕴含等任务上优于对称头，为非对称关系建模提供了几何化方法。",
-          "llm_tldr": "提出角色感知神经凸散度头用于非对称表示学习，通过源-目标角色投影和输入凸Bregman散度生成有结构的非负分数，在词汇蕴含、句子蕴含等任务上优于对称头，为非对称关系建模提供了几何化方法。",
+          "llm_evidence_en": "asymmetric representation learning with role-aware neural convex divergence heads",
+          "llm_evidence_cn": "用于非对称表征学习的角色感知神经凸散度头",
+          "llm_evidence": "用于非对称表征学习的角色感知神经凸散度头",
+          "canonical_evidence": "用于非对称表征学习的角色感知神经凸散度头",
+          "llm_tldr_en": "Proposes a role-aware neural convex divergence head for asymmetric representation learning, using source/target projections and neural Bregman divergence to model directed relations.",
+          "llm_tldr_cn": "该论文提出角色感知神经凸散度头（Role-Aware Neural Convex Divergence Heads），用于非对称表征学习。该方法通过源角色和目标角色投影，结合输入凸神经Bregman散度，在角色投影空间中产生非负结构化得分。实验在词义蕴含、句子蕴含等任务上验证了其有效性，相比标准对称头更好地捕捉了方向性关系，为表示学习中建模不对称关系提供了新工具。",
+          "llm_tldr": "该论文提出角色感知神经凸散度头（Role-Aware Neural Convex Divergence Heads），用于非对称表征学习。该方法通过源角色和目标角色投影，结合输入凸神经Bregman散度，在角色投影空间中产生非负结构化得分。实验在词义蕴含、句子蕴含等任务上验证了其有效性，相比标准对称头更好地捕捉了方向性关系，为表示学习中建模不对称关系提供了新工具。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -493,6 +172,136 @@
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
           "paper_id": "2607.01762v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.30336v1",
+          "source": "arxiv",
+          "title": "FlexTab: A Flexible Encoder-Decoder Architecture for In-Context Learning Across Diverse Tabular Tasks",
+          "abstract": "We introduce FlexTab, a flexible encoder-decoder architecture for in-context learning on tabular data that pairs a single, task-agnostic encoder with a suite of task-specific decoders. Unlike existing tabular in-context learners, which entangle feature representations with a specific prediction target, our design produces \\textit{target-agnostic} row embeddings that can be leveraged across a wide range of downstream tasks within a table-native in-context learning setup. We demonstrate this flexibility on six distinct problems: classification, regression, anomaly detection, clustering, entity matching, and entity classification in relational databases. Both the encoder and the task-specific decoders are trained on a large corpus of real-world, unlabeled tables. FlexTab achieves state-of-the-art performance on classification, regression, anomaly detection and entity matching, while remaining competitive with specialized models on entity classification in a relational setting. These results demonstrate that a single shared encoder, paired with task-specific decoders, can serve as an effective general-purpose backbone for diverse tabular prediction problems. The inference code and checkpoints will be made publicly available at https://github.com/SAP-samples/flextab.",
+          "authors": [
+            "Marek Polewczyk",
+            "Maximilian Schambach",
+            "Marco Spinaci",
+            "Sam Thelin",
+            "Johannes Höhne"
+          ],
+          "primary_category": "cs.LG",
+          "categories": [
+            "cs.LG"
+          ],
+          "published": "2026-06-29T14:14:34+00:00",
+          "link": "https://arxiv.org/pdf/2606.30336v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "target-agnostic row embeddings for improved downstream performance",
+          "llm_evidence_cn": "目标无关的行嵌入提升下游任务表现",
+          "llm_evidence": "目标无关的行嵌入提升下游任务表现",
+          "canonical_evidence": "目标无关的行嵌入提升下游任务表现",
+          "llm_tldr_en": "FlexTab uses a task-agnostic encoder to produce target-agnostic row embeddings, enabling effective in-context learning across diverse tabular tasks like classification and regression, demonstrating flexibility and strong performance.",
+          "llm_tldr_cn": "现有表格上下文学习器将特征表示与特定预测目标耦合，限制了复用性。FlexTab提出了一种灵活的编码器-解码器架构，通过任务无关编码器生成目标无关的行嵌入，支持分类、回归、异常检测等多种下游任务。实验表明该方法在多个任务上表现优异，为表格数据上下文学习提供了通用框架。",
+          "llm_tldr": "现有表格上下文学习器将特征表示与特定预测目标耦合，限制了复用性。FlexTab提出了一种灵活的编码器-解码器架构，通过任务无关编码器生成目标无关的行嵌入，支持分类、回归、异常检测等多种下游任务。实验表明该方法在多个任务上表现优异，为表格数据上下文学习提供了通用框架。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.30336v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2607.00465v1",
+          "source": "arxiv",
+          "title": "StochasT: Learning with Stochastic Turn Depth for Visual Instruction Tuning",
+          "abstract": "Large Vision-Language Models (LVLMs) rely extensively on Visual Instruction Tuning (VIT) to elicit their multimodal reasoning capabilities. However, we find a discrepancy: VIT often packs multiple language tasks about the same image for conversational, multi-turn training, whereas existing benchmarks evaluate LVLMs in isolated, single-turn scenarios. The models can suffer from visual attention decay and contextual overfitting during multi-turn training, making it hard for them to realize their full potential in the mismatched test phase. To close the gap, we propose learning with Stochastic Turn Depth (StochasT), which stochastically groups language tasks for the same image into clusters of varying sizes (turn depth) while preserving their organic order. Hence, while StochasT draws on Dropout and stochastic depth for ResNets, it does not actually drop anything to maximize the utility of the training data. Furthermore, we introduce a challenging, benchmark-agnostic evaluation mechanism based on the Balanced Latin Square to measure LVLMs' robustness under varying contextual dependencies. Extensive experiments demonstrate that StochasT effectively grants LVLMs strong, harmonized capabilities for both single-turn and multi-turn use cases.",
+          "authors": [
+            "Yuan Qing",
+            "Chengzhi Mao",
+            "Boqing Gong"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.CL",
+            "cs.LG"
+          ],
+          "published": "2026-07-01T05:34:07+00:00",
+          "link": "https://arxiv.org/pdf/2607.00465v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "stochastic turn depth for visual instruction tuning optimization",
+          "llm_evidence_cn": "随机轮次深度优化视觉指令微调训练",
+          "llm_evidence": "随机轮次深度优化视觉指令微调训练",
+          "canonical_evidence": "随机轮次深度优化视觉指令微调训练",
+          "llm_tldr_en": "StochasT stochastically groups language tasks for multi-turn VIT to mitigate visual attention decay and contextual overfitting, improving single-turn benchmark performance.",
+          "llm_tldr_cn": "针对视觉指令微调(VIT)中多轮训练与单轮评测不匹配的问题，本文提出StochasT方法，通过随机将同一图像的语言任务分组到不同大小的轮次中，减少视觉注意力衰减和上下文过拟合。实验表明该方法能有效提升LVLM在单轮基准上的表现，弥合训练与测试的差距。",
+          "llm_tldr": "针对视觉指令微调(VIT)中多轮训练与单轮评测不匹配的问题，本文提出StochasT方法，通过随机将同一图像的语言任务分组到不同大小的轮次中，减少视觉注意力衰减和上下文过拟合。实验表明该方法能有效提升LVLM在单轮基准上的表现，弥合训练与测试的差距。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "training optimization strategies for better model convergence",
+          "matched_requirement_id": "req-12",
+          "selection_source": "carryover_cache",
+          "paper_id": "2607.00465v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.30185v1",
+          "source": "arxiv",
+          "title": "Dynamo: Dynamic Skill-Tool Evolution for Vision-Language Agents",
+          "abstract": "Improving vision-language models (VLMs) on visual reasoning typically requires retraining or hand-designed prompts and tools. We present Dynamo, a training-free framework that adapts a frozen VLM without any weight updates. On a small labeled training subset, the agent inspects its own correct and incorrect attempts and evolves two complementary capabilities: reusable reasoning skills for cognitive bottlenecks, and executable visual tools for perceptual ones. Each generated tool is paired with a skill that specifies when to invoke it, and both capability types accumulate in a persistent library. Across four visual reasoning benchmarks and five VLM backbones, Dynamo improves direct inference on all 20 model--benchmark settings (avg. +5.6 acc). When the tool set is given in advance, the framework learns when to call each tool, and per-step tool choice improves on every tested backbone. Against task-specific RL (VTool-R1, DeepEyes), Dynamo closes 65--99% of the RL gap at a fraction of the compute, and combines additively with RL when available.",
+          "authors": [
+            "Yutao Sun",
+            "Yanting Miao",
+            "Hao-Xuan Ma",
+            "Mengyu Zhou",
+            "Mingshuai Chen",
+            "Tiancheng Zhao",
+            "Dexin Wang",
+            "Lei Lv",
+            "Li Xu",
+            "Xiaoxi Jiang",
+            "Guanjun Jiang"
+          ],
+          "primary_category": "cs.AI",
+          "categories": [
+            "cs.AI"
+          ],
+          "published": "2026-06-29T11:59:01+00:00",
+          "link": "https://arxiv.org/pdf/2606.30185v1",
+          "tags": [
+            "keyword:RL-VLA-world",
+            "keyword:rep-learning",
+            "query:RL-VLA-world",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "training-free framework adapting frozen VLM via self-evolution",
+          "llm_evidence_cn": "无需训练的框架通过自我进化适配冻结VLM",
+          "llm_evidence": "无需训练的框架通过自我进化适配冻结VLM",
+          "canonical_evidence": "无需训练的框架通过自我进化适配冻结VLM",
+          "llm_tldr_en": "Dynamo enables a frozen VLM to evolve reasoning skills and visual tools without weight updates, improving visual reasoning across benchmarks.",
+          "llm_tldr_cn": "为提升视觉语言模型的推理能力，本文提出Dynamo，一种无需权重更新的框架。代理通过分析自身正确与错误尝试，自动演化出可复用的推理技能和可执行视觉工具，并积累到持久库中。在多个视觉推理基准上，Dynamo一致提升了冻结VLM的准确率（平均+5.6%），展现了无需重训练即可适配的潜力。",
+          "llm_tldr": "为提升视觉语言模型的推理能力，本文提出Dynamo，一种无需权重更新的框架。代理通过分析自身正确与错误尝试，自动演化出可复用的推理技能和可执行视觉工具，并积累到持久库中。在多个视觉推理基准上，Dynamo一致提升了冻结VLM的准确率（平均+5.6%），展现了无需重训练即可适配的潜力。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
+          "matched_requirement_id": "req-15",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.30185v1",
           "carry_days": 1
         }
       ]
