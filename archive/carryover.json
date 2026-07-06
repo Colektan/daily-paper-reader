@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-07-05T21:30:47.634144+00:00",
-  "updated_date": "20260705",
+  "generated_at": "2026-07-06T20:48:08.240155+00:00",
+  "updated_date": "20260706",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260705",
+      "updated_date": "20260706",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260705",
+      "updated_date": "20260706",
       "carryover_days": 9,
       "items": [
         {
@@ -35,13 +35,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "Generative Meta-Learning with Human Feedback using RL",
-          "llm_evidence_cn": "利用强化学习的生成式元学习与人类反馈",
-          "llm_evidence": "利用强化学习的生成式元学习与人类反馈",
-          "canonical_evidence": "利用强化学习的生成式元学习与人类反馈",
-          "llm_tldr_en": "GMHF combines meta-learning with human feedback and RL to generate data that aligns with expert beliefs, improving generalization to new domains.",
-          "llm_tldr_cn": "机器学习模型在面对分布外环境时泛化能力不足。本文提出生成式元学习与人类反馈框架，利用条件神经ODE作为生成数字孪生，结合强化学习智能体，通过专家直觉指导数据合成。理论分析了泛化误差下界，实验证明对齐人类信念能显著降低风险。为元学习与迁移学习提供了新思路。",
-          "llm_tldr": "机器学习模型在面对分布外环境时泛化能力不足。本文提出生成式元学习与人类反馈框架，利用条件神经ODE作为生成数字孪生，结合强化学习智能体，通过专家直觉指导数据合成。理论分析了泛化误差下界，实验证明对齐人类信念能显著降低风险。为元学习与迁移学习提供了新思路。",
+          "llm_evidence_en": "generative meta-learning with human feedback and RL",
+          "llm_evidence_cn": "生成式元学习结合人类反馈与强化学习",
+          "llm_evidence": "生成式元学习结合人类反馈与强化学习",
+          "canonical_evidence": "生成式元学习结合人类反馈与强化学习",
+          "llm_tldr_en": "Proposes GMHF, a generative meta-learning framework with human feedback and RL, for domain generalization with limited target data.",
+          "llm_tldr_cn": "针对领域泛化中目标域数据缺失的问题，提出生成式元学习与人类反馈框架（GMHF）。利用条件神经ODE作为数字孪生生成数据，通过强化学习智能体根据专家直觉调整生成分布，理论证明对齐人类信念可降低泛化误差。在多种迁移场景中提升了模型适应性。",
+          "llm_tldr": "针对领域泛化中目标域数据缺失的问题，提出生成式元学习与人类反馈框架（GMHF）。利用条件神经ODE作为数字孪生生成数据，通过强化学习智能体根据专家直觉调整生成分布，理论证明对齐人类信念可降低泛化误差。在多种迁移场景中提升了模型适应性。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -51,88 +51,6 @@
           "selection_source": "carryover_cache",
           "paper_id": "2607.00926v1",
           "carry_days": 1
-        },
-        {
-          "id": "2606.30813v1",
-          "source": "arxiv",
-          "title": "Gradient Smoothing: Coupling Layer-wise Updates for Improved Optimization",
-          "abstract": "Deep neural networks with repeated architectural blocks, such as transformers, often exhibit structured relationships across layers that emerge during training. Motivated by this observation, we introduce \\emph{Depth-wise Gradient Augmentation}, a general optimization paradigm in which the update applied to each layer is obtained by transforming the collection of block-wise optimizer updates along the depth dimension. Within this framework, we study \\emph{Gradient Smoothing}, a family of depth-wise smoothing methods, and instantiate it with a simple local \\emph{Window Smoothing} operator. The resulting method operates directly on block-wise updates produced by arbitrary base optimizers (e.g., SGD, Adam, Muon), incurs minimal computational overhead, and is compatible with existing optimization pipelines. We evaluate Gradient Smoothing across a diverse set of architectures and training regimes, including language model pretraining, RL post-training of LLMs for reasoning, diffusion modeling, and image classification with Vision Transformers. Across these settings, Gradient Smoothing consistently improves optimization and generalization performance without modifying model architectures or training objectives. We further show that it promotes more structured representation evolution across depth, consistent with its interpretation as a structured depth-wise preconditioning method. Together, these results establish Depth-wise Gradient Augmentation as a promising framework for exploiting cross-depth structure in optimization and demonstrate Gradient Smoothing as a simple and broadly applicable instantiation.",
-          "authors": [
-            "Haoming Meng",
-            "Anton Sugolov",
-            "Vardan Papyan"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-06-29T18:37:34+00:00",
-          "link": "https://arxiv.org/pdf/2606.30813v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "training optimization via gradient smoothing",
-          "llm_evidence_cn": "通过梯度平滑优化训练",
-          "llm_evidence": "通过梯度平滑优化训练",
-          "canonical_evidence": "通过梯度平滑优化训练",
-          "llm_tldr_en": "Introduces Depth-wise Gradient Augmentation and Gradient Smoothing, a family of methods that smooth layer-wise updates to improve optimization for deep neural networks with minimal overhead.",
-          "llm_tldr_cn": "针对深度神经网络训练中优化器更新缺乏层间协调的问题，提出深度梯度增强框架和梯度平滑方法族。通过对各层优化器更新进行深度方向平滑（如窗口平滑算子），协调层间更新，在几乎不增加计算开销的情况下，显著提升了SGD、Adam等优化器的收敛速度与最终性能，在多种网络和任务上验证了有效性。",
-          "llm_tldr": "针对深度神经网络训练中优化器更新缺乏层间协调的问题，提出深度梯度增强框架和梯度平滑方法族。通过对各层优化器更新进行深度方向平滑（如窗口平滑算子），协调层间更新，在几乎不增加计算开销的情况下，显著提升了SGD、Adam等优化器的收敛速度与最终性能，在多种网络和任务上验证了有效性。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.30813v1",
-          "carry_days": 1
-        },
-        {
-          "id": "2606.28117v1",
-          "source": "arxiv",
-          "title": "When One Adapter Speaks for Many: Discovering Low-Rank Redundancy in Continual Fine-Tuning",
-          "abstract": "Low-Rank Adaptation (LoRA) has become the standard tool for parameter-efficient fine-tuning of large pretrained models. When applied sequentially across tasks in Continual Learning (CL), the standard assumption is that each new task requires a dedicated low-rank adapter. In this work, we challenge this assumption empirically and structurally. We show that task-specific LoRA adapters in CL exhibit significant low-rank redundancy: the subspaces spanned by adapters trained on different tasks substantially overlap, and in many cases earlier adapters can faithfully represent later tasks. Building on this observation, we propose LiteLoRA, a plug-and-play gating mechanism that learns at train time whether to recruit a new adapter or reuse existing low-rank representations. Our method reduces the number of active adapters by 20-70% while matching or exceeding state-of-the-art performance on standard CL benchmarks, revealing that structural redundancy is pervasive and that selective learning is sufficient to achieve stability without sacrificing plasticity.",
-          "authors": [
-            "Tanguy Dieudonné",
-            "Giulia Lanzillotta",
-            "Enis Simsar",
-            "Louis Barinka",
-            "Thomas Hofmann"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG"
-          ],
-          "published": "2026-06-26T14:19:03+00:00",
-          "link": "https://arxiv.org/pdf/2606.28117v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "Discovers low-rank redundancy in continual fine-tuning and proposes LiteLoRA for efficient transfer learning",
-          "llm_evidence_cn": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
-          "llm_evidence": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
-          "canonical_evidence": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
-          "llm_tldr_en": "LiteLoRA reduces adapter redundancy in continual learning by reusing existing adapters via a gating mechanism, improving parameter efficiency.",
-          "llm_tldr_cn": "连续学习中的LoRA适配器存在显著低秩冗余，不同任务的适配器子空间高度重叠。LiteLoRA提出门控机制，在训练时决定是否新建适配器或复用旧的，大幅减少参数量同时保持性能。在多个序列任务上验证了其有效性和效率。",
-          "llm_tldr": "连续学习中的LoRA适配器存在显著低秩冗余，不同任务的适配器子空间高度重叠。LiteLoRA提出门控机制，在训练时决定是否新建适配器或复用旧的，大幅减少参数量同时保持性能。在多个序列任务上验证了其有效性和效率。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "transfer learning methods to improve model training efficiency",
-          "matched_requirement_id": "req-10",
-          "selection_source": "carryover_cache",
-          "paper_id": "2606.28117v1",
-          "carry_days": 2
         },
         {
           "id": "2607.01762v1",
@@ -157,13 +75,13 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "asymmetric representation learning with role-aware neural convex divergence heads",
-          "llm_evidence_cn": "用于非对称表征学习的角色感知神经凸散度头",
-          "llm_evidence": "用于非对称表征学习的角色感知神经凸散度头",
-          "canonical_evidence": "用于非对称表征学习的角色感知神经凸散度头",
-          "llm_tldr_en": "Proposes a role-aware neural convex divergence head for asymmetric representation learning, using source/target projections and neural Bregman divergence to model directed relations.",
-          "llm_tldr_cn": "该论文提出角色感知神经凸散度头（Role-Aware Neural Convex Divergence Heads），用于非对称表征学习。该方法通过源角色和目标角色投影，结合输入凸神经Bregman散度，在角色投影空间中产生非负结构化得分。实验在词义蕴含、句子蕴含等任务上验证了其有效性，相比标准对称头更好地捕捉了方向性关系，为表示学习中建模不对称关系提供了新工具。",
-          "llm_tldr": "该论文提出角色感知神经凸散度头（Role-Aware Neural Convex Divergence Heads），用于非对称表征学习。该方法通过源角色和目标角色投影，结合输入凸神经Bregman散度，在角色投影空间中产生非负结构化得分。实验在词义蕴含、句子蕴含等任务上验证了其有效性，相比标准对称头更好地捕捉了方向性关系，为表示学习中建模不对称关系提供了新工具。",
+          "llm_evidence_en": "proposes a role-aware neural convex divergence head for asymmetric representation learning",
+          "llm_evidence_cn": "提出角色感知的神经凸散度头用于非对称表示学习",
+          "llm_evidence": "提出角色感知的神经凸散度头用于非对称表示学习",
+          "canonical_evidence": "提出角色感知的神经凸散度头用于非对称表示学习",
+          "llm_tldr_en": "Proposes a role-aware neural convex divergence head that models directed relations in representation learning.",
+          "llm_tldr_cn": "该论文针对表示学习中有向关系建模问题，提出角色感知的神经凸散度头。通过源角色和目标角色投影后计算输入凸神经Bregman散度，得到非负结构化分数。理论分析了投影空间性质、源角色凸性、方向差分解等，实验验证了其有效性。",
+          "llm_tldr": "该论文针对表示学习中有向关系建模问题，提出角色感知的神经凸散度头。通过源角色和目标角色投影后计算输入凸神经Bregman散度，得到非负结构化分数。理论分析了投影空间性质、源角色凸性、方向差分解等，实验验证了其有效性。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -175,35 +93,37 @@
           "carry_days": 1
         },
         {
-          "id": "2606.30336v1",
+          "id": "2607.00784v1",
           "source": "arxiv",
-          "title": "FlexTab: A Flexible Encoder-Decoder Architecture for In-Context Learning Across Diverse Tabular Tasks",
-          "abstract": "We introduce FlexTab, a flexible encoder-decoder architecture for in-context learning on tabular data that pairs a single, task-agnostic encoder with a suite of task-specific decoders. Unlike existing tabular in-context learners, which entangle feature representations with a specific prediction target, our design produces \\textit{target-agnostic} row embeddings that can be leveraged across a wide range of downstream tasks within a table-native in-context learning setup. We demonstrate this flexibility on six distinct problems: classification, regression, anomaly detection, clustering, entity matching, and entity classification in relational databases. Both the encoder and the task-specific decoders are trained on a large corpus of real-world, unlabeled tables. FlexTab achieves state-of-the-art performance on classification, regression, anomaly detection and entity matching, while remaining competitive with specialized models on entity classification in a relational setting. These results demonstrate that a single shared encoder, paired with task-specific decoders, can serve as an effective general-purpose backbone for diverse tabular prediction problems. The inference code and checkpoints will be made publicly available at https://github.com/SAP-samples/flextab.",
+          "title": "LeVLJEPA: End-to-End Vision-Language Pretraining Without Negatives",
+          "abstract": "Vision-language pretraining remains dominated by contrastive objectives, whereas vision-only self-supervised learning has largely adopted non-contrastive methods. At the same time, the role of vision-language encoders has shifted: they are increasingly deployed not as zero-shot classifiers but as the frozen visual backbone of vision-language models and dense prediction systems, which consume the full grid of patch tokens rather than a single pooled embedding. We introduce LeVLJEPA, the first fully non-contrastive end-to-end vision-language pretraining method. LeVLJEPA learns through cross-modal prediction with stop-gradient targets and per-modality distributional regularization, without negatives, temperature, momentum encoder, or teacher-student schedule, and trains stably at large scale. We find that the resulting encoder provides markedly stronger dense semantic features for downstream use: as a frozen vision-language-model backbone, LeVLJEPA is the strongest of the evaluated encoders across GQA, VQAv2, and POPE under two distinct language models, and outperforms contrastive baselines on semantic segmentation, while remaining on par on global readouts such as linear probing. These results establish non-contrastive pretraining as an effective means of producing dense semantic vision features.",
           "authors": [
-            "Marek Polewczyk",
-            "Maximilian Schambach",
-            "Marco Spinaci",
-            "Sam Thelin",
-            "Johannes Höhne"
+            "Lukas Kuhn",
+            "Giuseppe Serra",
+            "Randall Balestriero",
+            "Florian Buettner"
           ],
-          "primary_category": "cs.LG",
+          "primary_category": "cs.CV",
           "categories": [
-            "cs.LG"
+            "cs.CV",
+            "cs.AI"
           ],
-          "published": "2026-06-29T14:14:34+00:00",
-          "link": "https://arxiv.org/pdf/2606.30336v1",
+          "published": "2026-07-01T11:15:39+00:00",
+          "link": "https://arxiv.org/pdf/2607.00784v1",
           "tags": [
+            "keyword:RL-VLA-world",
             "keyword:rep-learning",
+            "query:RL-VLA-world",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "target-agnostic row embeddings for improved downstream performance",
-          "llm_evidence_cn": "目标无关的行嵌入提升下游任务表现",
-          "llm_evidence": "目标无关的行嵌入提升下游任务表现",
-          "canonical_evidence": "目标无关的行嵌入提升下游任务表现",
-          "llm_tldr_en": "FlexTab uses a task-agnostic encoder to produce target-agnostic row embeddings, enabling effective in-context learning across diverse tabular tasks like classification and regression, demonstrating flexibility and strong performance.",
-          "llm_tldr_cn": "现有表格上下文学习器将特征表示与特定预测目标耦合，限制了复用性。FlexTab提出了一种灵活的编码器-解码器架构，通过任务无关编码器生成目标无关的行嵌入，支持分类、回归、异常检测等多种下游任务。实验表明该方法在多个任务上表现优异，为表格数据上下文学习提供了通用框架。",
-          "llm_tldr": "现有表格上下文学习器将特征表示与特定预测目标耦合，限制了复用性。FlexTab提出了一种灵活的编码器-解码器架构，通过任务无关编码器生成目标无关的行嵌入，支持分类、回归、异常检测等多种下游任务。实验表明该方法在多个任务上表现优异，为表格数据上下文学习提供了通用框架。",
+          "llm_evidence_en": "Non-contrastive vision-language pretraining improves representation learning",
+          "llm_evidence_cn": "非对比视觉语言预训练提升表征学习",
+          "llm_evidence": "非对比视觉语言预训练提升表征学习",
+          "canonical_evidence": "非对比视觉语言预训练提升表征学习",
+          "llm_tldr_en": "LeVLJEPA is the first fully non-contrastive end-to-end vision-language pretraining method using cross-modal prediction without negatives.",
+          "llm_tldr_cn": "视觉语言预训练多采用对比学习，但视觉自监督学习已转向非对比方法。本文提出LeVLJEPA，首个完全非对比的端到端视觉语言预训练方法，通过跨模态预测和停止梯度目标学习，无需负样本、温度参数或动量编码器。实验证明其学习到的表示在下游任务中优于对比方法。",
+          "llm_tldr": "视觉语言预训练多采用对比学习，但视觉自监督学习已转向非对比方法。本文提出LeVLJEPA，首个完全非对比的端到端视觉语言预训练方法，通过跨模态预测和停止梯度目标学习，无需负样本、温度参数或动量编码器。实验证明其学习到的表示在下游任务中优于对比方法。",
           "llm_tags": [
             "query:rep-learning"
           ],
@@ -211,27 +131,26 @@
           "matched_query_text": "representation learning methods improving model performance",
           "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.30336v1",
+          "paper_id": "2607.00784v1",
           "carry_days": 1
         },
         {
-          "id": "2607.00465v1",
+          "id": "2607.01657v1",
           "source": "arxiv",
-          "title": "StochasT: Learning with Stochastic Turn Depth for Visual Instruction Tuning",
-          "abstract": "Large Vision-Language Models (LVLMs) rely extensively on Visual Instruction Tuning (VIT) to elicit their multimodal reasoning capabilities. However, we find a discrepancy: VIT often packs multiple language tasks about the same image for conversational, multi-turn training, whereas existing benchmarks evaluate LVLMs in isolated, single-turn scenarios. The models can suffer from visual attention decay and contextual overfitting during multi-turn training, making it hard for them to realize their full potential in the mismatched test phase. To close the gap, we propose learning with Stochastic Turn Depth (StochasT), which stochastically groups language tasks for the same image into clusters of varying sizes (turn depth) while preserving their organic order. Hence, while StochasT draws on Dropout and stochastic depth for ResNets, it does not actually drop anything to maximize the utility of the training data. Furthermore, we introduce a challenging, benchmark-agnostic evaluation mechanism based on the Balanced Latin Square to measure LVLMs' robustness under varying contextual dependencies. Extensive experiments demonstrate that StochasT effectively grants LVLMs strong, harmonized capabilities for both single-turn and multi-turn use cases.",
+          "title": "Domain Generalization via Text-Anchored Information Bottleneck",
+          "abstract": "Visual recognition models often fail when deployed in new environments. Domain Generalization (DG) addresses this by learning representations that remain invariant to environment-specific variations. Recent approaches increasingly rely on large vision-language models, assuming that preserving their expressive visual representations improves robustness. However, we show that such visual expressiveness can instead propagate spurious cues that tie representations to the training environments, hindering invariant learning. We therefore discard visual guidance and instead treat the language embedding space as the primary source of domain invariance, naturally acting as an information bottleneck that preserves core semantics while suppressing domain-specific variations. Extensive experiments across diverse backbones exhibit state-of-the-art performance and further analyze what makes guidance effective for robust generalization. These findings shift the focus of DG from improving representations to designing supervision that enforces invariance.",
           "authors": [
-            "Yuan Qing",
-            "Chengzhi Mao",
-            "Boqing Gong"
+            "Eunyi Lyou",
+            "Yunjeong Choi",
+            "Junho Lee",
+            "Joonseok Lee"
           ],
           "primary_category": "cs.CV",
           "categories": [
-            "cs.CV",
-            "cs.CL",
-            "cs.LG"
+            "cs.CV"
           ],
-          "published": "2026-07-01T05:34:07+00:00",
-          "link": "https://arxiv.org/pdf/2607.00465v1",
+          "published": "2026-07-02T03:31:34+00:00",
+          "link": "https://arxiv.org/pdf/2607.01657v1",
           "tags": [
             "keyword:RL-VLA-world",
             "keyword:rep-learning",
@@ -239,69 +158,98 @@
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "stochastic turn depth for visual instruction tuning optimization",
-          "llm_evidence_cn": "随机轮次深度优化视觉指令微调训练",
-          "llm_evidence": "随机轮次深度优化视觉指令微调训练",
-          "canonical_evidence": "随机轮次深度优化视觉指令微调训练",
-          "llm_tldr_en": "StochasT stochastically groups language tasks for multi-turn VIT to mitigate visual attention decay and contextual overfitting, improving single-turn benchmark performance.",
-          "llm_tldr_cn": "针对视觉指令微调(VIT)中多轮训练与单轮评测不匹配的问题，本文提出StochasT方法，通过随机将同一图像的语言任务分组到不同大小的轮次中，减少视觉注意力衰减和上下文过拟合。实验表明该方法能有效提升LVLM在单轮基准上的表现，弥合训练与测试的差距。",
-          "llm_tldr": "针对视觉指令微调(VIT)中多轮训练与单轮评测不匹配的问题，本文提出StochasT方法，通过随机将同一图像的语言任务分组到不同大小的轮次中，减少视觉注意力衰减和上下文过拟合。实验表明该方法能有效提升LVLM在单轮基准上的表现，弥合训练与测试的差距。",
+          "llm_evidence_en": "domain generalization via representation learning bottleneck",
+          "llm_evidence_cn": "通过表示学习瓶颈实现域泛化",
+          "llm_evidence": "通过表示学习瓶颈实现域泛化",
+          "canonical_evidence": "通过表示学习瓶颈实现域泛化",
+          "llm_tldr_en": "Proposes a text-anchored information bottleneck for domain generalization, discarding visual guidance and using language embeddings as invariance source.",
+          "llm_tldr_cn": "针对域泛化中视觉表示易传播环境特定伪相关的问题，提出文本锚点信息瓶颈方法。放弃视觉引导，将语言嵌入空间作为主要域不变性来源，通过信息瓶颈保留核心语义并抑制域特定变异。在多个基准上超越依赖视觉表达的先前方法，提升了模型对域变化的鲁棒性。",
+          "llm_tldr": "针对域泛化中视觉表示易传播环境特定伪相关的问题，提出文本锚点信息瓶颈方法。放弃视觉引导，将语言嵌入空间作为主要域不变性来源，通过信息瓶颈保留核心语义并抑制域特定变异。在多个基准上超越依赖视觉表达的先前方法，提升了模型对域变化的鲁棒性。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "training optimization strategies for better model convergence",
-          "matched_requirement_id": "req-12",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2607.00465v1",
+          "paper_id": "2607.01657v1",
           "carry_days": 1
         },
         {
-          "id": "2606.30185v1",
+          "id": "2607.01630v1",
           "source": "arxiv",
-          "title": "Dynamo: Dynamic Skill-Tool Evolution for Vision-Language Agents",
-          "abstract": "Improving vision-language models (VLMs) on visual reasoning typically requires retraining or hand-designed prompts and tools. We present Dynamo, a training-free framework that adapts a frozen VLM without any weight updates. On a small labeled training subset, the agent inspects its own correct and incorrect attempts and evolves two complementary capabilities: reusable reasoning skills for cognitive bottlenecks, and executable visual tools for perceptual ones. Each generated tool is paired with a skill that specifies when to invoke it, and both capability types accumulate in a persistent library. Across four visual reasoning benchmarks and five VLM backbones, Dynamo improves direct inference on all 20 model--benchmark settings (avg. +5.6 acc). When the tool set is given in advance, the framework learns when to call each tool, and per-step tool choice improves on every tested backbone. Against task-specific RL (VTool-R1, DeepEyes), Dynamo closes 65--99% of the RL gap at a fraction of the compute, and combines additively with RL when available.",
+          "title": "DRDN: Decoupled Representation Dynamic Network for From-Scratch ViT Class-Incremental Learning",
+          "abstract": "Dynamic expansion methods for class-incremental learning (CIL) protect task-specific knowledge by growing dedicated tokens or subnetworks, yet our analyses suggest that classification supervision alone does not sufficiently preserve task-agnostic shared backbone representations over long incremental sequences. We identify two intertwined challenges: cross-task confusion from sequential training on predominantly current-task data, which biases decision boundaries toward recent tasks; and under-optimized shared representations in the backbone that cap long-term discriminability as tasks accumulate.   We propose the Decoupled Representation Dynamic Network (DRDN), which addresses these challenges via two orthogonal mechanisms. For shared backbone representations, DRDN continuously applies masked image modeling (MIM) at every incremental step, with reconstruction gradients routed exclusively through the backbone, encouraging it to retain general visual structure beyond class-discriminative cues. For task-specific discrimination, DRDN employs hierarchical task token expansion across all transformer layers, with a modified per-task attention rule that reduces inter-task interference. We support this design with accuracy degradation analysis and cross-task confusion rate measurements.   In the from-scratch ViT CIL setting (no external pretraining), DRDN consistently improves over strong token-expansion baselines with comparable backbone scale. On CIFAR100-B0 (10 steps), DRDN achieves 77.19% average accuracy, outperforming DKT by 1.36 points and DyTox by 3.53 points, with an advantage that grows at longer incremental sequences. Multi-seed validation confirms stability (+/-0.31%). The MIM decoder is active only during training, adding no inference-time parameters or computation.",
           "authors": [
-            "Yutao Sun",
-            "Yanting Miao",
-            "Hao-Xuan Ma",
-            "Mengyu Zhou",
-            "Mingshuai Chen",
-            "Tiancheng Zhao",
-            "Dexin Wang",
-            "Lei Lv",
-            "Li Xu",
-            "Xiaoxi Jiang",
-            "Guanjun Jiang"
+            "Bingchen Huang",
+            "Yifu Chen",
+            "Zhiling Wang",
+            "Yuanchao Du"
           ],
-          "primary_category": "cs.AI",
+          "primary_category": "cs.CV",
           "categories": [
-            "cs.AI"
+            "cs.CV"
           ],
-          "published": "2026-06-29T11:59:01+00:00",
-          "link": "https://arxiv.org/pdf/2606.30185v1",
+          "published": "2026-07-02T02:57:58+00:00",
+          "link": "https://arxiv.org/pdf/2607.01630v1",
           "tags": [
-            "keyword:RL-VLA-world",
             "keyword:rep-learning",
             "query:RL-VLA-world",
             "query:rep-learning"
           ],
           "llm_score": 8.0,
-          "llm_evidence_en": "training-free framework adapting frozen VLM via self-evolution",
-          "llm_evidence_cn": "无需训练的框架通过自我进化适配冻结VLM",
-          "llm_evidence": "无需训练的框架通过自我进化适配冻结VLM",
-          "canonical_evidence": "无需训练的框架通过自我进化适配冻结VLM",
-          "llm_tldr_en": "Dynamo enables a frozen VLM to evolve reasoning skills and visual tools without weight updates, improving visual reasoning across benchmarks.",
-          "llm_tldr_cn": "为提升视觉语言模型的推理能力，本文提出Dynamo，一种无需权重更新的框架。代理通过分析自身正确与错误尝试，自动演化出可复用的推理技能和可执行视觉工具，并积累到持久库中。在多个视觉推理基准上，Dynamo一致提升了冻结VLM的准确率（平均+5.6%），展现了无需重训练即可适配的潜力。",
-          "llm_tldr": "为提升视觉语言模型的推理能力，本文提出Dynamo，一种无需权重更新的框架。代理通过分析自身正确与错误尝试，自动演化出可复用的推理技能和可执行视觉工具，并积累到持久库中。在多个视觉推理基准上，Dynamo一致提升了冻结VLM的准确率（平均+5.6%），展现了无需重训练即可适配的潜力。",
+          "llm_evidence_en": "Representation learning for class-incremental learning",
+          "llm_evidence_cn": "类增量学习中的表征学习",
+          "llm_evidence": "类增量学习中的表征学习",
+          "canonical_evidence": "类增量学习中的表征学习",
+          "llm_tldr_en": "DRDN uses decoupled representation and dynamic expansion to preserve task-agnostic backbone representations in class-incremental learning.",
+          "llm_tldr_cn": "类增量学习中分类监督无法保持共享骨干表征的泛化性。DRDN通过解耦表征动态网络，利用正交机制分别缓解跨任务混淆和骨干表征未优化问题。在多个CIL基准上，DRDN显著提升了长序列任务的平均准确率，且模型扩展效率高。",
+          "llm_tldr": "类增量学习中分类监督无法保持共享骨干表征的泛化性。DRDN通过解耦表征动态网络，利用正交机制分别缓解跨任务混淆和骨干表征未优化问题。在多个CIL基准上，DRDN显著提升了长序列任务的平均准确率，且模型扩展效率高。",
           "llm_tags": [
             "query:rep-learning"
           ],
           "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
-          "matched_requirement_id": "req-15",
+          "matched_query_text": "representation learning methods improving model performance",
+          "matched_requirement_id": "req-8",
           "selection_source": "carryover_cache",
-          "paper_id": "2606.30185v1",
+          "paper_id": "2607.01630v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.29658v1",
+          "source": "arxiv",
+          "title": "Multi-Source Transfer Learning of Sparse Single-Index Models",
+          "abstract": "Transfer learning leverages knowledge from related source domains to improve learning in a target domain. Recent theoretical advances cover a broad range of regression settings within (generalized) linear models. Despite their diversity, these methods share two common constraints: they assume a known link function or linear structure and require direct access to raw source data. To move beyond these constraints, we propose a source-data-free transfer learning framework based on the single-index model (SIM). Instead of requiring raw source data, our method transfers only summary statistics derived from a generalized Stein's lemma in a one-time communication. This design preserves privacy and avoids side effects caused by dissimilarities of unknown nonlinear link functions across domains. To capture flexible, unknown nonlinearity, we employ a multilayer perceptron guided by the pre-estimated index from the transferred statistics, which significantly mitigates overfitting. Extensive experiments on synthetic data and a real-world application demonstrate consistent improvements over existing (generalized) linear model-based approaches. The proposed framework thus offers a practical, privacy-preserving, and nonlinear-adaptive solution for transfer learning.",
+          "authors": [
+            "Ye Tian"
+          ],
+          "primary_category": "stat.ME",
+          "categories": [
+            "stat.ME",
+            "stat.ML"
+          ],
+          "published": "2026-06-28T23:55:54+00:00",
+          "link": "https://arxiv.org/pdf/2606.29658v1",
+          "tags": [
+            "keyword:rep-learning",
+            "query:rep-learning"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Source-data-free transfer learning framework for single-index models",
+          "llm_evidence_cn": "无需源数据的单索引模型迁移学习框架",
+          "llm_evidence": "无需源数据的单索引模型迁移学习框架",
+          "canonical_evidence": "无需源数据的单索引模型迁移学习框架",
+          "llm_tldr_en": "Proposes a source-data-free transfer learning framework for single-index models, transferring only summary statistics derived from generalized Stein's lemma to preserve privacy.",
+          "llm_tldr_cn": "传统迁移学习需已知线性结构或直接访问源数据。本文提出基于单索引模型的源数据无关迁移学习，仅通过广义Stein引理转移汇总统计量，保护隐私且避免非线性相似性副作用，在合成和真实数据上验证了有效性。",
+          "llm_tldr": "传统迁移学习需已知线性结构或直接访问源数据。本文提出基于单索引模型的源数据无关迁移学习，仅通过广义Stein引理转移汇总统计量，保护隐私且避免非线性相似性副作用，在合成和真实数据上验证了有效性。",
+          "llm_tags": [
+            "query:rep-learning"
+          ],
+          "matched_query_tag": "query:rep-learning",
+          "matched_query_text": "transfer learning methods to improve model training efficiency",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.29658v1",
           "carry_days": 1
         }
       ]

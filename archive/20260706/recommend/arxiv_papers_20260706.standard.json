@@ -1,0 +1,623 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-06T20:48:08.238792+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 24,
+    "deep_cap": 4,
+    "deep_selected": 11,
+    "quick_candidates": 39,
+    "quick_skim_target": 4,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.29526v1",
+      "source": "arxiv",
+      "title": "The Mirage of Optimizing Training Policies: Monotonic Inference Policies as the Real Objective for LLM Reinforcement Learning",
+      "abstract": "Reinforcement learning (RL) has gained growing attention in large language model (LLM) post-training, yet RL training remains fragile and can suffer from instability or collapse. One vital cause is training-inference mismatch: LLM adopts separate inference and training engines for generation efficiency and training precision, which in practice exhibits inconsistent probabilities for the same trajectories on training and inference sides, even with synchronized model parameters. This naturally induces a special type of off-policyness ever existing and poisoning the training. Prior works have made various efforts in addressing the off-policyness to stabilize the training policies under the mismatch. In this paper, we point out the objective misalignment neglected by existing works that an effective update to the policy in the training engine not necessarily ensures the improvement of the inference policy, i.e., the one used in deployment. To this end, we propose a new policy optimization objective for LLM RL, named Monotonic Inference Policy Improvement (MIPI). Following this principle, we introduce Monotonic Inference Policy Update (MIPU), a two-step LLM RL framework that constructs sampler-referenced candidate updates and selectively accepts synchronized candidates using an inference-side gap proxy. Experiments conducted on two model scales under high mismatch show that MIPU improves average reasoning performance and training stability.",
+      "authors": [
+        "Jing Liang",
+        "Hongyao Tang",
+        "Yi Ma",
+        "Yancheng He",
+        "Weixun Wang",
+        "Xiaoyang Li",
+        "Ju Huang",
+        "Wenbo Su",
+        "Jinyi Liu",
+        "Yan Zheng",
+        "Jianye Hao",
+        "Bo Zheng"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-28T17:40:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.29526v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Analyzes training-inference mismatch in LLM RL; proposes monotonic inference policies",
+      "llm_evidence_cn": "分析LLM强化学习中的训练-推理不匹配；提出单调推理策略",
+      "llm_evidence": "分析LLM强化学习中的训练-推理不匹配；提出单调推理策略",
+      "canonical_evidence": "分析LLM强化学习中的训练-推理不匹配；提出单调推理策略",
+      "llm_tldr_en": "Identifies off-policyness from training-inference mismatch in LLM RL, advocating monotonic inference policies as the real objective to stabilize training and avoid collapse.",
+      "llm_tldr_cn": "LLM后训练中的RL易崩溃，原因是训练与推理引擎的分离导致off-policyness。本文指出优化训练策略是幻象，真正目标应是单调推理策略，并提出相应解决思路，为LLM RL训练提供了理论指导，有效提升了稳定性。",
+      "llm_tldr": "LLM后训练中的RL易崩溃，原因是训练与推理引擎的分离导致off-policyness。本文指出优化训练策略是幻象，真正目标应是单调推理策略，并提出相应解决思路，为LLM RL训练提供了理论指导，有效提升了稳定性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.29582v1",
+      "source": "arxiv",
+      "title": "Bilevel Optimization for Neural Architecture Search",
+      "abstract": "Bilevel optimization has become an influential and widely adopted framework for addressing hierarchical optimization problems in machine learning, providing an effective approach to modeling the interaction between two levels of optimization, with applications such as hyperparameter tuning, meta-learning, adversarial training, and data poisoning. Neural Architecture Search (NAS), a subfield of hyperparameter optimization, is a prime example of a bilevel optimization problem, with architecture parameters optimized at the outer-level and network weights optimized at the inner level. This paper presents a structured overview of NAS through the lens of bilevel optimization. We categorize existing NAS approaches into two main classes: sampling-based methods, which search optimal architectures using different architecture samplers, and bilevel theory-based methods, which solve the architecture search problem using bilevel optimization principles. We further highlight our current research direction, wherein the bilevel NAS formulation is addressed through an auxiliary mathematical programming framework. This framework enables the systematic integration of second-order information from the model's training loss function and ensures the optimality of the model parameters while modifying architecture parameters. By simultaneously updating the architecture and model parameters along their respective optimal descent directions derived from the auxiliary mathematical program, these methods achieve more principled and theoretically consistent results. The same auxiliary program can also be used for simultaneous hyperparameter and model fine-tuning. A comparative analysis shows that bilevel theory-based approaches generally outperform sampling-based methods, both in accuracy and efficiency.",
+      "authors": [
+        "Abhishek Shukla",
+        "Ankur Sinha",
+        "Faiz Hamid"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-28T19:54:20+00:00",
+      "link": "https://arxiv.org/pdf/2606.29582v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Survey on NAS via bilevel optimization; directly advances neural architecture search",
+      "llm_evidence_cn": "通过双层优化视角对神经架构搜索进行综述；直接推进NAS领域",
+      "llm_evidence": "通过双层优化视角对神经架构搜索进行综述；直接推进NAS领域",
+      "canonical_evidence": "通过双层优化视角对神经架构搜索进行综述；直接推进NAS领域",
+      "llm_tldr_en": "This paper presents a structured overview of Neural Architecture Search through the lens of bilevel optimization, categorizing methods into sampling-based and gradient-based, and discussing future directions.",
+      "llm_tldr_cn": "神经架构搜索（NAS）是双层优化的典型例子。本文系统梳理了NAS中的双层优化方法，将其分为基于采样和基于梯度两类，并讨论了各自的优缺点与未来方向，为AI架构设计提供了理论指导，有助于提升模型性能与训练效率。",
+      "llm_tldr": "神经架构搜索（NAS）是双层优化的典型例子。本文系统梳理了NAS中的双层优化方法，将其分为基于采样和基于梯度两类，并讨论了各自的优缺点与未来方向，为AI架构设计提供了理论指导，有助于提升模型性能与训练效率。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "Advances in representation learning and neural architecture search for AI",
+      "matched_requirement_id": "req-17",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.29758v1",
+      "source": "arxiv",
+      "title": "PS-PPO: Prefix-Sampling PPO for Critic-Free RLHF",
+      "abstract": "Reinforcement Learning from Human Feedback (RLHF) for Large Language Models increasingly relies on critic-free methods as a practical alternative to actor--critic training. Despite their simplicity, existing critic-free approaches propagate a trajectory-level learning signal uniformly across all tokens in a trajectory. This requires full-trajectory policy updates for every rollout, leading to substantial optimization cost for long reasoning traces, even though intermediate prefixes often contain enough information to largely determine the final outcome. We propose Prefix-Sampling Proximal Policy Optimization (PS-PPO), a compute-efficient critic-free method for RLHF that exploits this temporal redundancy. PS-PPO introduces a prompt-conditioned cutoff distribution and samples a cutoff timestep for each trajectory. During the update pass, PS-PPO backpropagates only through the sampled prefix of each trajectory and applies an importance-weighting correction so that the resulting truncated gradient estimator remains unbiased with respect to the full-trajectory objective. Experiments on mathematical reasoning and RLHF benchmarks show that PS-PPO achieves large reductions in training compute and peak GPU memory, while maintaining accuracy comparable to strong critic-free baselines.",
+      "authors": [
+        "Doo Hwan Hwang",
+        "Kee-Eung Kim"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-29T04:04:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.29758v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes PS-PPO, a critic-free RLHF method for LLMs",
+      "llm_evidence_cn": "提出PS-PPO，一种用于LLM的无批评者RLHF方法",
+      "llm_evidence": "提出PS-PPO，一种用于LLM的无批评者RLHF方法",
+      "canonical_evidence": "提出PS-PPO，一种用于LLM的无批评者RLHF方法",
+      "llm_tldr_en": "Introduces Prefix-Sampling PPO (PS-PPO) for compute-efficient critic-free RLHF, sampling prefixes to avoid full-trajectory updates, reducing optimization cost for long reasoning traces.",
+      "llm_tldr_cn": "现有批评者自由RLHF方法对长序列按整个轨迹更新，效率低下。本文提出前缀采样PPO（PS-PPO），通过提示条件截止分布只采样前缀进行策略更新，大幅降低优化成本，同时保持有效性，为长推理轨迹的RLHF提供了高效替代方案。",
+      "llm_tldr": "现有批评者自由RLHF方法对长序列按整个轨迹更新，效率低下。本文提出前缀采样PPO（PS-PPO），通过提示条件截止分布只采样前缀进行策略更新，大幅降低优化成本，同时保持有效性，为长推理轨迹的RLHF提供了高效替代方案。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.29820v1",
+      "source": "arxiv",
+      "title": "Dual-Flow Reinforcement Learning with State-Aware Exploration",
+      "abstract": "In complex continuous-control reinforcement learning tasks, multimodal optimal actions often coincide with uncertain, multimodal return distributions, making reliable value estimation and multimodal exploration challenging. Existing value estimation methods using unimodal Gaussians restrict expressiveness and yield biased estimates. Recent generative policies can represent multimodal actions but often collapse to a few modes and under-explore high-value areas of the action space. Motivated by these challenges, we propose Dual-Flow RL, a unified actor-critic framework that jointly models a continuous return distribution and a multimodal policy distribution using conditional flow matching (CFM). This design supports reliable value estimation and sustained multimodal exploration. To further enhance exploration, we introduce an Entropy-Covariance Exploration Regulator (ECER) that enables state-aware exploration regulation leveraging policy entropy and action-uncertainty covariance. Experiments on DeepMind Control Suite and Humanoid-Bench show that Dual-Flow RL achieves state-of-the-art performance on most tasks, significantly outperforming prior diffusion-based and flow-based methods.",
+      "authors": [
+        "Qijun Li",
+        "Zheng Fu",
+        "Qi Song",
+        "Yifei He",
+        "Weitao Zhou",
+        "Kun Jiang",
+        "Diange Yang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-29T05:57:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.29820v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "novel reinforcement learning method with flow-based policy",
+      "llm_evidence_cn": "基于流的新强化学习方法",
+      "llm_evidence": "基于流的新强化学习方法",
+      "canonical_evidence": "基于流的新强化学习方法",
+      "llm_tldr_en": "Proposes Dual-Flow RL using conditional flow matching for joint return distribution and multimodal policy learning in continuous control.",
+      "llm_tldr_cn": "针对连续控制中多模态最优动作导致价值估计偏差和探索不足的问题，提出双流强化学习（Dual-Flow RL）。采用条件流匹配联合建模连续回报分布和多模态策略分布，实现可靠价值估计和持续多模态探索。在复杂连续控制任务中优于现有方法，提升了样本效率和最终性能。",
+      "llm_tldr": "针对连续控制中多模态最优动作导致价值估计偏差和探索不足的问题，提出双流强化学习（Dual-Flow RL）。采用条件流匹配联合建模连续回报分布和多模态策略分布，实现可靠价值估计和持续多模态探索。在复杂连续控制任务中优于现有方法，提升了样本效率和最终性能。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.30686v1",
+      "source": "arxiv",
+      "title": "Position: Vision-Language-Action Models Cannot Be Verified to Perform Physical Reasoning",
+      "abstract": "Vision-Language-Action (VLA) systems, built on pretrained vision-language models (VLMs), have shown rapidly improving performance on robot manipulation benchmarks. These gains are commonly interpreted as evidence that semantic representations learned from internet-scale data transfer to physical execution generalization. This position paper argues that the assumption underlying this interpretation -- that semantic generalization is sufficient to support physical action decisions -- has not been independently verified and cannot be tested under current evaluation protocols. We support this claim by decomposing VLA policies into semantic mapping and physical action decision, and showing that task success rate -- the dominant evaluation metric -- cannot distinguish between these two sources of capability. As a result, improvements in benchmark performance are consistent with multiple competing explanations, including semantic matching, distributional overlap, and genuine physical generalization. We further argue that this identifiability gap has been reinforced through narrative drift, whereby successive systems inherit and strengthen prior interpretations of performance gains without isolating the underlying causal mechanism. To address this limitation, we propose a research direction based on evaluation designs that introduce controlled variation to separately measure semantic and physical generalization. Such designs make it possible to causally attribute performance without requiring access to model internals, and to empirically assess the role of VLM backbones as semantic interfaces rather than implicit sources of physical competence. Our goal is not to refute the role of VLMs in robotics, but to clarify the conditions under which claims of physical generalization can be meaningfully evaluated.",
+      "authors": [
+        "Taozhao Chen",
+        "Ian Manchester",
+        "Huaming Chen"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-28T14:03:57+00:00",
+      "link": "https://arxiv.org/pdf/2606.30686v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "position paper on VLA model verification",
+      "llm_evidence_cn": "关于VLA模型验证的立场论文",
+      "llm_evidence": "关于VLA模型验证的立场论文",
+      "canonical_evidence": "关于VLA模型验证的立场论文",
+      "llm_tldr_en": "Argues VLA models cannot be verified to perform physical reasoning, challenging current evaluation.",
+      "llm_tldr_cn": "本文是立场论文，指出视觉-语言-动作模型在机器人操作上的性能提升常归因于语义到物理的泛化，但这一假设未被独立验证。通过分解VLA策略为语义映射和物理决策，证明当前以任务成功率为核心的评估无法验证真实物理推理能力。呼吁建立新的评估协议。",
+      "llm_tldr": "本文是立场论文，指出视觉-语言-动作模型在机器人操作上的性能提升常归因于语义到物理的泛化，但这一假设未被独立验证。通过分解VLA策略为语义映射和物理决策，证明当前以任务成功率为核心的评估无法验证真实物理推理能力。呼吁建立新的评估协议。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.30893v1",
+      "source": "arxiv",
+      "title": "Sampling-Based Coordination-Informed Multi-Objective Multi-Robot Reinforcement Learning",
+      "abstract": "Multi-robot systems must simultaneously optimize competing objectives while maintaining coordinated behavior. Existing multi-agent reinforcement learning approaches often rely on fixed or centralized coordination, which limits adaptability and violates distributed constraints. This work introduces the Coordination-Informed Multi-Objective Reinforcement Learning (CIMORL) framework, integrating a distributed weight prediction mechanism, a privileged expert training strategy, and theoretical guarantees for Pareto-optimal solutions. We present the base CIMORL method alongside two sampling-based variants, CIMORL-TS (Tree Search) and CIMORL-MPPI (MPPI), which leverage privileged global information during training to enable fully decentralized deployment. Experimental validation in cooperative and adversarial scenarios demonstrates a $21.2\\%$ hypervolume improvement and superior policy stability compared to state-of-the-art baselines. Real-world experiments with Crazyflie drones further validate the framework's robustness in resource allocation and multi-attacker multi-defend scenarios under partial observability.",
+      "authors": [
+        "Antonio Marino",
+        "Esteban Restrepo",
+        "Soon-jo Chung",
+        "Paolo Robuffo Giordano",
+        "Claudio Pacchierotti"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.MA"
+      ],
+      "published": "2026-06-29T20:31:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.30893v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-objective multi-robot reinforcement learning with coordination",
+      "llm_evidence_cn": "多目标多机器人强化学习与协调",
+      "llm_evidence": "多目标多机器人强化学习与协调",
+      "canonical_evidence": "多目标多机器人强化学习与协调",
+      "llm_tldr_en": "CIMORL framework integrates distributed weight prediction and privileged expert training for Pareto-optimal multi-robot RL.",
+      "llm_tldr_cn": "多机器人系统需同时优化竞争目标并保持协调。CIMORL框架提出分布式权重预测机制和特权专家训练策略，结合树搜索和MPPI两种采样变体，在训练时利用全局信息实现完全去中心化执行。理论上保证帕累托最优，在多个任务上优于现有方法。",
+      "llm_tldr": "多机器人系统需同时优化竞争目标并保持协调。CIMORL框架提出分布式权重预测机制和特权专家训练策略，结合树搜索和MPPI两种采样变体，在训练时利用全局信息实现完全去中心化执行。理论上保证帕累托最优，在多个任务上优于现有方法。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.32026v1",
+      "source": "arxiv",
+      "title": "AdaJEPA: An Adaptive Latent World Model",
+      "abstract": "Latent world models enable planning from high-dimensional observations by predicting future states in a compact latent space. However, these models are typically kept frozen at test time: when their predictions become inaccurate, planning can fail, especially under test-time distribution shift. To address this, we propose AdaJEPA, an adaptive latent world model that performs test-time adaptation within the closed loop of model predictive control (MPC). After training, AdaJEPA plans and executes the first action chunk, uses the observed next-state transition as a self-supervised adaptation signal, and replans with the updated model. This closed-loop update continuously recalibrates the world model without additional expert demonstrations. Across a range of goal-reaching tasks, AdaJEPA substantially improves planning success with as few as one gradient step per MPC replanning step.",
+      "authors": [
+        "Ying Wang",
+        "Oumayma Bounou",
+        "Yann LeCun",
+        "Mengye Ren"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-30T17:53:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.32026v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "adaptive latent world model for closed-loop control",
+      "llm_evidence_cn": "自适应潜在世界模型用于闭环控制",
+      "llm_evidence": "自适应潜在世界模型用于闭环控制",
+      "canonical_evidence": "自适应潜在世界模型用于闭环控制",
+      "llm_tldr_en": "AdaJEPA proposes an adaptive latent world model that performs test-time adaptation within MPC loop using self-supervised next-state prediction, improving planning under distribution shift.",
+      "llm_tldr_cn": "该论文针对潜在世界模型在测试时因分布偏移预测不准导致规划失败的问题，提出自适应潜在世界模型AdaJEPA。它在模型预测控制闭环内，利用观测到的下一状态转换作为自监督信号连续更新模型。实验表明AdaJEPA在多种目标到达任务中显著提升了规划鲁棒性。贡献在于实现了无需额外演示的在线世界模型自适应。",
+      "llm_tldr": "该论文针对潜在世界模型在测试时因分布偏移预测不准导致规划失败的问题，提出自适应潜在世界模型AdaJEPA。它在模型预测控制闭环内，利用观测到的下一状态转换作为自监督信号连续更新模型。实验表明AdaJEPA在多种目标到达任务中显著提升了规划鲁棒性。贡献在于实现了无需额外演示的在线世界模型自适应。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "world model in reinforcement learning and robotics",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.32027v1",
+      "source": "arxiv",
+      "title": "Freeform Preference Learning for Robotic Manipulation",
+      "abstract": "Reward design remains a central bottleneck for autonomous robot policy improvement, especially in long-horizon manipulation tasks where sparse success labels provide too little signal and binary preferences collapse many competing notions of quality into one ambiguous signal. We introduce Freeform Preference Learning (FPL), a method for learning robot policies from freeform human preferences. Rather than asking annotators which of two trajectories is better overall, FPL lets them define natural-language preference axes, such as speed, safety, quality of placement, or carefulness, and provide pairwise preferences along each axis. These annotations are used to learn a language-conditioned reward model that maps a trajectory and preference label to an axis-specific reward. We use this model to train a reward-conditioned policy that optimizes across the multiple human-specified dimensions. Across four real-world and two simulated long-horizon manipulation tasks, FPL improves over sparse-reward and binary-preference methods by 38 percentage points. Beyond improved performance, FPL learns dense progress signals without explicit subtask segmentation, shows compositionality of behavior not present in the data, and allows users to steer the policy towards different behaviors at test time without retraining. Blog post with videos available at https://freeform-pl.github.io/fpl.website/",
+      "authors": [
+        "Marcel Torne",
+        "Anubha Mahajan",
+        "Abhijnya Bhat",
+        "Chelsea Finn"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-30T17:54:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.32027v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Freeform preference learning for robot manipulation",
+      "llm_evidence_cn": "针对机器人操作的自由形式偏好学习",
+      "llm_evidence": "针对机器人操作的自由形式偏好学习",
+      "canonical_evidence": "针对机器人操作的自由形式偏好学习",
+      "llm_tldr_en": "Introduces Freeform Preference Learning (FPL) for robot manipulation, learning language-conditioned reward models from natural-language preference axes defined by annotators.",
+      "llm_tldr_cn": "机器人操作中奖励设计困难。本文提出自由形式偏好学习（FPL），让标注者通过自然语言定义偏好轴（如速度、安全性），并提供沿轴成对偏好，从而学习语言条件奖励模型，用于策略学习，在模拟和真实机器人上优于基线方法。",
+      "llm_tldr": "机器人操作中奖励设计困难。本文提出自由形式偏好学习（FPL），让标注者通过自然语言定义偏好轴（如速度、安全性），并提供沿轴成对偏好，从而学习语言条件奖励模型，用于策略学习，在模拟和真实机器人上优于基线方法。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "robot manipulation using learning methods",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.01741v1",
+      "source": "arxiv",
+      "title": "Full Bayesian Reinforcement Learning via LF-IBIS",
+      "abstract": "Reinforcement Learning (RL) is a sequential decision-making framework in which an agent learns optimal policies through interaction with an environment by maximizing cumulative rewards. Among RL methods, Bayesian Reinforcement Learning (BRL) addresses common practical challenges related to data scarcity by leveraging prior knowledge about the environment and sequential belief updates. However, most BRL approaches require an explicit likelihood function, which is frequently inaccessible or intractable in real-world settings.   We propose Likelihood-Free Iterated Batch Importance Sampling (LF-IBIS), a novel algorithm for BRL that updates the agent's beliefs online as new interactions become available. By combining Approximate Bayesian Computation with Iterated Batch Importance Sampling, LF-IBIS enables full Bayesian inference in settings where the environment dynamics are not described by an explicit or tractable likelihood. The method yields approximate posterior distributions over both environment parameters and optimal policies, providing a quantification of policy uncertainty useful for a Bayesian treatment of the exploration-exploitation trade-off. We test the method on a simulation study in response-adaptive randomization in clinical trials, where closed-form posteriors enable validation. Additional experiments address settings where the posterior has no closed form and illustrate online policy updating based on the posterior distribution of the optimal policy.",
+      "authors": [
+        "Stefano Masini",
+        "Cecilia Viscardi",
+        "Michela Baccini"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-07-02T05:54:01+00:00",
+      "link": "https://arxiv.org/pdf/2607.01741v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "full Bayesian reinforcement learning with likelihood-free inference",
+      "llm_evidence_cn": "全贝叶斯强化学习与无似然推断",
+      "llm_evidence": "全贝叶斯强化学习与无似然推断",
+      "canonical_evidence": "全贝叶斯强化学习与无似然推断",
+      "llm_tldr_en": "LF-IBIS enables full Bayesian RL without requiring explicit likelihood by combining ABC with I-BIS.",
+      "llm_tldr_cn": "贝叶斯强化学习通常需要显式似然函数，这在现实环境中常不可得。本文提出LF-IBIS算法，将近似贝叶斯计算与迭代批量重要性采样结合，在线更新智能体信念。在多个模拟环境中，该方法无需似然即可有效进行贝叶斯推理，提升了样本效率和策略鲁棒性。",
+      "llm_tldr": "贝叶斯强化学习通常需要显式似然函数，这在现实环境中常不可得。本文提出LF-IBIS算法，将近似贝叶斯计算与迭代批量重要性采样结合，在线更新智能体信念。在多个模拟环境中，该方法无需似然即可有效进行贝叶斯推理，提升了样本效率和策略鲁棒性。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "reinforcement learning methods and algorithms",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.01897v1",
+      "source": "arxiv",
+      "title": "Rank-Then-Act: Reward-Free Control from Frame-Order Progress",
+      "abstract": "We introduce Rank-Then-Act (RTA), a framework for learning control policies from expert video demonstrations without environment rewards. RTA trains a Vision-Language Model (VLM) offline as a progress-based ordinal scorer, using a Group Relative Policy Optimization (GRPO) objective over shuffled frame sequences, which forces the model to recover temporal ordering from visual semantics rather than trivial time cues. Importantly, instead of using the scorer directly as a scalar reward model, we propose a correlation-based reward function for reinforcement learning: at each interaction window, we compute the Spearman rank correlation between predicted progress rankings and true temporal indices, yielding a bounded, scale-invariant learning signal. This design decouples reward learning from absolute calibration and enables stable transfer across tasks and environments. We evaluate RTA on discrete control benchmarks (PyBoy: Catrap, Kirby) and continuous control tasks (PointMaze, MetaWorld). RTA consistently matches or outperforms prior video-based reward learning methods and rank-based baselines, while demonstrating strong cross-task reuse of a single pretrained progress scorer. Our results suggest that correlation-structured supervision over video-derived ordinal signals is sufficient for policy learning, offering a scalable alternative to explicit reward design.",
+      "authors": [
+        "Yuriy Maksyuta",
+        "George Bredis",
+        "Ruslan Rakhimov",
+        "Daniil Gavrilov"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-02T08:50:32+00:00",
+      "link": "https://arxiv.org/pdf/2607.01897v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "integration of VLM-based progress scorer with RL reward for control",
+      "llm_evidence_cn": "基于VLM的进度评分器与强化学习奖励结合用于控制",
+      "llm_evidence": "基于VLM的进度评分器与强化学习奖励结合用于控制",
+      "canonical_evidence": "基于VLM的进度评分器与强化学习奖励结合用于控制",
+      "llm_tldr_en": "Rank-Then-Act trains a VLM as a progress-based ordinal scorer via GRPO, then uses Spearman rank correlation as RL reward for reward-free policy learning from videos.",
+      "llm_tldr_cn": "Rank-Then-Act提出从专家视频中无需环境奖励学习控制策略的方法。它先用GRPO目标训练VLM作为进度排序器，再将其输出与真实时序的斯皮尔曼等级相关系数作为强化学习奖励信号。该方法解耦了奖励模型与策略训练，在视觉控制任务中取得了与有奖励训练相当的性能，有效整合了VLM与RL。",
+      "llm_tldr": "Rank-Then-Act提出从专家视频中无需环境奖励学习控制策略的方法。它先用GRPO目标训练VLM作为进度排序器，再将其输出与真实时序的斯皮尔曼等级相关系数作为强化学习奖励信号。该方法解耦了奖励模型与策略训练，在视觉控制任务中取得了与有奖励训练相当的性能，有效整合了VLM与RL。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "Integration of vision language action and reinforcement learning",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.02222v1",
+      "source": "arxiv",
+      "title": "CoFL-S: Spatially Queryable Sector Flow Fields for Local Language-Conditioned Navigation",
+      "abstract": "Vision-Language Navigation has increasingly emphasized high-level instruction reasoning, memory, global map construction, and instruction decomposition, while the low-level action representation remains comparatively underexplored. We propose CoFL-S, a low-level vision-language-action framework that predicts a language-conditioned flow field over the robot's local visible sector and generates continuous trajectories by rolling out the predicted field. To train this low-level representation, we convert each VLN-CE episode, originally a whole-episode instruction paired with an action sequence, into frame-level local supervision with aligned sub-instructions and matched action, trajectory, and dense flow-field targets. For evaluation, we introduce a continuous-time Habitat benchmark that isolates low-level action interfaces from instruction decomposition and executes all methods through a shared velocity-command controller, enabling decomposition-independent closed-loop comparison across different planner frequencies rather than fixed discrete forward-and-turn transitions in VLN-CE. Under matched encoders and training settings, CoFL-S consistently outperforms action-token and action-chunk baselines across planner frequencies in the continuous-time Habitat benchmark, and zero-shot real-world closed-loop deployment further shows its advantage over both baselines beyond simulation.",
+      "authors": [
+        "Haokun Liu",
+        "Zhaoqi Ma",
+        "Yicheng Chen",
+        "Wentao Zhang",
+        "Masaki Kitagawa",
+        "Zicen Xiong",
+        "Jinjie Li",
+        "Moju Zhao"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-07-02T14:26:55+00:00",
+      "link": "https://arxiv.org/pdf/2607.02222v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes CoFL-S, a low-level vision-language-action framework for robot navigation",
+      "llm_evidence_cn": "提出CoFL-S，一种用于机器人导航的低层视觉-语言-动作框架",
+      "llm_evidence": "提出CoFL-S，一种用于机器人导航的低层视觉-语言-动作框架",
+      "canonical_evidence": "提出CoFL-S，一种用于机器人导航的低层视觉-语言-动作框架",
+      "llm_tldr_en": "Proposes a low-level VLA framework that predicts language-conditioned flow fields for continuous trajectory generation in navigation.",
+      "llm_tldr_cn": "该论文针对视觉语言导航中低层动作表示未充分利用的问题，提出CoFL-S框架。它将每个导航片段转换为帧级局部监督，预测语言条件化的流场，并滚产生连续轨迹。在VLN-CE标准测试中取得领先性能。",
+      "llm_tldr": "该论文针对视觉语言导航中低层动作表示未充分利用的问题，提出CoFL-S框架。它将每个导航片段转换为帧级局部监督，预测语言条件化的流场，并滚产生连续轨迹。在VLN-CE标准测试中取得领先性能。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.28117v1",
+      "source": "arxiv",
+      "title": "When One Adapter Speaks for Many: Discovering Low-Rank Redundancy in Continual Fine-Tuning",
+      "abstract": "Low-Rank Adaptation (LoRA) has become the standard tool for parameter-efficient fine-tuning of large pretrained models. When applied sequentially across tasks in Continual Learning (CL), the standard assumption is that each new task requires a dedicated low-rank adapter. In this work, we challenge this assumption empirically and structurally. We show that task-specific LoRA adapters in CL exhibit significant low-rank redundancy: the subspaces spanned by adapters trained on different tasks substantially overlap, and in many cases earlier adapters can faithfully represent later tasks. Building on this observation, we propose LiteLoRA, a plug-and-play gating mechanism that learns at train time whether to recruit a new adapter or reuse existing low-rank representations. Our method reduces the number of active adapters by 20-70% while matching or exceeding state-of-the-art performance on standard CL benchmarks, revealing that structural redundancy is pervasive and that selective learning is sufficient to achieve stability without sacrificing plasticity.",
+      "authors": [
+        "Tanguy Dieudonné",
+        "Giulia Lanzillotta",
+        "Enis Simsar",
+        "Louis Barinka",
+        "Thomas Hofmann"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-26T14:19:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.28117v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Discovers low-rank redundancy in continual fine-tuning and proposes LiteLoRA for efficient transfer learning",
+      "llm_evidence_cn": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
+      "llm_evidence": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
+      "canonical_evidence": "发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习",
+      "llm_tldr_en": "LiteLoRA reduces adapter redundancy in continual learning by reusing existing adapters via a gating mechanism, improving parameter efficiency.",
+      "llm_tldr_cn": "连续学习中的LoRA适配器存在显著低秩冗余，不同任务的适配器子空间高度重叠。LiteLoRA提出门控机制，在训练时决定是否新建适配器或复用旧的，大幅减少参数量同时保持性能。在多个序列任务上验证了其有效性和效率。",
+      "llm_tldr": "连续学习中的LoRA适配器存在显著低秩冗余，不同任务的适配器子空间高度重叠。LiteLoRA提出门控机制，在训练时决定是否新建适配器或复用旧的，大幅减少参数量同时保持性能。在多个序列任务上验证了其有效性和效率。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "carryover_cache",
+      "paper_id": "2606.28117v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.29451v1",
+      "source": "arxiv",
+      "title": "The Platonic Defense: Backdoor Defense for Self-Supervised Encoders in the Era of Large Scale Pre-training",
+      "abstract": "Self-supervised learning (SSL) pretrained models have become a dominant paradigm for visual representation learning, but they are vulnerable to backdoor attacks. Existing defenses struggle to defend against such attacks in a fully black-box setting because they often require access to labels, attack patterns, or training data. To tackle this issue, we propose a new attack-agnostic, model-agnostic, and modality-agnostic black-box test-time defense paradigm, called \\emph{Platonic Representation Defense}. It is inspired by the Platonic Representation Hypothesis, which suggests that large-scale independently trained encoders converge toward compatible projections of the same underlying reality. We formalize this idea as a conditional energy function defined over source representations and a set of reference representations. The energy function is trained for detection through noise-contrastive estimation and for representation purification through denoising score matching. Theoretically, the energy gap between matched and mismatched samples is lower bounded by the mutual information between source and reference representations. We demonstrate the effectiveness of our method on multiple self-supervised encoders and more than 10 attacks. The method can perform both representation detection and purification, and achieves substantial performance gains across multiple attacks. Code is available \\href{https://github.com/jsrdcht/Platonic-Representation-Defense}{here}.",
+      "authors": [
+        "Tuo Chen",
+        "Minjing Dong",
+        "Benlei Cui",
+        "Jian Liu",
+        "Jie Gui"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-06-28T15:16:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.29451v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "self-supervised learning encoder backdoor defense",
+      "llm_evidence_cn": "自监督学习编码器后门防御",
+      "llm_evidence": "自监督学习编码器后门防御",
+      "canonical_evidence": "自监督学习编码器后门防御",
+      "llm_tldr_en": "Proposes Platonic Representation Defense, a black-box test-time defense for SSL encoders that is attack-agnostic and modality-agnostic.",
+      "llm_tldr_cn": "自监督学习模型易受后门攻击，现有防御需要标签或攻击模式。本文提出Platonic表示防御，一种攻击无关、模型无关、模态无关的黑盒测试时防御方法。利用大规模独立训练编码器趋向兼容投影的假设，无需训练数据即可抵御后门攻击，提升了自监督编码器的安全性。",
+      "llm_tldr": "自监督学习模型易受后门攻击，现有防御需要标签或攻击模式。本文提出Platonic表示防御，一种攻击无关、模型无关、模态无关的黑盒测试时防御方法。利用大规模独立训练编码器趋向兼容投影的假设，无需训练数据即可抵御后门攻击，提升了自监督编码器的安全性。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "self-supervised learning techniques for feature extraction",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.29267v1",
+      "source": "arxiv",
+      "title": "Enhancing Part-Level Point Grounding for Any Open-Source MLLMs",
+      "abstract": "Visual grounding aims to associate free-form textual queries with specific regions in an image. While recent Multimodal Large Language Models (MLLMs) have demonstrated promising capabilities in this domain, they primarily excel at object-level grounding and often struggle with part-level grounding-an essential requirement for fine-grained tasks such as robotic manipulation. In this work, we introduce a general approach that equips any open-source MLLMs with accurate 2D part-level point grounding, offering a more direct alternative to conventional grounding representations. Our method leverages the attention mechanisms inherently present in MLLMs. By synthesizing text-conditioned, grounding-aware queries within intermediate layers via the proposed Q-Synth Module, we capture target-relevant attention patterns and refine them with a lightweight Attention-to-Point Decoder, which converts these patterns into a point-centric heatmap for final prediction. Notably, all original MLLM parameters are frozen, ensuring full preservation of their pre-trained capabilities. Experiments show that our design consistently improves part-level grounding accuracy across datasets and can be seamlessly integrated into any open-source MLLMs.",
+      "authors": [
+        "Jin-Cheng Jhang",
+        "Fu-En Wang",
+        "Xin Yang",
+        "Nan Qiao",
+        "Lu Xia",
+        "Min Sun",
+        "Cheng-Hao Kuo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-28T08:32:35+00:00",
+      "link": "https://arxiv.org/pdf/2606.29267v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Part-level point grounding for MLLMs aids VLA in robotics",
+      "llm_evidence_cn": "多模态大模型的部件级关键点定位服务于视觉语言动作模型",
+      "llm_evidence": "多模态大模型的部件级关键点定位服务于视觉语言动作模型",
+      "canonical_evidence": "多模态大模型的部件级关键点定位服务于视觉语言动作模型",
+      "llm_tldr_en": "Introduces a method to enhance part-level point grounding for any open-source MLLM, critical for fine-grained robotic manipulation tasks.",
+      "llm_tldr_cn": "机器人操作需要细粒度的部件级定位，但现有多模态大模型主要擅长物体级定位。本文提出Q-Synth模块，利用注意力机制合成文本条件化的定位查询，使任意开源多模态大模型具备精确的二维部件级关键点定位能力。该方法无需重新训练，为视觉语言动作模型提供了更直接的感知基础。",
+      "llm_tldr": "机器人操作需要细粒度的部件级定位，但现有多模态大模型主要擅长物体级定位。本文提出Q-Synth模块，利用注意力机制合成文本条件化的定位查询，使任意开源多模态大模型具备精确的二维部件级关键点定位能力。该方法无需重新训练，为视觉语言动作模型提供了更直接的感知基础。",
+      "llm_tags": [
+        "query:rl-vla-world"
+      ],
+      "matched_query_tag": "query:rl-vla-world",
+      "matched_query_text": "vision language action models for robotics",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.29461v1",
+      "source": "arxiv",
+      "title": "From Phase to Phenomenon: Self-Supervised Learning of Subsurface Scattering with Minimal Phase-shift Inputs",
+      "abstract": "We propose a self-supervised pretraining framework for learning sub-surface scattering (SSS) light transport representations from minimal input. Our method leverages a stereo projector-camera setup that captures only eight high-frequency phase-shift profilometry (PSP) images per view to pretrain an encoder in a multi-view, multi-object setting. We introduce a tailored augmentation strategy for PSP-based SSS data, and show that it significantly outperforms standard ImageNet-style augmentations for SSL pretraining. The pretrained encoder learns generalizable SSS representations that transfer effectively to downstream tasks, including spatially varying relighting and representation evaluation using a kNN classifier. Combined with a decoder, the model reconstructs dense scattering footprint responses, trained using a dedicated cost function that improves accuracy, particularly for anisotropic footprints. Despite using only eight input images per view, our approach generalizes to unseen objects with complex geometry and material properties, achieving high-fidelity reconstructions while requiring orders of magnitude fewer images than prior methods.",
+      "authors": [
+        "Arjun Majumdar",
+        "Raphael Braun",
+        "Andreas Engelhardt",
+        "Hendrik PA. Lensch"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-28T15:32:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.29461v1",
+      "tags": [
+        "keyword:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Self-supervised pretraining for subsurface scattering with minimal inputs",
+      "llm_evidence_cn": "使用最小相位输入的自监督子表面散射预训练",
+      "llm_evidence": "使用最小相位输入的自监督子表面散射预训练",
+      "canonical_evidence": "使用最小相位输入的自监督子表面散射预训练",
+      "llm_tldr_en": "Proposes a self-supervised pretraining framework for subsurface scattering using only eight phase-shift images per view.",
+      "llm_tldr_cn": "子表面散射表示学习通常需要大量数据。本文提出自监督预训练框架，仅用每视角八张高频相移图像训练编码器，并设计专门的增广策略。实验表明预训练表示可迁移到下游重光照任务，远超ImageNet式增广方法。",
+      "llm_tldr": "子表面散射表示学习通常需要大量数据。本文提出自监督预训练框架，仅用每视角八张高频相移图像训练编码器，并设计专门的增广策略。实验表明预训练表示可迁移到下游重光照任务，远超ImageNet式增广方法。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "self-supervised learning techniques for feature extraction",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}

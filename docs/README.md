@@ -6,70 +6,67 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-05
-- 运行时间：2026-07-05 21:41:33 UTC
+- 最新运行日期：2026-07-06
+- 运行时间：2026-07-06 20:58:26 UTC
 - 运行状态：成功
-- 本次总论文数：16
-- 精读区：12
+- 本次总论文数：15
+- 精读区：11
 - 速读区：4
 
 ### 今日简报（AI）
-今日推荐16篇论文，精读12篇，其中《Mean Field Reinforcement Learning》获满分评价。
-最值得关注平均场强化学习理论及ViPSim视觉-参数协作世界模型，其次可看双学习元学习提升开放域泛化。
-建议优先精读高分论文，并留意贝叶斯自适应秩分配（BaRA）等高效微调方法。
-- 详情：[/202607/05/README](/202607/05/README)
+1) 今日精读11篇，聚焦LLM强化学习训练策略优化与神经架构搜索，两篇高分论文揭示关键突破。  
+2) 最值得关注：LLM强化学习真正目标应是单调推理策略而非训练策略优化；神经架构搜索的双层优化方法取得9分高评价。  
+3) 建议优先精读这两篇高分论文，尤其是LLM训练方向从业者可重点关注推理策略设计，避免被当前主流优化方法误导。
+- 详情：[/202607/06/README](/202607/06/README)
 
 ### 精读区论文标签
-1. [Mean Field Reinforcement Learning](/202607/05/2607.01525v1-mean-field-reinforcement-learning)  
-   标签：评分：10.0/10、query:rl-vla-world
-   evidence：平均场强化学习专著
-2. [ViPSim: Collaborating Visual and Parameter Spaces for Consistent Long-Horizon Embodied World Models](/202607/05/2606.28804v1-vipsim-collaborating-visual-and-parameter-spaces-for-consistent-long-horizon-embodied-world-models)  
+1. [The Mirage of Optimizing Training Policies: Monotonic Inference Policies as the Real Objective for LLM Reinforcement Learning](/202607/06/2606.29526v1-the-mirage-of-optimizing-training-policies-monotonic-inference-policies-as-the-real-objective-for-llm-reinforcement-learning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：具身世界模型实现一致的长视界生成
-3. [Human2Any: Human-to-Robot Transfer via Constraint-Aware Compositional Planning](/202607/05/2606.28813v1-human2any-human-to-robot-transfer-via-constraint-aware-compositional-planning)  
-   标签：评分：9.0/10、query:rl-vla-world
-   evidence：从人类视频学习以物体为中心的交互先验用于机器人操作
-4. [Learning from Acquisition: Metadata-driven Multimodal Pre-training for Cardiac MRI](/202607/05/2606.28991v1-learning-from-acquisition-metadata-driven-multimodal-pre-training-for-cardiac-mri)  
+   evidence：分析LLM强化学习中的训练-推理不匹配；提出单调推理策略
+2. [Bilevel Optimization for Neural Architecture Search](/202607/06/2606.29582v1-bilevel-optimization-for-neural-architecture-search)  
    标签：评分：9.0/10、query:rep-learning
-   evidence：元数据驱动的CLIP预训练用于医学影像
-5. [Unleashing More Actions via Action Compositional Training for VLA Models](/202607/05/2607.00351v1-unleashing-more-actions-via-action-compositional-training-for-vla-models)  
+   evidence：通过双层优化视角对神经架构搜索进行综述；直接推进NAS领域
+3. [PS-PPO: Prefix-Sampling PPO for Critic-Free RLHF](/202607/06/2606.29758v1-ps-ppo-prefix-sampling-ppo-for-critic-free-rlhf)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：VLA模型的动作组合训练
-6. [Local Motion Matters: A Deconstruct-Recompose Paradigm for Reinforcement Learning Pre-training from Videos](/202607/05/2607.00808v1-local-motion-matters-a-deconstruct-recompose-paradigm-for-reinforcement-learning-pre-training-from-videos)  
+   evidence：提出PS-PPO，一种用于LLM的无批评者RLHF方法
+4. [Dual-Flow Reinforcement Learning with State-Aware Exploration](/202607/06/2606.29820v1-dual-flow-reinforcement-learning-with-state-aware-exploration)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：从视频中强化学习预训练
-7. [From World Models to World Action Models: A Concise Tutorial for Robotics](/202607/05/2607.00836v1-from-world-models-to-world-action-models-a-concise-tutorial-for-robotics)  
+   evidence：基于流的新强化学习方法
+5. [Position: Vision-Language-Action Models Cannot Be Verified to Perform Physical Reasoning](/202607/06/2606.30686v1-position-vision-language-action-models-cannot-be-verified-to-perform-physical-reasoning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：关于世界模型和世界行动模型的机器人教程
-8. [From World Models to World Action Models: A Concise Tutorial for Robotics](/202607/05/2607.00836v2-from-world-models-to-world-action-models-a-concise-tutorial-for-robotics)  
+   evidence：关于VLA模型验证的立场论文
+6. [Sampling-Based Coordination-Informed Multi-Objective Multi-Robot Reinforcement Learning](/202607/06/2606.30893v1-sampling-based-coordination-informed-multi-objective-multi-robot-reinforcement-learning)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：关于机器人的世界模型和世界动作模型教程
-9. [PhysMani: Physics-principled 3D World Model for Dynamic Object Manipulation](/202607/05/2607.01938v1-physmani-physics-principled-3d-world-model-for-dynamic-object-manipulation)  
+   evidence：多目标多机器人强化学习与协调
+7. [AdaJEPA: An Adaptive Latent World Model](/202607/06/2606.32026v1-adajepa-an-adaptive-latent-world-model)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于动态物体操作的物理原则3D世界模型
-10. [Bridge-WA: Predicting Where and How the World Changes for Robotic Action](/202607/05/2607.02195v1-bridge-wa-predicting-where-and-how-the-world-changes-for-robotic-action)  
+   evidence：自适应潜在世界模型用于闭环控制
+8. [Freeform Preference Learning for Robotic Manipulation](/202607/06/2606.32027v1-freeform-preference-learning-for-robotic-manipulation)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：用于机器人操作的轻量级世界动作框架
-11. [WorldSample: Closed-loop Real-robot RL with World Modelling](/202607/05/2607.02431v1-worldsample-closed-loop-real-robot-rl-with-world-modelling)  
+   evidence：针对机器人操作的自由形式偏好学习
+9. [Full Bayesian Reinforcement Learning via LF-IBIS](/202607/06/2607.01741v1-full-bayesian-reinforcement-learning-via-lf-ibis)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：结合世界模型数据增强的机器人操作强化学习
-12. [Learning to Move Before Learning to Do: Task-Agnostic pretraining for VLAs](/202607/05/2607.02466v1-learning-to-move-before-learning-to-do-task-agnostic-pretraining-for-vlas)  
+   evidence：全贝叶斯强化学习与无似然推断
+10. [Rank-Then-Act: Reward-Free Control from Frame-Order Progress](/202607/06/2607.01897v1-rank-then-act-reward-free-control-from-frame-order-progress)  
    标签：评分：9.0/10、query:rl-vla-world
-   evidence：使用自监督逆动力学的VLA任务无关预训练
+   evidence：基于VLM的进度评分器与强化学习奖励结合用于控制
+11. [CoFL-S: Spatially Queryable Sector Flow Fields for Local Language-Conditioned Navigation](/202607/06/2607.02222v1-cofl-s-spatially-queryable-sector-flow-fields-for-local-language-conditioned-navigation)  
+   标签：评分：9.0/10、query:rl-vla-world
+   evidence：提出CoFL-S，一种用于机器人导航的低层视觉-语言-动作框架
 
 ### 速读区论文标签
-1. [Exploring Dualistic Meta-Learning to Enhance Domain Generalization in Open Set Scenarios](/202607/05/2606.23758v1-exploring-dualistic-meta-learning-to-enhance-domain-generalization-in-open-set-scenarios)  
+1. [When One Adapter Speaks for Many: Discovering Low-Rank Redundancy in Continual Fine-Tuning](/202607/06/2606.28117v1-when-one-adapter-speaks-for-many-discovering-low-rank-redundancy-in-continual-fine-tuning)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：双面元学习用于开放集域泛化
-2. [Training for the Model You Return: Improving Optimization for Iterate-Averaged Language Models](/202607/05/2606.25086v1-training-for-the-model-you-return-improving-optimization-for-iterate-averaged-language-models)  
+   evidence：发现连续微调中的低秩冗余，提出LiteLoRA用于高效迁移学习
+2. [From Phase to Phenomenon: Self-Supervised Learning of Subsurface Scattering with Minimal Phase-shift Inputs](/202607/06/2606.29461v1-from-phase-to-phenomenon-self-supervised-learning-of-subsurface-scattering-with-minimal-phase-shift-inputs)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：针对迭代平均语言模型的优化器设计，PACE包装器改进AdamW
-3. [BaRA: Bayesian Adaptive Rank Allocation for Parameter-Efficient Fine-Tuning](/202607/05/2606.29184v1-bara-bayesian-adaptive-rank-allocation-for-parameter-efficient-fine-tuning)  
+   evidence：使用最小相位输入的自监督子表面散射预训练
+3. [The Platonic Defense: Backdoor Defense for Self-Supervised Encoders in the Era of Large Scale Pre-training](/202607/06/2606.29451v1-the-platonic-defense-backdoor-defense-for-self-supervised-encoders-in-the-era-of-large-scale-pre-training)  
    标签：评分：7.0/10、query:rep-learning
-   evidence：贝叶斯自适应秩分配参数高效微调提升表示灵活性
-4. [DLR: Zero-Inference-Cost Latent Residuals for Low-Rank Pre-Training](/202607/05/2606.28932v1-dlr-zero-inference-cost-latent-residuals-for-low-rank-pre-training)  
-   标签：评分：6.0/10、query:rep-learning
-   evidence：零推理成本的潜在残差改进低秩预训练
+   evidence：自监督学习编码器后门防御
+4. [Enhancing Part-Level Point Grounding for Any Open-Source MLLMs](/202607/06/2606.29267v1-enhancing-part-level-point-grounding-for-any-open-source-mllms)  
+   标签：评分：6.0/10、query:rl-vla-world
+   evidence：多模态大模型的部件级关键点定位服务于视觉语言动作模型
 
 
 <div class="dpr-home-promo-card">
