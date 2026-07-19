@@ -1,0 +1,6803 @@
+Title: Transfer Learning for Linear Discriminant Analysis with a Shared Classification Signal
+
+URL Source: https://arxiv.org/pdf/2607.06936v1
+
+Published Time: Thu, 09 Jul 2026 00:23:20 GMT
+
+Number of Pages: 66
+
+Markdown Content:
+# Transfer Learning for Linear Discriminant Analysis with a Shared Classification Signal 
+
+Yonghan Zhang 1, Yimeng Fan 1, Wenya Luo 2, and Jiang Hu 11Northeast Normal University and 2Zhejiang University of Finance and Economics July 9, 2026 
+
+Abstract 
+
+This paper studies transfer learning for linear discriminant analysis in high-dimensional two-class classification. We consider one target domain and several source domains, where the mean difference in each domain is decomposed into a deterministic common compo-nent and a domain-specific random deviation. The common component represents a shared classification signal across domains, while the random deviation captures domain-specific heterogeneity. Under spiked covariance models, we derive deterministic limits for the target-domain Gaussian-calibrated error of weighted transfer classifiers under both homogeneous and heterogeneous covariance settings. These limits quantify the effects of the shared signal, domain-specific variation, dimension-to-sample-size ratios, and spike structures on transfer performance. They further lead to oracle transfer weights and consistent data-driven plug-in estimators. We also characterize the intercept bias induced by unbalanced target-domain class sample sizes and provide an asymptotically optimal correction. 
+
+Keywords: Discriminant analysis, Transfer learning, Shared classification signal, Spiked covariance model 
+
+# 1 Introduction 
+
+Linear discriminant analysis (LDA) is a classical method for classification. Since the work of Fisher (1936), it has been widely used because of its simple form and clear interpretation. In the two-class case, the Bayes rule depends on the mean difference between the two classes and the inverse covariance matrix. This structure makes LDA useful in many statistical and scientific applications. For example, discriminant analysis and related dimension reduction methods have been used in image retrieval, gene-expression-based cancer classification, clinical outcome prediction, and text data analysis; see, for example, Swets and Weng (1996); Golub et al. (1999); Pomeroy et al. (2002); Park et al. (2003). Classical LDA works well when the dimension is small compared with the sample size. This condition is often not satisfied in modern data analysis. When the number of variables is com-parable to, or larger than, the sample size, the sample covariance matrix becomes unstable. The resulting empirical LDA rule may then have poor classification performance. This phe-nomenon has been studied in several high-dimensional settings; see, for example, Bickel and 1arXiv:2607.06936v1 [stat.ME] 8 Jul 2026 Levina (2004) and Shao et al. (2011). A common way to improve stability is to regularize the covariance estimator. Regularized discriminant analysis was introduced by Friedman (1989), and its high-dimensional behavior has been further studied using random matrix theory. In particular, Dobriban and Wager (2018) and Wang and Jiang (2018) derived asymptotic approx-imations for regularized LDA under different assumptions. These studies show that the classification error is affected by the dimension-to-sample-size ratios and the regularization parameter. They also suggest that the covariance structure may play an important role in high-dimensional classification. In particular, the mean difference may align with some eigendirections of the covariance matrix, and such alignment can affect the classification error. Spiked covariance models provide a useful way to describe this type of structure; see Johnstone (2001). Under this model, Li et al. (2025) proposed a spectrally corrected regularized LDA method. Further, Zhang et al. (2025b) studied the structural effect of covariance eigenvectors and proposed a spectral enhancement method for high-dimensional discriminant analysis. Another challenge is that the target domain may contain only a limited number of labeled samples. In many applications, data from related source domains are available. This situation is common in biomedical and genomic studies, where data may be collected from different cohorts, sites, or tissues. Transfer learning aims to use such source data to improve learning in the target domain; see (Pan and Yang, 2010; Weiss et al., 2016). In high-dimensional statistics, transfer learning has been studied for linear regression by Li et al. (2022) and for random-coefficient ridge regression by Zhang and Li (pear). For classification, Zhang et al. (2025a) recently proposed a transfer learning framework for regularized LDA. Their method combines target and source discriminant directions through suitable weights and derives the corresponding high-dimensional classification error. The closest work to ours is Zhang et al. (2025a), which studies transfer learning for regu-larized LDA under a random-effects model. In their framework, the class-separation vector in each domain is a zero-mean random vector, and the relatedness between the target and source domains is described by the correlations among these random effects. This model is useful for quantifying how similar different discriminant directions are on average. However, since the transferable information is placed entirely in random mean differences, this formulation does not explicitly capture the stable discriminative information that is genuinely shared across domains. Such a shared-signal structure naturally arises in multi-site biomedical studies. For example, when different hospitals or imaging centers collect data for the same disease classification task, the disease-related biological or imaging pattern may be stable across sites and can serve as a common discriminative signal. At the same time, differences in acquisition protocols, measure-ment platforms, patient populations, and preprocessing procedures may introduce additional site-specific deviations. Thus, the discriminative structure across domains is not purely random; it may consist of a transferable common component together with domain-specific perturbations. This paper is built on the premise that transferability should be modeled directly at the level of the discriminative signal. We therefore decompose the mean difference in each domain as 
+
+μk = ¯ μ + δk,
+
+2where the deterministic component ¯ μ represents the shared classification signal and the random component δk represents domain-specific heterogeneity. This formulation differs from existing random-domain models in a crucial way: it makes the transferable signal an explicit object of inference and allows its contribution to the target-domain classification error to be separated from the variability introduced by individual source domains. As a result, the model provides a theoretical framework for understanding when a source domain is beneficial, when it is harmful, and how different sources should be weighted. The main contribution of this paper is to develop a high-dimensional transfer learning theory for LDA that explicitly separates the transferable classification signal from domain-specific heterogeneity. Under spiked covariance structures, we derive deterministic equivalents for the target-domain Gaussian-calibrated error of weighted transfer classifiers in both homogeneous and heterogeneous covariance settings. These formulas identify the roles of the shared signal, domain-specific deviations, classwise dimension-to-sample-size ratios, sample spike-eigenvector bias, and cross-domain spike alignment. They also yield closed-form oracle transfer weights and consistent plug-in estimators. In addition, we characterize the intercept bias caused by unbalanced target-domain class sample sizes and provide an asymptotically optimal correction. The rest of this paper is organized as follows. Section 2 introduces the model and the proposed classifiers. Subsection 2.1 studies the homogeneous covariance case, and Subsection 2.2 studies the heterogeneous covariance case. Section 3 presents simulation studies. Section 4 presents empirical studies on two real multi-site biomedical datasets. Section 5 concludes the paper. All technical proofs are given in the Appendix. 
+
+Notation. Throughout the paper, ∥·∥ denotes the Euclidean norm for vectors and the spectral norm for matrices. For a square matrix A, λmin (A), tr( A), and rank( A) denote its smallest eigenvalue, trace, and rank, respectively. We write A⊤ for the transpose of A, Ip for the p × p
+
+identity matrix, and diag( ·) for a diagonal matrix. For an event E, 1E denotes its indicator. The notation a ∝ b means that a is equal to a positive scalar multiple of b. We use op(1), Op(1), 
+
+> p
+
+−→, and a.s.
+
+−−→ in their usual asymptotic senses. Unless otherwise stated, all model parameters other than the dimension and the sample sizes are treated as fixed constants independent of the asymptotic index. 
+
+# 2 Transfer learning for linear discriminant analysis 
+
+We study transfer learning for linear discriminant analysis (TLDA) in a high-dimensional setting with one target domain and several source domains. Our goal is to understand when information from the source domains can improve classification in the target domain, and how this gain depends on the mean structure and the covariance structure across domains. We consider a two-class transfer learning setting. The target domain is indexed by K, and the K − 1 source domains are indexed by k = 1 , . . . , K − 1. The number of domains K is fixed and K ≥ 2. For domain k, let μ+1 ,k and μ−1,k denote the two class mean vectors, and let 
+
+Σk denote the within-domain common covariance matrix. For each domain k = 1 , . . . , K , let 
+
+nk = nk, + + nk, −, where nk, + and nk, − denote the numbers of observations from classes +1 and 
+
+−1, respectively. 3For i = 1 , . . . , n k, ( Xk)i is a p-dimensional observation with label ( yk)i ∈ {− 1, +1 }. We write Xk = (( Xk)1, . . . , (Xk)nk )⊤ as the nk × p sample matrix, and yk = (( yk)1, . . . , (yk)nk )⊤
+
+as the corresponding label vector. For the target domain, the Bayes optimal prediction direction takes the form dBayes =
+
+Σ−1 
+
+> K
+
+(μ+1 ,K − μ−1,K ). The Bayes prediction for a test observation x from the target domain is 
+
+y(x) = sign 
+
+
+
+d⊤
+
+> Bayes
+
+
+
+x − μ+1 ,K + μ−1,K 
+
+2
+
+ 
+
+.
+
+The empirical classifier with bd and bb is written as ˆy(x; bd, bb) = sign 
+
+n bd⊤x + bb
+
+o
+
+.
+
+Throughout the theoretical analysis, the target-domain test distribution is taken to have equal class priors. Under the Gaussian mixture model, the exact misclassification error of the empirical classifier is Err( bd, bb) = 12 Φ
+
+ bd⊤μ−1,K + bb
+
+qbd⊤ΣK bd
+
+ + 12 Φ
+
+− bd⊤μ+1 ,K + bb
+
+qbd⊤ΣK bd
+
+ , (1) where Φ denotes the cumulative distribution function of the standard normal distribution. Under non-Gaussian models, (1) need not coincide with the exact misclassification error. It may nevertheless be interpreted as the Gaussian calibration of the corresponding standardized margins. In particular, the arguments of Φ in (1) are the signal-to-noise ratios of the linear scores, and related Φ-type margin criteria have been used in high-dimensional analyses of trans-fer and robust discriminant rules (Zhang et al., 2025a; Auguin et al., 2021). Throughout the paper, we analyze (1) as a Gaussian-calibrated error criterion. 
+
+Assumption 1. For each domain k = 1 , . . . , K , the design matrix Xk ∈ Rnk ×p is generated as 
+
+Xk =
+
+
+
+μ(yk )1,k , . . . , μ(yk )nk ,k 
+
+⊤
+
++ ZkΣ1/2 
+
+> k
+
+,
+
+where Z1, . . . , ZK are mutually independent random matrices. For each k, the entries (Zk)ij 
+
+are i.i.d. with E(Zk)ij = 0 , E(Zk)2 
+
+> ij
+
+= 1 , and E(Zk)4 
+
+> ij
+
+< ∞.
+
+Remark. Assumption 1 gives a simple common data model for all domains. The domains may differ through their mean vectors and covariance matrices, while the noise part remains independent across samples and domains. 
+
+To describe the relatedness across domains, we define the mean-difference vectors μk =
+
+μ+1 ,k − μ−1,k and propose the following assumption. 
+
+Assumption 2. For each domain k = 1 , . . . , K , the mean-difference vector μk ∈ Rp is modeled as 
+
+μk = ¯ μ + δk, k = 1 , . . . , K, (2) 4where ¯μ is a deterministic vector with bounded Euclidean norm, and δ1, . . . , δK are mutually independent and independent of Z1, . . . , ZK . Moreover, each δk has i.i.d. coordinates with 
+
+E(( δk)i) = 0 , E(( δk)2 
+
+> i
+
+) = α2
+
+> k
+
+p−1, E(|(δk)i|4) ≤ Cp −2
+
+for some C > 0 and α1, . . . , α K independent of p.
+
+Remark. Assumption 2 separates the shared part and the domain-specific part of the mean difference. The deterministic vector ¯μ represents the stable classification signal shared by all domains, while the random vector δk represents the domain-specific deviation from this common direction. Randomizing the unknown signal or coefficient vector is a common way to obtain explicit high-dimensional limits. For example, Dobriban and Wager (2018) use a random-effects formulation to describe the population signal in high-dimensional regression and classification; Zhang et al. (2025a) randomizes the class-separation vector in each domain; and Zhang and Li (pear) use random regression coefficients in transfer regression models. In our model, the randomization is used only for the domain-specific deviations δk, while the common component 
+
+¯μ is kept deterministic. This distinction allows us to retain the tractability of random-effects modeling while explicitly preserving a stable transferable classification signal. 
+
+2.1 Homogeneous covariance case 
+
+We first consider the homogeneous covariance case, where all domains share the same co-variance matrix. This setting allows us to isolate the effect of the shared classification signal on the target-domain Gaussian-calibrated error, as the common covariance structure simplifies the expressions for the signal and variance components. 
+
+Assumption 3. The covariance matrix is common across all domains and follows a spiked covariance model: 
+
+Σ1 = · · · = ΣK = Σ = σ2
+
+Ip + X
+
+> j∈I
+
+λj vj v⊤
+
+> j
+
+ , I := I+ ∪ I −, (3) 
+
+where 1/c ≤ σ2 ≤ c for some constant c > 0, {vj : j ∈ I} is an orthonormal family in Rp, and 
+
+I+ = {1, . . . , r +}, I− = {− r−, . . . , −1} with fixed r = r+ + r−.
+
+Remark. This is a standard spiked covariance model. For simplicity, in the theoretical analysis, we assume that σ2, r+, r−, and λj , j ∈ I , are known. In experiments, these population spectral parameters can be estimated consistently using existing methods for spiked covariance models; see, for example, Bai and Ding (2012); Jiang and Bai (2021). 
+
+Assumption 4. For each k = 1 , . . . , K and s ∈ { +, −} , assume that p, n k,s → ∞ and bγk,s := 
+
+p/n k,s → γk,s ∈ (0 , ∞).
+
+Let n = PKk=1 nk. Under Assumption 4, we have bγk := p/n k → γk and bγ := p/n → γ,where 1 /γ k = 1 /γ k, + + 1 /γ k, − and 1 /γ = PKk=1 1/γ k. Moreover, define bτk := bγk, + + bγk, − and 
+
+b∆k := bγk, + − bγk, −. Then bτk → τk and b∆k → ∆k, where τk := γk, + + γk, − and ∆ k := γk, + − γk, −.5Assumption 5. For each j ∈ I , λj is independent of p, and 
+
+λ1 > · · · > λ r+ > √γ > −√γ > λ −r− > · · · > λ −1 > −1,
+
+Moreover, if γ ≥ 1, I− = ∅.
+
+Under Assumptions 3–5, all domains share the same spiked covariance structure, so it is natural to pool the covariance information across domains. We therefore use the pooled sample covariance matrix to estimate the common eigenspace, and then combine the domainwise sample mean differences through a weighted transfer direction. The sample mean vectors and the pooled sample covariance matrix are written as 
+
+bμ±1,k = 1
+
+nk, ±1
+
+X 
+
+> i:( yk)i=±1
+
+(Xk)i, Sn = 1
+
+n − 2K
+
+> K
+
+X
+
+> k=1
+> nk
+
+X
+
+> i=1
+
+h
+
+(Xk)i − bμ(yk )i,k 
+
+ih 
+
+(Xk)i − bμ(yk )i,k 
+
+i⊤
+
+.
+
+Write the spectral decomposition 
+
+Sn =
+
+> p
+
+X
+
+> j=1
+
+ℓj bvj bv⊤ 
+
+> j
+
+,
+
+with the eigenvalues arranged in decreasing order. For later use, we relabel the isolated sample spike eigenvectors by the corresponding population spike indices. That is, for j ∈ I +, bvj denotes the sample eigenvector associated with the outlier above the upper edge, while for j ∈ I −, bvj
+
+denotes the sample eigenvector associated with the outlier below the lower edge. Using the known spike structure, we define the spectrally-corrected covariance estimator 
+
+bΣ = σ2
+
+Ip + X
+
+> j∈I
+
+λj bvj bv⊤
+
+> j
+
+ , (4) and the local discriminant direction in domain k by bdk = bΣ−1 bμk, where bμk = bμ+1 ,k − bμ−1,k .The transfer discriminant direction is 
+
+bd(w) = 
+
+> K
+
+X
+
+> k=1
+
+wk bdk, (5) where w = ( w1, . . . , w K )⊤ ∈ RK . Then, the resulting target-domain classifier is 
+
+by(x) = sign 
+
+n bd(w)⊤x + bbK (w)
+
+o
+
+, (6) where 
+
+bbK (w) = − bd(w)⊤ bμ+1 ,K + bμ−1,K 
+
+2 .
+
+We refer to (6) as the Homogeneous Transfer Learning Discriminant Analysis (TLDA-O) clas-sifier. 
+
+Theorem 1. Suppose that Assumptions 1–5 hold. Then, for every deterministic unit vector 
+
+ξ ∈ Rp,
+
+ξ⊤ bvj bv⊤ 
+
+> j
+
+ξ p
+
+−→ λ2 
+
+> j
+
+− γλj (λj + γ) ξ⊤vj v⊤ 
+
+> j
+
+ξ, j ∈ I .
+
+6Remark. Theorem 1 extends the corresponding sample spike-eigenvector result in Li et al. (2025) by allowing non-Gaussian observations with finite fourth moments and by applying to the centered pooled sample covariance matrix used in the TLDA-O classifier. In addition to the usual upper-spike case that is the main focus of spiked eigenvector studies (Bao et al., 2022; Liu et al., 2025), it also provides theoretical support for the eigenvector limits associated with lower isolated covariance spikes. 
+
+Theorem 1 shows that the sample spike directions still carry nontrivial information about the population spike directions, which allows us to replace the unknown population eigenspace by its sample version. To describe the limiting error, we next introduce two deterministic quantities. The vector up = ( u1,p , . . . , u K,p )⊤ represents the limiting signal term, and the matrix Ap = ( Akk ′,p )1≤k,k ′≤K represents the limiting variance term. For k, k ′ = 1 , . . . , K , define Err( w) = Err( bd(w), bbK (w)) and 
+
+uk,p = ∥ ¯μ∥2
+
+σ2 − X
+
+> j∈I
+
+bj aj
+
+( ¯ μ⊤vj )2
+
+σ2 + α2
+
+> K
+
+σ2 1{k=K},Akk ′,p = ∥ ¯μ∥2
+
+σ2 + X
+
+> j∈I
+
+cj
+
+( ¯ μ⊤vj )2
+
+σ2 +
+
+ α2
+
+> k
+
+σ2 + τk
+
+
+
+1{k=k′},
+
+where 
+
+aj = λ2 
+
+> j
+
+− γλj (λj + γ) , bj = λj
+
+1 + λj
+
+, cj = ( b2 
+
+> j
+
+− 2bj )aj + λj − 2λj bj aj + λj b2 
+
+> j
+
+a2 
+
+> j
+
+.
+
+Theorem 2. Under Assumptions 1–5, the target-domain Gaussian-calibrated error of the TLDA-O classifier satisfies 
+
+Err( w) − 12 Φ − u⊤ 
+
+> p
+
+w + wK ∆K
+
+2pw⊤Apw
+
+!
+
+− 12 Φ − u⊤ 
+
+> p
+
+w − wK ∆K
+
+2pw⊤Apw
+
+!
+
+→ 0 in probability (7) 
+
+for every fixed nonzero w ∈ RK .
+
+Remark. Theorem 2 gives a deterministic approximation for the target-domain Gaussian-calibrated error. The vector up represents the effective signal, while Ap represents the variance cost of the weighted transfer direction. The diagonal term α2
+
+> k
+
+/σ 2+τk shows that stronger domain-specific variation and larger classwise dimension-to-sample-size ratios increase the variability of using domain k. When the target-domain class sample sizes are unbalanced, the additional term 
+
+wK ∆K appears in the two margins. 
+
+To remove this target-domain intercept bias, for a scalar adjustment t ∈ R, consider the adjusted score 
+
+bd(w)⊤x + bbK (w) + t
+
+and write Err t(w) := Err( bd(w), bbK (w) + t).
+
+7Proposition 1. Under Assumptions 1–5, for every fixed nonzero w satisfying u⊤ 
+
+> p
+
+w > 0, let 
+
+bt∗
+
+> p
+
+(w) ∈ arg min  
+
+> t∈R
+
+Err t(w).
+
+Then 
+
+bt∗
+
+> p
+
+(w) − 12 wK b∆K → 0 in probability .
+
+Moreover, 
+
+Err bt∗
+
+> p(w)
+
+(w) − Φ − u⊤ 
+
+> p
+
+w
+
+2pw⊤Apw
+
+!
+
+→ 0 in probability . (8) 
+
+Remark. If u⊤ 
+
+> p
+
+w ≤ 0, the limiting Gaussian-calibrated error under this fixed weight is at least 1/2, and we do not consider such cases. Proposition 1 shows that the optimal intercept correction removes the target-domain imbalance term wK ∆K . Hence the corrected deterministic limit is no larger than the limit in Theorem 2, and it is strictly smaller when wK ∆K̸ = 0 . After correction, the limiting error has the same form as the balanced-target limit obtained by setting 
+
+∆K = 0 ; the remaining effect of class-size imbalance is only through the variance term τk in 
+
+Ap.
+
+Once the corrected error limit of TLDA-O is available, we can optimize it over the transfer weights. This leads to an optimal choice that serves as a benchmark for the best possible linear combination of the domainwise discriminant directions. 
+
+Corollary 1. Under Assumptions 1–5, suppose up̸ = 0. Then the deterministic equivalent in 
+
+(8) is minimized by 
+
+w∗ 
+
+> p
+
+∝ A−1 
+
+> p
+
+up. (9) 
+
+Under the normalization w⊤Apw = 1 , the unique maximizer is 
+
+w∗ 
+
+> p
+
+= A−1 
+
+> p
+
+up
+
+q
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up
+
+. (10) 
+
+Remark. Corollary 1 shows that the optimal weight has the form of a generalized signal-to-noise maximizer. Domains with larger effective shared signal tend to receive larger weights, while domains with stronger domain-specific variation or larger dimension-to-sample-size ratios are penalized through Ap.
+
+The optimal weight for TLDA-O depends on unknown population quantities and therefore cannot be used directly. We next replace these quantities by consistent estimators and obtain a consistent plug-in weight vector. To construct this plug-in version of (9), define 
+
+bκp := 1
+
+σ2K(K − 1) 
+
+X
+
+> m̸=ℓ
+
+bμ⊤ 
+
+> m
+
+bμℓ, (11) 8and, for each k = 1 , . . . , K , define 
+
+bβk := 1
+
+σ2
+
+∥ bμk∥2 − 1
+
+K − 1
+
+X
+
+> ℓ̸=k
+
+bμ⊤ 
+
+> k
+
+bμℓ
+
+ − bτk. (12) As in Assumption 3, the spike strengths λj , j ∈ I , and hence bj = λj /(1 + λj ), are treated as known population parameters. For each j ∈ I , define 
+
+baj := λ2 
+
+> j
+
+− bγλj (λj + bγ) , bcj := ( b2 
+
+> j
+
+− 2bj )baj + λj − 2λj bjbaj + λj b2 
+
+> j
+
+ba2 
+
+> j
+
+.
+
+Then, for k, k ′ = 1 , . . . , K , define 
+
+buk,p := bκp − X
+
+> j∈I
+
+bj
+
+σ2K(K − 1) 
+
+X
+
+> m̸=ℓ
+
+bμ⊤ 
+
+> ℓ
+
+bvj bv⊤ 
+
+> j
+
+bμm + bβK 1{k=K},
+
+bAkk ′,p := bκp + X
+
+> j∈I
+
+bcj
+
+σ2K(K − 1) 
+
+X
+
+> m̸=ℓ
+
+1
+
+baj
+
+bμ⊤ 
+
+> ℓ
+
+bvj bv⊤ 
+
+> j
+
+bμm + 1{k=k′}
+
+  bβk + bτk
+
+.
+
+Let 
+
+bup = ( bu1,p , . . . , buK,p )⊤, bAp = ( bAkk ′,p )1≤k,k ′≤K .
+
+Theorem 3. Suppose that Assumptions 1–5 hold, and that there exists a constant cu > 0 such that ∥up∥ ≥ cu, for all sufficiently large p. Then 
+
+bup − up → 0, bAp − Ap → 0 in probability . (13) 
+
+Moreover, with probability tending to one, bAp is positive definite, and the empirical optimal weight vector 
+
+bw∗ 
+
+> p
+
+=
+
+bA−1 
+
+> p
+
+bup
+
+qbu⊤ 
+
+> p
+
+bA−1 
+
+> p
+
+bup
+
+(14) 
+
+satisfies 
+
+bw∗ 
+
+> p
+
+− w∗ 
+
+> p
+
+→ 0 in probability . (15) 
+
+Remark. The consistency is stated for known spectral parameters in Assumption 3. The same conclusion continues to hold if these parameters are replaced by consistent estimators such as those in Bai and Ding (2012); Jiang and Bai (2021). 
+
+2.2 Heterogeneous covariance case 
+
+We now move to the more general case where the covariance matrices are allowed to vary across domains. This setting is closer to practice, but the interaction across domains becomes more involved because both the spike strengths and the spike directions may differ from one domain to another. 9Assumption 6. For each domain k = 1 , . . . , K , the covariance matrix follows a spiked covari-ance model: 
+
+Σk = σ2
+
+> k
+
+Ip + X
+
+> j∈I k
+
+λj,k vj,k v⊤
+
+> j,k
+
+ , Ik = Ik, + ∪ I k, − (16) 
+
+where 1/c ≤ σ2 
+
+> k
+
+≤ c for some constant c > 0, {vj,k : j ∈ I k} is an orthonormal family in Rp,and Ik, + = {1, . . . , r k, +}, Ik, − = {− rk, −, . . . , −1}, with rk := rk, + + rk, − fixed for each k.
+
+Remark. As in the homogeneous covariance case, for simplicity, in the theoretical analysis, we assume that σ2
+
+> k
+
+, rk, +, rk, −, and λj,k , j ∈ I k, are known for each k. In experiments, these population spectral parameters can be estimated consistently using existing methods for spiked covariance models; see, for example, Bai and Ding (2012); Jiang and Bai (2021). 
+
+Assumption 7. For each domain k = 1 , . . . , K and each j ∈ I k, λj,k is independent of p, and 
+
+λ1,k > · · · > λ rk, +,k > √γk > −√γk > λ −rk, −,k > · · · > λ −1,k > −1.
+
+Moreover, if γk ≥ 1, then Ik, − = ∅.
+
+In the heterogeneous setting, the covariance information can no longer be pooled directly. We therefore estimate the spiked covariance structure within each domain and then combine the resulting local discriminant directions through transfer weights. The within-domain sample covariance matrix is estimated separately by 
+
+Sn,k = 1
+
+nk − 2
+
+> nk
+
+X
+
+> i=1
+
+h
+
+(Xk)i − bμ(yk )i,k 
+
+ih 
+
+(Xk)i − bμ(yk )i,k 
+
+i⊤
+
+. (17) Write its spectral decomposition as 
+
+Sn,k =
+
+> p
+
+X
+
+> j=1
+
+ℓj,k bvj,k bv⊤
+
+> j,k
+
+,
+
+with the eigenvalues arranged in decreasing order. For j ∈ I k, +, bvj,k denotes the sample eigenvector associated with the upper outlier corresponding to λj,k . For j ∈ I k, −, bvj,k denotes the sample eigenvector associated with the lower outlier corresponding to λj,k . We then define the spectrally-corrected covariance estimator by 
+
+bΣk = σ2
+
+> k
+
+Ip + X
+
+> j∈I k
+
+λj,k bvj,k bv⊤
+
+> j,k
+
+ . (18) By the same argument as Theorem 1, the domainwise analogue holds with ( γ, λ j , vj ) replaced by ( γk, λ j,k , vj,k ). The local discriminant direction is then defined by bdEk = bΣ−1 
+
+> k
+
+bμk, and the transfer discriminant direction remains 
+
+bdE (w) = 
+
+> K
+
+X
+
+> k=1
+
+wk bdEk .
+
+10 The resulting target-domain classifier is 
+
+byE (x) = sign 
+
+n bdE (w)⊤x + bbEK (w)
+
+o
+
+, (19) where 
+
+bbEK (w) = − bdE (w)⊤ bμ+1 ,K + bμ−1,K 
+
+2 .
+
+We refer to (19) as the Heterogeneous Transfer Learning Discriminant Analysis (TLDA-E) classifier. To state the error formula in this setting, we need a few quantities that describe both within-domain spike effects and cross-domain spike alignment. Define 
+
+aj,k := λ2 
+
+> j,k
+
+− γk
+
+λj,k (λj,k + γk) , bj,k := λj,k 
+
+1 + λj,k 
+
+, mj,k := ¯ μ⊤vj,k , j ∈ I k.
+
+For k, k ′ = 1 , . . . , K , define 
+
+mk := ( mj,k )j∈I k , Rkk ′ :=  ρ(k,k ′)
+
+> jℓ
+
+  
+
+> j∈I k, ℓ ∈I k′
+
+, ρ(k,k ′) 
+
+> jℓ
+
+:= v⊤
+
+> j,k
+
+vℓ,k ′ .
+
+Also define 
+
+Bk := diag( bj,k )j∈I k , Dk := diag( bj,k aj,k )j∈I k , Λk := diag( λj,k )j∈I k ,
+
+and 
+
+Ckk ′ := 
+
+
+
+diag( aj,k )j∈I k , k = k′,
+
+diag( aj,k )j∈I k Rkk ′ diag( aℓ,k ′ )ℓ∈I k′ , k̸ = k′.
+
+For each k, k ′ = 1 , . . . , K , define qk := mK − RKk Dkmk, and 
+
+uEk,p = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk
+
+σ2
+
+> k
+
++ α2
+
+> K
+
+σ2
+
+> K
+
+1{k=K},AEkk ′,p = σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+ΩEkk ′,p +
+
+ σ2 
+
+> K
+
+α2
+
+> k
+
+σ4
+
+> k
+
++ τk
+
+σ2
+
+> K
+
+σ2
+
+> k
+
+
+
+1{k=k′},
+
+where ΩEkk ′,p = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′ + m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′ + q⊤ 
+
+> k
+
+ΛK qk′ .
+
+Let 
+
+uEp := ( uE
+
+> 1,p
+
+, . . . , u EK,p )⊤, AEp := ( AEkk ′,p )1≤k,k ′≤K .
+
+Also write Err E (w) := Err( bdE (w), bbEK (w)) .
+
+Theorem 4. Under Assumptions 1, 2, 4, 6 and 7, the target-domain Gaussian-calibrated error 
+
+11 of the TLDA-E classifier satisfies 
+
+Err E (w) − 12 Φ
+
+− (uEp )⊤w + wK ∆K
+
+2
+
+q
+
+w⊤AEp w
+
+ − 12 Φ
+
+− (uEp )⊤w − wK ∆K
+
+2
+
+q
+
+w⊤AEp w
+
+ → 0 in probability 
+
+(20) 
+
+for every fixed nonzero w ∈ RK .
+
+Remark. Theorem 4 extends the deterministic error approximation to domain-specific covari-ance matrices. Here uEp still describes the effective signal, and AEp describes the variance cost. Compared with the homogeneous case, the error now depends not only on the shared signal, domain-specific variation, dimension-to-sample-size ratios, and within-domain spike directions, but also on cross-domain spike alignment. The matrices Rkk ′ and the vectors qk describe how the spike directions from different domains interact with the target-domain covariance structure. 
+
+To remove this target-domain intercept bias, for a scalar adjustment t ∈ R, consider the adjusted score ( bdE (w)) ⊤x + bbEK (w) + t
+
+and write Err Et (w) := Err( bdE (w), bbEK (w) + t).
+
+Proposition 2. Under Assumptions 1, 2, 4, 6 and 7, for every fixed nonzero w satisfying 
+
+(uEp )⊤w > 0, let 
+
+bt∗ 
+
+> p,E
+
+(w) ∈ arg min  
+
+> t∈R
+
+Err Et (w).
+
+Then 
+
+bt∗ 
+
+> p,E
+
+(w) − 12 wK b∆K → 0 in probability .
+
+Moreover, 
+
+Err E 
+
+> bt∗
+> p,E (w)
+
+(w) − Φ
+
+− (uEp )⊤w
+
+2
+
+q
+
+w⊤AEp w
+
+ → 0 in probability . (21) The corrected deterministic error formula also yields the optimal TLDA-E transfer weights. 
+
+Corollary 2. Under Assumptions 1, 2, 4, 6 and 7, suppose uEp̸ = 0. Then the deterministic equivalent in (21) is minimized by 
+
+w∗ 
+
+> p,E
+
+∝ (AEp )−1uEp . (22) 
+
+Under the normalization w⊤AEp w = 1 , the unique maximizer is 
+
+w∗ 
+
+> p,E
+
+= (AEp )−1uEp
+
+q
+
+(uEp )⊤(AEp )−1uEp
+
+. (23) Compared with TLDA-O, the TLDA-E weight additionally reflects the alignment between source-domain spike directions and the target-domain covariance structure. To construct a 12 plug-in version of (22), define, for any p × p matrix M ,
+
+bAp(M ) := 1
+
+K(K − 1) 
+
+X
+
+> a̸=b
+
+bμ⊤ 
+
+> a
+
+M bμb.
+
+Also, for each k = 1 , . . . , K , define 
+
+bβEk := ∥ bμk∥2 − 1
+
+K − 1
+
+X
+
+> ℓ̸=k
+
+bμ⊤ 
+
+> k
+
+bμℓ − bτkσ2
+
+> k
+
+.
+
+As in Assumption 6, the spike strengths λj,k , j ∈ I k, and hence bj,k = λj,k /(1+ λj,k ), are treated as known. For each j ∈ I k, define 
+
+baj,k := λ2 
+
+> j,k
+
+− bγk
+
+λj,k (λj,k + bγk) , bPj,k = bvj,k bv⊤
+
+> j,k
+
+,
+
+cMk := Ip − X
+
+> j∈I k
+
+bj,k bPj,k , buEk,p := 1
+
+σ2
+
+> k
+
+bAp( cMk) + bβEK
+
+σ2
+
+> K
+
+1{k=K}.
+
+For k, k ′ = 1 , . . . , K, ℓ ∈ I K , define 
+
+bΘkk ′,ℓ := 
+
+
+
+1
+
+baℓ,K 
+
+bAp( cMk bPℓ,K cMk′ ), k̸ = K, k ′̸ = K, 
+
+1 − bℓ,K baℓ,K 
+
+baℓ,K 
+
+bAp( bPℓ,K cMk′ ), k = K, k ′̸ = K, 
+
+1 − bℓ,K baℓ,K 
+
+baℓ,K 
+
+bAp( cMk bPℓ,K ), k̸ = K, k ′ = K, 
+
+(1 − bℓ,K baℓ,K )2
+
+baℓ,K 
+
+bAp( bPℓ,K ), k = K, k ′ = K. 
+
+Then define 
+
+bΩEkk ′,p := bAp( cMk cMk′ ) + X
+
+> ℓ∈I K
+
+λℓ,K bΘkk ′,ℓ ,
+
+and 
+
+bAEkk ′,p := σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+bΩEkk ′,p + σ2 
+
+> K
+
+bβEk
+
+σ4
+
+> k
+
++ bτk
+
+σ2
+
+> K
+
+σ2
+
+> k
+
+!
+
+1{k=k′}.
+
+Let 
+
+buEp := ( buE
+
+> 1,p
+
+, . . . , buEK,p )⊤, bAEp := ( bAEkk ′,p )1≤k,k ′≤K .
+
+Theorem 5. Under Assumptions 1, 2, 4, 6 and 7, suppose there exists a constant cu > 0 such that ∥uEp ∥ ≥ cu, for all sufficiently large p. Then 
+
+buEp − uEp → 0, bAEp − AEp → 0 in probability .
+
+Moreover, with probability tending to one, bAEp is positive definite, and the empirical optimal 
+
+13 weight vector 
+
+bw∗ 
+
+> p,E
+
+= ( bAEp )−1 buEp
+
+q
+
+(buEp )⊤( bAEp )−1 buEp
+
+(24) 
+
+satisfies 
+
+bw∗ 
+
+> p,E
+
+− w∗ 
+
+> p,E
+
+→ 0 in probability .
+
+Remark. This theorem is the heterogeneous analogue of Theorem 3. Its consistency statement is likewise understood for known spectral parameters, or for consistent plug-in estimates of these parameters. 
+
+# 3 Simulations 
+
+We conduct four sets of simulations to examine: the accuracy of the deterministic approxi-mation, the performance of the proposed classifiers, robustness to spike-number misspecification, and the effect of intercept bias correction under class imbalance. Throughout the simulations, we set K = 3, with domain K being the target domain. Each reported empirical error rate is computed on an independently generated balanced target-domain test set with 1000 observations, consisting of 500 observations from each class. Each simulation result is averaged over 1000 replications. For each replication, the common signal is generated as ¯ μ ∼ N (0, Ip/p ). The domain-specific deviations are generated according to Assumption 2 with α1 = 0 .2, α 2 = 0 .5, α 3 = 1 .
+
+Then μk = ¯ μ + δk, and the class mean vectors are set as μ+1 ,k = μk/2 and μ−1,k = −μk/2. For the covariance matrices, the noise level, spike numbers, and spike strengths are set to be the same across domains. That is, for each domain k, we take σ2 
+
+> k
+
+= σ2 = 1 , r k, + = r+ = 1 , r k, − = r− = 2 ,
+
+and set λ1,k = λ1 = 3 , λ −2,k = λ−2 = −0.8, λ −1,k = λ−1 = −0.9. These values are used to generate the population covariance matrices. In implementing the classifiers, unless otherwise stated, the spike numbers, spike strengths, and noise variances are estimated from the data using the methods of Bai and Ding (2012); Jiang and Bai (2021), rather than being set to their population values. 
+
+Case 1: homogeneous covariance. Generate an orthonormal family v1, v−2, v−1 ∈ Rp by orthonormalizing three independent standard Gaussian vectors. All domains share Σ1 = · · · =
+
+ΣK = Σ, where 
+
+Σ = Ip + λ1v1v⊤ 
+
+> 1
+
++ λ−2v−2v⊤−2 + λ−1v−1v⊤−1.
+
+In this case, the proposed method uses the pooled covariance estimator and is denoted by TLDA-O. 
+
+Case 2: heterogeneous covariance. For each domain k = 1 , . . . , K , generate an orthonor-mal family v1,k , v−2,k , v−1,k ∈ Rp by orthonormalizing three independent standard Gaussian vectors. The domain-specific covariance matrix is 
+
+Σk = Ip + λ1v1,k v⊤ 
+
+> 1,k
+
++ λ−2v−2,k v⊤−2,k + λ−1v−1,k v⊤−1,k , k = 1 , . . . , K. 
+
+14 In this case, the proposed method uses domain-specific covariance estimators and is denoted by TLDA-E. 
+
+3.1 Deterministic approximation 
+
+We first examine the accuracy of the deterministic approximation to the Gaussian-calibrated error. Both Case 1 and Case 2 are considered. We take p = 20 , 40 , . . . , 400 and set p/n k = 0 .5for each domain, with balanced class sizes nk, + = nk, − = nk/2.
+
+In this experiment, we use the fixed transfer weight ω = (1 , 1, 1) ⊤. For Case 1, the classifier is constructed by TLDA-O with this fixed weight. For Case 2, the classifier is constructed by TLDA-E with the same fixed weight. We compare the empirical target-domain test error with the deterministic approximation derived in the theory. 20 60 100 140 180 220 260 300 340 380 0.1  0.2  0.3  0.4 
+
+> pError rate
+> Deterministic approximation
+
+(a) Case 1: homogeneous covariance. 20 60 100 140 180 220 260 300 340 380 0.1  0.2  0.3  0.4  0.5  
+
+> pError rate
+> Deterministic approximation
+
+(b) Case 2: heterogeneous covariance. Figure 1: Empirical target-domain test error and its deterministic approximation. Figure 1 shows that the deterministic approximation closely tracks the empirical target-domain test error in both covariance settings. As p increases, the empirical error becomes more concentrated around the theoretical curve, supporting the accuracy of the proposed determin-istic equivalent. 
+
+3.2 Performance of classifiers 
+
+We next compare the proposed TLDA methods with baseline methods. In this experiment, we fix p = 100 , set the two source-domain sample sizes as n1 = n2 = 500 , and vary the target-domain sample size as n3 = 200 , 250 , . . . , 500 . All domains have balanced class sizes. In Case 1, we compare LDA, pooled LDA, TLP-RDA, TLDA-O with equal weights, and TLDA-O with estimated optimal weights. In Case 2, we compare LDA, pooled LDA, TL-RDA, TLDA-E with equal weights, and TLDA-E with estimated optimal weights. For the optimal-weight TLDA methods, we use the plug-in estimators based on Theorem 3 and Theorem 5. Figure 2 reports the mean test error of all competing methods. In both covariance set-tings, the proposed TLDA method with estimated optimal weights gives the lowest error across the target sample sizes. Compared with the equal-weight version, the optimal-weight version achieves a clear improvement, showing the benefit of selecting transfer weights according to the proposed asymptotic criterion. 15 0.26  0.28  0.30  0.32  0.34       
+
+> target domain sample size Error rate
+> 200 250 300 350 400 450 500
+> LDA LDApool TLP−RDA TLDA equal TLDA optimal
+
+(a) Case 1: homogeneous covariance. 0.26  0.28  0.30  0.32  0.34        
+
+> target domain sample size Error rate
+> 200 250 300 350 400 450 500
+> LDA LDApool TL−RDA TLDA equal TLDA optimal
+
+(b) Case 2: heterogeneous covariance. Figure 2: Mean target-domain test error of different classifiers as the target-domain sample size varies. 
+
+3.3 Robustness to spike-number misspecification 
+
+We further examine the stability of the proposed methods when the number of spikes is misspecified. The simulation setting follows that in the previous subsection. The data are generated from the true spike configuration ( r+, r −) = (1 , 2), while in constructing the TLDA classifiers, we deliberately use several prescribed spike numbers (r∗
+
++, r ∗−) ∈ { (1 , 2) , (0 , 2) , (1 , 1) , (2 , 2) , (1 , 3) }.
+
+Here (1 , 2) corresponds to the correct specification, (0 , 2) and (1 , 1) represent under-estimation, and (2 , 2) and (1 , 3) represent over-estimation. For each prescribed spike number, the corre-sponding spike eigenvalues and eigenvectors are still estimated from the selected sample eigen-pairs. In Case 1, we compare TLDA-O with TLP-RDA; in Case 2, we compare TLDA-E with TL-RDA. 0.26  0.27  0.28  0.29  0.30  0.31  0.32       
+
+> target domain sample size Error rate
+> 200 250 300 350 400 450 500
+> TLP−RDA (1,2) (0,2) (1,1) (2,2) (1,3)
+
+(a) Case 1: homogeneous covariance. 0.27  0.28  0.29  0.30  0.31  0.32        
+
+> target domain sample size Error rate
+> 200 250 300 350 400 450 500
+> TL−RDA (1,2) (0,2) (1,1) (2,2) (1,3)
+
+(b) Case 2: heterogeneous covariance. Figure 3: Sensitivity of TLDA-O and TLDA-E to spike-number misspecification. The true spike numbers are ( r+, r −) = (1 , 2), while the classifiers use prescribed values ( r∗
+
++, r ∗−). Figure 3 shows that the proposed methods are stable under moderate spike-number mis-specification. In both covariance settings, the curves corresponding to different prescribed spike numbers remain close to the correctly specified case (1 , 2). Moreover, the proposed TLDA clas-sifiers continue to outperform the corresponding transfer RDA baselines. This suggests that the 16 classification performance is not overly sensitive to small errors in spike-number selection. 
+
+3.4 Bias correction 
+
+Finally, we study the intercept bias correction under class imbalance. Both Case 1 and Case 2 are considered. We fix p = 100 and set nk = 200 , k = 1 , . . . , K. For each domain, the positive-class sample size varies as nk, + = 30 , 40 , . . . , 170 , and the negative-class sample size is 
+
+nk, − = 200 − nk, +.
+
+In this experiment, the discriminant direction is constructed using the estimated optimal TLDA weights. We compare three choices of intercept while keeping the discriminant direction fixed. The first one is the uncorrected intercept. The second one is the theoretically corrected intercept, obtained by Proposition 1 and Proposition 2. The third one is an oracle intercept, obtained by optimizing an intercept correction on the target-domain test set, and is used only as a benchmark. 0.29  0.30  0.31  0.32  0.33               
+
+> nk,+ Error rate
+> 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170
+> Uncorrected Theory−corrected Oracle intercept
+
+(a) Case 1: homogeneous covariance. 0.30  0.31  0.32  0.33  0.34  0.35                
+
+> nk,+ Error rate
+> 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170
+> Uncorrected Theory−corrected Oracle intercept
+
+(b) Case 2: heterogeneous covariance. Figure 4: Effect of intercept bias correction under class imbalance. Figure 4 shows that the uncorrected intercept suffers from a clear increase in test error when the class sizes are highly unbalanced. The theoretically corrected intercept substantially reduces this error in highly unbalanced cases and is close to the oracle intercept selected on the test set. Around the balanced case nk, + = 100, all three intercepts perform similarly, as expected since the bias term is close to zero. 
+
+# 4 Experiments 
+
+We evaluate the proposed methods on two real multi-site biomedical datasets: ADHD-200 and the Parkinson’s Progression Markers Initiative (PPMI). In both datasets, each site is treated as one domain. We select one site as the target domain in turn and use the remaining selected sites as source domains. The proposed TLDA-E and TLDA-O methods are compared with LDA, pooled LDA, and the transfer regularized discriminant analysis methods of Zhang et al. (2025a). Specifically, LDA uses only the target-domain training data, while LDA-POOL pools the training data from all domains. When the sample covariance matrix in LDA is singular, a small ridge regularization term is added for numerical stability. 17 4.1 ADHD-200 dataset 
+
+We first evaluate the proposed methods on the ADHD-200 multi-site resting-state functional magnetic resonance imaging dataset. ADHD-200 is a publicly available neuroimaging dataset collected from 8 independent imaging sites, comprising 973 subjects in total, including 585 typically developing controls, 362 ADHD patients, and 26 subjects with missing diagnostic labels. Due to differences across sites in scanning equipment, acquisition parameters, and sample composition, ADHD-200 exhibits substantial multi-site heterogeneity. After removing duplicate and incomplete samples and aligning the phenotype information with the imaging features, we selected 4 sites comprising a total of 310 subjects for analysis. Each selected site was treated as the target domain in turn, while the remaining selected sites were used as source domains. For each target site, 20% of the subjects are randomly assigned to the test set, and the remaining subjects are used as the training set. Feature screening is conducted exclusively on the training data, using a two-sample t-test. The classification accuracy of different methods is then compared under feature dimensions p = 60 , 70 , 80 , 90 , 100. All results are reported as averages across 50 random training-test splits, where n represents the number of target-domain training samples. Table 1: Classification accuracy on the ADHD-200 dataset.                                                                                                                                
+
+> Target site pLDA LDA-POOL TL-RDA TLP-RDA TLDA-E TLDA-O site 1 (n=115) 60 0.693 0.684 0.624 0.622 0.732 0.741
+> 70 0.673 0.676 0.529 0.539 0.721 0.744
+> 80 0.674 0.689 0.565 0.527 0.740 0.766
+> 90 0.656 0.665 0.590 0.516 0.719 0.759
+> 100 0.645 0.684 0.584 0.535 0.715 0.756
+> site 2 (n=60) 60 0.520 0.583 0.639 0.599 0.640 0.557 70 0.544 0.586 0.570 0.527 0.674 0.557 80 0.530 0.564 0.541 0.510 0.643 0.577 90 0.526 0.549 0.519 0.539 0.627 0.560 100 0.590 0.593 0.496 0.559 0.639 0.594 site 3 (n=28) 60 0.633 0.667 0.410 0.463 0.750 0.753
+> 70 0.603 0.613 0.457 0.567 0.763 0.680 80 0.607 0.567 0.440 0.597 0.673 0.697
+> 90 0.543 0.573 0.453 0.623 0.693 0.683 100 0.577 0.613 0.423 0.600 0.710 0.680 site 4 (n=47) 60 0.507 0.565 0.522 0.553 0.600 0.545 70 0.551 0.575 0.533 0.478 0.607 0.558 80 0.585 0.547 0.507 0.473 0.591 0.538 90 0.564 0.500 0.525 0.535 0.625 0.536 100 0.553 0.558 0.493 0.520 0.591 0.535
+
+Table 1 reports the classification accuracy on the ADHD-200 dataset. The proposed TLDA methods achieve the best performance in all reported settings. TLDA-O is consistently best for site 1, while TLDA-E performs better for site 2 and site 4. For site 3, both TLDA methods outperform the baseline methods, with the better method depending on the feature dimension. 18 These results indicate that transfer learning is effective on this multi-site neuroimaging dataset, and that the relative advantage of TLDA-O and TLDA-E depends on the target site. 
+
+4.2 PPMI dataset 
+
+We next evaluate the proposed methods on the Parkinson’s Progression Markers Initia-tive (PPMI) dataset. PPMI is a publicly available multi-center dataset for Parkinson’s disease research, covering multimodal information such as clinical data, imaging data, genetic informa-tion, biospecimens, and biomarkers. It is mainly used to study the onset and progression of Parkinson’s disease. In the binary classification task, Parkinson’s disease patients were treated as the positive class, while healthy controls and prodromal subjects were combined as the neg-ative class. After removing duplicate and incomplete samples and matching and aligning the features, we selected the 4 acquisition sites with the largest sample sizes, comprising a total of 612 subjects, for analysis. Each selected site was treated as the target domain in turn, while the remaining selected sites were used as source domains. For the target site, approximately 20% of the subjects are held out as the test set, and the remaining subjects are used as the training set. Feature screening is conducted exclusively on the training data using a two-sample t-test. The classification accuracy of different methods is then compared under feature dimensions p = 160 , 170 , 180 , 190 , 200. All results are reported as averages across 50 random training-test splits, where n represents the number of target-domain training samples. Table 2: Classification accuracy on the PPMI dataset.                                                                                                                                
+
+> Target site pLDA LDA-POOL TL-RDA TLP-RDA TLDA-E TLDA-O site 1 (n=218) 160 0.582 0.619 0.518 0.483 0.500 0.629
+> 170 0.600 0.613 0.502 0.487 0.497 0.642
+> 180 0.586 0.600 0.524 0.505 0.478 0.643
+> 190 0.600 0.592 0.518 0.511 0.490 0.635
+> 200 0.573 0.594 0.507 0.503 0.492 0.624
+> site 2 (n=122) 160 0.584 0.605 0.503 0.502 0.733 0.689 170 0.567 0.607 0.519 0.515 0.736 0.678 180 0.592 0.595 0.515 0.491 0.735 0.675 190 0.599 0.599 0.513 0.502 0.732 0.674 200 0.594 0.593 0.509 0.473 0.736 0.667 site 3 (n=98) 160 0.570 0.607 0.519 0.524 0.696 0.644 170 0.552 0.589 0.506 0.481 0.688 0.653 180 0.545 0.585 0.490 0.490 0.702 0.668 190 0.547 0.566 0.493 0.487 0.698 0.668 200 0.554 0.579 0.483 0.502 0.696 0.665 site 4 (n=53) 160 0.536 0.544 0.540 0.540 0.525 0.676
+> 170 0.493 0.487 0.498 0.482 0.498 0.665
+> 180 0.529 0.518 0.513 0.522 0.496 0.649
+> 190 0.555 0.529 0.547 0.564 0.509 0.647
+> 200 0.516 0.520 0.516 0.516 0.498 0.640
+
+Table 2 reports the classification accuracy on the PPMI dataset. The proposed TLDA methods again achieve the best performance in all reported settings. TLDA-O performs best 19 for site 1 and site 4, whereas TLDA-E gives the highest accuracy for site 2 and site 3. This site-dependent pattern suggests that the homogeneous and heterogeneous covariance versions capture different aspects of cross-site transfer. 
+
+# 5 Conclusion 
+
+This paper develops a transfer learning framework for high-dimensional LDA with a shared classification signal. By decomposing the mean difference in each domain into a deterministic common component and a domain-specific random deviation, the proposed model separates transferable discriminative information from domain heterogeneity. Under spiked covariance models, we derive deterministic limits for the target-domain Gaussian-calibrated error under both homogeneous and heterogeneous covariance settings. The resulting formulas lead to oracle transfer weights and consistent plug-in estimators. We also identify the intercept bias caused by unbalanced target-domain class sample sizes and provide an asymptoti-cally optimal correction. The empirical studies on the ADHD-200 and PPMI datasets show that the proposed TLDA methods achieve the best accuracy in all reported settings, with TLDA-O and TLDA-E showing complementary site-dependent advantages. There are several possible directions for future work. First, the present model focuses on linear discriminant rules, while nonlinear classification methods may be more suitable for some complex data. Second, it would be interesting to study how to select useful source domains au-tomatically when some source domains are weakly related to the target domain. Finally, future work may consider more general types of domain heterogeneity beyond the spiked covariance models studied in this paper. 20 References 
+
+Auguin, N., Morales-Jimenez, D., and McKay, M. (2021). Large-dimensional characterization of robust linear discriminant analysis. IEEE Transactions on Signal Processing , 69:2625–2638. Bai, Z. and Ding, X. (2012). Estimation of spiked eigenvalues in spiked models. Random Matrices: Theory and Applications , 01(02):1150011. Bai, Z., Miao, B., and Pan, G. (2007). On asymptotics of eigenvectors of large sample covariance matrix. The Annals of Probability , 35(4):1532–1572. Bai, Z. and Yin, Y. (1993). Limit of the smallest eigenvalue of a large dimensional sample covariance matrix. The Annals of Probability , 21(3). Baik, J. and Silverstein, J. W. (2006). Eigenvalues of large sample covariance matrices of spiked population models. Journal of Multivariate Analysis , 97(6):1382–1408. Bao, Z., Ding, X., Wang, J., and Wang, K. (2022). Statistical inference for principal components of spiked covariance matrices. The Annals of Statistics , 50(2). Bickel, P. J. and Levina, E. (2004). Some theory for fisher’s linear discriminant function, ‘naive bayes’, and some alternatives when there are many more variables than observations. 
+
+Bernoulli , 10(6). Chafa¨ ı, D. and Tikhomirov, K. (2018). On the convergence of the extremal eigenvalues of empirical covariance matrices with dependence. Probability Theory and Related Fields , 170(3-4):847–889. Dobriban, E. and Wager, S. (2018). High-dimensional asymptotics of prediction: Ridge regres-sion and classification. The Annals of Statistics , 46(1). Fisher, R. A. (1936). The use of multiple measurements in taxonomic problems. Annals of Eugenics , 7(2):179–188. Friedman, J. H. (1989). Regularized discriminant analysis. Journal of the American Statistical Association , 84(405):165–175. Golub, T. R., Slonim, D. K., Tamayo, P., Huard, C., Gaasenbeek, M., Mesirov, J. P., Coller, H., Loh, M. L., Downing, J. R., Caligiuri, M. A., Bloomfield, C. D., and Lander, E. S. (1999). Molecular classification of cancer: Class discovery and class prediction by gene expression monitoring. Science , 286(5439):531–537. Jiang, D. and Bai, Z. (2021). Generalized four moment theorem and an application to clt for spiked eigenvalues of high-dimensional covariance matrices. Bernoulli. Official Journal of the Bernoulli Society for Mathematical Statistics and Probability , 27(1):274–294. Johnstone, I. M. (2001). On the distribution of the largest eigenvalue in principal components analysis. The Annals of Statistics , 29(2). 21 Li, H., Luo, W., Bai, Z., Zhou, H., and Pu, Z. (2025). Spectrally-corrected and regularized lda for spiked model. IEEE Transactions on Pattern Analysis and Machine Intelligence ,47(3):1991–1999. Li, S., Cai, T. T., and Li, H. (2022). Transfer learning for high-dimensional linear regression: Prediction, estimation and minimax optimality. Journal of the Royal Statistical Society Series B: Statistical Methodology , 84(1):149–173. Liu, X., Liu, Y., Pan, G., Zhang, L., and Zhang, Z. (2025). Asymptotic limits of spiked eigen-values and eigenvectors of signal-plus-noise matrices with weak signals and heteroskedastic noise. Bernoulli , 31(3). Pan, S. J. and Yang, Q. (2010). A survey on transfer learning. IEEE Transactions on Knowledge and Data Engineering , 22(10):1345–1359. Park, H., Jeon, M., and Rosen, J. B. (2003). Lower dimensional representation of text data based on centroids and least squares. BIT Numerical Mathematics , 43(2):427–448. Pomeroy, S. L., Tamayo, P., Gaasenbeek, M., Sturla, L. M., Angelo, M., McLaughlin, M. E., Kim, J. Y. H., Goumnerova, L. C., Black, P. M., Lau, C., Allen, J. C., Zagzag, D., Olson, J. M., Curran, T., Wetmore, C., Biegel, J. A., Poggio, T., Mukherjee, S., Rifkin, R., Califano, A., Stolovitzky, G., Louis, D. N., Mesirov, J. P., Lander, E. S., and Golub, T. R. (2002). Prediction of central nervous system embryonal tumour outcome based on gene expression. 
+
+Nature , 415(6870):436–442. Shao, J., Wang, Y., Deng, X., and Wang, S. (2011). Sparse linear discriminant analysis by thresholding for high dimensional data. The Annals of Statistics , 39(2). Swets, D. L. and Weng, J. J. (1996). Using discriminant eigenfeatures for image retrieval. IEEE Transactions on Pattern Analysis and Machine Intelligence , 18(8):831–836. Wang, C. and Jiang, B. (2018). On the dimension effect of regularized linear discriminant analysis. Electronic Journal of Statistics , 12(2). Weiss, K., Khoshgoftaar, T. M., and Wang, D. (2016). A survey of transfer learning. Journal of Big Data , 3(1):9. Yin, Y., Bai, Z., and Krishnaiah, P. R. (1988). On the limit of the largest eigenvalue of the large dimensional sample covariance matrix. Probability Theory and Related Fields , 78(4):509–521. Zhang, H., Auddy, A., and Li, H. (2025a). Transfer learning via regularized linear discriminant analysis. arXiv:2501.02411 .Zhang, H. and Li, H. (to appear). Transfer learning for ridge regression with random coefficients. 
+
+Statistica Sinica .Zhang, Y., Pu, Z., Yan, L., and Hu, J. (2025b). Structural effect and spectral enhancement of high-dimensional regularized linear discriminant analysis. arXiv:2507.16682 .22 A Appendix 
+
+A.1 Proof of Theorem 1 
+
+Throughout the proof of Theorem 1, we take σ2 = 1 without loss of generality, since mul-tiplying the covariance matrix by a positive scalar does not change its eigenvectors or spectral projectors. Let Z = [ Z1, . . . , ZK ]⊤ ∈ Rn×p denote the stacked whitened data matrix. We first present the following lemmas. 
+
+Lemma 1. Suppose that Assumptions 1–5 hold. Define the uncentered pooled sample covariance matrix 
+
+eS en := 1
+
+n Σ1/2Z⊤ZΣ1/2.
+
+For each j ∈ I , let eℓj be the sample eigenvalue of eS en associated with the population spike λj ,and let evj be a corresponding eigenvector. Then, for every deterministic unit vector ξ ∈ Rp,
+
+ξ⊤ evj ev⊤ 
+
+> j
+
+ξ a.s.
+
+−−→ λ2 
+
+> j
+
+− γλj (λj + γ) ξ⊤vj v⊤ 
+
+> j
+
+ξ, j ∈ I .
+
+Proof. Fix j ∈ I . Let 
+
+B := 1
+
+n Z⊤Z, R(z) := ( B − zIp)−1, eG(z) := ( eS en − zIp)−1.
+
+Set 
+
+γ− := (1 − √γ)2, γ+ := (1 + √γ)2,
+
+and define 
+
+Sγ := 
+
+
+
+[γ−, γ +], 0 < γ ≤ 1,
+
+{0} ∪ [γ−, γ +], γ > 1.
+
+Also write 
+
+V := ( vl)l∈I ∈ Rp×r, D := diag 
+
+ λl
+
+1 + λl
+
+
+
+> l∈I
+
+.
+
+Since 
+
+Σ−1 = Ip − V DV ⊤,
+
+we have 
+
+eS en − zIp = Σ1/2(B − zΣ−1)Σ1/2 = Σ1/2 R(z)−1 + zV DV ⊤Σ1/2.
+
+Hence 
+
+eG(z) = Σ−1/2 R(z)−1 + zV DV ⊤−1Σ−1/2.
+
+Choose ρj > 0 such that 0 < ρ j < 12 min 
+
+n
+
+min   
+
+> l∈I ,l ̸=j
+
+|λj − λl|, |λj − √γ|, |λj + √γ|
+
+o
+
+,
+
+and define Γj := {ζ ∈ C : |ζ − λj | = ρj }, ϑ(ζ) := 1 + ζ + γ + γζ , Cj := ϑ(Γ j ).
+
+23 By Baik and Silverstein (2006), eℓj → ϑ(λj ) almost surely, and Cj encloses exactly the eigenvalue 
+
+eℓj of eS en for all sufficiently large p. Therefore, define ePj := evj ev⊤ 
+
+> j
+
+, then 
+
+ePj = − 12πi 
+
+I
+
+> Cj
+
+eG(z) dz 
+
+for all sufficiently large p, and hence 
+
+ξ⊤ ePj ξ = − 12πi 
+
+I
+
+> Cj
+
+ξ⊤ eG(z)ξ dz. 
+
+Define eξ := Σ−1/2ξ. By the matrix inversion lemma, 
+
+ξ⊤ eG(z)ξ = eξ⊤R(z) eξ − z eξ⊤R(z)V  D−1 + zV ⊤R(z)V −1V ⊤R(z) eξ.
+
+We next replace the random resolvent blocks by deterministic equivalents. Since the entries of Z are i.i.d. with mean zero, variance one, and finite fourth moment, Theorem 1 of Bai et al. (2007) yields that for every fixed z ∈ C \ Sγ and every deterministic unit vector ξ,
+
+ξ⊤R(z)ξ − mγ (z) → 0 a.s. , (25) where mγ (z) is the Stieltjes transform of the Marchenko–Pastur law with ratio γ. To justify the uniform convergence on Cj , fix any two deterministic vectors a, b in the finite set 
+
+A := { eξ} ∪ { vl : l ∈ I} .
+
+Define ∆a,b 
+
+> p
+
+(z) := a⊤R(z)b − mγ (z)a⊤b.
+
+By (25) and polarization, for every fixed z ∈ C \ Sγ ,∆a,b 
+
+> p
+
+(z) → 0 a.s. Now let δj := dist( Cj , Sγ ) > 0. Since Cj is a fixed compact contour disjoint from Sγ , almost surely for all sufficiently large p,dist( Cj , spec( B)) ≥ δj
+
+2 .
+
+Hence, for all z ∈ C j ,
+
+∥R(z)∥ ≤ 2
+
+δj
+
+almost surely for all sufficiently large p.Moreover, by the resolvent identity, 
+
+R(z1) − R(z2) = ( z1 − z2)R(z1)R(z2),
+
+24 so that for z1, z 2 ∈ C j ,
+
+∥R(z1) − R(z2)∥ ≤ | z1 − z2| ∥ R(z1)∥ ∥ R(z2)∥ ≤ 4
+
+δ2
+
+> j
+
+|z1 − z2|.
+
+Since mγ is analytic on a neighborhood of Cj , it is Lipschitz on Cj , i.e., there exists a constant 
+
+Lj > 0 such that 
+
+|mγ (z1) − mγ (z2)| ≤ Lj |z1 − z2|, z1, z 2 ∈ C j .
+
+Therefore, 
+
+|∆a,b 
+
+> p
+
+(z1) − ∆a,b 
+
+> p
+
+(z2)| ≤ Cj |z1 − z2|
+
+for all z1, z 2 ∈ C j , almost surely for all sufficiently large p, where Cj > 0 is deterministic. Fix ε > 0, and choose a finite ε-net {z1, . . . , z Nε } ⊂ C j . Then for any z ∈ C j , there exists zℓ
+
+such that |z − zℓ| ≤ ε, and hence 
+
+|∆a,b 
+
+> p
+
+(z)| ≤ | ∆a,b 
+
+> p
+
+(zℓ)| + Cj ε. 
+
+Taking the supremum over z ∈ C j gives sup 
+
+> z∈C j
+
+|∆a,b 
+
+> p
+
+(z)| ≤ max 
+
+> 1≤ℓ≤Nε
+
+|∆a,b 
+
+> p
+
+(zℓ)| + Cj ε. 
+
+Since the net is finite and ∆ a,b 
+
+> p
+
+(zℓ) → 0 almost surely for each ℓ, we obtain lim sup 
+
+> p→∞
+
+sup 
+
+> z∈C j
+
+|∆a,b 
+
+> p
+
+(z)| ≤ Cj ε a.s. for every ε > 0. Since ε > 0 is arbitrary, it follows that lim sup 
+
+> p→∞
+
+sup 
+
+> z∈C j
+
+|∆a,b 
+
+> p
+
+(z)| = 0 a.s. That is, sup 
+
+> z∈C j
+
+|∆a,b 
+
+> p
+
+(z)| → 0 a.s. Since A is finite, this uniform convergence holds simultaneously for all pairs a, b ∈ A . In particular, uniformly for z ∈ C j ,
+
+eξ⊤R(z)V = mγ (z) eξ⊤V + o(1) , V ⊤R(z)V = mγ (z)Ir + o(1) , a.s. Set L(z) :=  D−1 +zm γ (z)Ir
+
+−1. For z = ϑ(ζ) with ζ ∈ Γj , the Marchenko–Pastur equation gives 
+
+mγ (ϑ(ζ)) = − 1
+
+ζ + γ .
+
+Hence, for every l ∈ I , 1 + λl
+
+λl
+
++ ϑ(ζ)mγ (ϑ(ζ)) = 1
+
+λl
+
+− 1
+
+ζ .
+
+Since Γ j stays a positive distance away from every λi, the matrix D−1 + zm γ (z)Ir is uniformly 25 invertible on Cj . Thus, uniformly for z ∈ C j ,
+
+ D−1 + zV ⊤R(z)V −1 = L(z) + o(1) , a.s. Consequently, 
+
+ξ⊤ eG(z)ξ = eξ⊤R(z) eξ − z m γ (z)2 eξ⊤V L (z)V ⊤ eξ + o(1) uniformly on Cj , almost surely. Since Cj lies outside Sγ , it stays a positive distance away from the support of the p-dimensional Marchenko–Pastur law. If 0 < γ ≤ 1, the almost sure convergence of the extreme eigenvalues of B to γ− and γ+ (see Yin et al. (1988) for the upper edge and Bai and Yin (1993) for the lower edge) implies that, almost surely for all sufficiently large p, the contour Cj and its interior are disjoint from spec( B). If γ > 1, then B = 1 
+
+> n
+
+Z⊤Z has exactly p − n zero eigenvalues, and its nonzero extreme eigenvalues converge almost surely to γ− and γ+. Since Cj surrounds the positive outlier location 
+
+ϑ(λj ) > γ +, it is disjoint from {0} ∪ [γ−, γ +], and hence also disjoint from spec( B) for all sufficiently large p, almost surely. Therefore the function 
+
+z 7 → eξ⊤R(z) eξ
+
+is analytic on and inside Cj . Hence, by Cauchy’s integral theorem, 
+
+I
+
+> Cj
+
+eξ⊤R(z) eξ dz = 0 ,
+
+and therefore 
+
+ξ⊤ ePj ξ = 12πi 
+
+I
+
+> Cj
+
+z m γ (z)2 eξ⊤V L (z)V ⊤ eξ dz + o(1) a.s. Since L(z) is diagonal, 
+
+eξ⊤V L (z)V ⊤ eξ = X
+
+> l∈I
+
+λl⟨ eξ, vl⟩2
+
+1 + λl + λlzm γ (z) .
+
+Hence 
+
+ξ⊤ ePj ξ = X
+
+> l∈I
+
+12πi 
+
+I
+
+> Cj
+
+zm γ (z)2 λl⟨ eξ, vl⟩2
+
+1 + λl + λlzm γ (z) dz + o(1) .
+
+Now use the change of variables z = ϑ(ζ) with ζ ∈ Γj . Since 
+
+mγ (ϑ(ζ)) = − 1
+
+ζ + γ , λl
+
+1 + λl + λlϑ(ζ)mγ (ϑ(ζ)) = ζλ l
+
+ζ − λl
+
+,
+
+we obtain 
+
+ξ⊤ ePj ξ = X
+
+> l∈I
+
+12πi 
+
+I
+
+> Γj
+
+ϑ(ζ)ϑ′(ζ)mγ (ϑ(ζ)) 2 ζλ l
+
+ζ − λl
+
+⟨ eξ, vl⟩2 dζ + o(1) .
+
+26 Since Γ j encloses only λj , all terms with l̸ = j vanish by Cauchy’s theorem. Thus 
+
+ξ⊤ ePj ξ = 12πi 
+
+I
+
+> Γj
+
+ϑ(ζ)ϑ′(ζ)mγ (ϑ(ζ)) 2 ζλ j
+
+ζ − λj
+
+⟨ eξ, vj ⟩2 dζ + o(1) .
+
+Next, since Σvj = (1 + λj )vj , we have 
+
+⟨ eξ, vj ⟩2 = 11 + λj
+
+⟨ξ, vj ⟩2.
+
+Also, 
+
+ϑ(ζ) = 1 + ζ + γ + γζ , ϑ′(ζ) = 1 − γζ2 , mγ (ϑ(ζ)) = − 1
+
+ζ + γ .
+
+Therefore the integrand equals 
+
+λj
+
+1 + λj
+
+· (1 + ζ)( ζ2 − γ)
+
+ζ2(ζ + γ)( ζ − λj ) ⟨ξ, vj ⟩2.
+
+Hence the residue at ζ = λj is 
+
+λj
+
+1 + λj
+
+· (1 + λj )( λ2 
+
+> j
+
+− γ)
+
+λ2 
+
+> j
+
+(λj + γ) ⟨ξ, vj ⟩2 = λ2 
+
+> j
+
+− γλj (λj + γ) ⟨ξ, vj ⟩2.
+
+By the residue theorem, 
+
+ξ⊤ ePj ξ = λ2 
+
+> j
+
+− γλj (λj + γ) ⟨ξ, vj ⟩2 + o(1) a.s. Since 
+
+ePj = evj ev⊤ 
+
+> j
+
+, ⟨ξ, vj ⟩2 = ξ⊤vj v⊤ 
+
+> j
+
+ξ,
+
+the desired conclusion follows. 
+
+Lemma 2. Suppose that Assumptions 1–5 hold. Let 
+
+GK := diag  Pn1,+ , Pn1,− , . . . , PnK, + , PnK, −
+
+, Pm := Im − 1
+
+m 1m1⊤
+
+> m
+
+.
+
+Define 
+
+eS en := 1
+
+n Σ1/2Z⊤Z Σ1/2, eSn := 1
+
+n Σ1/2Z⊤GK Z Σ1/2.
+
+For z ∈ C+, let 
+
+Q en(z) := ( eS en − zIp)−1, Qn(z) := ( eSn − zIp)−1.
+
+Then for any deterministic unit vector ξ ∈ Rp and any fixed z ∈ C+,
+
+ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ p
+
+−→ 0.
+
+Proof. The proof follows the same argument as Proposition 2 of Liu et al. (2025). In that proposition, the effect of the usual centering matrix 
+
+Φ = In − n−11n1⊤
+
+> n
+
+27 is controlled by a rank-one resolvent perturbation. In the present setting, the block-centering matrix can be written as 
+
+G = In − U U ⊤,
+
+where the columns of U are the normalized block indicator vectors and U ⊤U = Iq, with q = 2 K
+
+fixed. Thus the scalar correction terms in the proof of Proposition 2 are replaced by q ×q matrix corrections. Since q is fixed, the same resolvent bounds, the same Sherman–Morrison–Woodbury expansion, and the same moment estimates apply without changing the order of the error terms. Consequently, for any deterministic unit vector ξ and any fixed z ∈ C+,
+
+ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ p
+
+−→ 0.
+
+Lemma 3. Suppose that Assumptions 1–5 hold. Let eℓj and bℓj denote the sample outlier eigen-values of eS en and eSn, respectively, associated with the population spike λj , j ∈ I .Define 
+
+θj := 1 + λj + γ + γλj
+
+.
+
+Then 
+
+bℓjp
+
+−→ θj .
+
+In particular, 
+
+bℓj − eℓjp
+
+−→ 0.
+
+Proof. For convenience, write 
+
+Bn := 1
+
+n Z⊤GK Z, Ben := 1
+
+n Z⊤Z,
+
+so that 
+
+eSn = Σ1/2BnΣ1/2, eS en = Σ1/2BenΣ1/2.
+
+Also recall that 
+
+Σ−1 = Ip − V DV ⊤, D = diag 
+
+ λℓ
+
+1 + λℓ
+
+
+
+> ℓ∈I
+
+.
+
+Set 
+
+γ− := (1 − √γ)2, γ+ := (1 + √γ)2,
+
+and 
+
+Sγ := 
+
+
+
+[γ−, γ +], 0 < γ ≤ 1,
+
+{0} ∪ [γ−, γ +], γ > 1.
+
+For each ℓ ∈ I , write 
+
+θℓ := 1 + λℓ + γ + γλℓ
+
+.
+
+Let 
+
+ϑ(ζ) := 1 + ζ + γ + γζ .
+
+28 Since 
+
+ϑ′(λj ) = 1 − γλ2
+
+> j
+
+̸
+
+= 0 ,
+
+we may choose ρj > 0 small enough such that ϑ is one-to-one on a neighborhood of B(λj , ρ j ), the disk B(λj , ρ j ) contains no λℓ with ℓ̸ = j, and 
+
+ϑ B(λj , ρ j ) ∩ Sγ = ∅.
+
+Define Γj := {ζ ∈ C : |ζ − λj | = ρj }, Cj := ϑ(Γ j ), Dj := ϑ B(λj , ρ j ).
+
+Then Cj is a simple closed contour enclosing θj = ϑ(λj ), and Dj is the closed domain enclosed by Cj .Since GK is an orthogonal projection with rank n − 2K, the nonzero eigenvalues of Bn are those of a centered empirical covariance matrix with dependent coordinates. By the extremal eigenvalue convergence result for such empirical covariance matrices in Chafa¨ ı and Tikhomirov (2018), the spectrum of Bn is asymptotically confined to the Marchenko–Pastur support Sγ .The same conclusion holds for Ben by the classical Bai–Yin edge convergence; see Yin et al. (1988); Bai and Yin (1993). Since Dj lies a positive distance away from Sγ , there exists cj > 0such that 
+
+P(En) → 1,
+
+where 
+
+En := dist  Dj , spec( Ben) ≥ cj , dist  Dj , spec( Bn) ≥ cj .
+
+Define 
+
+Tn(z) := V ⊤(Bn − zIp)−1V , T en (z) := V ⊤(Ben − zIp)−1V ,
+
+and 
+
+Mn(z) := D−1 + zTn(z).
+
+On the event En, both T en (z) and Tn(z) are analytic on a neighborhood of Dj , and sup 
+
+> z∈C j
+
+∥(Ben − zIp)−1∥ ≤ c−1 
+
+> j
+
+, sup 
+
+> z∈C j
+
+∥(Bn − zIp)−1∥ ≤ c−1 
+
+> j
+
+.
+
+We now prove that sup 
+
+> z∈C j
+
+∥Tn(z) − mγ (z)Ir∥ p
+
+−→ 0.
+
+To this end, for fixed z ∈ C+, define 
+
+Nn(z) := V ⊤(Bn − zΣ−1)−1V , N en(z) := V ⊤(Ben − zΣ−1)−1V .
+
+Since 
+
+eSn − zIp = Σ1/2(Bn − zΣ−1)Σ1/2,
+
+we have (Bn − zΣ−1)−1 = Σ1/2( eSn − zIp)−1Σ1/2,
+
+29 and similarly for the uncentered matrix. Therefore, by polarization and Lemma 2, for every fixed z ∈ C+,
+
+Nn(z) − N en(z) p
+
+−→ 0.
+
+On the other hand, for every fixed z ∈ C+, the deterministic-equivalent step in the uncen-tered proof gives 
+
+T en (z) a.s.
+
+−−→ mγ (z)Ir.
+
+Using the Woodbury identity, (Bn − zΣ−1)−1 = ( Bn − zIp)−1 − (Bn − zIp)−1V  (zD)−1 + Tn(z)−1V ⊤(Bn − zIp)−1,
+
+hence 
+
+Nn(z) = Tn(z) − Tn(z) (zD)−1 + Tn(z)−1Tn(z) = Tn(z) Ir + zDT n(z)−1.
+
+Thus (Ir − zNn(z)D)Tn(z) = Nn(z),
+
+so that 
+
+Tn(z) = Φ z (Nn(z)) , Φz (X) := ( Ir − zXD )−1X.
+
+Similarly, 
+
+T en (z) = Φ z (N en(z)) .
+
+Now define 
+
+N (z) := mγ (z) Ir + z m γ (z)D−1.
+
+Then N en(z) a.s.
+
+−−→ N (z), and therefore 
+
+Nn(z) p
+
+−→ N (z) (z ∈ C+ fixed) .
+
+Since Ir − zN (z)D is invertible for z ∈ C+, the map Φ z is continuous at N (z), and hence 
+
+Tn(z) = Φ z (Nn(z)) p
+
+−→ Φz (N (z)) = mγ (z)Ir (z ∈ C+ fixed) .
+
+Because the matrices are real symmetric, 
+
+Tn(¯ z) = Tn(z), mγ (¯ z) = mγ (z),
+
+so the same convergence holds for every fixed z ∈ C j \ R.We now upgrade pointwise convergence to uniform convergence on Cj . On the event En, the resolvent identity implies that for z, w ∈ C j ,
+
+∥Tn(z) − Tn(w)∥ = V ⊤(Bn − zIp)−1 − (Bn − wIp)−1V
+
+≤ | z − w| ∥ V ∥2 ∥(Bn − zIp)−1∥ ∥ (Bn − wIp)−1∥≤ c−2 
+
+> j
+
+|z − w|.
+
+30 Since Cj \ R is dense in Cj , we may choose the net inside Cj \ R. Thus {Tn} is stochastically equicontinuous on Cj . Since mγ is continuous on Cj , a standard finite-net argument yields sup 
+
+> z∈C j
+
+∥Tn(z) − mγ (z)Ir∥ p
+
+−→ 0.
+
+Consequently, sup 
+
+> z∈C j
+
+∥Mn(z) − M (z)∥ p
+
+−→ 0,
+
+where 
+
+M (z) := D−1 + z m γ (z)Ir.
+
+Define 
+
+fn(z) := det Mn(z), f (z) := det M (z).
+
+Since the determinant is continuous on the finite-dimensional space of r × r matrices, sup 
+
+> z∈C j
+
+|fn(z) − f (z)| p
+
+−→ 0.
+
+We now analyze f (z). By the identity already derived in the uncentered proof, for z =
+
+ϑ(ζ) = 1 + ζ + γ + γ/ζ ,1 + λℓ
+
+λℓ
+
++ ϑ(ζ)mγ (ϑ(ζ)) = 1
+
+λℓ
+
+− 1
+
+ζ , ℓ ∈ I .
+
+Hence 
+
+f (ϑ(ζ)) = Y
+
+> ℓ∈I
+
+ 1
+
+λℓ
+
+− 1
+
+ζ
+
+
+
+.
+
+Since Γ j encloses only λj , and ϑ is one-to-one on a neighborhood of B(λj , ρ j ), the function f
+
+has exactly one zero inside Cj , namely 
+
+θj = ϑ(λj ).
+
+Moreover this zero is simple because 
+
+ϑ′(λj ) = 1 − γλ2
+
+> j
+
+̸
+
+= 0 .
+
+In particular, inf 
+
+> z∈C j
+
+|f (z)| > 0.
+
+Fix 
+
+ηj := 12 inf 
+
+> z∈C j
+
+|f (z)| > 0.
+
+Then 
+
+P sup 
+
+> z∈C j
+
+|fn(z) − f (z)| < η j
+
+!
+
+→ 1.
+
+31 On the event 
+
+En ∩
+
+(
+
+sup 
+
+> z∈C j
+
+|fn(z) − f (z)| < η j
+
+)
+
+,
+
+the functions fn and f are analytic on a neighborhood of Dj , and satisfy 
+
+|fn(z) − f (z)| < |f (z)|, z ∈ C j .
+
+Hence, by Rouch´ e’s theorem, fn and f have the same number of zeros inside Cj , namely exactly one. Since En also guarantees that Cj is disjoint from spec( Bn), the zeros of fn inside Cj are precisely the eigenvalues of eSn inside Cj . Hence, with probability tending to one, eSn has exactly one eigenvalue in Cj . Denote it by bℓj .Since diam( Dj ) → 0 as ρj ↓ 0, the above implies 
+
+bℓjp
+
+−→ θj .
+
+Together with eℓj a.s.
+
+−−→ θj , we obtain 
+
+bℓj − eℓjp
+
+−→ 0.
+
+This completes the proof. Next, we formally begin the proof of Theorem 1. Recall that 
+
+eSn := 1
+
+n Σ1/2Z⊤GK ZΣ1/2, eS en := 1
+
+n Σ1/2Z⊤ZΣ1/2.
+
+By the definition of the pooled sample covariance matrix, 
+
+Sn = nn − 2K eSn.
+
+Hence Sn and eSn have exactly the same eigenvectors. It is therefore enough to prove the claimed limit for the eigenvectors of eSn.For z ∈ C \ R, define the resolvents 
+
+Qn(z) := ( eSn − zIp)−1, Q en(z) := ( eS en − zIp)−1.
+
+Fix j ∈ I , and define 
+
+θj := 1 + λj + γ + γλj
+
+.
+
+Take the same ρj , Γ j , Cj , and Dj as in the proof of Lemma 3. Then Cj is a simple closed contour enclosing θj , and it is disjoint from the limiting bulk Sγ and from all the other outlier limits 
+
+{θℓ : ℓ ∈ I , ℓ ̸ = j}.By Lemma 3, 
+
+eℓj a.s.
+
+−−→ θj , bℓjp
+
+−→ θj .
+
+32 Moreover, by the proof of Lemma 3, for sufficiently small ρj , there exists an event En such that 
+
+P(En) → 1,
+
+and on En the contour Cj encloses exactly one eigenvalue of eS en , namely eℓj , and exactly one eigenvalue of eSn, namely bℓj , and moreover, for some constant cj > 0, dist( Cj , spec( eSn)) ≥ cj , dist( Cj , spec( eS en )) ≥ cj .
+
+On the event En, define the spectral projectors 
+
+ePj := − 12πi 
+
+I
+
+> Cj
+
+Q en(z) dz, bPj := − 12πi 
+
+I
+
+> Cj
+
+Qn(z) dz. 
+
+Since each contour encloses exactly one eigenvalue, both projectors are rank one, and 
+
+ePj = evj ev⊤ 
+
+> j
+
+, bPj = bvj bv⊤ 
+
+> j
+
+.
+
+We next show that 
+
+ξ⊤( bPj − ePj )ξ p
+
+−→ 0. (26) To this end, define 
+
+Dn(z) := ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ, z ∈ C j .
+
+By Lemma 2, for every fixed z ∈ C j ∩ C+,
+
+Dn(z) p
+
+−→ 0.
+
+Since eSn and eS en are real symmetric, we have 
+
+Qn(¯ z) = Qn(z), Q en(¯ z) = Q en(z),
+
+and hence 
+
+Dn(¯ z) = Dn(z).
+
+Therefore, 
+
+Dn(z) p
+
+−→ 0 for every fixed z ∈ C j \ R.
+
+We will combine this pointwise convergence on the dense subset Cj \ R with stochastic equicon-tinuity on Cj to obtain uniform convergence on the whole contour. We now upgrade this pointwise convergence to uniform convergence on Cj . On the event 
+
+En, the contour Cj encloses exactly one eigenvalue of eS en and exactly one eigenvalue of eSn, and moreover, for some constant cj > 0, dist( Cj , spec( eSn)) ≥ cj , dist( Cj , spec( eS en )) ≥ cj .
+
+33 Hence, on En,sup 
+
+> z∈C j
+
+∥Qn(z)∥ ≤ c−1 
+
+> j
+
+, sup 
+
+> z∈C j
+
+∥Q en(z)∥ ≤ c−1 
+
+> j
+
+.
+
+Let z, w ∈ C j . By the resolvent identity, 
+
+Qn(z) − Qn(w) = ( w − z)Qn(z)Qn(w),
+
+Q en(z) − Q en(w) = ( w − z)Q en(z)Q en(w).
+
+Therefore, on En,
+
+|Dn(z) − Dn(w)| ≤ ξ⊤(Qn(z) − Qn(w)) ξ + ξ⊤(Q en(z) − Q en(w)) ξ
+
+≤ | z − w| ∥ Qn(z)∥∥ Qn(w)∥ + |z − w| ∥ Q en(z)∥∥ Q en(w)∥≤ Cj |z − w|,
+
+where Cj > 0 is deterministic. Fix ε > 0. Since Cj \ R is dense in Cj , choose a finite δ-net {z1, . . . , z Nδ } ⊂ C j \ R, where 
+
+δ > 0 is chosen so small that Cj δ ≤ ε/ 2. Then for every z ∈ C j , there exists zℓ such that 
+
+|z − zℓ| ≤ δ. On En,
+
+|Dn(z)| ≤ | Dn(zℓ)| + Cj δ ≤ | Dn(zℓ)| + ε
+
+2 .
+
+Hence, on En,sup 
+
+> z∈C j
+
+|Dn(z)| ≤ max 
+
+> 1≤ℓ≤Nδ
+
+|Dn(zℓ)| + ε
+
+2 .
+
+Therefore 
+
+P sup 
+
+> z∈C j
+
+|Dn(z)| > ε 
+
+!
+
+≤ P(Ecn) + 
+
+> Nδ
+
+X
+
+> ℓ=1
+
+P
+
+
+
+|Dn(zℓ)| > ε
+
+2
+
+
+
+.
+
+Since P(Ecn) → 0 and Dn(zℓ) p
+
+−→ 0 for each fixed ℓ, we obtain sup 
+
+> z∈C j
+
+ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ p
+
+−→ 0. (27) Using the contour representations of the projectors, we get 
+
+ξ⊤( bPj − ePj )ξ = 12πi 
+
+I
+
+> Cj
+
+
+
+ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ
+
+
+
+dz 
+
+≤ length( Cj )2π sup 
+
+> z∈C j
+
+ξ⊤Qn(z)ξ − ξ⊤Q en(z)ξ .
+
+Together with (27), this proves (26). Finally, by Lemma 1, 
+
+ξ⊤ ePj ξ = ξ⊤ evj ev⊤ 
+
+> j
+
+ξ a.s.
+
+−−→ λ2 
+
+> j
+
+− γλj (λj + γ) ξ⊤vj v⊤ 
+
+> j
+
+ξ.
+
+34 Hence also 
+
+ξ⊤ ePj ξ p
+
+−→ λ2 
+
+> j
+
+− γλj (λj + γ) ξ⊤vj v⊤ 
+
+> j
+
+ξ.
+
+Combining this with (26), we obtain 
+
+ξ⊤ bvj bv⊤ 
+
+> j
+
+ξ = ξ⊤ bPj ξ = ξ⊤ ePj ξ + op(1) ,
+
+and therefore 
+
+ξ⊤ bvj bv⊤ 
+
+> j
+
+ξ p
+
+−→ λ2 
+
+> j
+
+− γλj (λj + γ) ξ⊤vj v⊤ 
+
+> j
+
+ξ.
+
+This completes the proof. 
+
+A.2 Proof of Theorem 2 
+
+Lemma 4. Under Assumptions 1–5, the matrix Ap is positive definite. More precisely, 
+
+λmin (Ap) ≥ min  
+
+> 1≤k≤K
+
+τk > 0.
+
+Proof. Write 
+
+Akk ′,p = sp + dk1{k=k′},
+
+where 
+
+sp = ∥ ¯μ∥2
+
+σ2 + X
+
+> j∈I
+
+cj
+
+( ¯ μ⊤vj )2
+
+σ2 , dk = α2
+
+> k
+
+σ2 + τk.
+
+Under Assumption 5, 0 < a j < 1. Moreover, 1 + cj = (1 + λj )(1 − bj aj )2 + b2 
+
+> j
+
+aj (1 − aj ) > 0.
+
+Let ¯ μ⊥ be the component of ¯ μ orthogonal to span {vj : j ∈ I} . Then 
+
+sp = 1
+
+σ2
+
+∥ ¯μ⊥∥2 + X
+
+> j∈I
+
+(1 + cj )( ¯ μ⊤vj )2
+
+ ≥ 0.
+
+Hence, for any w̸ = 0,
+
+w⊤Apw = sp
+
+> K
+
+X
+
+> k=1
+
+wk
+
+!2
+
++
+
+> K
+
+X
+
+> k=1
+
+dkw2 
+
+> k
+
+≥ min  
+
+> 1≤k≤K
+
+τk ∥w∥2 > 0.
+
+This proves the claim. 
+
+Lemma 5. Suppose that Assumptions 1–5 hold. For each k = 1 , . . . , K , define 
+
+ek := bμk − μk.
+
+Then, for every fixed k ∈ { 1, . . . , K } and every fixed j ∈ I ,
+
+e⊤ 
+
+> k
+
+bvjp
+
+−→ 0.
+
+35 Proof. Without loss of generality, we take σ2 = 1, since multiplying the covariance matrix by a positive scalar does not change its eigenvectors or spectral projectors. Recall that 
+
+bμk = bμ+1 ,k − bμ−1,k , μk = μ+1 ,k − μ−1,k .
+
+Under Assumption 1, write (Xk)i = μ(yk )i,k + Σ1/2(zk)i,
+
+where ( zk)i ∈ Rp denotes the corresponding whitened sample vector. Define the classwise whitened sample means by ¯zk, ±1 := 1
+
+nk, ±1
+
+X 
+
+> i:( yk)i=±1
+
+(zk)i.
+
+Then 
+
+bμ±1,k = μ±1,k + Σ1/2 ¯zk, ±1,
+
+and hence 
+
+ek = bμk − μk = Σ1/2  ¯zk, + − ¯zk, −
+
+.
+
+Therefore it suffices to prove that, for each fixed sign s ∈ { +, −} ,¯z⊤
+
+> k,s
+
+Σ1/2 bvjp
+
+−→ 0.
+
+Fix one such block mean and write ¯z := ¯ zk,s .
+
+We first express bvj through the spectral projector associated with the centered pooled sample covariance matrix. Recall from the proof of Theorem 1 that 
+
+eSn = 1
+
+n Σ1/2Z⊤GK ZΣ1/2, Sn = nn − 2K eSn,
+
+so that Sn and eSn have exactly the same eigenvectors. In particular, bvj is also the eigenvector of eSn associated with the centered outlier bℓj .Let 
+
+bPj := bvj bv⊤ 
+
+> j
+
+.
+
+By the proof of Theorem 1, we may take the same contour Cj = ϑ(Γ j ) as above. With probability tending to one, Cj encloses exactly one eigenvalue of eSn, namely bℓj , and 
+
+bPj = − 12πi 
+
+I
+
+> Cj
+
+Qn(z) dz, Qn(z) := ( eSn − zIp)−1.
+
+Also, 
+
+bPj vj = ( bv⊤ 
+
+> j
+
+vj )bvj .
+
+Hence ¯z⊤Σ1/2 bvj = ¯z⊤Σ1/2 bPj vj
+
+bv⊤ 
+
+> j
+
+vj
+
+,
+
+36 whenever bv⊤ 
+
+> j
+
+vj̸ = 0. We now show that the denominator is bounded away from zero with probability tending to one. By Theorem 1, taking ξ = vj , we have 
+
+v⊤ 
+
+> j
+
+bPj vj = v⊤ 
+
+> j
+
+bvj bv⊤ 
+
+> j
+
+vj = |bv⊤ 
+
+> j
+
+vj |2 p
+
+−→ λ2 
+
+> j
+
+− γλj (λj + γ) .
+
+Since Assumption 5 implies 
+
+λ2 
+
+> j
+
+− γλj (λj + γ) > 0,
+
+there exists a constant cj > 0 such that 
+
+P |bv⊤ 
+
+> j
+
+vj | ≥ cj
+
+ → 1.
+
+Therefore, it remains to prove that ¯z⊤Σ1/2 bPj vjp
+
+−→ 0.
+
+Using the contour representation of bPj ,¯z⊤Σ1/2 bPj vj = − 12πi 
+
+I
+
+> Cj
+
+¯z⊤Σ1/2Qn(z)vj dz. 
+
+Thus it suffices to show that sup 
+
+> z∈C j
+
+¯z⊤Σ1/2Qn(z)vj
+
+> p
+
+−→ 0. (28) Recall 
+
+Q en(z) := ( eS en − zIp)−1, eS en = 1
+
+n Σ1/2Z⊤ZΣ1/2.
+
+We first prove that, for any fixed block mean ¯ za,t and any deterministic unit vector ξ,¯z⊤
+
+> a,t
+
+Σ1/2Q en(z)ξ p
+
+−→ 0, z ∈ C+ fixed .
+
+Fix the block ( a, t ), write m = na,t , and denote its whitened observations by z1, . . . , zm. Let 
+
+yi = 1
+
+√n Σ1/2zi, Q(z) = Q en(z).
+
+Then ¯z⊤
+
+> a,t
+
+Σ1/2Q en(z)ξ =
+
+√nm
+
+> m
+
+X
+
+> i=1
+
+y⊤ 
+
+> i
+
+Q(z)ξ.
+
+It is enough to prove 
+
+L := 
+
+√nm
+
+> m
+
+X
+
+> i=1
+
+y⊤ 
+
+> i
+
+Q(z)ξ = op(1) .
+
+Let G be the σ-field generated by all observations outside this block. Define 
+
+F0 = G, Fi = σ(G, z1, . . . , zi), i = 1 , . . . , m. 
+
+37 Write 
+
+L − E(L | G ) = 
+
+> m
+
+X
+
+> i=1
+
+∆i, ∆i = E(L | F i) − E(L | F i−1).
+
+Let L(i) be obtained from L by replacing yi with an independent copy y′
+
+> i
+
+. Then 
+
+E(L(i) | F i−1) = E(L | F i−1),
+
+and hence ∆i = E(L − L(i) | F i).
+
+By Jensen’s inequality and the orthogonality of martingale differences, 
+
+E|L − E(L | G )|2 =
+
+> m
+
+X
+
+> i=1
+
+E|∆i|2 ≤
+
+> m
+
+X
+
+> i=1
+
+E|L − L(i)|2.
+
+For each i, let Q(i)(z) be the resolvent with yi removed, and set 
+
+βi(z) = 11 + y⊤ 
+
+> i
+
+Q(i)(z)yi
+
+, β′
+
+> i
+
+(z) = 11 + ( y′
+
+> i
+
+)⊤Q(i)(z)y′
+
+> i
+
+.
+
+Since z ∈ C+ is fixed, 
+
+|βi(z)| + |β′
+
+> i
+
+(z)| ≤ Cz , ∥Q(i)(z)∥ ≤ Cz .
+
+By the Sherman–Morrison formula, 
+
+Q(z) = Q(i)(z) − βi(z)Q(i)(z)yiy⊤ 
+
+> i
+
+Q(i)(z),
+
+and the analogous identity holds after replacing yi by y′
+
+> i
+
+. Thus 
+
+L − L(i) =
+
+√nm
+
+h
+
+βi(z) y⊤ 
+
+> i
+
+Q(i)(z)ξ − β′
+
+> i
+
+(z) ( y′
+
+> i
+
+)⊤Q(i)(z)ξ
+
+− βi(z)
+
+ X 
+
+> ℓ̸=i
+
+y⊤ 
+
+> ℓ
+
+Q(i)(z)yi
+
+
+
+y⊤ 
+
+> i
+
+Q(i)(z)ξ
+
++ β′
+
+> i
+
+(z)
+
+ X 
+
+> ℓ̸=i
+
+y⊤ 
+
+> ℓ
+
+Q(i)(z)y′
+
+> i
+
+
+
+(y′
+
+> i
+
+)⊤Q(i)(z)ξ
+
+i
+
+.
+
+Let 
+
+Hi = σ G, {yℓ : ℓ̸ = i, 1 ≤ ℓ ≤ m}.
+
+Conditional on Hi, Q(i)(z) and P 
+
+> ℓ̸=i
+
+yℓ are fixed, and yi is independent of them. Thus, for any 
+
+Hi-measurable matrices A, B with ∥A∥ + ∥B∥ ≤ Cz and any Hi-measurable vectors u, v, the finite fourth moment assumption gives 
+
+E
+
+
+
+|y⊤ 
+
+> i
+
+Au |2 | H i
+
+
+
+≤ Cz
+
+n ∥u∥2.
+
+38 Moreover, by the Cauchy–Schwarz inequality, 
+
+E
+
+
+
+|y⊤ 
+
+> i
+
+Au |2|y⊤ 
+
+> i
+
+Bv |2 | H i
+
+
+
+≤
+
+n
+
+E
+
+
+
+|y⊤ 
+
+> i
+
+Au |4 | H i
+
+o 1/2 n
+
+E
+
+
+
+|y⊤ 
+
+> i
+
+Bv |4 | H i
+
+o 1/2
+
+≤ Cz
+
+n2 ∥u∥2∥v∥2.
+
+Therefore, 
+
+E
+
+
+
+|βi(z)y⊤ 
+
+> i
+
+Q(i)(z)ξ|2 | H i
+
+
+
+≤ Cz
+
+n ,
+
+and 
+
+E
+
+ βi(z)
+
+ X 
+
+> ℓ̸=i
+
+y⊤ 
+
+> ℓ
+
+Q(i)(z)yi
+
+
+
+y⊤ 
+
+> i
+
+Q(i)(z)ξ
+
+> 2
+
+| H i
+
+
+
+≤ Cz
+
+n2
+
+X
+
+> ℓ̸=i
+
+yℓ
+
+> 2
+
+.
+
+The same bounds hold for the terms involving y′
+
+> i
+
+. Hence, by |x1 + · · · + x4|2 ≤ 4 P4 
+
+> r=1
+
+|xr|2,
+
+E|L − L(i)|2 ≤ Cn m2
+
+
+
+1
+
+n + 1
+
+n2 E X
+
+> ℓ̸=i
+
+yℓ
+
+> 2
+
+ = O(n−2).
+
+Consequently, 
+
+E|L − E(L | G )|2 ≤
+
+> m
+
+X
+
+> i=1
+
+O(n−2) = O(n−1),
+
+and hence 
+
+L − E(L | G ) = op(1) .
+
+It remains to prove E(L | G ) = op(1). By exchangeability, 
+
+E(L | G ) = √n E 
+
+
+
+y⊤ 
+
+> 1
+
+Q(z)ξ | G 
+
+
+
+.
+
+Let 
+
+H1 = σ(G, y2, . . . , ym).
+
+Conditional on H1, Q(1) (z) is fixed and 
+
+y⊤ 
+
+> 1
+
+Q(z)ξ = y⊤ 
+
+> 1
+
+Q(1) (z)ξ
+
+1 + y⊤ 
+
+> 1
+
+Q(1) (z)y1
+
+.
+
+Set 
+
+c1 = 1 + 1
+
+n tr {ΣQ(1) (z)}, ∆1 = y⊤ 
+
+> 1
+
+Q(1) (z)y1 − 1
+
+n tr {ΣQ(1) (z)}.
+
+Since 
+
+E
+
+
+
+y⊤ 
+
+> 1
+
+Q(1) (z)ξ | H 1
+
+
+
+= 0 ,
+
+39 we have 
+
+E
+
+
+
+y⊤ 
+
+> 1
+
+Q(z)ξ | H 1
+
+
+
+= E y⊤ 
+
+> 1
+
+Q(1) (z)ξ
+
+c1 + ∆ 1
+
+| H 1
+
+!
+
+= E − y⊤ 
+
+> 1
+
+Q(1) (z)ξ ∆1
+
+c1(c1 + ∆ 1) | H 1
+
+!
+
+.
+
+By the standard resolvent denominator bounds, as in the bounds for βi(z) and its deterministic counterpart, 
+
+|c1|−1 ≤ Cz , |c1 + ∆ 1|−1 ≤ Cz .
+
+Thus 
+
+E
+
+
+
+y⊤ 
+
+> 1
+
+Q(z)ξ | H 1
+
+
+
+≤ Cz
+
+n
+
+E
+
+
+
+|y⊤ 
+
+> 1
+
+Q(1) (z)ξ|2 | H 1
+
+o 1/2 E  |∆1|2 | H 1
+
+ 1/2 .
+
+The finite fourth moment assumption gives 
+
+E
+
+
+
+|y⊤ 
+
+> 1
+
+Q(1) (z)ξ|2 | H 1
+
+
+
+≤ Cz
+
+n ,
+
+and 
+
+E  |∆1|2 | H 1
+
+ ≤ Cz
+
+n .
+
+Therefore, 
+
+E
+
+
+
+y⊤ 
+
+> 1
+
+Q(z)ξ | H 1
+
+
+
+≤ Cz n−1.
+
+Taking conditional expectation with respect to G, we get 
+
+E
+
+
+
+y⊤ 
+
+> 1
+
+Q(z)ξ | G 
+
+
+
+≤ Cz n−1.
+
+Consequently, 
+
+E(L | G ) = O(n−1/2) = o(1) .
+
+Combining the two parts gives L = op(1). Therefore ¯z⊤
+
+> a,t
+
+Σ1/2Q en(z)ξ p
+
+−→ 0.
+
+Taking ξ = vj , we obtain ¯z⊤Σ1/2Q en(z)vjp
+
+−→ 0 (z ∈ C+ fixed) .
+
+Next, by the resolvent identity, 
+
+Qn(z) − Q en(z) = Qn(z)RnQ en(z),
+
+where 
+
+Rn =
+
+> K
+
+X
+
+> a=1
+
+X
+
+> t∈{ +,−}
+
+na,t 
+
+n Σ1/2 ¯za,t ¯z⊤
+
+> a,t
+
+Σ1/2.
+
+40 Hence ¯z⊤Σ1/2 Qn(z) − Q en(z)vj =
+
+> K
+
+X
+
+> a=1
+
+X
+
+> t∈{ +,−}
+
+na,t 
+
+n
+
+
+
+¯z⊤Σ1/2Qn(z)Σ1/2 ¯za,t 
+
+ 
+
+¯z⊤
+
+> a,t
+
+Σ1/2Q en(z)vj
+
+
+
+.
+
+For each fixed ( a, t ), the second factor converges to zero in probability by the previous paragraph, while the first factor is Op(1), because 
+
+¯z⊤Σ1/2Qn(z)Σ1/2 ¯za,t ≤ ∥ Σ∥ ∥ Qn(z)∥ ∥ ¯z∥ ∥ ¯za,t ∥,
+
+and ∥Qn(z)∥ ≤ (ℑz)−1, while ∥ ¯z∥ = Op(1) and ∥ ¯za,t ∥ = Op(1). Since K is fixed, the sum has only finitely many terms. Therefore ¯z⊤Σ1/2Qn(z)vj − ¯z⊤Σ1/2Q en(z)vjp
+
+−→ 0 (z ∈ C+ fixed) ,
+
+and hence ¯z⊤Σ1/2Qn(z)vjp
+
+−→ 0 (z ∈ C+ fixed) .
+
+Because eSn is real symmetric, the same convergence holds for every fixed z ∈ C j \ R.We now upgrade the above pointwise convergence to uniform convergence on Cj . By the proof of Theorem 1, there exists an event En such that 
+
+P(En) → 1and, on En, for some constant cj > 0, dist( Cj , spec( eSn)) ≥ cj .
+
+Hence, on En,sup 
+
+> z∈C j
+
+∥Qn(z)∥ ≤ c−1 
+
+> j
+
+.
+
+For z, w ∈ C j , the resolvent identity gives 
+
+Qn(z) − Qn(w) = ( w − z)Qn(z)Qn(w),
+
+so that, on En,
+
+¯z⊤Σ1/2Qn(z)vj − ¯z⊤Σ1/2Qn(w)vj ≤ ∥ ¯z∥ ∥ Σ1/2∥ ∥ Qn(z) − Qn(w)∥≤ ∥ ¯z∥ ∥ Σ1/2∥ | z − w| ∥ Qn(z)∥ ∥ Qn(w)∥≤ Cj ∥ ¯z∥ | z − w|,
+
+where Cj > 0 is deterministic. Fix ε > 0. Choose M > 0 such that 
+
+P(∥ ¯z∥ > M ) < ε. 
+
+41 Since Cj \R is dense in Cj , choose a finite δ-net {z1, . . . , z N } ⊂ C j \R. Then, on En ∩{∥ ¯z∥ ≤ M },for every z ∈ C j ,
+
+¯z⊤Σ1/2Qn(z)vj ≤ max  
+
+> 1≤ℓ≤N
+
+¯z⊤Σ1/2Qn(zℓ)vj + Cj M δ. 
+
+Therefore 
+
+P sup 
+
+> z∈C j
+
+¯z⊤Σ1/2Qn(z)vj > 2ε
+
+!
+
+≤ P(Ecn) + P(∥ ¯z∥ > M )+
+
+> N
+
+X
+
+> ℓ=1
+
+P
+
+
+
+¯z⊤Σ1/2Qn(zℓ)vj > ε 
+
+
+
+provided δ > 0 is chosen so small that Cj M δ ≤ ε. Since P(Ecn) → 0, P(∥ ¯z∥ > M ) < ε , and each fixed-net term tends to zero in probability, we conclude that sup 
+
+> z∈C j
+
+¯z⊤Σ1/2Qn(z)vj
+
+> p
+
+−→ 0.
+
+This proves (28). Consequently, ¯z⊤Σ1/2 bPj vj = − 12πi 
+
+I
+
+> Cj
+
+¯z⊤Σ1/2Qn(z)vj dz p
+
+−→ 0.
+
+Together with the previously established lower bound on |bv⊤ 
+
+> j
+
+vj |, this yields ¯z⊤Σ1/2 bvjp
+
+−→ 0.
+
+Since ¯ z was an arbitrary choice among ¯ zk, + and ¯ zk, −, we finally obtain 
+
+e⊤ 
+
+> k
+
+bvj =   ¯zk, + − ¯zk, −
+
+⊤Σ1/2 bvjp
+
+−→ 0.
+
+This completes the proof. Next, we formally begin the proof of Theorem 2. For k = 1 , . . . , K , write 
+
+ηk, ±1 := bμ±1,k − μ±1,k , ek := bμk − μk = ηk, + − ηk, −, sk := ηk, + + ηk, −.
+
+Then 
+
+bμk = μk + ek, 2μ+1 ,K − bμ+1 ,K − bμ−1,K = μK − sK ,
+
+and 
+
+bμ+1 ,K + bμ−1,K − 2μ−1,K = μK + sK .
+
+By construction, 
+
+bd(w) = 
+
+> K
+
+X
+
+> k=1
+
+wk bdk, bdk = bΣ−1 bμk,
+
+42 and the empirical intercept is 
+
+bbK = − bd(w)⊤ bμ+1 ,K + bμ−1,K 
+
+2 .
+
+Define 
+
+Vn(w) := bd(w)⊤Σ bd(w),
+
+and 
+
+D+,n (w) :=  2μ+1 ,K − bμ+1 ,K − bμ−1,K 
+
+⊤ bd(w),D−,n (w) :=   bμ+1 ,K + bμ−1,K − 2μ−1,K 
+
+⊤ bd(w).
+
+Then 
+
+−  bd(w)⊤μ+1 ,K + bbK
+
+ = − 12 D+,n (w),
+
+and 
+
+bd(w)⊤μ−1,K + bbK = − 12 D−,n (w).
+
+Hence Err( w) = 12 Φ − D−,n (w)2pVn(w)
+
+!
+
++ 12 Φ − D+,n (w)2pVn(w)
+
+!
+
+. (29) Therefore it suffices to prove that 
+
+D+,n (w) = u⊤ 
+
+> p
+
+w − wK ∆K + op(1) , (30) 
+
+D−,n (w) = u⊤ 
+
+> p
+
+w + wK ∆K + op(1) , (31) 
+
+Vn(w) = w⊤Apw + op(1) . (32) We first record several elementary consequences of Assumptions 1–4. Since 
+
+μk = ¯ μ + δk, E∥δk∥2 = α2
+
+> k
+
+,
+
+we have ∥μk∥ = Op(1) for each fixed k. Moreover, for fixed k, k ′,¯μ⊤δk = op(1) , ¯μ⊤ek = op(1) , δ⊤ 
+
+> k
+
+ek′ = op(1) , (33) 
+
+μ⊤ 
+
+> K
+
+ek = op(1) , μ⊤ 
+
+> K
+
+sK = op(1) , s⊤ 
+
+> K
+
+μk = op(1) , (34) 1
+
+σ2 s⊤ 
+
+> K
+
+ek = ∆ K 1{k=K} + op(1) , (35) 1
+
+σ2 e⊤ 
+
+> k
+
+ek′ = τk 1{k=k′} + op(1) , (36) 
+
+μ⊤ 
+
+> K
+
+μk = ∥ ¯μ∥2 + α2 
+
+> K
+
+1{k=K} + op(1) . (37) Indeed, the above relations follow from standard second-moment calculations, using that each classwise sample-mean noise has covariance Var( ηk, ±1) = 1
+
+nk, ±1
+
+Σ.
+
+43 Moreover, 
+
+s⊤ 
+
+> K
+
+eK = ∥ηK, +∥2 − ∥ ηK, −∥2,
+
+and concentration of each classwise squared norm gives 1
+
+σ2 s⊤ 
+
+> K
+
+eK = pnK, +
+
+− pnK, −
+
++ op(1) = ∆ K + op(1) .
+
+Similarly, 
+
+ek = ηk, + − ηk, −, Var( ek) = 
+
+ 1
+
+nk, +
+
++ 1
+
+nk, −
+
+
+
+Σ,
+
+which gives (36). Finally, (37) follows from Assumption 2. Next, by (4), 
+
+bΣ = σ2
+
+Ip + X
+
+> j∈I
+
+λj bPj
+
+ , bPj := bvj bv⊤ 
+
+> j
+
+.
+
+Since the projectors bPj are mutually orthogonal, 
+
+bΣ−1 = 1
+
+σ2
+
+Ip − X
+
+> j∈I
+
+λj
+
+1 + λj
+
+bPj
+
+ .
+
+Then 
+
+bdk = 1
+
+σ2
+
+ b μk − X
+
+> j∈I
+
+bj bPj bμk
+
+ . (38) We now analyze the spike-projector terms. By Theorem 1 and polarization, for any deter-ministic vectors x, y with bounded Euclidean norms, 
+
+x⊤ bPj y = aj x⊤vj v⊤ 
+
+> j
+
+y + op(1) = aj (x⊤vj )( y⊤vj ) + op(1) . (39) In particular, ¯μ⊤ bPj ¯μ = aj ( ¯ μ⊤vj )2 + op(1) . (40) Also, since δk is independent of the training data and 
+
+E (δ⊤ 
+
+> k
+
+bvj )2 | bvj
+
+ = α2
+
+> k
+
+p ,
+
+we have 
+
+δ⊤ 
+
+> k
+
+bvjp
+
+−→ 0, δ⊤ 
+
+> k
+
+bPj δk′ = op(1) , ¯μ⊤ bPj δk = op(1) . (41) Furthermore, by Lemma 5, 
+
+e⊤ 
+
+> k
+
+bvjp
+
+−→ 0, e⊤ 
+
+> k
+
+bPj ek′ = op(1) , μ⊤ 
+
+> K
+
+bPj ek = op(1) . (42) Exactly the same proof as in Lemma 5, replacing 
+
+ek = Σ1/2( ¯ zk, + − ¯zk, −)44 by 
+
+sk = Σ1/2( ¯ zk, + + ¯ zk, −),
+
+shows that 
+
+s⊤ 
+
+> k
+
+bvjp
+
+−→ 0, s⊤ 
+
+> k
+
+bPj μk = op(1) , s⊤ 
+
+> k
+
+bPj ek = op(1) . (43) Combining (40), (41), (42), and (43), we obtain, for each fixed k and j,(μK − sK )⊤ bPj bμk = aj ( ¯ μ⊤vj )2 + op(1) , (44) and likewise (μK + sK )⊤ bPj bμk = aj ( ¯ μ⊤vj )2 + op(1) . (45) We now prove (30). By (38), 
+
+D+,n (w) = ( μK − sK )⊤ bd(w)= 1
+
+σ2
+
+> K
+
+X
+
+> k=1
+
+wk
+
+(μK − sK )⊤ bμk − X
+
+> j∈I
+
+bj (μK − sK )⊤ bPj bμk
+
+ .
+
+By (37), (34), and (35), 1
+
+σ2 (μK − sK )⊤ bμk = ∥ ¯μ∥2
+
+σ2 + α2
+
+> K
+
+σ2 1{k=K} − ∆K 1{k=K} + op(1) .
+
+Together with (44), this yields 
+
+D+,n (w) = 
+
+> K
+
+X
+
+> k=1
+
+wk
+
+ ∥ ¯μ∥2
+
+σ2 − X
+
+> j∈I
+
+λj
+
+1 + λj
+
+aj
+
+( ¯ μ⊤vj )2
+
+σ2 + α2
+
+> K
+
+σ2 1{k=K} − ∆K 1{k=K}
+
+ + op(1) .
+
+By the definition of up,
+
+D+,n (w) = u⊤ 
+
+> p
+
+w − wK ∆K + op(1) .
+
+This proves (30). Similarly, 
+
+D−,n (w) = ( μK + sK )⊤ bd(w) = u⊤ 
+
+> p
+
+w + wK ∆K + op(1) ,
+
+which proves (31). It remains to prove (32). Write 
+
+Vn(w) = 
+
+> K
+
+X
+
+> k,k ′=1
+
+wkwk′ bμ⊤ 
+
+> k
+
+bΣ−1Σ bΣ−1 bμk′ .
+
+Thus it suffices to show that, for each fixed k, k ′,
+
+bμ⊤ 
+
+> k
+
+bΣ−1Σ bΣ−1 bμk′ = Akk ′,p + op(1) . (46) 45 Using 
+
+Σ = σ2 Ip + X
+
+> ℓ∈I
+
+λℓPℓ
+
+!
+
+, Pℓ := vℓv⊤ 
+
+> ℓ
+
+,
+
+and 
+
+bΣ−1 = 1
+
+σ2
+
+Ip − X
+
+> j∈I
+
+bj bPj
+
+ ,
+
+we obtain 
+
+bΣ−1Σ bΣ−1 = 1
+
+σ2
+
+Ip − X
+
+> j∈I
+
+bj bPj
+
+ Ip + X
+
+> ℓ∈I
+
+λℓPℓ
+
+!
+
+Ip − X
+
+> m∈I
+
+bm bPm
+
+!
+
+. (47) Now decompose 
+
+bμk = ¯ μ + δk + ek.
+
+Since Pℓ = vℓv⊤ 
+
+> ℓ
+
+is a rank-one deterministic projector, for each fixed ℓ ∈ I we also have 
+
+δ⊤ 
+
+> k
+
+vℓp
+
+−→ 0, e⊤ 
+
+> k
+
+vℓp
+
+−→ 0, (48) and hence 
+
+δ⊤ 
+
+> k
+
+Pℓδk′ = op(1) , ¯μ⊤Pℓδk = op(1) , e⊤ 
+
+> k
+
+Pℓek′ = op(1) , ¯μ⊤Pℓek = op(1) , (49) as well as the analogous mixed terms with one δ-factor and one e-factor. Indeed, each term factors through vℓ, for example 
+
+δ⊤ 
+
+> k
+
+Pℓδk′ = ( δ⊤ 
+
+> k
+
+vℓ)( v⊤ 
+
+> ℓ
+
+δk′ ), e⊤ 
+
+> k
+
+Pℓek′ = ( e⊤ 
+
+> k
+
+vℓ)( v⊤ 
+
+> ℓ
+
+ek′ ).
+
+Therefore, by (33), (41), (42), (48), (49), and the boundedness of ∥ bΣ−1Σ bΣ−1∥, all mixed terms involving at least one factor among the δk- or ek-components are op(1), except for the pure identity contribution σ−2δ⊤ 
+
+> k
+
+δk′ and σ−2e⊤ 
+
+> k
+
+ek′ . Consequently, 
+
+bμ⊤ 
+
+> k
+
+bΣ−1Σ bΣ−1 bμk′ = ¯ μ⊤ bΣ−1Σ bΣ−1 ¯μ + 1
+
+σ2 δ⊤ 
+
+> k
+
+δk′ + 1
+
+σ2 e⊤ 
+
+> k
+
+ek′ + op(1) .
+
+By Assumption 2, 1
+
+σ2 δ⊤ 
+
+> k
+
+δk′ = α2
+
+> k
+
+σ2 1{k=k′} + op(1) ,
+
+and by (36), 1
+
+σ2 e⊤ 
+
+> k
+
+ek′ = τk1{k=k′} + op(1) .
+
+Thus it remains to evaluate ¯μ⊤ bΣ−1Σ bΣ−1 ¯μ.
+
+46 Expanding (47) between ¯ μ and itself and using bPj bPm = 1{j=m} bPj , we obtain ¯μ⊤ bΣ−1Σ bΣ−1 ¯μ = ∥ ¯μ∥2
+
+σ2 + 1
+
+σ2
+
+X
+
+> j∈I
+
+
+
+b2 
+
+> j
+
+− 2bj
+
+
+
+¯μ⊤ bPj ¯μ
+
++ 1
+
+σ2
+
+X
+
+> ℓ∈I
+
+λℓ ¯μ⊤Pℓ ¯μ
+
+− 1
+
+σ2
+
+X
+
+> ℓ,m ∈I
+
+λℓbm ¯μ⊤Pℓ bPm ¯μ
+
+− 1
+
+σ2
+
+X
+
+> j,ℓ ∈I
+
+λℓbj ¯μ⊤ bPj Pℓ ¯μ
+
++ 1
+
+σ2
+
+X
+
+> j,ℓ,m ∈I
+
+λℓbj bm ¯μ⊤ bPj Pℓ bPm ¯μ.
+
+By Theorem 1 and polarization, ¯μ⊤ bPj ¯μ = aj ( ¯ μ⊤vj )2 + op(1) ,
+
+¯μ⊤Pℓ bPm ¯μ = am 1{ℓ=m}( ¯ μ⊤vm)2 + op(1) ,
+
+¯μ⊤ bPj Pℓ ¯μ = aj 1{j=ℓ}( ¯ μ⊤vj )2 + op(1) ,
+
+and ¯μ⊤ bPj Pℓ bPm ¯μ = a2 
+
+> j
+
+1{j=ℓ=m}( ¯ μ⊤vj )2 + op(1) .
+
+Therefore ¯μ⊤ bΣ−1Σ bΣ−1 ¯μ = ∥ ¯μ∥2
+
+σ2 + 1
+
+σ2
+
+X
+
+> j∈I
+
+(b2 
+
+> j
+
+− 2bj )aj + λj − 2λj bj aj + λj b2 
+
+> j
+
+a2
+
+> j
+
+ ( ¯ μ⊤vj )2 + op(1) .
+
+By the definition of bj and cj ,
+
+cj = ( b2 
+
+> j
+
+− 2bj )aj + λj − 2λj bj aj + λj b2 
+
+> j
+
+a2 
+
+> j
+
+.
+
+Hence ¯μ⊤ bΣ−1Σ bΣ−1 ¯μ = ∥ ¯μ∥2
+
+σ2 + X
+
+> j∈I
+
+cj
+
+( ¯ μ⊤vj )2
+
+σ2 + op(1) .
+
+Combining the previous displays, we conclude that 
+
+bμ⊤ 
+
+> k
+
+bΣ−1Σ bΣ−1 bμk′ = ∥ ¯μ∥2
+
+σ2 + X
+
+> j∈I
+
+cj
+
+( ¯ μ⊤vj )2
+
+σ2 +
+
+ α2
+
+> k
+
+σ2 + τk
+
+
+
+1{k=k′} + op(1) .
+
+By the definition of Akk ′,p , this proves (46), and hence (32). Finally, (30), (31), and (32) imply 
+
+D+,n (w)2pVn(w) = u⊤ 
+
+> p
+
+w − wK ∆K
+
+2pw⊤Apw + op(1) , D−,n (w)2pVn(w) = u⊤ 
+
+> p
+
+w + wK ∆K
+
+2pw⊤Apw + op(1) ,
+
+47 because w̸ = 0 and Ap is positive definite by Lemma 4. Substituting the above into (29) and using the continuity of Φ, we obtain (7). This completes the proof. 
+
+A.3 Proof of Proposition 1 
+
+For a fixed scalar adjustment t, the preceding proof remains unchanged except that the two margin terms are replaced by 
+
+D(t)+,n (w) = D+,n (w) + 2 t, D(t)
+
+> −,n
+
+(w) = D−,n (w) − 2t. 
+
+Thus Err t(w) = 12 Φ − D−,n (w) − 2t
+
+2pVn(w)
+
+!
+
++ 12 Φ − D+,n (w) + 2 t
+
+2pVn(w)
+
+!
+
+.
+
+On the event D+,n (w) + D−,n (w) > 0, differentiating the last display with respect to t shows that its unique minimizer is 
+
+bt∗
+
+> p
+
+(w) = 14 {D−,n (w) − D+,n (w)}.
+
+Since u⊤ 
+
+> p
+
+w > 0, (30) and (31) imply 
+
+D+,n (w) + D−,n (w) = 2 u⊤ 
+
+> p
+
+w + op(1) > 0with probability tending to one. Moreover, 
+
+bt∗
+
+> p
+
+(w) = 12 wK ∆K + op(1) = 12 wK b∆K + op(1) ,
+
+because b∆K → ∆K . Substituting this minimizer into the margin representation and using (30), (31), and (32) yields Err bt∗
+
+> p(w)
+
+(w) − Φ − u⊤ 
+
+> p
+
+w
+
+2pw⊤Apw
+
+!
+
+→ 0in probability. This completes the proof. 
+
+A.4 Proof of Corollary 1 
+
+By Proposition 1, the deterministic equivalent of the target-domain Gaussian-calibrated error under the optimal intercept is Φ − u⊤ 
+
+> p
+
+w
+
+2pw⊤Apw
+
+!
+
+.
+
+Since Φ is strictly increasing, minimizing this quantity is equivalent to maximizing 
+
+u⊤ 
+
+> p
+
+w
+
+pw⊤Apw
+
+48 over all w̸ = 0. This criterion is invariant under positive rescaling of w. Therefore the oracle weight is identifiable only up to a positive scalar multiple. By Lemma 4, Ap is positive definite. Therefore, the Cauchy–Schwarz inequality under the 
+
+Ap-inner product gives 
+
+u⊤ 
+
+> p
+
+w = ( A−1/2 
+
+> p
+
+up)⊤(A1/2 
+
+> p
+
+w) ≤
+
+q
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up
+
+q
+
+w⊤Apw.
+
+Hence u⊤ 
+
+> p
+
+w
+
+pw⊤Apw ≤
+
+q
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up.
+
+Equality holds if and only if 
+
+A1/2 
+
+> p
+
+w ∝ A−1/2 
+
+> p
+
+up,
+
+or equivalently, 
+
+w ∝ A−1 
+
+> p
+
+up.
+
+Therefore the deterministic equivalent is minimized by 
+
+w∗ 
+
+> p
+
+∝ A−1 
+
+> p
+
+up.
+
+Under the normalization w⊤Apw = 1, the maximizer is uniquely determined as 
+
+w∗ 
+
+> p
+
+= A−1 
+
+> p
+
+up
+
+q
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up
+
+.
+
+This completes the proof. 
+
+A.5 Proof of Theorem 3 
+
+We first prove the consistency of the quantities used in bup and bAp. Recall that 
+
+bμk = μk + ek = ¯ μ + δk + ek.
+
+From the calculations in the proof of Theorem 2, for any fixed k̸ = ℓ,
+
+bμ⊤ 
+
+> k
+
+bμℓ = ∥ ¯μ∥2 + op(1) .
+
+Hence, since K is fixed, 
+
+bκp = 1
+
+σ2K(K − 1) 
+
+X
+
+> m̸=ℓ
+
+bμ⊤ 
+
+> m
+
+bμℓ = ∥ ¯μ∥2
+
+σ2 + op(1) .
+
+Next, for each fixed k,
+
+∥ bμk∥2 = ∥ ¯μ∥2 + ∥δk∥2 + e⊤ 
+
+> k
+
+ek + op(1) .
+
+49 By Assumption 2, 
+
+∥δk∥2 = α2 
+
+> k
+
++ op(1) ,
+
+and by the same argument used for (36), 
+
+e⊤ 
+
+> k
+
+ek = σ2
+
+ pnk, +
+
++ pnk, −
+
+
+
++ op(1) = σ2τk + op(1) .
+
+Moreover, for ℓ̸ = k,
+
+bμ⊤ 
+
+> k
+
+bμℓ = ∥ ¯μ∥2 + op(1) .
+
+Therefore 
+
+bβk = 1
+
+σ2
+
+∥ bμk∥2 − 1
+
+K − 1
+
+X
+
+> ℓ̸=k
+
+bμ⊤ 
+
+> k
+
+bμℓ
+
+ − bτk = α2
+
+> k
+
+σ2 + op(1) .
+
+We now consider the spike-projection terms. For any fixed m̸ = ℓ and j ∈ I , write 
+
+bμ⊤ 
+
+> ℓ
+
+bPj bμm = ( ¯ μ + δℓ + eℓ)⊤ bPj ( ¯ μ + δm + em).
+
+By the same argument as in (41) and Lemma 5, all terms involving at least one factor among 
+
+δℓ, δm, e ℓ, e m are op(1). Hence 
+
+bμ⊤ 
+
+> ℓ
+
+bPj bμm = ¯ μ⊤ bPj ¯μ + op(1) .
+
+By Theorem 1 and polarization, ¯μ⊤ bPj ¯μ = aj ( ¯ μ⊤vj )2 + op(1) .
+
+Therefore 
+
+bμ⊤ 
+
+> ℓ
+
+bvj bv⊤ 
+
+> j
+
+bμm = aj ( ¯ μ⊤vj )2 + op(1) .
+
+Since K and |I| are fixed, this convergence holds after finite summation. Consequently, 
+
+buk,p = ∥ ¯μ∥2
+
+σ2 − X
+
+> j∈I
+
+bj aj
+
+( ¯ μ⊤vj )2
+
+σ2 + α2
+
+> K
+
+σ2 1{k=K} + op(1) = uk,p + op(1) .
+
+Thus 
+
+bup − up → 0 in probability .
+
+Similarly, since baj → aj , using the factor 1 /baj in the definition of bAkk ′,p ,1
+
+K(K − 1) 
+
+X
+
+> m̸=ℓ
+
+1
+
+baj
+
+bμ⊤ 
+
+> ℓ
+
+bvj bv⊤ 
+
+> j
+
+bμm = ( ¯ μ⊤vj )2 + op(1) .
+
+Since bcj → cj , bτk → τk, together with the consistency of bκp and bβk, this gives 
+
+bAkk ′,p = ∥ ¯μ∥2
+
+σ2 + X
+
+> j∈I
+
+cj
+
+( ¯ μ⊤vj )2
+
+σ2 +
+
+ α2
+
+> k
+
+σ2 + τk
+
+
+
+1{k=k′} + op(1) = Akk ′,p + op(1) .
+
+50 Because K is fixed, entrywise convergence implies 
+
+bAp − Ap → 0 in probability .
+
+It remains to prove the consistency of the empirical weight. By Lemma 4, there exists a constant cA > 0 such that 
+
+λmin (Ap) ≥ cA
+
+for all sufficiently large p. Since ∥ bAp − Ap∥ → 0 in probability, Weyl’s inequality gives 
+
+P λmin ( bAp) ≥ cA/2 → 1.
+
+Thus bAp is positive definite with probability tending to one. Moreover, on this event, 
+
+bA−1 
+
+> p
+
+− A−1 
+
+> p
+
+= bA−1 
+
+> p
+
+(Ap − bAp)A−1 
+
+> p
+
+,
+
+and therefore 
+
+bA−1 
+
+> p
+
+− A−1 
+
+> p
+
+→ 0 in probability .
+
+Hence 
+
+bA−1 
+
+> p
+
+bup − A−1 
+
+> p
+
+up → 0 in probability .
+
+Also, 
+
+bu⊤ 
+
+> p
+
+bA−1 
+
+> p
+
+bup − u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up → 0 in probability .
+
+Since ∥up∥ ≥ cu and λmax (Ap) = O(1), there exists a constant c′ > 0 such that 
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up ≥ c′.
+
+Thus the denominator in bw∗ 
+
+> p
+
+is bounded away from zero with probability tending to one. There-fore, by the continuous mapping theorem, 
+
+bw∗ 
+
+> p
+
+=
+
+bA−1 
+
+> p
+
+bup
+
+qbu⊤ 
+
+> p
+
+bA−1 
+
+> p
+
+bup
+
+→ A−1 
+
+> p
+
+up
+
+q
+
+u⊤ 
+
+> p
+
+A−1 
+
+> p
+
+up
+
+= w∗
+
+> p
+
+in probability. This completes the proof. 
+
+A.6 Proof of Theorem 4 
+
+Lemma 6. For each fixed domain k ∈ { 1, . . . , K }, let 
+
+bPj,k := bvj,k bv⊤
+
+> j,k
+
+, Pj,k := vj,k v⊤
+
+> j,k
+
+, j ∈ I k.
+
+Under Assumptions 1, 2, 4, 6 and 7, for any deterministic vectors x, y ∈ Rp with bounded Euclidean norms, 
+
+x⊤ bPj,k y = aj,k x⊤Pj,k y + op(1) = aj,k (x⊤vj,k )( y⊤vj,k ) + op(1) , j ∈ I k.
+
+51 Proof. For each fixed domain k, the proof of Theorem 1 can be repeated verbatim for the within-domain sample covariance matrix Sn,k , with ( Σ, γ, λ j , vj , bvj ) replaced by ( Σk, γ k, λ j,k , vj,k , bvj,k ). Hence, for every deterministic unit vector ξ ∈ Rp,
+
+ξ⊤ bPj,k ξ = ξ⊤ bvj,k bv⊤
+
+> j,k
+
+ξ p
+
+−→ aj,k ξ⊤vj,k v⊤
+
+> j,k
+
+ξ.
+
+Now apply polarization: 
+
+x⊤ bPj,k y = 14
+
+h
+
+(x + y)⊤ bPj,k (x + y) − (x − y)⊤ bPj,k (x − y)
+
+i
+
+.
+
+The same identity holds with bPj,k replaced by Pj,k . Since ∥x ± 1y∥ = O(1), the desired conclusion follows. 
+
+Lemma 7. For each domain k = 1 , . . . , K , define 
+
+ek := bμk − μk, sk := ( bμ+1 ,k − μ+1 ,k ) + ( bμ−1,k − μ−1,k ).
+
+Under Assumptions 1, 2, 4, 6 and 7, for every fixed k ∈ { 1, . . . , K } and every fixed j ∈ I k,
+
+e⊤ 
+
+> k
+
+bvj,k p
+
+−→ 0, s⊤ 
+
+> k
+
+bvj,k p
+
+−→ 0.
+
+Consequently, 
+
+e⊤ 
+
+> k
+
+bPj,k ek = op(1) , s⊤ 
+
+> k
+
+bPj,k sk = op(1) , s⊤ 
+
+> k
+
+bPj,k ek = op(1) .
+
+Proof. The proof is exactly the same as that of Lemma 5, applied within domain k. Indeed, under Assumption 1, 
+
+ek = Σ1/2 
+
+> k
+
+( ¯ zk, + − ¯zk, −), sk = Σ1/2 
+
+> k
+
+( ¯ zk, + + ¯ zk, −),
+
+where ¯ zk, ±1 are the whitened sample means in domain k. Repeating the contour-projector argument in Lemma 5 for the within-domain sample covariance matrix Sn,k we obtain 
+
+e⊤ 
+
+> k
+
+bvj,k p
+
+−→ 0, s⊤ 
+
+> k
+
+bvj,k p
+
+−→ 0.
+
+The projector conclusions follow immediately from 
+
+e⊤ 
+
+> k
+
+bPj,k ek = ( e⊤ 
+
+> k
+
+bvj,k )2, s⊤ 
+
+> k
+
+bPj,k sk = ( s⊤ 
+
+> k
+
+bvj,k )2, s⊤ 
+
+> k
+
+bPj,k ek = ( s⊤ 
+
+> k
+
+bvj,k )( e⊤ 
+
+> k
+
+bvj,k ).
+
+Lemma 8. Under Assumptions 1, 2, 4, 6 and 7, let 
+
+bPj,k := bvj,k bv⊤
+
+> j,k
+
+, Pj,k := vj,k v⊤
+
+> j,k
+
+, mj,k := ¯ μ⊤vj,k , ρ(k,k ′) 
+
+> jℓ
+
+:= v⊤
+
+> j,k
+
+vℓ,k ′ .
+
+52 Then, for any fixed k, k ′ ∈ { 1, . . . , K }, j ∈ I k, m ∈ I k′ , and ℓ ∈ I K ,
+
+¯μ⊤ bPj,k ¯μ = aj,k m2 
+
+> j,k
+
++ op(1) ,
+
+¯μ⊤ bPj,k Pℓ,K ¯μ = aj,k mj,k ρ(k,K ) 
+
+> jℓ
+
+mℓ,K + op(1) ,
+
+¯μ⊤Pℓ,K bPm,k ′ ¯μ = am,k ′ mℓ,K ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′ + op(1) ,
+
+¯μ⊤ bPj,k Pℓ,K bPm,k ′ ¯μ = aj,k am,k ′ mj,k ρ(k,K ) 
+
+> jℓ
+
+ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′ + op(1) .
+
+Moreover, 
+
+¯μ⊤ bPj,k bPm,k ′ ¯μ =
+
+
+
+aj,k 1{j=m} m2 
+
+> j,k
+
++ op(1) , k = k′,aj,k am,k ′ mj,k ρ(k,k ′) 
+
+> jm
+
+mm,k ′ + op(1) , k̸ = k′.
+
+Proof. The first display is Lemma 6 with x = y = ¯ μ. For the second display, apply Lemma 6 with 
+
+x = ¯ μ, y = Pℓ,K ¯μ = ( ¯ μ⊤vℓ,K )vℓ,K = mℓ,K vℓ,K .
+
+Then ¯μ⊤ bPj,k Pℓ,K ¯μ = aj,k ( ¯ μ⊤vj,k )( v⊤
+
+> j,k
+
+Pℓ,K ¯μ) + op(1) .
+
+Since 
+
+v⊤
+
+> j,k
+
+Pℓ,K ¯μ = ( v⊤
+
+> j,k
+
+vℓ,K )( v⊤ 
+
+> ℓ,K
+
+¯μ) = ρ(k,K ) 
+
+> jℓ
+
+mℓ,K ,
+
+the second display follows. The third display is analogous. For the fourth display, use the factorization ¯μ⊤ bPj,k Pℓ,K bPm,k ′ ¯μ =   ¯μ⊤ bPj,k vℓ,K 
+
+  v⊤ 
+
+> ℓ,K
+
+bPm,k ′ ¯μ.
+
+By Lemma 6, ¯μ⊤ bPj,k vℓ,K = aj,k mj,k ρ(k,K ) 
+
+> jℓ
+
++ op(1) ,
+
+and 
+
+v⊤ 
+
+> ℓ,K
+
+bPm,k ′ ¯μ = am,k ′ ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′ + op(1) .
+
+Multiplying the two displays yields ¯μ⊤ bPj,k Pℓ,K bPm,k ′ ¯μ = aj,k am,k ′ mj,k ρ(k,K ) 
+
+> jℓ
+
+ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′ + op(1) .
+
+It remains to prove the last display. If k = k′, then the sample eigenvectors bvj,k and bvm,k 
+
+are orthonormal, so 
+
+bPj,k bPm,k = 1{j=m} bPj,k .
+
+Hence ¯μ⊤ bPj,k bPm,k ¯μ = 1{j=m} ¯μ⊤ bPj,k ¯μ = aj,k 1{j=m} m2 
+
+> j,k
+
++ op(1) ,
+
+by the first display. If k̸ = k′, condition on the data from domain k′. Then bPm,k ′ ¯μ is fixed relative to the randomness from domain k, is independent of bPj,k , and has norm bounded by ∥ ¯μ∥. Hence the 53 same polarization argument as in Lemma 6, applied conditionally, gives ¯μ⊤ bPj,k bPm,k ′ ¯μ = aj,k ( ¯ μ⊤vj,k ) v⊤ 
+
+> j,k
+
+bPm,k ′ ¯μ + op(1) .
+
+Applying Lemma 6 again, now in domain k′, with x = vj,k and y = ¯ μ, yields 
+
+v⊤ 
+
+> j,k
+
+bPm,k ′ ¯μ = am,k ′ (v⊤
+
+> j,k
+
+vm,k ′ )( v⊤ 
+
+> m,k ′
+
+¯μ) + op(1) = am,k ′ ρ(k,k ′) 
+
+> jm
+
+mm,k ′ + op(1) .
+
+Substituting this into the previous display gives ¯μ⊤ bPj,k bPm,k ′ ¯μ = aj,k am,k ′ mj,k ρ(k,k ′) 
+
+> jm
+
+mm,k ′ + op(1) .
+
+This completes the proof. 
+
+Lemma 9. Under Assumptions 1, 2, 4, 6 and 7, the matrix AEp is positive definite for all sufficiently large p. More precisely, there exists a constant cE > 0 such that 
+
+λmin (AEp ) ≥ cE
+
+for all sufficiently large p.Proof. Since 0 < a j,k < 1, enlarge the Euclidean space if necessary and choose orthonormal vectors {fj,k : j ∈ I k, 1 ≤ k ≤ K} orthogonal to Rp. Define 
+
+gj,k = aj,k vj,k +
+
+q
+
+aj,k (1 − aj,k ) fj,k .
+
+Then 
+
+⟨gj,k , gℓ,k ′ ⟩ =
+
+
+
+aj,k 1{j=ℓ}, k = k′,aj,k aℓ,k ′ ρ(k,k ′) 
+
+> jℓ
+
+, k̸ = k′,
+
+⟨ ¯μ, gj,k ⟩ = aj,k mj,k .
+
+Set 
+
+hk = ¯ μ − X
+
+> j∈I k
+
+bj,k mj,k gj,k .
+
+Then 
+
+⟨hk, hk′ ⟩ = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′
+
++ m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′ .
+
+For ℓ ∈ I K ,
+
+⟨vℓ,K , hk⟩ = mℓ,K −  RKk Dkmk
+
+ 
+
+> ℓ
+
+= ( qk)ℓ.
+
+Let 
+
+NK = I + X
+
+> ℓ∈I K
+
+λℓ,K vℓ,K v⊤ 
+
+> ℓ,K
+
+.
+
+Since λℓ,K > −1, NK is positive definite. Moreover, 
+
+⟨hk, NK hk′ ⟩ = ⟨hk, hk′ ⟩ + X
+
+> ℓ∈I K
+
+λℓ,K (qk)ℓ(qk′ )ℓ
+
+= Ω Ekk ′,p .
+
+54 Thus ΩEp = (Ω Ekk ′,p )1≤k,k ′≤K is positive semidefinite. For any w ∈ RK , let 
+
+ew = ( ew1, . . . , ewK )⊤, ewk = wk
+
+σ2
+
+> k
+
+.
+
+Then 
+
+w⊤AEp w = σ2 
+
+> K
+
+ew⊤ΩEp ew +
+
+> K
+
+X
+
+> k=1
+
+ σ2 
+
+> K
+
+α2
+
+> k
+
+σ4
+
+> k
+
++ τk
+
+σ2
+
+> K
+
+σ2
+
+> k
+
+
+
+w2
+
+> k
+
+≥
+
+> K
+
+X
+
+> k=1
+
+τk
+
+σ2
+
+> K
+
+σ2
+
+> k
+
+w2
+
+> k
+
+.
+
+Since K is fixed, τk > 0, and the σ2
+
+> k
+
+’s are uniformly bounded away from zero and infinity, there exists a constant cE > 0 such that 
+
+w⊤AEp w ≥ cE ∥w∥2.
+
+Therefore, 
+
+λmin (AEp ) ≥ cE
+
+for all sufficiently large p.Next, we formally begin the proof of Theorem 4. For k = 1 , . . . , K , write 
+
+ηk, ±1 := bμ±1,k − μ±1,k , ek := bμk − μk = ηk, + − ηk, −, sk := ηk, + + ηk, −.
+
+Then 
+
+bμk = μk + ek, 2μ+1 ,K − bμ+1 ,K − bμ−1,K = μK − sK ,
+
+and 
+
+bμ+1 ,K + bμ−1,K − 2μ−1,K = μK + sK .
+
+By construction, 
+
+bdE (w) = 
+
+> K
+
+X
+
+> k=1
+
+wk bdEk , bdEk = bΣ−1 
+
+> k
+
+bμk,
+
+and the empirical intercept is 
+
+bbEK (w) = − bdE (w)⊤ bμ+1 ,K + bμ−1,K 
+
+2 .
+
+Define 
+
+V En (w) := bdE (w)⊤ΣK bdE (w),
+
+and 
+
+DE
+
+> +,n
+
+(w) :=  2μ+1 ,K − bμ+1 ,K − bμ−1,K 
+
+⊤ bdE (w),DE
+
+> −,n
+
+(w) :=   bμ+1 ,K + bμ−1,K − 2μ−1,K 
+
+⊤ bdE (w).
+
+Then 
+
+−  bdE (w)⊤μ+1 ,K + bbEK (w) = − 12 DE
+
+> +,n
+
+(w),
+
+55 and 
+
+bdE (w)⊤μ−1,K + bbEK (w) = − 12 DE
+
+> −,n
+
+(w).
+
+Hence Err E (w) = 12 Φ − DE
+
+> −,n
+
+(w)2pV En (w)
+
+!
+
++ 12 Φ − DE
+
+> +,n
+
+(w)2pV En (w)
+
+!
+
+. (50) Therefore it suffices to prove that 
+
+DE
+
+> +,n
+
+(w) = ( uEp )⊤w − wK ∆K + op(1) , (51) 
+
+DE
+
+> −,n
+
+(w) = ( uEp )⊤w + wK ∆K + op(1) , (52) 
+
+V En (w) = w⊤AEp w + op(1) . (53) We first record several elementary consequences of Assumptions 1, 2, 4, and 6. Since 
+
+μk = ¯ μ + δk, E∥δk∥2 = α2
+
+> k
+
+,
+
+we have ∥μk∥ = Op(1) and ∥ bμk∥ = Op(1) for each fixed k. Moreover, for fixed k, k ′,
+
+μ⊤ 
+
+> K
+
+ek = op(1) , μ⊤ 
+
+> K
+
+sK = op(1) , s⊤ 
+
+> K
+
+μk = op(1) , (54) 1
+
+σ2
+
+> k
+
+s⊤ 
+
+> K
+
+ek = ∆ K 1{k=K} + op(1) , (55) 
+
+e⊤ 
+
+> k
+
+ek′ = τkσ2 
+
+> k
+
+1{k=k′} + op(1) , (56) 
+
+μ⊤ 
+
+> K
+
+μk = ∥ ¯μ∥2 + α2 
+
+> K
+
+1{k=K} + op(1) . (57) Indeed, the above relations follow from standard second-moment calculations, using that each classwise sample-mean noise has covariance Var( ηk, ±1) = 1
+
+nk, ±1
+
+Σk.
+
+Also, 
+
+ek = ηk, + − ηk, −, Var( ek) = 
+
+ 1
+
+nk, +
+
++ 1
+
+nk, −
+
+
+
+Σk,
+
+which gives (56). Moreover, 
+
+s⊤ 
+
+> K
+
+eK = ∥ηK, +∥2 − ∥ ηK, −∥2,
+
+and hence (55) follows by concentration of the two classwise squared norms. Finally, (57) follows from Assumption 2. Next, by (18), 
+
+bΣk = σ2
+
+> k
+
+Ip + X
+
+> j∈I k
+
+λj,k bPj,k 
+
+ , bPj,k := bvj,k bv⊤
+
+> j,k
+
+.
+
+56 Since the projectors bPj,k are mutually orthogonal, 
+
+bΣ−1 
+
+> k
+
+= 1
+
+σ2
+
+> k
+
+Ip − X
+
+> j∈I k
+
+bj,k bPj,k 
+
+ ,
+
+and hence 
+
+bdEk = 1
+
+σ2
+
+> k
+
+ b μk − X
+
+> j∈I k
+
+bj,k bPj,k bμk
+
+ . (58) We now analyze the spike-projector terms. By Lemma 6, 
+
+x⊤ bPj,k y = aj,k (x⊤vj,k )( y⊤vj,k ) + op(1) (59) for any deterministic vectors x, y with bounded Euclidean norms. In particular, ¯μ⊤ bPj,k ¯μ = aj,k m2 
+
+> j,k
+
++ op(1) . (60) Also, for any fixed a ∈ { 1, . . . , K }, since δa is independent of the training data and 
+
+E (δ⊤ 
+
+> a
+
+bvj,k )2 | bvj,k 
+
+ = α2
+
+> a
+
+p ,
+
+we have 
+
+δ⊤ 
+
+> a
+
+bvj,k p
+
+−→ 0, δ⊤ 
+
+> a
+
+bPj,k δb = op(1) , ¯μ⊤ bPj,k δa = op(1) . (61) Furthermore, by Lemma 7, 
+
+e⊤ 
+
+> k
+
+bvj,k p
+
+−→ 0, e⊤ 
+
+> k
+
+bPj,k ek = op(1) , ¯μ⊤ bPj,k ek = op(1) . (62) Moreover, for any fixed a, k ∈ { 1, . . . , K } and j ∈ I k,
+
+e⊤ 
+
+> a
+
+bvj,k p
+
+−→ 0.
+
+If a = k, this is Lemma 7; if a̸ = k, then ea is independent of bvj,k , and 
+
+E
+
+h
+
+(e⊤ 
+
+> a
+
+bvj,k )2 | bvj,k 
+
+i
+
+=
+
+ 1
+
+na, +
+
++ 1
+
+na, −
+
+bv⊤
+
+> j,k
+
+Σa bvj,k = O(n−1 
+
+> a, +
+
++ n−1
+
+> a, −
+
+),
+
+which implies the claim. If k = K, Lemma 7 also gives 
+
+s⊤ 
+
+> K
+
+bvj,K p
+
+−→ 0.
+
+If k̸ = K, then sK is independent of bvj,k , and 
+
+E (s⊤ 
+
+> K
+
+bvj,k )2 | bvj,k 
+
+ =
+
+ 1
+
+nK, +
+
++ 1
+
+nK, −
+
+bv⊤
+
+> j,k
+
+ΣK bvj,k = O(n−1 
+
+> K, +
+
++ n−1
+
+> K, −
+
+),
+
+so again 
+
+s⊤ 
+
+> K
+
+bvj,k p
+
+−→ 0. (63) 57 Combining (60), (61), (62), and (63), we obtain, for each fixed k and j ∈ I k,(μK − sK )⊤ bPj,k bμk = aj,k m2 
+
+> j,k
+
++ op(1) , (64) and likewise (μK + sK )⊤ bPj,k bμk = aj,k m2 
+
+> j,k
+
++ op(1) . (65) We now prove (51). By (58), 
+
+DE
+
+> +,n
+
+(w) = ( μK − sK )⊤ bdE (w)=
+
+> K
+
+X
+
+> k=1
+
+wk
+
+σ2
+
+> k
+
+(μK − sK )⊤ bμk − X
+
+> j∈I k
+
+bj,k (μK − sK )⊤ bPj,k bμk
+
+ .
+
+By (57), (54), and (55), 1
+
+σ2
+
+> k
+
+(μK − sK )⊤ bμk = ∥ ¯μ∥2
+
+σ2
+
+> k
+
++ α2
+
+> K
+
+σ2
+
+> K
+
+1{k=K} − ∆K 1{k=K} + op(1) .
+
+Together with (64), this yields 
+
+DE
+
+> +,n
+
+(w) = 
+
+> K
+
+X
+
+> k=1
+
+wk
+
+" ∥ ¯μ∥2 − P 
+
+> j∈I k
+
+bj,k aj,k m2
+
+> j,k
+
+σ2
+
+> k
+
++ α2
+
+> K
+
+σ2
+
+> K
+
+1{k=K} − ∆K 1{k=K}
+
+#
+
++ op(1) .
+
+Hence 
+
+DE
+
+> +,n
+
+(w) = ( uEp )⊤w − wK ∆K + op(1) .
+
+Similarly, 
+
+DE
+
+> −,n
+
+(w) = ( uEp )⊤w + wK ∆K + op(1) ,
+
+which proves (52). It remains to prove (53). Write 
+
+V En (w) = 
+
+> K
+
+X
+
+> k,k ′=1
+
+wkwk′ T Ekk ′,n ,
+
+where 
+
+T Ekk ′,n := bμ⊤ 
+
+> k
+
+bΣ−1 
+
+> k
+
+ΣK bΣ−1 
+
+> k′
+
+bμk′ .
+
+Thus it suffices to show that, for each fixed k, k ′,
+
+T Ekk ′,n = AEkk ′,p + op(1) . (66) Define 
+
+Mk := Ip − X
+
+> j∈I k
+
+bj,k bPj,k , NK := Ip + X
+
+> ℓ∈I K
+
+λℓ,K Pℓ,K .
+
+Then 
+
+bΣ−1 
+
+> k
+
+= 1
+
+σ2
+
+> k
+
+Mk, ΣK = σ2 
+
+> K
+
+NK ,
+
+58 and therefore 
+
+T Ekk ′,n = σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+bμ⊤ 
+
+> k
+
+MkNK Mk′ bμk′ . (67) Now decompose 
+
+bμk = ¯ μ + δk + ek, bμk′ = ¯ μ + δk′ + ek′ .
+
+Since each bPj,k and Pℓ,K is rank one, every mixed term involving at least one factor among 
+
+δk, e k, δk′ , e k′ factors through an inner product of one of these random vectors with either a sample eigenvector bvj,k , bvm,k ′ or a deterministic spike direction vℓ,K . By (61), (62), and the deterministic bounds 
+
+δ⊤ 
+
+> a
+
+vℓ,K p
+
+−→ 0, e⊤ 
+
+> a
+
+vℓ,K p
+
+−→ 0 (a ∈ { k, k ′}),
+
+all such mixed terms are op(1), except for the pure identity contributions δ⊤ 
+
+> k
+
+δk′ and e⊤ 
+
+> k
+
+ek′ .Consequently, 
+
+T Ekk ′,n = σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+¯μ⊤MkNK Mk′ ¯μ + σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+δ⊤ 
+
+> k
+
+δk′ + σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+e⊤ 
+
+> k
+
+ek′ + op(1) . (68) We next evaluate the deterministic principal term. First, ¯μ⊤MkMk′ ¯μ
+
+=∥ ¯μ∥2 − X
+
+> j∈I k
+
+bj,k ¯μ⊤ bPj,k ¯μ − X
+
+> m∈I k′
+
+bm,k ′ ¯μ⊤ bPm,k ′ ¯μ + X
+
+> j∈I k
+
+X
+
+> m∈I k′
+
+bj,k bm,k ′ ¯μ⊤ bPj,k bPm,k ′ ¯μ.
+
+By the first and the last displays of Lemma 8, ¯μ⊤MkMk′ ¯μ = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′ + m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′ + op(1) . (69) Next, expand the target-spike part: ¯μ⊤Mk
+
+ X
+
+> ℓ∈I K
+
+λℓ,K Pℓ,K 
+
+ Mk′ ¯μ
+
+= X
+
+> ℓ∈I K
+
+λℓ,K ¯μ⊤Pℓ,K ¯μ − X
+
+> j∈I k
+
+X
+
+> ℓ∈I K
+
+λℓ,K bj,k ¯μ⊤ bPj,k Pℓ,K ¯μ
+
+− X
+
+> ℓ∈I K
+
+X
+
+> m∈I k′
+
+λℓ,K bm,k ′ ¯μ⊤Pℓ,K bPm,k ′ ¯μ
+
++ X
+
+> j∈I k
+
+X
+
+> ℓ∈I K
+
+X
+
+> m∈I k′
+
+λℓ,K bj,k bm,k ′ ¯μ⊤ bPj,k Pℓ,K bPm,k ′ ¯μ.
+
+By the second, third, and fourth displays of Lemma 8, this becomes ¯μ⊤Mk
+
+ X
+
+> ℓ∈I K
+
+λℓ,K Pℓ,K 
+
+ Mk′ ¯μ = q⊤ 
+
+> k
+
+ΛK qk′ + op(1) . (70) 59 Combining (69) and (70), we obtain ¯μ⊤MkNK Mk′ ¯μ = Ω Ekk ′,p + op(1) . (71) Finally, by Assumption 2, 
+
+δ⊤ 
+
+> k
+
+δk′ = α2
+
+> k
+
+1{k=k′} + op(1) ,
+
+and by (56), 
+
+e⊤ 
+
+> k
+
+ek′ = τkσ2 
+
+> k
+
+1{k=k′} + op(1) .
+
+Substituting these together with (71) into (68), we conclude that 
+
+T Ekk ′,n = σ2
+
+> K
+
+σ2
+
+> k
+
+σ2
+
+> k′
+
+ΩEkk ′,p +
+
+ σ2 
+
+> K
+
+α2
+
+> k
+
+σ4
+
+> k
+
++ τk
+
+σ2
+
+> K
+
+σ2
+
+> k
+
+
+
+1{k=k′} + op(1) .
+
+By the definition of AEkk ′,p , this proves (66), and hence (53). Therefore, 
+
+DE
+
+> +,n
+
+(w)2pV En (w) = (uEp )⊤w − wK ∆K
+
+2
+
+q
+
+w⊤AEp w
+
++ op(1) , DE
+
+> −,n
+
+(w)2pV En (w) = (uEp )⊤w + wK ∆K
+
+2
+
+q
+
+w⊤AEp w
+
++ op(1) ,
+
+because w̸ = 0 and AEp is positive definite by Lemma 9. Substituting the above into (50) and using the continuity of Φ, we obtain (20). This completes the proof. 
+
+A.7 Proof of Proposition 2 
+
+For a fixed scalar adjustment t, the proof of Theorem 4 gives the modified margins 
+
+DE, (t)+,n (w) = DE
+
+> +,n
+
+(w) + 2 t, DE, (t) 
+
+> −,n
+
+(w) = DE
+
+> −,n
+
+(w) − 2t. 
+
+Therefore Err Et (w) = 12 Φ − DE
+
+> −,n
+
+(w) − 2t
+
+2pV En (w)
+
+!
+
++ 12 Φ − DE
+
+> +,n
+
+(w) + 2 t
+
+2pV En (w)
+
+!
+
+.
+
+On the event DE
+
+> +,n
+
+(w) + DE
+
+> −,n
+
+(w) > 0, differentiating the last display with respect to t shows that its unique minimizer is 
+
+bt∗ 
+
+> p,E
+
+(w) = 14 {DE
+
+> −,n
+
+(w) − DE
+
+> +,n
+
+(w)}.
+
+Since ( uEp )⊤w > 0, (51) and (52) imply 
+
+DE
+
+> +,n
+
+(w) + DE
+
+> −,n
+
+(w) = 2( uEp )⊤w + op(1) > 0with probability tending to one. Moreover, 
+
+bt∗ 
+
+> p,E
+
+(w) = 12 wK ∆K + op(1) = 12 wK b∆K + op(1) ,
+
+60 because b∆K → ∆K . Substituting this minimizer into the margin representation and using (51), (52), and (53) yields Err E 
+
+> bt∗
+> p,E (w)
+
+(w) − Φ
+
+− (uEp )⊤w
+
+2
+
+q
+
+w⊤AEp w
+
+ → 0in probability. This completes the proof. 
+
+A.8 Proof of Corollary 2 
+
+By Proposition 2, the deterministic equivalent of the target-domain Gaussian-calibrated error under the optimal intercept is Φ
+
+− (uEp )⊤w
+
+2
+
+q
+
+w⊤AEp w
+
+ .
+
+Since Φ is strictly increasing, minimizing this quantity is equivalent to maximizing (uEp )⊤w
+
+q
+
+w⊤AEp w
+
+over all w̸ = 0. This criterion is invariant under positive rescaling of w. Therefore the oracle weight is identifiable only up to a positive scalar multiple. By Lemma 9, AEp is positive definite. Therefore, the Cauchy–Schwarz inequality under the 
+
+AEp -inner product gives (uEp )⊤w =  (AEp )−1/2uEp
+
+⊤ (AEp )1/2w ≤
+
+q
+
+(uEp )⊤(AEp )−1uEp
+
+q
+
+w⊤AEp w.
+
+Hence (uEp )⊤w
+
+q
+
+w⊤AEp w
+
+≤
+
+q
+
+(uEp )⊤(AEp )−1uEp .
+
+Equality holds if and only if (AEp )1/2w ∝ (AEp )−1/2uEp ,
+
+or equivalently, 
+
+w ∝ (AEp )−1uEp .
+
+Therefore the deterministic equivalent is minimized by 
+
+w∗ 
+
+> p,E
+
+∝ (AEp )−1uEp .
+
+Under the normalization w⊤AEp w = 1, the unique maximizer is 
+
+w∗ 
+
+> p,E
+
+= (AEp )−1uEp
+
+q
+
+(uEp )⊤(AEp )−1uEp
+
+.
+
+This completes the proof. 61 A.9 Proof of Theorem 5 
+
+For convenience, for each k = 1 , . . . , K and ℓ ∈ I K , write 
+
+qk,ℓ := [ qk]ℓ = mℓ,K − X
+
+> j∈I k
+
+bj,k aj,k ρ(K,k ) 
+
+> ℓj
+
+mj,k .
+
+Then 
+
+q⊤ 
+
+> k
+
+ΛK qk′ = X
+
+> ℓ∈I K
+
+λℓ,K qk,ℓ qk′,ℓ ,
+
+and in particular 
+
+qK,ℓ = (1 − bℓ,K aℓ,K )mℓ,K .
+
+We first prove the consistency of the basic scalar quantities. From the calculations in the proof of Theorem 4, for any fixed a̸ = b,
+
+bμ⊤ 
+
+> a
+
+bμb = ∥ ¯μ∥2 + op(1) ,
+
+while for each fixed k,
+
+∥ bμk∥2 = ∥ ¯μ∥2 + α2 
+
+> k
+
++ σ2
+
+> k
+
+ pnk, +
+
++ pnk, −
+
+
+
++ op(1) = ∥ ¯μ∥2 + α2 
+
+> k
+
++ σ2
+
+> k
+
+τk + op(1) .
+
+Hence, since K is fixed, 
+
+bAp(Ip) = ∥ ¯μ∥2 + op(1) ,
+
+and 
+
+bβEk = α2 
+
+> k
+
++ op(1) , k = 1 , . . . , K. 
+
+Next fix k ∈ { 1, . . . , K }. Since 
+
+cMk = Ip − X
+
+> j∈I k
+
+bj,k bPj,k ,
+
+for any fixed a̸ = b,
+
+bμ⊤ 
+
+> a
+
+cMk bμb = bμ⊤ 
+
+> a
+
+bμb − X
+
+> j∈I k
+
+bj,k bμ⊤ 
+
+> a
+
+bPj,k bμb.
+
+As in the proof of Theorem 4, write 
+
+bμa = ¯ μ + δa + ea, bμb = ¯ μ + δb + eb.
+
+By Lemmas 6 and 7, together with the independence of δa, δb from the training data, all terms involving at least one factor among δa, δb are op(1). For the sample-mean noise terms, if a = k
+
+then Lemma 7 gives 
+
+e⊤ 
+
+> a
+
+bvj,k p
+
+−→ 0.
+
+If a̸ = k, then ea is independent of bvj,k , and 
+
+E
+
+h
+
+(e⊤ 
+
+> a
+
+bvj,k )2 | bvj,k 
+
+i
+
+=
+
+ 1
+
+na, +
+
++ 1
+
+na, −
+
+bv⊤
+
+> j,k
+
+Σa bvj,k = O(n−1 
+
+> a, +
+
++ n−1
+
+> a, −
+
+),
+
+62 so e⊤ 
+
+> a
+
+bvj,k p
+
+−→ 0. The same argument applies to eb. Hence every term involving at least one factor among ea, e b is also op(1). Therefore, for each fixed j ∈ I k,
+
+bμ⊤ 
+
+> a
+
+bPj,k bμb = ¯ μ⊤ bPj,k ¯μ + op(1) = aj,k m2 
+
+> j,k
+
++ op(1) .
+
+Hence 
+
+bμ⊤ 
+
+> a
+
+cMk bμb = ∥ ¯μ∥2 − X
+
+> j∈I k
+
+bj,k aj,k m2 
+
+> j,k
+
++ op(1) = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk + op(1) .
+
+Averaging over a̸ = b gives 
+
+bAp( cMk) = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk + op(1) .
+
+Consequently, 
+
+buEk,p = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk
+
+σ2
+
+> k
+
++ α2
+
+> K
+
+σ2
+
+> K
+
+1{k=K} + op(1) = uEk,p + op(1) .
+
+Thus 
+
+buEp − uEp → 0 in probability .
+
+We now turn to bΩEkk ′,p . Fix k, k ′ ∈ { 1, . . . , K }. Expanding 
+
+cMk cMk′ =
+
+Ip − X
+
+> j∈I k
+
+bj,k bPj,k 
+
+Ip − X
+
+> m∈I k′
+
+bm,k ′ bPm,k ′
+
+ ,
+
+we obtain, for any fixed a̸ = b,
+
+bμ⊤ 
+
+> a
+
+cMk cMk′ bμb = bμ⊤ 
+
+> a
+
+bμb − X
+
+> j∈I k
+
+bj,k bμ⊤ 
+
+> a
+
+bPj,k bμb − X
+
+> m∈I k′
+
+bm,k ′ bμ⊤ 
+
+> a
+
+bPm,k ′ bμb
+
++ X
+
+> j∈I k
+
+X
+
+> m∈I k′
+
+bj,k bm,k ′ bμ⊤ 
+
+> a
+
+bPj,k bPm,k ′ bμb.
+
+By the same reduction as above and the last display of Lemma 8, 
+
+bμ⊤ 
+
+> a
+
+bPj,k bPm,k ′ bμb = ¯ μ⊤ bPj,k bPm,k ′ ¯μ + op(1) .
+
+Hence 
+
+bμ⊤ 
+
+> a
+
+cMk cMk′ bμb = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′
+
++ m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′ + op(1) .
+
+Averaging over a̸ = b yields 
+
+bAp( cMk cMk′ ) = ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′ + m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′ + op(1) . (72) 63 Next we show that, for each fixed ℓ ∈ I K ,
+
+bΘkk ′,ℓ = qk,ℓ qk′,ℓ + op(1) . (73) Since baℓ,K → aℓ,K and aℓ,K ̸ = 0, replacing aℓ,K by baℓ,K in the normalizing factors does not change the limit. First consider the case k̸ = K and k′̸ = K. By definition, 
+
+bΘkk ′,ℓ = 1
+
+baℓ,K 
+
+bAp( cMk bPℓ,K cMk′ ).
+
+Expanding the product and arguing exactly as above, using the second, third, and fourth displays of Lemma 8, we obtain 1
+
+baℓ,K 
+
+bμ⊤ 
+
+> a
+
+cMk bPℓ,K cMk′ bμb = m2 
+
+> ℓ,K
+
+− X
+
+> j∈I k
+
+bj,k aj,k mj,k ρ(k,K ) 
+
+> jℓ
+
+mℓ,K 
+
+− X
+
+> m∈I k′
+
+bm,k ′ am,k ′ mℓ,K ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′
+
++ X
+
+> j∈I k
+
+X
+
+> m∈I k′
+
+bj,k bm,k ′ aj,k am,k ′ mj,k ρ(k,K ) 
+
+> jℓ
+
+ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′
+
++ op(1) .
+
+Since baℓ,K → aℓ,K and ρ(k,K ) 
+
+> jℓ
+
+= ρ(K,k ) 
+
+> ℓj
+
+, the right-hand side equals qk,ℓ qk′,ℓ + op(1). Averaging over a̸ = b gives 
+
+bΘkk ′,ℓ = qk,ℓ qk′,ℓ + op(1) .
+
+Next consider the case k = K, k′̸ = K. By definition, 
+
+bΘKk ′,ℓ = 1 − bℓ,K baℓ,K 
+
+baℓ,K 
+
+bAp( bPℓ,K cMk′ ).
+
+Again by Lemma 8, 1
+
+baℓ,K 
+
+bμ⊤ 
+
+> a
+
+bPℓ,K cMk′ bμb = m2 
+
+> ℓ,K
+
+− X
+
+> m∈I k′
+
+bm,k ′ am,k ′ mℓ,K ρ(K,k ′) 
+
+> ℓm
+
+mm,k ′ + op(1) = mℓ,K qk′,ℓ + op(1) .
+
+Hence 
+
+bΘKk ′,ℓ = (1 − bℓ,K baℓ,K )mℓ,K qk′,ℓ + op(1) = (1 − bℓ,K aℓ,K )mℓ,K qk′,ℓ + op(1) = qK,ℓ qk′,ℓ + op(1) .
+
+The case k̸ = K, k′ = K is identical and gives 
+
+bΘkK,ℓ = qk,ℓ qK,ℓ + op(1) .
+
+Finally, when k = k′ = K,
+
+bΘKK,ℓ = (1 − bℓ,K baℓ,K )2
+
+baℓ,K 
+
+bAp( bPℓ,K ),
+
+64 and by the first display of Lemma 8, 1
+
+baℓ,K 
+
+bμ⊤ 
+
+> a
+
+bPℓ,K bμb = m2 
+
+> ℓ,K
+
++ op(1) .
+
+Thus 
+
+bΘKK,ℓ = (1 − bℓ,K baℓ,K )2m2 
+
+> ℓ,K
+
++ op(1) = (1 − bℓ,K aℓ,K )2m2 
+
+> ℓ,K
+
++ op(1) = q2 
+
+> K,ℓ
+
++ op(1) .
+
+This proves (73) in all cases. Combining (72) and (73), we conclude that 
+
+bΩEkk ′,p = bAp( cMk cMk′ ) + X
+
+> ℓ∈I K
+
+λℓ,K bΘkk ′,ℓ 
+
+= ∥ ¯μ∥2 − m⊤ 
+
+> k
+
+Dkmk − m⊤ 
+
+> k′
+
+Dk′ mk′ + m⊤ 
+
+> k
+
+BkCkk ′ Bk′ mk′
+
++ X
+
+> ℓ∈I K
+
+λℓ,K qk,ℓ qk′,ℓ + op(1) = Ω Ekk ′,p + op(1) .
+
+Since bτk → τk, together with bβEk = α2 
+
+> k
+
++ op(1), this yields 
+
+bAEkk ′,p = AEkk ′,p + op(1) .
+
+Since K is fixed, entrywise convergence implies 
+
+bAEp − AEp → 0 in probability .
+
+It remains to prove the consistency of the empirical optimal weight. By Lemma 9, there exists a constant cE > 0 such that 
+
+λmin (AEp ) ≥ cE
+
+for all sufficiently large p. Since ∥ bAEp − AEp ∥ → 0 in probability, Weyl’s inequality gives 
+
+P
+
+
+
+λmin ( bAEp ) ≥ cE /2
+
+
+
+→ 1.
+
+Thus bAEp is positive definite with probability tending to one. Moreover, on this event, ( bAEp )−1 − (AEp )−1 = ( bAEp )−1(AEp − bAEp )( AEp )−1,
+
+and therefore ( bAEp )−1 − (AEp )−1 → 0 in probability .
+
+Hence ( bAEp )−1 buEp − (AEp )−1uEp → 0 in probability ,
+
+and also (buEp )⊤( bAEp )−1 buEp − (uEp )⊤(AEp )−1uEp → 0 in probability .
+
+65 Since ∥uEp ∥ ≥ cu and λmax (AEp ) = O(1), there exists a constant c′ > 0 such that (uEp )⊤(AEp )−1uEp ≥ c′.
+
+Thus the denominator in (24) is bounded away from zero with probability tending to one. Therefore, by the continuous mapping theorem, 
+
+bw∗ 
+
+> p,E
+
+= ( bAEp )−1 buEp
+
+q
+
+(buEp )⊤( bAEp )−1 buEp
+
+→ (AEp )−1uEp
+
+q
+
+(uEp )⊤(AEp )−1uEp
+
+= w∗
+
+> p,E
+
+in probability. This completes the proof. 66

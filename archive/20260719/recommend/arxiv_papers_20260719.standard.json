@@ -1,0 +1,346 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-19T20:29:55.065853+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 10,
+    "deep_cap": 4,
+    "deep_selected": 4,
+    "quick_candidates": 6,
+    "quick_skim_target": 4,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2607.04011v1",
+      "source": "arxiv",
+      "title": "Separating Representation from Reconstruction Enables Scalable Text Encoders",
+      "abstract": "While decoders have rapidly scaled, encoders have remained largely unchanged since BERT. We revisit this disparity by frozen backbone evaluation via probing. Under this lens, the representations of BERT encoders become increasingly $\\textit{unexploitable}$ by frozen probes, despite improved perplexity. The misalignment originates in BERT's flat design, which couples representation learning to the token reconstruction loss. We propose $\\textbf{CrossBERT}$, a two-part architecture that separates the learning of high-quality encoded representations from the rigid grounding of token reconstruction. This design further enables high masking ratios ($\\ge 50\\%$) and gradient collection over all tokens via a $\\textit{Complementary Masking Strategy}$, respectively increasing throughput by $1.5$ to $2\\times$ and sample efficiency by $2\\times$. Overall, CrossBERT demonstrates monotonic scaling and superior performance on MTEB(eng, v2) and frozen GLUE benchmarks.",
+      "authors": [
+        "Megi Dervishi",
+        "Mathurin Videau",
+        "Yann LeCun"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-07-04T20:13:38+00:00",
+      "link": "https://arxiv.org/pdf/2607.04011v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "separating representation from reconstruction for better encoders",
+      "llm_evidence_cn": "分离表示与重建以改进编码器",
+      "llm_evidence": "分离表示与重建以改进编码器",
+      "canonical_evidence": "分离表示与重建以改进编码器",
+      "llm_tldr_en": "CrossBERT separates representation learning from token reconstruction, enabling larger masking ratios and better exploitable features for text encoders.",
+      "llm_tldr_cn": "针对BERT编码器将表征学习与token重建损失耦合导致表征可利用性下降的问题，提出CrossBERT两部件架构，分离高质量表征学习与重建任务。该设计支持50%以上的掩码率，并通过互补掩码策略对所有token聚合梯度。实验表明，CrossBERT在冻结探测评估中显著优于BERT，证明了解耦表征与重建的有效性。",
+      "llm_tldr": "针对BERT编码器将表征学习与token重建损失耦合导致表征可利用性下降的问题，提出CrossBERT两部件架构，分离高质量表征学习与重建任务。该设计支持50%以上的掩码率，并通过互补掩码策略对所有token聚合梯度。实验表明，CrossBERT在冻结探测评估中显著优于BERT，证明了解耦表征与重建的有效性。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.04011v1"
+    },
+    {
+      "id": "2607.04139v1",
+      "source": "arxiv",
+      "title": "Masked Generative-Contrastive Representation Learning for Cross-Dataset EEG-Based Emotion Recognition",
+      "abstract": "Self-supervised learning (SSL) shows strong potential for cross-dataset transfer by improving feature representation and generalization. However, its application to EEG-based emotion recognition remains largely unexplored. Existing SSL methods struggle to capture the intricate spatiotemporal dependencies of EEG signals under varying channel configurations, extract fine-grained representations resilient to noise, and derive global features that generalize well across subjects. To address these challenges, we propose Masked Generative-Contrastive Representation Learning (MGCRL), a novel SSL framework specifically designed for EEG-based emotion recognition. Built upon a region-aware spatiotemporal encoder, MGCRL integrates generative and contrastive learning to achieve both fine-grained and global discriminative representations for cross-dataset generalization. MGCRL introduces three key designs: 1) a spatiotemporal encoder that incorporates region-based graph convolution to capture localized spatial and functional relationships, enhancing region-specific feature learning and mitigating the impact of varying EEG channel configurations across datasets; 2) a generative learning mechanism based on the joint embedding predictive architecture (JEPA) that utilizes masked features to capture noise robustness fine-grained representations, improving the model's capability to characterize subtle emotional states; and 3) a contrastive learning strategy that leverages masked and original features to learn temporally stable and cross-subject-invariant representations across the same stimuli, boosting emotion discrimination and cross-subject generalization. Under these designs, MGCRL exhibits remarkable ability to learn universal representation. Extensive experiments involving pretraining on the large FACED dataset and fine-tuning on multiple SEED-series datasets demonstrate the effectiveness of MGCRL.",
+      "authors": [
+        "Huqin Weng",
+        "Jiayang Huang",
+        "Yimin Wen",
+        "Jie Du",
+        "Chi-Man Vong",
+        "Chuangquan Chen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-05T06:44:17+00:00",
+      "link": "https://arxiv.org/pdf/2607.04139v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "self-supervised representation learning for EEG emotion recognition",
+      "llm_evidence_cn": "自监督表征学习用于脑电情绪识别",
+      "llm_evidence": "自监督表征学习用于脑电情绪识别",
+      "canonical_evidence": "自监督表征学习用于脑电情绪识别",
+      "llm_tldr_en": "Proposes Masked Generative-Contrastive Representation Learning (MGCRL), a self-supervised framework that captures spatiotemporal dependencies and global features for cross-dataset EEG emotion recognition.",
+      "llm_tldr_cn": "针对跨数据集脑电情绪识别中自监督方法难以捕获时空依赖和噪声鲁棒特征的问题，提出掩码生成对比表征学习MGCRL，基于区域感知时空编码器，结合掩码生成和对比学习范式，有效学习细粒度全局特征。跨数据集实验表明MGCRL显著优于现有自监督方法。",
+      "llm_tldr": "针对跨数据集脑电情绪识别中自监督方法难以捕获时空依赖和噪声鲁棒特征的问题，提出掩码生成对比表征学习MGCRL，基于区域感知时空编码器，结合掩码生成和对比学习范式，有效学习细粒度全局特征。跨数据集实验表明MGCRL显著优于现有自监督方法。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "self-supervised learning techniques for feature extraction",
+      "matched_requirement_id": "req-9",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.04139v1"
+    },
+    {
+      "id": "2607.04353v1",
+      "source": "arxiv",
+      "title": "HASSL: Hierarchy-Aware Self-Supervised Learning Framework for Single Cell Microscopy",
+      "abstract": "Hierarchical structure is common in image data, where fine-grained clusters often merge into larger, coarser semantic groups. In biological cell images, current self-supervised learning models often suppress this hierarchy, as coarse factors such as imaging modality can obscure finer morphological attributes in the latent space. We propose a hierarchy-aware self-supervised training framework to address this problem. Our method combines two components: a distillation framework with a segmentation teacher to improve morphological awareness in the latent space, and a hierarchy-aware contrastive loss based on HDBSCAN to improve decision boundaries between closely related subtypes at different hierarchical levels. Together, these components reduce the tendency of self-supervised learning to overemphasize coarse factors and instead align embeddings with semantic and morphological cues. This yields biologically meaningful sub-clusters driven by fine morphological detail. We train and evaluate our method on a curated corpus of 2.3 million single cells aggregated from 20 microscopy datasets, both labeled and unlabeled, covering 208 cell classes. Our method improves over baseline and counterpart methods, increasing average top-K accuracy by 2.8%, top-9 retrieval on the dataset with the deepest hierarchy by 6.3%, and downstream F1-score for biologically relevant drug classification from perturbed cell morphology by 7.8%.",
+      "authors": [
+        "Julius Riel",
+        "Vishwa Mohan Singh",
+        "Sai Anirudh Aryasomayajula",
+        "Anuun Chinbat",
+        "Hannes Leonhard",
+        "Moritz Ladenburger",
+        "Frederik Alexander",
+        "Vishisht Choudhary",
+        "Fabio Laredo",
+        "Giacomo Masserdotti",
+        "Thorben Prein",
+        "Carsten Marr",
+        "Amirhossein Kardoost"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-07-05T15:18:12+00:00",
+      "link": "https://arxiv.org/pdf/2607.04353v1",
+      "tags": [
+        "keyword:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "self-supervised learning for feature extraction",
+      "llm_evidence_cn": "自监督学习用于特征提取",
+      "llm_evidence": "自监督学习用于特征提取",
+      "canonical_evidence": "自监督学习用于特征提取",
+      "llm_tldr_en": "HASSL proposes a hierarchy-aware self-supervised learning framework that combines distillation and contrastive loss to improve feature extraction in hierarchical image data.",
+      "llm_tldr_cn": "针对自监督学习模型在层次结构图像数据中忽略层级关系的问题，HASSL提出了一种层次感知的自监督训练框架。通过蒸馏框架和基于HDBSCAN的层次对比损失，该方法增强了潜在空间中的形态学意识和子类型边界。实验表明，该方法在单细胞显微镜图像中显著提升了特征提取效果，为自监督学习在层次数据中的应用提供了新思路。",
+      "llm_tldr": "针对自监督学习模型在层次结构图像数据中忽略层级关系的问题，HASSL提出了一种层次感知的自监督训练框架。通过蒸馏框架和基于HDBSCAN的层次对比损失，该方法增强了潜在空间中的形态学意识和子类型边界。实验表明，该方法在单细胞显微镜图像中显著提升了特征提取效果，为自监督学习在层次数据中的应用提供了新思路。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "self-supervised learning techniques for feature extraction",
+      "matched_requirement_id": "req-9",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.04353v1"
+    },
+    {
+      "id": "2607.04422v1",
+      "source": "arxiv",
+      "title": "Full-Stack FP4: Stable LLM Pretraining with Quantized Projections, Optimizers, and Attention",
+      "abstract": "Recent NVFP4 pretraining methods mainly target transformer linear layers, leaving optimizer states, optimizer arithmetic and attention underexplored in 4-bit pipelines. This critical gap blocks stable full-stack 4-bit pretraining, as the three core modules exhibit unique numerical failure patterns: linear layers hit hard quantization noise limits with dimension-propagated error amplification; AdamW second moments are heavy-tailed non-negative values fragile to low-precision denominators; attention carries error-prone computation paths demanding strict forward-backward quantization consistency. We propose Full-Stack FP4, the first complete NVFP4 pretraining framework resolving all three stability bottlenecks via module-wise precision strategies. For linear projections, LoRA-SVD lightweight decomposition suppresses quantization noise and breaks the direct-quantization error ceiling, shrinking the linear-only loss gap from 1.40% to 0.61%. For optimizers, we design AdamW second-moment transformation for robust NVFP4 storage and fully support native NVFP4 Newton-Schulz iterations for the Root (Muon) optimizer. For attention, a mixed-precision scheme quantizes Q/K/V and backward dS while guarding vulnerable paths in BF16, paired with unified tensor reuse to sustain forward-backward alignment. We further analyze fast error accumulation in naive low-bit matrix multiplication and the extreme sensitivity of PV / dOV^T attention branches. All modules are plug-and-play with cumulative stability and efficiency improvements. Our 3B/64B-token pretraining validates near-BF16 performance with merely 1.47% loss gap, verifying feasible stable end-to-end NVFP4 LLM pretraining.",
+      "authors": [
+        "Siyu Ding",
+        "Mingchuan Ma",
+        "Jiabo Tong",
+        "Xingrun Xing",
+        "Ziming Wang",
+        "Guoqi Li"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-05T17:31:36+00:00",
+      "link": "https://arxiv.org/pdf/2607.04422v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "full-stack 4-bit pretraining framework resolving stability bottlenecks",
+      "llm_evidence_cn": "全栈4比特预训练框架解决稳定性瓶颈",
+      "llm_evidence": "全栈4比特预训练框架解决稳定性瓶颈",
+      "canonical_evidence": "全栈4比特预训练框架解决稳定性瓶颈",
+      "llm_tldr_en": "Full-Stack FP4 enables stable 4-bit pretraining of LLMs by addressing numerical issues in linear layers, optimizer states, and attention.",
+      "llm_tldr_cn": "现有4比特预训练方法主要针对线性层，忽略了优化器状态和注意力模块的数值不稳定性。本文提出Full-Stack FP4框架，通过模块级精度适配同时解决了三个核心模块的数值崩溃问题，实现了首个完整的NVFP4预训练流水线，显著降低了预训练的比特数而不损失模型质量。",
+      "llm_tldr": "现有4比特预训练方法主要针对线性层，忽略了优化器状态和注意力模块的数值不稳定性。本文提出Full-Stack FP4框架，通过模块级精度适配同时解决了三个核心模块的数值崩溃问题，实现了首个完整的NVFP4预训练流水线，显著降低了预训练的比特数而不损失模型质量。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "training optimization strategies for better model convergence",
+      "matched_requirement_id": "req-12",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.04422v1"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.05850v1",
+      "source": "arxiv",
+      "title": "Breaking Spurious Correlations via Generative Randomization and Cross-Variant Self-Supervised Learning",
+      "abstract": "Deep neural networks trained with Empirical Risk Minimization (ERM) often fail under distribution shifts because they exploit spurious correlations between object labels and background context. Recent generative approaches address this issue by creating counterfactual images with altered contexts, but typically use these samples as standard data augmentation, leaving the model free to retain background-sensitive representations. We propose a two-stage framework that uses generative intervention to explicitly learn background-invariant visual representations. First, we isolate the foreground object using zero-shot segmentation and generate context-shifted variants with a structure-preserving diffusion model, preserving object identity while varying the surrounding environment. We then introduce Cross-Variant Self-Supervised Learning, where variants of the same object under different backgrounds form positive pairs in a contrastive objective. This encourages the encoder to align object-centric representations while suppressing background-specific cues. Then, we fine-tune the pretrained encoder using an ERM warm-up followed by GroupDRO with layer-wise learning rates. Experiments on distribution-shift benchmarks demonstrate best worst-group performance, achieving 92.5% on Waterbirds, 81.7% on MetaShift, and 87.4% on NICO++. Code: https://github.com/surajyadav-research/GRSSL",
+      "authors": [
+        "Suraj Yadav",
+        "Anjaneya Sharma",
+        "Siddharth Yadav"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-07T05:13:26+00:00",
+      "link": "https://arxiv.org/pdf/2607.05850v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "representation learning, self-supervised learning, spurious correlations, invariant representations",
+      "llm_evidence_cn": "表征学习，自监督学习，虚假相关性，不变表征",
+      "llm_evidence": "表征学习，自监督学习，虚假相关性，不变表征",
+      "canonical_evidence": "表征学习，自监督学习，虚假相关性，不变表征",
+      "llm_tldr_en": "Proposes a two-stage framework using generative intervention and cross-variant self-supervised learning to learn background-invariant visual representations, improving generalization under distribution shifts.",
+      "llm_tldr_cn": "深度神经网络易利用背景等虚假相关性导致分布漂移下性能下降。本文提出两阶段框架：首先生成上下文变换的变体图像，然后通过交叉变体自监督学习强制模型学习背景不变的表征。在多个分布漂移基准上，该方法显著提高了模型的泛化能力，且不依赖额外标注。",
+      "llm_tldr": "深度神经网络易利用背景等虚假相关性导致分布漂移下性能下降。本文提出两阶段框架：首先生成上下文变换的变体图像，然后通过交叉变体自监督学习强制模型学习背景不变的表征。在多个分布漂移基准上，该方法显著提高了模型的泛化能力，且不依赖额外标注。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.05850v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.06936v1",
+      "source": "arxiv",
+      "title": "Transfer Learning for Linear Discriminant Analysis with a Shared Classification Signal",
+      "abstract": "This paper studies transfer learning for linear discriminant analysis in high-dimensional two-class classification. We consider one target domain and several source domains, where the mean difference in each domain is decomposed into a deterministic common component and a domain-specific random deviation. The common component represents a shared classification signal across domains, while the random deviation captures domain-specific heterogeneity. Under spiked covariance models, we derive deterministic limits for the target-domain Gaussian-calibrated error of weighted transfer classifiers under both homogeneous and heterogeneous covariance settings. These limits quantify the effects of the shared signal, domain-specific variation, dimension-to-sample-size ratios, and spike structures on transfer performance. They further lead to oracle transfer weights and consistent data-driven plug-in estimators. We also characterize the intercept bias induced by unbalanced target-domain class sample sizes and provide an asymptotically optimal correction.",
+      "authors": [
+        "Yonghan Zhang",
+        "Yimeng Fan",
+        "Wenya Luo",
+        "Jiang Hu"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "stat.ML"
+      ],
+      "published": "2026-07-08T02:58:10+00:00",
+      "link": "https://arxiv.org/pdf/2607.06936v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "transfer learning for LDA with shared classification signal",
+      "llm_evidence_cn": "带有共享分类信号的LDA迁移学习",
+      "llm_evidence": "带有共享分类信号的LDA迁移学习",
+      "canonical_evidence": "带有共享分类信号的LDA迁移学习",
+      "llm_tldr_en": "Study transfer learning for high-dimensional LDA with common and domain-specific components, deriving error limits.",
+      "llm_tldr_cn": "针对高维二分类线性判别分析的迁移学习问题，将各领域均值差分解为确定性共同分量和领域特定随机偏差。在尖峰协方差模型下，推导了加权迁移分类器目标域误差的确定性极限，量化了共享信号、领域变异和维度的影响。理论结果为迁移学习在高维LDA中的应用提供了指导。",
+      "llm_tldr": "针对高维二分类线性判别分析的迁移学习问题，将各领域均值差分解为确定性共同分量和领域特定随机偏差。在尖峰协方差模型下，推导了加权迁移分类器目标域误差的确定性极限，量化了共享信号、领域变异和维度的影响。理论结果为迁移学习在高维LDA中的应用提供了指导。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "transfer learning methods to improve model training efficiency",
+      "matched_requirement_id": "req-10",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.06936v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.07386v1",
+      "source": "arxiv",
+      "title": "Sparse Delta Memory: Scaling the State of Linear RNNs through Sparsity",
+      "abstract": "Linear attention models allow a fixed state size and a fixed amount of compute per token. However, due to their limited state size, linear attention models fall behind in long-context recall compared to softmax-attention-based transformer architectures. Increasing the state size of linear attention improves recall performance but at the cost of higher FLOPs. In this work, we introduce Sparse Delta Memory (SDM), an architecture that scales the hidden state of gated linear RNNs to orders of magnitude higher capacity using a sparse addressing scheme. SDM extends the Gated DeltaNet architecture by replacing the dense key-value outer product with sparse reads and writes to a large explicit memory. We show that, under an isoFLOP constraint and with an identical number of parameters, a higher state memory capacity significantly improves performance on in-context learning and long-context retrieval tasks. Moreover, by learning the initial state of the SDM memory and therefore using it as a parametric memory, we show that the model further improves on a wide range of common-knowledge and reasoning tasks.",
+      "authors": [
+        "Loïc Cabannes",
+        "Pierre-Emmanuel Mazaré",
+        "Gergely Szilvasy",
+        "Matthijs Douze",
+        "Maria Lomeli",
+        "Ilze Amanda Auzina",
+        "Justin Carpentier",
+        "Gabriel Synnaeve",
+        "Hervé Jégou"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-08T13:17:19+00:00",
+      "link": "https://arxiv.org/pdf/2607.07386v1",
+      "tags": [
+        "keyword:rep-learning",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "new linear RNN architecture with sparse memory",
+      "llm_evidence_cn": "线性RNN稀疏记忆架构新设计",
+      "llm_evidence": "线性RNN稀疏记忆架构新设计",
+      "canonical_evidence": "线性RNN稀疏记忆架构新设计",
+      "llm_tldr_en": "Sparse Delta Memory scales the hidden state of gated linear RNNs via sparse addressing, achieving better long-context recall under isoFLOP constraints.",
+      "llm_tldr_cn": "针对线性RNN因状态大小有限导致长上下文召回不足的问题，提出Sparse Delta Memory架构，通过稀疏寻址机制将隐藏状态容量提升数个数量级。该方法在保持计算开销不变的前提下，显著提升长序列召回性能，为线性注意力模型在长上下文任务中的应用提供了新思路。",
+      "llm_tldr": "针对线性RNN因状态大小有限导致长上下文召回不足的问题，提出Sparse Delta Memory架构，通过稀疏寻址机制将隐藏状态容量提升数个数量级。该方法在保持计算开销不变的前提下，显著提升长序列召回性能，为线性注意力模型在长上下文任务中的应用提供了新思路。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "What are the latest AI architectures that enhance model performance and training methods?",
+      "matched_requirement_id": "req-15",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.07386v1",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2607.07470v1",
+      "source": "arxiv",
+      "title": "A Theory of Contrastive Learning with Natural Images",
+      "abstract": "Why does contrastive learning with simple images and augmentations yield useful representations for downstream tasks? We address this question by analytically computing the optimal representation in terms of a contrastive loss for a range of basic augmentations and any image dataset with stationary statistics. We show that for certain augmentations the optimum can be attained by a CNN whose first layer filters are sinusoids, followed by a pointwise nonlinearity, global average pooling, and a final linear layer that performs partial whitening. We also show that the optimal weights in such CNNs for more complicated augmentations are still sinusoids. The frequencies of the sinusoids and their weights can be computed using a simple waterfilling algorithm given the dataset's expected power spectrum. Experiments with different image datasets and augmentations show that such CNNs trained with SGD empirically learn sinusoids in their first layer and to perform partial whitening",
+      "authors": [
+        "Antonio Torralba",
+        "Yair Weiss"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-07-08T14:32:44+00:00",
+      "link": "https://arxiv.org/pdf/2607.07470v1",
+      "tags": [
+        "keyword:RL-VLA-world",
+        "keyword:rep-learning",
+        "query:RL-VLA-world",
+        "query:rep-learning"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "theory of contrastive learning for representation learning",
+      "llm_evidence_cn": "对比学习在表示学习中的理论",
+      "llm_evidence": "对比学习在表示学习中的理论",
+      "canonical_evidence": "对比学习在表示学习中的理论",
+      "llm_tldr_en": "Analytically derive optimal representations for contrastive learning with natural images, showing sinusoidal filters.",
+      "llm_tldr_cn": "为理解对比学习为何能产生有用表示，通过分析计算在常见增强和自然图像数据集下对比损失的最优表示。证明最优CNN第一层滤波器为正弦函数，后续接点式非线性、全局平均池化和部分白化线性层。该理论揭示了对比学习的内在机制，为设计更好的表示学习方法提供了理论基础。",
+      "llm_tldr": "为理解对比学习为何能产生有用表示，通过分析计算在常见增强和自然图像数据集下对比损失的最优表示。证明最优CNN第一层滤波器为正弦函数，后续接点式非线性、全局平均池化和部分白化线性层。该理论揭示了对比学习的内在机制，为设计更好的表示学习方法提供了理论基础。",
+      "llm_tags": [
+        "query:rep-learning"
+      ],
+      "matched_query_tag": "query:rep-learning",
+      "matched_query_text": "representation learning methods improving model performance",
+      "matched_requirement_id": "req-8",
+      "selection_source": "carryover_cache",
+      "paper_id": "2607.07470v1",
+      "quick_tier": "8plus"
+    }
+  ]
+}
