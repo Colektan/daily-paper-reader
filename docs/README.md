@@ -6,47 +6,29 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-19
-- 运行时间：2026-07-19 20:37:18 UTC
+- 最新运行日期：2026-07-20
+- 运行时间：2026-07-20 21:07:49 UTC
 - 运行状态：成功
-- 本次总论文数：8
-- 精读区：4
-- 速读区：4
+- 本次总论文数：2
+- 精读区：2
+- 速读区：0
 
 ### 今日简报（AI）
-- 今日共生成 8 篇推荐（精读 4 篇，速读 4 篇）
-- 精读：《Separating Representation from Reconstruction Enables Scalable Text Encoders》（8.0/10）, 《Masked Generative-Contrastive Representation Learning for Cross-Dataset EEG-Based Emotion Recognition》（8.0/10）
-- 速读：《Breaking Spurious Correlations via Generative Randomization and Cross-Variant Self-Supervised Learning》（8.0/10）, 《Transfer Learning for Linear Discriminant Analysis with a Shared Classification Signal》（8.0/10）, 《Sparse Delta Memory: Scaling the State of Linear RNNs through Sparsity》（8.0/10）
+- 今日共生成 2 篇推荐（精读 2 篇，速读 0 篇）
+- 精读：《Architecture Generalization with MetaNCA》（8.0/10）, 《Agentic Neural Architecture Search》（8.0/10）
 - 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202607/19/README](/202607/19/README)
+- 详情：[/202607/20/README](/202607/20/README)
 
 ### 精读区论文标签
-1. [Separating Representation from Reconstruction Enables Scalable Text Encoders](/202607/19/2607.04011v1-separating-representation-from-reconstruction-enables-scalable-text-encoders)  
+1. [Architecture Generalization with MetaNCA](/202607/20/2607.07743v1-architecture-generalization-with-metanca)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：分离表示与重建以改进编码器
-2. [Masked Generative-Contrastive Representation Learning for Cross-Dataset EEG-Based Emotion Recognition](/202607/19/2607.04139v1-masked-generative-contrastive-representation-learning-for-cross-dataset-eeg-based-emotion-recognition)  
+   evidence：通过局部规则自组织网络权重的元学习
+2. [Agentic Neural Architecture Search](/202607/20/2607.07984v1-agentic-neural-architecture-search)  
    标签：评分：8.0/10、query:rep-learning
-   evidence：自监督表征学习用于脑电情绪识别
-3. [HASSL: Hierarchy-Aware Self-Supervised Learning Framework for Single Cell Microscopy](/202607/19/2607.04353v1-hassl-hierarchy-aware-self-supervised-learning-framework-for-single-cell-microscopy)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：自监督学习用于特征提取
-4. [Full-Stack FP4: Stable LLM Pretraining with Quantized Projections, Optimizers, and Attention](/202607/19/2607.04422v1-full-stack-fp4-stable-llm-pretraining-with-quantized-projections-optimizers-and-attention)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：全栈4比特预训练框架解决稳定性瓶颈
+   evidence：结合LLM和NAS的架构搜索方法
 
 ### 速读区论文标签
-1. [Breaking Spurious Correlations via Generative Randomization and Cross-Variant Self-Supervised Learning](/202607/19/2607.05850v1-breaking-spurious-correlations-via-generative-randomization-and-cross-variant-self-supervised-learning)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：表征学习，自监督学习，虚假相关性，不变表征
-2. [Transfer Learning for Linear Discriminant Analysis with a Shared Classification Signal](/202607/19/2607.06936v1-transfer-learning-for-linear-discriminant-analysis-with-a-shared-classification-signal)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：带有共享分类信号的LDA迁移学习
-3. [Sparse Delta Memory: Scaling the State of Linear RNNs through Sparsity](/202607/19/2607.07386v1-sparse-delta-memory-scaling-the-state-of-linear-rnns-through-sparsity)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：线性RNN稀疏记忆架构新设计
-4. [A Theory of Contrastive Learning with Natural Images](/202607/19/2607.07470v1-a-theory-of-contrastive-learning-with-natural-images)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：对比学习在表示学习中的理论
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">

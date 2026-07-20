@@ -1,6 +1,10 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-07-20 <!--dpr-date:20260720-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/20/2607.07743v1-architecture-generalization-with-metanca" data-sidebar-item="{&quot;title&quot;: &quot;Architecture Generalization with MetaNCA&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.07743v1-architecture-generalization-with-metanca&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;rep-learning&quot;}], &quot;evidence&quot;: &quot;通过局部规则自组织网络权重的元学习&quot;}">Architecture Generalization with MetaNCA</a>
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/20/2607.07984v1-agentic-neural-architecture-search" data-sidebar-item="{&quot;title&quot;: &quot;Agentic Neural Architecture Search&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.07984v1-agentic-neural-architecture-search&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;rep-learning&quot;}], &quot;evidence&quot;: &quot;结合LLM和NAS的架构搜索方法&quot;}">Agentic Neural Architecture Search</a>
   * 2026-07-19 <!--dpr-date:20260719-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/19/2607.04011v1-separating-representation-from-reconstruction-enables-scalable-text-encoders" data-sidebar-item="{&quot;title&quot;: &quot;Separating Representation from Reconstruction Enables Scalable Text Encoders&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.04011v1-separating-representation-from-reconstruction-enables-scalable-text-encoders&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;rep-learning&quot;}], &quot;evidence&quot;: &quot;分离表示与重建以改进编码器&quot;}">Separating Representation from Reconstruction Enables Scalable Text Encoders</a>

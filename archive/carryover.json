@@ -1,97 +1,17 @@
 {
-  "generated_at": "2026-07-19T20:29:55.067039+00:00",
-  "updated_date": "20260719",
+  "generated_at": "2026-07-20T21:05:33.195058+00:00",
+  "updated_date": "20260720",
   "carryover_days": 9,
   "tag_states": {
     "RL-VLA-world": {
-      "updated_date": "20260719",
+      "updated_date": "20260720",
       "carryover_days": 9,
       "items": []
     },
     "rep-learning": {
-      "updated_date": "20260719",
+      "updated_date": "20260720",
       "carryover_days": 9,
-      "items": [
-        {
-          "id": "2607.07984v1",
-          "source": "arxiv",
-          "title": "Agentic Neural Architecture Search",
-          "abstract": "Neural architecture search (NAS) methods have grown increasingly efficient, yet they remain bounded by manually engineered search spaces that require substantial domain expertise and must be rebuilt for every new task. Large language models (LLMs) can generate architectures in an open-ended space, but how to optimally divide the labor between LLM-driven design and NAS-driven search remains unexplored. We propose a mechanism that bridges these two paradigms: an LLM produces a high-quality seed architecture, then decomposes it into a \"slotted architecture\", a scaffold with named, interchangeable module slots that automatically defines a bounded, task-specific search space for conventional NAS to explore, without manual engineering. We instantiate this mechanism in AgentNAS, a modular three-phase pipeline in which each component's contribution can be measured independently. On 17 tasks spanning classification, dense regression, segmentation, and multi-label tagging across diverse modalities (NAS-Bench-360 and Unseen NAS), AgentNAS establishes a new state of the art on 11 tasks, outperforming published baselines including task-specific expert designs. Ablation studies show that the two search mechanisms are broadly complementary: the LLM-generated seed already surpasses published baselines on the majority of tasks, and NAS delivers additional gains in most cases through combinatorial recombination across slots, a mode of search that independent LLM samples cannot replicate. These patterns hold across three LLMs of different capability levels, confirming that the division of labor is robust. Our code is available at https://github.com/alroimfebruary/AgentNAS.",
-          "authors": [
-            "Seokhoon Jeong",
-            "Mijung Kim",
-            "Taehwan Kim"
-          ],
-          "primary_category": "cs.AI",
-          "categories": [
-            "cs.AI"
-          ],
-          "published": "2026-07-08T23:20:30+00:00",
-          "link": "https://arxiv.org/pdf/2607.07984v1",
-          "tags": [
-            "keyword:rep-learning",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "LLM and NAS combined architecture search",
-          "llm_evidence_cn": "结合LLM和NAS的架构搜索方法",
-          "llm_evidence": "结合LLM和NAS的架构搜索方法",
-          "canonical_evidence": "结合LLM和NAS的架构搜索方法",
-          "llm_tldr_en": "Proposes AgentNAS, which uses an LLM to generate a seed architecture and decompose it into a slotted architecture for conventional NAS to optimize, bridging LLM design and NAS search.",
-          "llm_tldr_cn": "神经架构搜索仍受限于手工搜索空间。本文提出AgentNAS，让大型语言模型生成种子架构并分解为插槽式架构，自动定义有界搜索空间，供传统NAS探索，无需人工工程。实验表明，AgentNAS在多个任务上找到的架构性能优于现有自动搜索方法。",
-          "llm_tldr": "神经架构搜索仍受限于手工搜索空间。本文提出AgentNAS，让大型语言模型生成种子架构并分解为插槽式架构，自动定义有界搜索空间，供传统NAS探索，无需人工工程。实验表明，AgentNAS在多个任务上找到的架构性能优于现有自动搜索方法。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "Advances in representation learning and neural architecture search for AI",
-          "matched_requirement_id": "req-17",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.07984v1",
-          "carry_days": 8
-        },
-        {
-          "id": "2607.07743v1",
-          "source": "arxiv",
-          "title": "Architecture Generalization with MetaNCA",
-          "abstract": "Self-organization is an emergent property of life, driven by the collective behavior of individual components acting on local information. Biological neurons, through local interactions transmitted through synapses, are able to learn efficiently and can adapt their connections over an organism's lifespan. Motivated by these desirable properties of adaptability and local interaction, neural cellular automata (NCA) models have been successful at learning morphogenesis solely through local update rules, demonstrating stability over many updates and robustness to perturbations. In this work, we introduce Meta Neural Cellular Automata (MetaNCA), a framework that learns local rules which self-organize the weights of artificial neural networks. A learned rule network iteratively updates the weights of a task network using only local interactions on the computation graph. We propose a novel Weight Transformer architecture for the local rule network, which uses linear attention to aggregate signals from neighboring weights and hidden states. Once trained, the rule network generates task networks of diverse architectures without backpropagation. We show that MetaNCA generates weights for feedforward MLPs, CNNs, and ResNets on MNIST and CIFAR-100, scaling to networks of 2 million parameters. We further show that MetaNCA generalizes to architectures not seen during meta-training, and that architectural diversity in the training phase strengthens this generalization.",
-          "authors": [
-            "Meet Barot",
-            "Daniel Berenberg",
-            "Sina Khajehabdollahi"
-          ],
-          "primary_category": "cs.LG",
-          "categories": [
-            "cs.LG",
-            "cs.AI"
-          ],
-          "published": "2026-07-08T08:31:57+00:00",
-          "link": "https://arxiv.org/pdf/2607.07743v1",
-          "tags": [
-            "keyword:RL-VLA-world",
-            "keyword:rep-learning",
-            "query:RL-VLA-world",
-            "query:rep-learning"
-          ],
-          "llm_score": 8.0,
-          "llm_evidence_en": "meta-learning to self-organize network weights via local rules",
-          "llm_evidence_cn": "通过局部规则自组织网络权重的元学习",
-          "llm_evidence": "通过局部规则自组织网络权重的元学习",
-          "canonical_evidence": "通过局部规则自组织网络权重的元学习",
-          "llm_tldr_en": "Introduce MetaNCA, a meta-learning framework that learns local rules to self-organize neural network weights, improving architecture generalization.",
-          "llm_tldr_cn": "受生物神经元局部交互启发，提出元神经细胞自动机（MetaNCA），通过元学习学习局部规则来自组织人工神经网络的权重。实验表明MetaNCA能够生成稳定且鲁棒的架构，并泛化到未见任务。该方法将元学习与神经细胞自动机结合，为架构泛化提供了新途径。",
-          "llm_tldr": "受生物神经元局部交互启发，提出元神经细胞自动机（MetaNCA），通过元学习学习局部规则来自组织人工神经网络的权重。实验表明MetaNCA能够生成稳定且鲁棒的架构，并泛化到未见任务。该方法将元学习与神经细胞自动机结合，为架构泛化提供了新途径。",
-          "llm_tags": [
-            "query:rep-learning"
-          ],
-          "matched_query_tag": "query:rep-learning",
-          "matched_query_text": "meta-learning algorithms for fast adaptation and improved generalization",
-          "matched_requirement_id": "req-11",
-          "selection_source": "carryover_cache",
-          "paper_id": "2607.07743v1",
-          "carry_days": 8
-        }
-      ]
+      "items": []
     }
   }
 }
