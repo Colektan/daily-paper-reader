@@ -6,26 +6,19 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-20
-- 运行时间：2026-07-20 21:07:49 UTC
+- 最新运行日期：2026-07-24
+- 运行时间：2026-07-24 20:35:23 UTC
 - 运行状态：成功
-- 本次总论文数：2
-- 精读区：2
+- 本次总论文数：0
+- 精读区：0
 - 速读区：0
 
 ### 今日简报（AI）
-- 今日共生成 2 篇推荐（精读 2 篇，速读 0 篇）
-- 精读：《Architecture Generalization with MetaNCA》（8.0/10）, 《Agentic Neural Architecture Search》（8.0/10）
-- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
-- 详情：[/202607/20/README](/202607/20/README)
+> 今日无新推荐，系统未产出可展示论文。
+- 详情：[/202607/24/README](/202607/24/README)
 
 ### 精读区论文标签
-1. [Architecture Generalization with MetaNCA](/202607/20/2607.07743v1-architecture-generalization-with-metanca)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：通过局部规则自组织网络权重的元学习
-2. [Agentic Neural Architecture Search](/202607/20/2607.07984v1-agentic-neural-architecture-search)  
-   标签：评分：8.0/10、query:rep-learning
-   evidence：结合LLM和NAS的架构搜索方法
+- 本次无精读推荐。
 
 ### 速读区论文标签
 - 本次无速读推荐。
